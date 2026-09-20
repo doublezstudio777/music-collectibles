@@ -1,0 +1,8 @@
+# 本 repo 專屬設定，覆蓋全域 ~/.codex/config.toml
+# 跟著 git 同步，Mac 與 Windows 兩台自動一致
+
+model = "gpt-5.6-sol"
+
+# 這是研發企劃型專案，思考深度優先於速度
+# 覺得太慢可改 "medium" 或 "low"
+model_reasoning_effort = "high"
