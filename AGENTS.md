@@ -10,13 +10,23 @@
 
 ## 開工流程
 
-1. `git pull`
+1. `git status` — 看 Claude 上次動了什麼
 2. 讀 `00_現況.md`
 3. 動手
 4. 更新 `00_現況.md`，交棒
-5. `git add -A && git commit && git push`
+5. `git add -A && git commit -m "做了什麼"`
 
-第一次 push 時 sandbox 會要求網路授權，同意即可。
+⚠️ **不要 `git push`**。GitHub repo 尚未建立，push 一定失敗，不用重試也不用除錯。
+
+## 🚨 產出一定要放在這個專案資料夾內
+
+**不要放 `~/Documents/Codex/{日期}/` 那種沙盒目錄。**
+
+那個路徑受 macOS 權限保護，Claude Code 列不到目錄內容，
+等於你做的東西它看不見，協作就斷了。
+
+所有檔案寫在專案資料夾內的對應位置：
+`討論/`、`研究/`、`產出/`。產完 commit，Claude 下次 `git status` 就知道你做了什麼。
 
 ## 討論收尾要存檔
 

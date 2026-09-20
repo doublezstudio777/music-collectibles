@@ -14,11 +14,13 @@
 
 ## 開工流程
 
-1. `git pull`
+1. `git status` — 看 Codex 上次動了什麼，`git diff` 看細節
 2. 讀 `00_現況.md`
 3. 動手
 4. 更新 `00_現況.md`，交棒
-5. commit + push
+5. `git add -A && git commit`（**不要 push**，GitHub repo 尚未建立）
+
+Codex 產出的 docx／pptx 用 python 解 zip 讀 `word/document.xml` 即可，不需要額外套件。
 
 ## 可以動用的既有資源
 
