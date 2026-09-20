@@ -1,0 +1,3 @@
+# 測試站，全面禁止索引
+User-agent: *
+Disallow: /
