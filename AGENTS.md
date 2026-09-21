@@ -10,13 +10,15 @@
 
 ## 開工流程
 
-1. `git status` — 看 Claude 上次動了什麼
+1. `git pull` — 先拿 Windows 那邊的最新進度
 2. 讀 `00_現況.md`
 3. 動手
 4. 更新 `00_現況.md`，交棒
-5. `git add -A && git commit -m "做了什麼"`
+5. `git add -A && git commit -m "做了什麼" && git push`
 
-⚠️ **不要 `git push`**。GitHub repo 尚未建立，push 一定失敗，不用重試也不用除錯。
+第一次 push 時 sandbox 會要求網路授權，同意即可。
+
+主力在 Windows，你是第二台。**沒 pull 就動手，等著解衝突。**
 
 ## 🚨 產出一定要放在這個專案資料夾內
 

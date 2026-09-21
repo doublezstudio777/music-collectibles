@@ -14,11 +14,14 @@
 
 ## 開工流程
 
-1. `git status` — 看 Codex 上次動了什麼，`git diff` 看細節
+1. `git pull`，然後 `git log --oneline -5` 看 Codex 上次做了什麼，`git diff HEAD~1` 看細節
 2. 讀 `00_現況.md`
 3. 動手
 4. 更新 `00_現況.md`，交棒
-5. `git add -A && git commit`（**不要 push**，GitHub repo 尚未建立）
+5. `git add -A && git commit && git push`
+
+**Windows 是主力機**，Mac 只在你人在 Mac 前面時用。
+Windows 第一次 clone 後，`cd 網站 && npm install` 才能跑 `npm run dev`。
 
 Codex 產出的 docx／pptx 用 python 解 zip 讀 `word/document.xml` 即可，不需要額外套件。
 
