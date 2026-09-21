@@ -41,6 +41,11 @@
 
 不用逐字，但推理鏈要留下來——Windows 那邊的 Claude 是靠這個接上脈絡的。
 
+## ⚠️ 裝套件用 `npm ci`
+
+`cd 網站 && npm ci`。**不要用 `npm install`**——它會改寫 lockfile，
+macOS 與 Linux 對 `libc` 欄位處理不同，兩台會無限抖動。理由見 `_共用規則.md`。
+
 ## 🎨 改網站前必讀
 
 動 `網站/` 底下任何介面檔案前，先讀 **`網站/DESIGN.md`**。
