@@ -21,6 +21,7 @@
 5. `git add -A && git commit && git push`
 
 **Windows 是主力機**，Mac 只在你人在 Mac 前面時用。
+**使用者改變方向時**：先更新 `00_現況.md` 並 push，再做新規劃（見 `_共用規則.md`）。
 裝套件一律 `npm ci`，**不要 `npm install`**（會讓 lockfile 在兩台之間抖動，理由見 `_共用規則.md`）。
 
 Codex 產出的 docx／pptx 用 python 解 zip 讀 `word/document.xml` 即可，不需要額外套件。
