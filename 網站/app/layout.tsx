@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SiteHeader } from "@/components/site-header";
 
 export const metadata: Metadata = {
-  title: "音藏｜台灣音樂的版本與收藏",
+  // 標題仍是待決定項，見 00_現況.md 待討論。
+  // 目前先移除「台灣」與「版本」兩個天花板，等使用者選定正式版本。
+  title: "音藏",
   description:
-    "同一張專輯，不同年份、不同地區的版本長得不一樣。音藏收錄台灣音樂的實體版本差異，也讓收藏的人把自己手上那件講清楚。",
+    "同一張專輯，不同年份、不同地區的版本長得不一樣。音藏收錄音樂實體的版本差異，也讓收藏的人把自己手上那件講清楚。",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
@@ -26,7 +29,10 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <SiteHeader />
+        {children}
+      </body>
     </html>
   );
 }
