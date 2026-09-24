@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>音藏｜方向B 淺色資料型</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF; --surface:#F3F5F8; --surface2:#E9EDF2; --line:#D7DDE5;
+  --text:#0F1420; --muted:#5A6474; --accent:#1F4FD8; --like:#C0205E;
+  --ok:#0B6E45; --warn:#855400; --bad:#B8203F;
+  --font:"Inter","Noto Sans TC","PingFang TC",sans-serif;
+  --mono:"IBM Plex Mono","SFMono-Regular",Menlo,monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.65}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+.mono{font-family:var(--mono);font-size:.92em;letter-spacing:0}
+/* nav */
+.nav{border-bottom:2px solid var(--text);background:var(--bg)}
+.nav .wrap{display:flex;align-items:center;height:56px;gap:28px}
+.logo{font-weight:700;font-size:20px;letter-spacing:-.01em}
+.menu{display:flex;gap:22px;font-size:15px;font-weight:500}
+.menu a{padding:17px 0;border-bottom:3px solid transparent;margin-bottom:-2px}
+.menu a.on{border-color:var(--accent);color:var(--accent)}
+.sp{flex:1}
+.search{display:flex;align-items:center;border:1.5px solid var(--text);height:38px;padding:0 14px;color:var(--muted);font-size:14px;width:320px}
+.btn{display:inline-flex;align-items:center;height:38px;padding:0 16px;font-weight:600;font-size:14px;transition:background .15s var(--ease)}
+.btn-p{background:var(--accent);color:#fff}
+.btn-p:hover{background:#173FB0}
+/* hero */
+.hero{padding:56px 0 32px;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:48px;align-items:end;border-bottom:1px solid var(--line)}
+.hero h1{font-size:40px;line-height:1.15;font-weight:700;letter-spacing:-.02em}
+.hero p{margin-top:14px;color:var(--muted);font-size:16px;max-width:520px}
+.kpi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line)}
+.kpi div{padding:14px 16px;border-left:1px solid var(--line)}
+.kpi div:first-child{border-left:0}
+.kpi b{display:block;font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.kpi span{font-size:12px;color:var(--muted)}
+/* layout */
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:56px;padding:40px 0 72px}
+.sec{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px}
+.sec h2{font-size:15px;font-weight:700}
+.sec a{font-size:13px;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+/* list rows */
+.share{display:grid;grid-template-columns:72px minmax(0,1fr) 150px;gap:18px;padding:20px 0;border-top:1px solid var(--line)}
+.share:last-child{border-bottom:1px solid var(--line)}
+.cover{aspect-ratio:1;position:relative;background:#333}
+.cover b{position:absolute;right:6px;bottom:4px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.8)}
+.c1{background:#22334D}.c2{background:#4A2C3D}.c3{background:#1E4B57}.c4{background:#3E3F4A}.c5{background:#2B4A3A}.c6{background:#5A4634}
+.share h3{font-size:18px;font-weight:600;line-height:1.4}
+.share h3 a:hover{text-decoration:underline;text-underline-offset:3px}
+.share p{color:var(--muted);font-size:15px;margin-top:4px}
+.meta{font-size:13px;color:var(--muted);margin-top:8px;display:flex;flex-wrap:wrap;gap:4px 14px}
+.meta a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.right{text-align:right;font-size:13px;color:var(--muted);line-height:1.9}
+.right .like{color:var(--like);font-weight:600;display:inline-flex;align-items:center;gap:4px}
+.right .like svg{width:14px;height:14px;fill:currentColor}
+.who{font-size:13px;color:var(--muted);margin-bottom:4px}
+.who b{color:var(--text);font-weight:600}
+.st{display:inline-block;font-size:12px;font-weight:600;padding:0 6px;border:1.5px solid currentColor}
+.st.ok{color:var(--ok)}.st.warn{color:var(--warn)}.st.bad{color:var(--bad)}
+/* side */
+.side .box{border:1px solid var(--line);margin-bottom:20px}
+.side h4{font-size:13px;font-weight:700;padding:10px 14px;background:var(--surface);border-bottom:1px solid var(--line)}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+td{padding:9px 14px;border-top:1px solid var(--line);vertical-align:top}
+tr:first-child td{border-top:0}
+td.n{text-align:right;font-family:var(--mono);color:var(--muted);white-space:nowrap}
+td span{display:block;color:var(--muted);font-size:12px}
+/* profile */
+.prof{border-top:2px solid var(--text);padding:36px 0 24px;display:flex;align-items:flex-end;gap:24px}
+.ava{width:64px;height:64px;background:var(--surface2);display:inline-flex;align-items:center;justify-content:center;font-size:24px;font-weight:600}
+.prof h2{font-size:28px;font-weight:700;letter-spacing:-.01em}
+.prof .loc{color:var(--muted);font-size:14px}
+.stats{margin-left:auto;display:flex;border:1px solid var(--line)}
+.stats div{padding:10px 20px;border-left:1px solid var(--line);text-align:center}
+.stats div:first-child{border-left:0}
+.stats b{display:block;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;color:var(--muted)}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);font-size:14px;font-weight:500}
+.tabs a{padding:10px 18px;border:1px solid transparent;border-bottom:0;margin-bottom:-1px}
+.tabs a.on{border-color:var(--line);border-bottom:1px solid var(--bg);background:var(--bg);color:var(--accent)}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:14px;margin:0 0 40px}
+.tbl th{text-align:left;font-size:12px;font-weight:600;color:var(--muted);padding:12px 10px;border-bottom:1px solid var(--text);background:var(--surface)}
+.tbl td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl td .cover{width:44px}
+.tbl td.n{font-family:var(--mono);font-size:13px;white-space:nowrap}
+.tbl td.r{text-align:right;font-variant-numeric:tabular-nums}
+.tbl tr:hover td{background:var(--surface)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:96px}
+.tag{font-size:13px;padding:5px 12px;border:1px solid var(--line);font-family:var(--font)}
+.tag b{font-family:var(--mono);font-weight:400;color:var(--muted);margin-left:6px}
+@media (max-width:1000px){.cols,.hero{grid-template-columns:1fr}.search{display:none}.tbl .hide{display:none}}
+@media (max-width:700px){
+  .wrap{padding:0 18px}.menu{display:none}.hero{padding:32px 0 24px;gap:24px}.hero h1{font-size:28px}
+  .kpi b{font-size:20px}
+  .share{grid-template-columns:56px minmax(0,1fr)}.share .right{grid-column:2;text-align:left;display:flex;gap:14px}
+  .prof{flex-wrap:wrap;gap:16px}.stats{margin-left:0;width:100%}.stats div{flex:1;padding:8px 6px}.stats b{font-size:18px}
+  .tabs{overflow-x:auto;white-space:nowrap}.tabs a{padding:10px 12px}
+  .tbl{font-size:13px}.tbl th,.tbl td{padding:10px 6px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="nav"><div class="wrap">
+  <a class="logo" href="#">音藏</a>
+  <nav class="menu"><a class="on" href="#">發現</a><a href="#">作品</a><a href="#">藝人</a><a href="#">我的收藏</a></nav>
+  <div class="sp"></div>
+  <div class="search">搜尋藝人、作品、目錄號、條碼</div>
+  <a class="btn btn-p" href="#">炫收藏</a>
+</div></header>
+
+<!-- 首頁上半段 -->
+<div class="wrap">
+  <section class="hero">
+    <div>
+      <h1>樂迷的收藏分享</h1>
+      <p>同一張專輯在不同年份、不同地區長得不一樣。這裡有人把手上那件拍下來，講清楚差在哪。</p>
+    </div>
+    <div class="kpi">
+      <div><b>6</b><span>已建版本</span></div>
+      <div><b>48</b><span>收藏件數</span></div>
+      <div><b>3</b><span>本週炫收藏</span></div>
+    </div>
+  </section>
+
+  <div class="cols">
+    <main>
+      <div class="sec"><h2>最近的炫收藏</h2><a href="#">依點讚排序</a></div>
+
+      <article class="share">
+        <div class="cover c1"><b>CD</b></div>
+        <div>
+          <div class="who"><b>小孟</b> · 今天</div>
+          <h3><a href="#">終於把《夜行採集》的兩個 CD 版本放在一起了</a></h3>
+          <p>台灣首批是紙套，日本版多了側標，背面的公司資訊也不一樣。一直以為只是包裝差別，實際擺在一起比才發現目錄號根本不同。</p>
+          <div class="meta"><a href="#">山線電台</a><a href="#">夜行採集</a><span>首批紙套版 · CD · <span class="mono">ML-018-A</span></span><span class="st ok">已確認</span></div>
+        </div>
+        <div class="right"><span class="like"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.4-9.5 9-9.5 9z"/></svg>128</span><br>我有 18 · 想要 7</div>
+      </article>
+
+      <article class="share">
+        <div class="cover c4"><b>CS</b></div>
+        <div>
+          <div class="who"><b>阿澤</b> · 昨天</div>
+          <h3><a href="#">這卷巡演卡帶沒有條碼，要從哪裡認？</a></h3>
+          <p>外盒只有場次貼紙和一組手寫編號。先放在待確認，希望有人手上也有一卷，可以拍照一起比對。</p>
+          <div class="meta"><a href="#">空房間</a><a href="#">留聲便條</a><span>巡演限定版 · 卡帶 · 無條碼</span><span class="st warn">待確認</span></div>
+        </div>
+        <div class="right"><span class="like"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.4-9.5 9-9.5 9z"/></svg>41</span><br>我有 3 · 想要 9</div>
+      </article>
+
+      <article class="share">
+        <div class="cover c3"><b>LP</b></div>
+        <div>
+          <div class="who"><b>安琪</b> · 3 天前</div>
+          <h3><a href="#">想找這張透明海藍膠的完整內容物</a></h3>
+          <p>手上這張缺了內附小海報。想先確認首批是不是每張都有，再決定要換一張完整的，還是單收海報就好。</p>
+          <div class="meta"><a href="#">潮汐公路</a><a href="#">島嶼低鳴</a><span>透明海藍膠 · 黑膠 · <span class="mono">TS-022-LP</span></span><span class="st ok">已確認</span></div>
+        </div>
+        <div class="right"><span class="like"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.4-9.5 9-9.5 9z"/></svg>63</span><br>我有 11 · 想要 21</div>
+      </article>
+    </main>
+
+    <aside class="side">
+      <div class="box">
+        <h4>待確認的版本</h4>
+        <table>
+          <tr><td>留聲便條<span>空房間 · 巡演限定版</span></td><td class="n">3 有 / 9 要</td></tr>
+          <tr><td>凌晨四點<span>微光訊號 · 電台宣傳片</span></td><td class="n">2 有 / 16 要</td></tr>
+        </table>
+      </div>
+      <div class="box">
+        <h4>最多人想要</h4>
+        <table>
+          <tr><td>島嶼低鳴<span>透明海藍膠</span></td><td class="n">21</td></tr>
+          <tr><td>凌晨四點<span>電台宣傳片</span></td><td class="n">16</td></tr>
+          <tr><td>夜行採集<span>日版附側標</span></td><td class="n">12</td></tr>
+        </table>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- 個人收藏頁上半段 -->
+<div class="wrap">
+  <div class="prof">
+    <span class="ava">孟</span>
+    <div><h2>小孟</h2><div class="loc">台中 · 2024 年加入</div></div>
+    <div class="stats">
+      <div><b>24</b><span>收藏</span></div>
+      <div><b>7</b><span>炫收藏</span></div>
+      <div><b>58</b><span>喜愛</span></div>
+      <div><b>132</b><span>追蹤者</span></div>
+    </div>
+  </div>
+  <div class="tabs"><a class="on" href="#">收藏</a><a href="#">炫收藏</a><a href="#">喜愛清單</a><a href="#">想要</a><a href="#">標籤</a></div>
+  <table class="tbl">
+    <thead><tr><th></th><th>作品</th><th>版本</th><th class="hide">格式</th><th class="hide">目錄號</th><th>狀態</th><th style="text-align:right">點讚</th></tr></thead>
+    <tbody>
+      <tr><td><div class="cover c1"></div></td><td>夜行採集<span style="display:block;color:var(--muted);font-size:12px">山線電台</span></td><td>首批紙套版 · 2018</td><td class="hide">CD</td><td class="n hide">ML-018-A</td><td><span class="st ok">已確認</span></td><td class="r">128</td></tr>
+      <tr><td><div class="cover c2"></div></td><td>夜行採集<span style="display:block;color:var(--muted);font-size:12px">山線電台</span></td><td>日版附側標 · 2020</td><td class="hide">CD</td><td class="n hide">MLJP-020</td><td><span class="st ok">已確認</span></td><td class="r">54</td></tr>
+      <tr><td><div class="cover c3"></div></td><td>島嶼低鳴<span style="display:block;color:var(--muted);font-size:12px">潮汐公路</span></td><td>透明海藍膠 · 2022</td><td class="hide">黑膠</td><td class="n hide">TS-022-LP</td><td><span class="st ok">已確認</span></td><td class="r">63</td></tr>
+      <tr><td><div class="cover c5"></div></td><td>南方現場<span style="display:block;color:var(--muted);font-size:12px">雨停以前</span></td><td>首批盒裝版 · 2021</td><td class="hide">Blu-ray</td><td class="n hide">RB-021-BD</td><td><span class="st ok">已確認</span></td><td class="r">19</td></tr>
+      <tr><td><div class="cover c4"></div></td><td>留聲便條<span style="display:block;color:var(--muted);font-size:12px">空房間</span></td><td>巡演限定版 · 2017</td><td class="hide">卡帶</td><td class="n hide">待查證</td><td><span class="st warn">待確認</span></td><td class="r">41</td></tr>
+      <tr><td><div class="cover c6"></div></td><td>凌晨四點<span style="display:block;color:var(--muted);font-size:12px">微光訊號</span></td><td>電台宣傳片 · 2019</td><td class="hide">CD</td><td class="n hide">PROMO-04</td><td><span class="st warn">待確認</span></td><td class="r">8</td></tr>
+    </tbody>
+  </table>
+  <div class="tags">
+    <span class="tag">山線電台<b>12</b></span><span class="tag">潮汐公路<b>5</b></span><span class="tag">簽名<b>3</b></span><span class="tag">場刊<b>2</b></span><span class="tag">金音獎入圍<b>4</b></span><span class="tag">日版<b>2</b></span>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>音藏｜方向C 灰階單強調色</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@400;600&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EFEFEF; --surface:#FFFFFF; --surface2:#E3E3E3; --line:#CFCFCF;
+  --text:#141414; --muted:#5C5C5C; --accent:#CFF03A; --accent-text:#3E6300;
+  --ok:#3E6300; --warn:#7A5800; --bad:#A3253B;
+  --sans:"Inter","Noto Sans TC","PingFang TC",sans-serif;
+  --serif:"Instrument Serif","Noto Serif TC","Songti TC",serif;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.7}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+.serif{font-family:var(--serif);font-weight:400}
+/* nav */
+.nav{background:var(--bg)}
+.nav .wrap{display:flex;align-items:center;height:64px;gap:32px;border-bottom:1px solid var(--text)}
+.logo{font-family:var(--serif);font-size:26px;letter-spacing:.06em}
+.menu{display:flex;gap:26px;font-size:15px;color:var(--muted)}
+.menu a.on{color:var(--text);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px;text-decoration-color:var(--accent)}
+.sp{flex:1}
+.search{display:flex;align-items:center;border-bottom:1px solid var(--text);height:34px;color:var(--muted);font-size:14px;width:280px}
+.btn{display:inline-flex;align-items:center;height:40px;padding:0 20px;font-weight:600;font-size:14px;border-radius:2px;transition:filter .2s var(--ease)}
+.btn-p{background:var(--accent);color:var(--text)}
+.btn-p:hover{filter:brightness(.95)}
+/* hero */
+.hero{padding:88px 0 56px}
+.hero h1{font-family:var(--serif);font-size:64px;line-height:1.1;font-weight:400;letter-spacing:.01em}
+.hero h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--accent) 62%)}
+.hero p{margin-top:24px;color:var(--muted);font-size:17px;max-width:520px}
+/* covers strip */
+.strip{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px;margin:0 0 72px;background:var(--line);border:1px solid var(--line)}
+.cover{aspect-ratio:1;position:relative;background:#555}
+.cover b{position:absolute;left:10px;top:8px;font-size:11px;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.75)}
+.c1{background:#2F3640}.c2{background:#4C3F49}.c3{background:#33494F}.c4{background:#4A4A4A}.c5{background:#3A4A40}.c6{background:#5B5147}
+.strip figure{background:var(--surface)}
+.strip figcaption{padding:10px 12px 12px;font-size:13px;line-height:1.45}
+.strip figcaption span{display:block;color:var(--muted);font-size:12px}
+/* feed */
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:72px;padding-bottom:88px}
+.sec{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px}
+.sec h2{font-family:var(--serif);font-size:30px;font-weight:400}
+.sec a{font-size:13px;color:var(--muted);border-bottom:1px solid var(--line)}
+.share{background:var(--surface);padding:28px;margin-bottom:16px;border-radius:2px;display:grid;grid-template-columns:minmax(0,1fr) 140px;gap:28px}
+.share h3{font-family:var(--serif);font-size:26px;line-height:1.3;font-weight:400;text-wrap:balance}
+.share .who{font-size:13px;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.ava{width:28px;height:28px;border-radius:50%;background:var(--text);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
+.share p{color:var(--muted);font-size:15px;margin-top:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chip{font-size:12px;padding:3px 10px;border:1px solid var(--line);border-radius:2px}
+.chip.on{background:var(--text);color:#fff;border-color:var(--text)}
+.acts{display:flex;gap:18px;margin-top:18px;font-size:13px;color:var(--muted);align-items:center}
+.like{display:inline-flex;align-items:center;gap:6px;color:var(--text);font-weight:600}
+.like i{width:22px;height:22px;border-radius:50%;background:var(--accent);display:inline-flex;align-items:center;justify-content:center}
+.like svg{width:12px;height:12px;fill:var(--text)}
+/* side */
+.side h4{font-family:var(--serif);font-size:22px;font-weight:400;margin-bottom:12px}
+.row{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line);font-size:14px;align-items:center}
+.row .cover{width:44px;flex:none}
+.row span{display:block;color:var(--muted);font-size:12px}
+.st{font-size:11px;font-weight:600;margin-left:auto;padding-bottom:1px;border-bottom:2px solid currentColor}
+.st.ok{color:var(--ok)}.st.warn{color:var(--warn)}.st.bad{color:var(--bad)}
+.side .blk{margin-bottom:40px}
+/* profile */
+.prof{border-top:1px solid var(--text);padding:48px 0 32px;display:flex;align-items:flex-end;gap:24px}
+.prof .ava{width:80px;height:80px;font-size:30px;font-family:var(--serif)}
+.prof h2{font-family:var(--serif);font-size:40px;font-weight:400;line-height:1.1}
+.prof .loc{color:var(--muted);font-size:14px;margin-top:6px}
+.stats{margin-left:auto;display:flex;gap:40px}
+.stats b{display:block;font-family:var(--serif);font-size:34px;font-weight:400;line-height:1;font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;color:var(--muted)}
+.tabs{display:flex;gap:26px;border-bottom:1px solid var(--line);font-size:15px;color:var(--muted)}
+.tabs a{padding:12px 0;margin-bottom:-1px;border-bottom:2px solid transparent}
+.tabs a.on{color:var(--text);border-color:var(--accent);border-bottom-width:3px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin:36px 0 48px}
+.grid figure{background:var(--surface);border-radius:2px;overflow:hidden}
+.grid figcaption{padding:12px 14px 14px;font-size:14px;line-height:1.45}
+.grid figcaption span{display:block;color:var(--muted);font-size:12px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:96px}
+.tags .chip{font-size:13px;padding:6px 14px;background:var(--surface)}
+@media (max-width:1000px){.cols{grid-template-columns:1fr}.search{display:none}.strip{grid-template-columns:repeat(3,minmax(0,1fr))}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:700px){
+  .wrap{padding:0 18px}.menu{display:none}.hero{padding:48px 0 32px}.hero h1{font-size:40px}
+  .share{grid-template-columns:1fr;padding:20px}.share .cover{width:96px;order:-1}.share h3{font-size:22px}
+  .sec h2{font-size:24px}
+  .prof{flex-wrap:wrap;gap:16px}.prof h2{font-size:32px}.stats{margin-left:0;width:100%;justify-content:space-between;gap:8px}.stats b{font-size:26px}
+  .tabs{gap:18px;overflow-x:auto;white-space:nowrap}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="nav"><div class="wrap">
+  <a class="logo" href="#">音藏</a>
+  <nav class="menu"><a class="on" href="#">發現</a><a href="#">作品</a><a href="#">藝人</a><a href="#">我的收藏</a></nav>
+  <div class="sp"></div>
+  <div class="search">搜尋藝人、作品、目錄號</div>
+  <a class="btn btn-p" href="#">炫收藏</a>
+</div></header>
+
+<!-- 首頁上半段 -->
+<div class="wrap">
+  <section class="hero">
+    <h1>樂迷的<em>收藏分享</em></h1>
+    <p>同一張專輯在不同年份、不同地區長得不一樣。這裡有人把手上那件拍下來，講清楚差在哪。</p>
+  </section>
+
+  <div class="strip">
+    <figure><div class="cover c1"><b>CD</b></div><figcaption>夜行採集<span>山線電台 · 首批紙套版</span></figcaption></figure>
+    <figure><div class="cover c2"><b>CD</b></div><figcaption>夜行採集<span>山線電台 · 日版附側標</span></figcaption></figure>
+    <figure><div class="cover c3"><b>LP</b></div><figcaption>島嶼低鳴<span>潮汐公路 · 透明海藍膠</span></figcaption></figure>
+    <figure><div class="cover c4"><b>CS</b></div><figcaption>留聲便條<span>空房間 · 巡演限定版</span></figcaption></figure>
+    <figure><div class="cover c5"><b>BD</b></div><figcaption>南方現場<span>雨停以前 · 首批盒裝版</span></figcaption></figure>
+    <figure><div class="cover c6"><b>CD</b></div><figcaption>凌晨四點<span>微光訊號 · 電台宣傳片</span></figcaption></figure>
+  </div>
+
+  <div class="cols">
+    <main>
+      <div class="sec"><h2>最近的炫收藏</h2><a href="#">依點讚</a></div>
+
+      <article class="share">
+        <div>
+          <div class="who"><span class="ava">孟</span>小孟 · 今天</div>
+          <h3>終於把《夜行採集》的兩個 CD 版本放在一起了</h3>
+          <p>台灣首批是紙套，日本版多了側標，背面的公司資訊也不一樣。一直以為只是包裝差別，實際擺在一起比才發現目錄號根本不同。</p>
+          <div class="chips"><span class="chip on">CD</span><span class="chip">山線電台</span><span class="chip">夜行採集</span></div>
+          <div class="acts"><span class="like"><i><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.4-9.5 9-9.5 9z"/></svg></i>128</span><span>我有 18</span><span>想要 7</span></div>
+        </div>
+        <div class="cover c1"><b>CD</b></div>
+      </article>
+
+      <article class="share">
+        <div>
+          <div class="who"><span class="ava">澤</span>阿澤 · 昨天</div>
+          <h3>這卷巡演卡帶沒有條碼，要從哪裡認？</h3>
+          <p>外盒只有場次貼紙和一組手寫編號。先放在待確認，希望有人手上也有一卷，可以拍照一起比對。</p>
+          <div class="chips"><span class="chip on">卡帶</span><span class="chip">空房間</span><span class="chip">2017 巡演</span></div>
+          <div class="acts"><span class="like"><i><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.4-9.5 9-9.5 9z"/></svg></i>41</span><span>我有 3</span><span>想要 9</span></div>
+        </div>
+        <div class="cover c4"><b>CS</b></div>
+      </article>
+
+      <article class="share">
+        <div>
+          <div class="who"><span class="ava">安</span>安琪 · 3 天前</div>
+          <h3>想找這張透明海藍膠的完整內容物</h3>
+          <p>手上這張缺了內附小海報。想先確認首批是不是每張都有，再決定要換一張完整的，還是單收海報就好。</p>
+          <div class="chips"><span class="chip on">黑膠</span><span class="chip">潮汐公路</span><span class="chip">島嶼低鳴</span></div>
+          <div class="acts"><span class="like"><i><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.4-9.5 9-9.5 9z"/></svg></i>63</span><span>我有 11</span><span>想要 21</span></div>
+        </div>
+        <div class="cover c3"><b>LP</b></div>
+      </article>
+    </main>
+
+    <aside class="side">
+      <div class="blk">
+        <h4>待確認</h4>
+        <div class="row"><div class="cover c4"></div><div>留聲便條<span>空房間 · 巡演限定版</span></div><span class="st warn">待確認</span></div>
+        <div class="row"><div class="cover c6"></div><div>凌晨四點<span>微光訊號 · 電台宣傳片</span></div><span class="st warn">待確認</span></div>
+      </div>
+      <div class="blk">
+        <h4>藝人</h4>
+        <div class="row"><span class="ava">山</span><div>山線電台<span>2 個版本 · 24 件收藏</span></div></div>
+        <div class="row"><span class="ava">潮</span><div>潮汐公路<span>1 個版本 · 11 件收藏</span></div></div>
+        <div class="row"><span class="ava">空</span><div>空房間<span>1 個版本 · 3 件收藏</span></div></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- 個人收藏頁上半段 -->
+<div class="wrap">
+  <div class="prof">
+    <span class="ava">孟</span>
+    <div><h2>小孟</h2><div class="loc">台中 · 2024 年加入</div></div>
+    <div class="stats">
+      <div><b>24</b><span>收藏</span></div>
+      <div><b>7</b><span>炫收藏</span></div>
+      <div><b>58</b><span>喜愛</span></div>
+      <div><b>132</b><span>追蹤者</span></div>
+    </div>
+  </div>
+  <div class="tabs"><a class="on" href="#">收藏</a><a href="#">炫收藏</a><a href="#">喜愛清單</a><a href="#">想要</a><a href="#">標籤</a></div>
+  <div class="grid">
+    <figure><div class="cover c1"><b>CD</b></div><figcaption>夜行採集<span>首批紙套版 · 2018</span></figcaption></figure>
+    <figure><div class="cover c2"><b>CD</b></div><figcaption>夜行採集<span>日版附側標 · 2020</span></figcaption></figure>
+    <figure><div class="cover c3"><b>LP</b></div><figcaption>島嶼低鳴<span>透明海藍膠 · 2022</span></figcaption></figure>
+    <figure><div class="cover c5"><b>BD</b></div><figcaption>南方現場<span>首批盒裝版 · 2021</span></figcaption></figure>
+  </div>
+  <div class="tags">
+    <span class="chip">山線電台 12</span><span class="chip">潮汐公路 5</span><span class="chip">簽名 3</span><span class="chip">場刊 2</span><span class="chip">金音獎入圍 4</span><span class="chip">日版 2</span>
+  </div>
+</div>
+</body>
+</html>

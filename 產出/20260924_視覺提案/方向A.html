@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>音藏｜方向A 深色展示型</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E1014; --surface:#161A20; --surface2:#1E232B; --line:#2A303A;
+  --text:#E8EAEE; --muted:#9AA3B0; --accent:#5FE3B5; --like:#FF6B8B;
+  --ok:#5FE3B5; --warn:#F2C14E; --bad:#FF7B8E;
+  --font:"Inter","Noto Sans TC","PingFang TC",sans-serif;
+  --r:6px; --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+/* nav */
+.nav{position:sticky;top:0;z-index:5;background:rgba(14,16,20,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;height:60px;gap:32px}
+.logo{font-weight:700;font-size:18px;letter-spacing:.02em;display:flex;align-items:center;gap:10px}
+.logo i{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.menu{display:flex;gap:24px;color:var(--muted);font-size:15px}
+.menu a.on{color:var(--text)}
+.nav .sp{flex:1}
+.search{display:flex;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:999px;height:38px;padding:0 16px;color:var(--muted);font-size:14px;width:300px}
+.btn{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 18px;border-radius:999px;font-weight:600;font-size:14px;transition:opacity .2s var(--ease)}
+.btn-p{background:var(--accent);color:#0E1014}
+.btn-p:hover{opacity:.85}
+.btn-o{border:1px solid var(--line);color:var(--text)}
+/* hero */
+.hero{padding:72px 0 40px}
+.hero h1{font-size:44px;line-height:1.2;font-weight:700;letter-spacing:-.01em;max-width:640px}
+.hero p{margin-top:16px;color:var(--muted);font-size:17px;max-width:520px}
+/* covers row */
+.shelf{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;margin:40px 0 72px}
+.cover{aspect-ratio:1;border-radius:var(--r);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.cover:hover{transform:translateY(-3px)}
+.cover b{position:absolute;right:10px;bottom:8px;font-size:11px;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.7)}
+.c1{background:#22334D}.c2{background:#4A2C3D}.c3{background:#1E4B57}.c4{background:#3E3F4A}.c5{background:#2B4A3A}.c6{background:#5A4634}
+.shelf figcaption,.grid figcaption{margin-top:8px;font-size:13px;line-height:1.45}
+.shelf figcaption span,.grid figcaption span{display:block;color:var(--muted);font-size:12px}
+/* feed */
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:64px;padding-bottom:80px}
+.sec{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:8px}
+.sec h2{font-size:17px;font-weight:600}
+.sec a{color:var(--muted);font-size:13px}
+.share{display:grid;grid-template-columns:120px minmax(0,1fr);gap:20px;padding:24px 0;border-bottom:1px solid var(--line)}
+.share .cover{width:120px}
+.share h3{font-size:19px;font-weight:600;line-height:1.4}
+.share .who{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);margin-bottom:8px}
+.ava{width:26px;height:26px;border-radius:50%;background:var(--surface2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:var(--text)}
+.share p{color:var(--muted);font-size:15px;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{font-size:12px;padding:3px 10px;border-radius:999px;background:var(--surface2);color:var(--text)}
+.chip.who{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.acts{display:flex;gap:20px;margin-top:14px;font-size:13px;color:var(--muted)}
+.acts .like{color:var(--like);display:inline-flex;align-items:center;gap:5px}
+.acts .like svg{width:15px;height:15px;fill:currentColor}
+/* side */
+.side .card{background:var(--surface);border-radius:10px;padding:20px 22px;margin-bottom:20px}
+.side h4{font-size:14px;font-weight:600;margin-bottom:12px}
+.row{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
+.row:first-of-type{border-top:0}
+.row .cover{width:44px;border-radius:4px;flex:none}
+.row span{display:block;color:var(--muted);font-size:12px}
+.st{font-size:11px;padding:1px 8px;border-radius:999px;margin-left:auto}
+.st.ok{color:var(--ok);border:1px solid var(--ok)}
+.st.warn{color:var(--warn);border:1px solid var(--warn)}
+.st.bad{color:var(--bad);border:1px solid var(--bad)}
+/* profile */
+.divider{border-top:1px solid var(--line);margin:0 0 56px}
+.prof{display:flex;align-items:center;gap:24px;padding-bottom:28px}
+.prof .ava{width:72px;height:72px;font-size:26px}
+.prof h2{font-size:26px;font-weight:700}
+.prof .loc{color:var(--muted);font-size:14px}
+.stats{margin-left:auto;display:flex;gap:36px;text-align:center}
+.stats b{display:block;font-size:24px;font-weight:600;font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;color:var(--muted)}
+.tabs{display:flex;gap:28px;border-bottom:1px solid var(--line);font-size:15px;color:var(--muted)}
+.tabs a{padding:12px 0;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs a.on{color:var(--text);border-color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;margin:32px 0 48px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:96px}
+.tags .chip{font-size:13px;padding:6px 14px}
+@media (max-width:1000px){.cols{grid-template-columns:1fr}.search{display:none}.shelf,.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:700px){
+  .wrap{padding:0 18px}.menu{display:none}.hero{padding:40px 0 24px}.hero h1{font-size:30px}
+  .share{grid-template-columns:88px minmax(0,1fr);gap:14px}.share .cover{width:88px}.share h3{font-size:16px}
+  .prof{flex-wrap:wrap}.stats{margin-left:0;width:100%;justify-content:space-between;gap:12px}.stats b{font-size:20px}
+  .tabs{gap:18px;overflow-x:auto;white-space:nowrap}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="nav"><div class="wrap">
+  <a class="logo" href="#"><i></i>音藏</a>
+  <nav class="menu"><a class="on" href="#">發現</a><a href="#">作品</a><a href="#">藝人</a><a href="#">我的收藏</a></nav>
+  <div class="sp"></div>
+  <div class="search">搜尋藝人、作品、目錄號</div>
+  <a class="btn btn-p" href="#">炫收藏</a>
+</div></header>
+
+<!-- 首頁上半段 -->
+<section class="hero wrap">
+  <h1>樂迷的收藏分享</h1>
+  <p>同一張專輯在不同年份、不同地區長得不一樣。這裡有人把手上那件拍下來，講清楚差在哪。</p>
+</section>
+
+<div class="wrap">
+  <div class="sec"><h2>本週最多人點讚</h2><a href="#">全部</a></div>
+  <div class="shelf">
+    <figure><div class="cover c1"><b>CD</b></div><figcaption>夜行採集<span>山線電台 · 首批紙套版</span></figcaption></figure>
+    <figure><div class="cover c2"><b>CD</b></div><figcaption>夜行採集<span>山線電台 · 日版附側標</span></figcaption></figure>
+    <figure><div class="cover c3"><b>LP</b></div><figcaption>島嶼低鳴<span>潮汐公路 · 透明海藍膠</span></figcaption></figure>
+    <figure><div class="cover c4"><b>CS</b></div><figcaption>留聲便條<span>空房間 · 巡演限定版</span></figcaption></figure>
+    <figure><div class="cover c5"><b>BD</b></div><figcaption>南方現場<span>雨停以前 · 首批盒裝版</span></figcaption></figure>
+    <figure><div class="cover c6"><b>CD</b></div><figcaption>凌晨四點<span>微光訊號 · 電台宣傳片</span></figcaption></figure>
+  </div>
+
+  <div class="cols">
+    <main>
+      <div class="sec"><h2>最近的炫收藏</h2><a href="#">依時間</a></div>
+
+      <article class="share">
+        <div class="cover c1"><b>CD</b></div>
+        <div>
+          <div class="who"><span class="ava">孟</span>小孟 · 今天</div>
+          <h3>終於把《夜行採集》的兩個 CD 版本放在一起了</h3>
+          <p>台灣首批是紙套，日本版多了側標，背面的公司資訊也不一樣。一直以為只是包裝差別，實際擺在一起比才發現目錄號根本不同。</p>
+          <div class="chips"><span class="chip">CD</span><span class="chip who">山線電台</span><span class="chip who">夜行採集</span></div>
+          <div class="acts"><span class="like"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.4-9.5 9-9.5 9z"/></svg>128</span><span>我有 18</span><span>想要 7</span></div>
+        </div>
+      </article>
+
+      <article class="share">
+        <div class="cover c4"><b>CS</b></div>
+        <div>
+          <div class="who"><span class="ava">澤</span>阿澤 · 昨天</div>
+          <h3>這卷巡演卡帶沒有條碼，要從哪裡認？</h3>
+          <p>外盒只有場次貼紙和一組手寫編號。先放在待確認，希望有人手上也有一卷，可以拍照一起比對。</p>
+          <div class="chips"><span class="chip">卡帶</span><span class="chip who">空房間</span><span class="chip who">2017 巡演</span></div>
+          <div class="acts"><span class="like"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.4-9.5 9-9.5 9z"/></svg>41</span><span>我有 3</span><span>想要 9</span></div>
+        </div>
+      </article>
+
+      <article class="share">
+        <div class="cover c3"><b>LP</b></div>
+        <div>
+          <div class="who"><span class="ava">安</span>安琪 · 3 天前</div>
+          <h3>想找這張透明海藍膠的完整內容物</h3>
+          <p>手上這張缺了內附小海報。想先確認首批是不是每張都有，再決定要換一張完整的，還是單收海報就好。</p>
+          <div class="chips"><span class="chip">黑膠</span><span class="chip who">潮汐公路</span><span class="chip who">島嶼低鳴</span></div>
+          <div class="acts"><span class="like"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.4-9.5 9-9.5 9z"/></svg>63</span><span>我有 11</span><span>想要 21</span></div>
+        </div>
+      </article>
+    </main>
+
+    <aside class="side">
+      <div class="card">
+        <h4>待確認的版本</h4>
+        <div class="row"><div class="cover c4"></div><div>留聲便條<span>空房間 · 巡演限定版</span></div><span class="st warn">待確認</span></div>
+        <div class="row"><div class="cover c6"></div><div>凌晨四點<span>微光訊號 · 電台宣傳片</span></div><span class="st warn">待確認</span></div>
+        <div class="row"><div class="cover c2"></div><div>夜行採集<span>山線電台 · 日版附側標</span></div><span class="st ok">已確認</span></div>
+      </div>
+      <div class="card">
+        <h4>本週活躍藝人頁</h4>
+        <div class="row"><span class="ava">山</span><div>山線電台<span>2 個版本 · 24 件收藏</span></div></div>
+        <div class="row"><span class="ava">潮</span><div>潮汐公路<span>1 個版本 · 11 件收藏</span></div></div>
+        <div class="row"><span class="ava">空</span><div>空房間<span>1 個版本 · 3 件收藏</span></div></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- 個人收藏頁上半段 -->
+<div class="wrap">
+  <div class="divider"></div>
+  <div class="prof">
+    <span class="ava">孟</span>
+    <div><h2>小孟</h2><div class="loc">台中 · 2024 年加入</div></div>
+    <div class="stats">
+      <div><b>24</b><span>收藏</span></div>
+      <div><b>7</b><span>炫收藏</span></div>
+      <div><b>58</b><span>喜愛</span></div>
+      <div><b>132</b><span>追蹤者</span></div>
+    </div>
+  </div>
+  <div class="tabs"><a class="on" href="#">收藏</a><a href="#">炫收藏</a><a href="#">喜愛清單</a><a href="#">想要</a><a href="#">標籤</a></div>
+  <div class="grid">
+    <figure><div class="cover c1"><b>CD</b></div><figcaption>夜行採集<span>首批紙套版</span></figcaption></figure>
+    <figure><div class="cover c2"><b>CD</b></div><figcaption>夜行採集<span>日版附側標</span></figcaption></figure>
+    <figure><div class="cover c3"><b>LP</b></div><figcaption>島嶼低鳴<span>透明海藍膠</span></figcaption></figure>
+    <figure><div class="cover c5"><b>BD</b></div><figcaption>南方現場<span>首批盒裝版</span></figcaption></figure>
+    <figure><div class="cover c4"><b>CS</b></div><figcaption>留聲便條<span>巡演限定版</span></figcaption></figure>
+    <figure><div class="cover c6"><b>CD</b></div><figcaption>凌晨四點<span>電台宣傳片</span></figcaption></figure>
+  </div>
+  <div class="tags">
+    <span class="chip">山線電台 12</span><span class="chip">潮汐公路 5</span><span class="chip">簽名 3</span><span class="chip">場刊 2</span><span class="chip">金音獎入圍 4</span><span class="chip">日版 2</span>
+  </div>
+</div>
+</body>
+</html>

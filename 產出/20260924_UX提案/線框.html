@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>音藏 線框（灰階）</title>
+<style>
+:root{
+  --ink:#111;--ink2:#555;--ink3:#8a8a8a;--line:#d9d9d9;--line2:#ececec;--bg:#fff;--bg2:#f4f4f4;--bg3:#e6e6e6;
+  --s1:8px;--s2:16px;--s3:24px;--s4:40px;--s5:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:"Noto Sans TC",-apple-system,"Segoe UI",Roboto,"PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);background:var(--bg);line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+img,.ph{display:block}
+h1,h2,h3{font-weight:600;line-height:1.3}
+h1{font-size:28px}
+h2{font-size:18px}
+h3{font-size:16px}
+small,.muted{color:var(--ink3);font-size:13px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 var(--s3)}
+
+/* 切換列（只是線框工具，不是產品介面） */
+.switcher{position:sticky;top:0;z-index:50;background:#222;color:#ddd;font-size:13px;padding:6px var(--s2);display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.switcher span{margin-right:8px;color:#999}
+.switcher a{padding:4px 10px;border:1px solid #555;border-radius:4px}
+.switcher a.on{background:#fff;color:#111;border-color:#fff}
+.screen{display:none}
+.screen.on{display:block}
+
+/* 導覽列 */
+.nav{border-bottom:1px solid var(--line);background:var(--bg)}
+.nav .wrap{display:flex;align-items:center;gap:var(--s2);height:60px}
+.brand{font-weight:700;font-size:18px;letter-spacing:.02em;white-space:nowrap}
+.search{flex:1;max-width:520px;display:flex;align-items:center;gap:8px;height:40px;border:1px solid var(--line);border-radius:6px;padding:0 12px;color:var(--ink3);background:var(--bg2)}
+.search .ico{width:16px;height:16px;border:2px solid var(--ink3);border-radius:50%;position:relative;flex:none}
+.search .ico::after{content:"";position:absolute;width:2px;height:6px;background:var(--ink3);right:-4px;bottom:-5px;transform:rotate(-45deg)}
+.spacer{flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 18px;border:1px solid var(--ink);border-radius:6px;font-weight:500;white-space:nowrap}
+.btn.primary{background:var(--ink);color:#fff}
+.btn.sm{height:32px;padding:0 12px;font-size:14px}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--bg3);display:inline-flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink2);flex:none}
+.avatar.lg{width:72px;height:72px;font-size:22px}
+.avatar.xs{width:24px;height:24px;font-size:11px}
+.textlink{text-decoration:underline;text-underline-offset:3px;color:var(--ink2)}
+.nav .ico-only{display:none}
+
+/* 佔位圖 */
+.ph{background:var(--bg3);position:relative;overflow:hidden}
+.ph::before{content:attr(data-l);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink3);font-size:13px}
+.ph.sq{aspect-ratio:1/1}
+.ph.wide{aspect-ratio:4/3}
+
+/* 炫收藏牆 */
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s3);padding:var(--s3) 0 var(--s5)}
+.card{display:flex;flex-direction:column;gap:6px}
+.card .ph{border-radius:4px}
+.card .title{font-weight:500;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:13px;color:var(--ink2);border:1px solid var(--line);border-radius:999px;padding:1px 10px;line-height:1.6}
+.tag.who{border-color:var(--ink2)}
+.meta{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink3)}
+.meta .spacer{flex:1}
+.heart{display:inline-flex;align-items:center;gap:4px;min-width:44px;min-height:44px;margin:-12px 0;color:var(--ink2)}
+.heart i{width:16px;height:16px;border:1.5px solid var(--ink2);border-radius:50% 50% 0 50%;transform:rotate(45deg) scale(.9);display:inline-block}
+.heart.on i{background:var(--ink);border-color:var(--ink)}
+.toolbar{display:flex;align-items:center;gap:var(--s2);padding-top:var(--s2)}
+.select{border:1px solid var(--line);border-radius:6px;height:32px;padding:0 10px;font-size:14px;display:inline-flex;align-items:center;gap:6px;color:var(--ink2)}
+.select::after{content:"▾"}
+
+/* 頁首 */
+.pagehead{padding:var(--s4) 0 var(--s3);border-bottom:1px solid var(--line2)}
+.pagehead .row{display:flex;gap:var(--s3);align-items:flex-start}
+.pagehead .row > .ph{width:160px;flex:none;border-radius:4px}
+.pagehead .actions{margin-left:auto;display:flex;gap:8px;flex:none}
+.crumb{font-size:14px;color:var(--ink3);margin-bottom:6px}
+.crumb a{text-decoration:underline;text-underline-offset:3px}
+.lede{color:var(--ink2);margin-top:4px}
+.stats{display:flex;gap:var(--s3);margin-top:8px;font-size:14px;color:var(--ink2)}
+.stats b{color:var(--ink);font-weight:600;margin-right:4px}
+
+/* 區塊 */
+.section{padding:var(--s4) 0 0}
+.section:last-child{padding-bottom:var(--s5)}
+.section-h{display:flex;align-items:baseline;gap:var(--s2);margin-bottom:var(--s2)}
+.section-h .spacer{flex:1}
+.section-h a{font-size:14px;color:var(--ink2);text-decoration:underline;text-underline-offset:3px}
+.prose{max-width:720px}
+.prose p{margin-bottom:var(--s2)}
+.prose-foot{font-size:13px;color:var(--ink3);margin-top:var(--s1)}
+.two{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:var(--s5)}
+
+/* 封面列 */
+.covers{display:flex;gap:var(--s2);overflow-x:auto;padding-bottom:4px}
+.cover{width:140px;flex:none}
+.cover .ph{border-radius:4px;margin-bottom:6px}
+.cover b{display:block;font-weight:500;font-size:14px;line-height:1.4}
+.cover small{display:block}
+
+/* 清單與表格 */
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line2);vertical-align:top}
+th{font-weight:500;color:var(--ink2)}
+thead th{border-bottom:1px solid var(--line)}
+.list{list-style:none}
+.list li{display:flex;gap:var(--s2);padding:10px 0;border-bottom:1px solid var(--line2);font-size:14px;align-items:baseline}
+.list li b{font-weight:500;color:var(--ink)}
+.list li .muted{margin-left:auto;white-space:nowrap}
+
+/* 版本比較表 */
+.cmp-wrap{overflow-x:auto}
+.cmp{min-width:100%;table-layout:fixed}
+.cmp th:first-child,.cmp td:first-child{position:sticky;left:0;background:var(--bg);width:120px;color:var(--ink2);font-weight:500;z-index:1}
+.cmp thead th{vertical-align:top;color:var(--ink);font-weight:600;font-size:15px;width:220px}
+.cmp thead th .vact{display:flex;gap:6px;margin-top:8px;font-weight:400;font-size:13px}
+.cmp thead th .vact .btn{height:28px;padding:0 10px;font-size:13px}
+.cmp thead th small{display:block;font-weight:400;margin-top:2px}
+.cmp tr.diff td{background:var(--bg2)}
+.cmp tr.diff td:first-child{background:var(--bg2)}
+.cmp td.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.cmp .idrow td{line-height:1.6}
+
+/* 表單 */
+.form{max-width:640px;padding:var(--s4) 0 var(--s5)}
+.field{margin-bottom:var(--s3)}
+.field label{display:block;font-weight:500;margin-bottom:6px}
+.field label small{font-weight:400;margin-left:6px}
+.input{width:100%;min-height:44px;border:1px solid var(--line);border-radius:6px;padding:10px 12px;font:inherit;color:var(--ink);background:#fff}
+.input.ta{min-height:120px}
+.input.tagsin{display:flex;flex-wrap:wrap;gap:6px;align-items:center;color:var(--ink3)}
+.input.tagsin .tag{color:var(--ink)}
+.upload{border:1px dashed var(--ink3);border-radius:6px;min-height:200px;display:flex;align-items:center;justify-content:center;color:var(--ink2);background:var(--bg2);gap:var(--s2);flex-wrap:wrap;padding:var(--s2)}
+.upload .ph{width:120px;border-radius:4px}
+.suggest{border:1px solid var(--line);border-top:0;border-radius:0 0 6px 6px;margin-top:-6px;font-size:14px}
+.suggest div{padding:8px 12px;border-top:1px solid var(--line2)}
+.suggest div b{font-weight:500}
+.suggest div small{margin-left:8px}
+.formfoot{display:flex;align-items:center;gap:var(--s2);margin-top:var(--s4)}
+
+/* 個人頁 */
+.profile{display:flex;gap:var(--s3);align-items:center;padding:var(--s4) 0 var(--s3);border-bottom:1px solid var(--line2)}
+.tabs{display:flex;gap:var(--s3);border-bottom:1px solid var(--line);font-size:15px}
+.tabs a{padding:12px 0;color:var(--ink2);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs a.on{color:var(--ink);border-color:var(--ink);font-weight:500}
+
+.empty{padding:var(--s5) 0;text-align:center;color:var(--ink2)}
+.empty .btn{margin-top:var(--s2)}
+.note{font-size:12px;color:#888;background:#fafafa;border:1px dashed #ccc;padding:6px 10px;margin:var(--s2) 0;border-radius:4px}
+
+@media (max-width:767px){
+  html{font-size:16px}
+  .wrap{padding:0 var(--s2)}
+  .nav .wrap{height:56px;gap:10px}
+  .nav .search{display:none}
+  .nav .ico-only{display:inline-flex;width:40px;height:40px;align-items:center;justify-content:center}
+  .nav .ico-only .ico{width:16px;height:16px;border:2px solid var(--ink);border-radius:50%;position:relative}
+  .nav .ico-only .ico::after{content:"";position:absolute;width:2px;height:6px;background:var(--ink);right:-4px;bottom:-5px;transform:rotate(-45deg)}
+  .grid{grid-template-columns:1fr;gap:var(--s4);padding-top:var(--s2)}
+  .grid.wall .card .ph{border-radius:0;margin:0 calc(-1 * var(--s2))}
+  .two .grid{grid-template-columns:1fr 1fr!important;gap:16px!important}
+  table td:last-child,table th:last-child{white-space:nowrap}
+  .pagehead{padding-top:var(--s3)}
+  .pagehead .row{flex-wrap:wrap}
+  .pagehead .row > .ph{width:120px}
+  .pagehead .actions{margin-left:0;width:100%}
+  h1{font-size:24px}
+  .two{grid-template-columns:1fr;gap:var(--s4)}
+  .cover{width:120px}
+  .cmp thead th{width:200px}
+  .cmp th:first-child,.cmp td:first-child{width:96px}
+  .profile{flex-wrap:wrap}
+  .profile .actions{width:100%}
+  .formfoot{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<div class="switcher"><span>線框畫面</span>
+<a href="#home" data-s="home">首頁</a><a href="#me" data-s="me">個人頁</a><a href="#artist" data-s="artist">藝人頁</a><a href="#work" data-s="work">作品頁</a><a href="#new" data-s="new">炫收藏表單</a><a href="#tag" data-s="tag">標籤頁</a>
+</div>
+
+<!-- ============ 首頁 ============ -->
+<section class="screen" id="s-home">
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="#home">音藏</a>
+  <div class="search"><span class="ico"></span>搜尋藝人、作品、收藏</div>
+  <span class="spacer"></span>
+  <a class="ico-only" aria-label="搜尋"><span class="ico"></span></a>
+  <a class="btn primary" href="#new">炫收藏</a>
+  <span class="avatar">孟</span>
+</div></nav>
+<div class="wrap">
+  <div class="toolbar"><span class="spacer"></span><span class="select">最新</span></div>
+  <div class="grid wall">
+    <article class="card">
+      <div class="ph sq" data-l="照片"></div>
+      <div class="title">夜行採集 台灣首批紙套 CD，跟日版擺一起</div>
+      <div class="tags"><a class="tag who" href="#tag">山線電台</a><a class="tag" href="#tag">首刷</a></div>
+      <div class="meta"><span class="avatar xs">孟</span>小孟 · 今天<span class="spacer"></span><a class="heart"><i></i>12</a></div>
+    </article>
+    <article class="card">
+      <div class="ph sq" data-l="照片"></div>
+      <div class="title">空房間 2017 巡演限定卡帶，外盒有場次貼紙</div>
+      <div class="tags"><a class="tag who" href="#tag">空房間</a><a class="tag" href="#tag">卡帶</a><a class="tag" href="#tag">演唱會戰利品</a></div>
+      <div class="meta"><span class="avatar xs">澤</span>阿澤 · 昨天<span class="spacer"></span><a class="heart"><i></i>4</a></div>
+    </article>
+    <article class="card">
+      <div class="ph sq" data-l="照片"></div>
+      <div class="title">2019 金音獎場刊，第 14 頁有山線電台的專訪</div>
+      <div class="tags"><a class="tag who" href="#tag">山線電台</a><a class="tag who" href="#tag">金音創作獎</a><a class="tag" href="#tag">場刊</a></div>
+      <div class="meta"><span class="avatar xs">安</span>安琪 · 3 天前<span class="spacer"></span><a class="heart on"><i></i>31</a></div>
+    </article>
+    <article class="card">
+      <div class="ph sq" data-l="照片"></div>
+      <div class="title">島嶼低鳴 透明海藍膠，缺了內附小海報</div>
+      <div class="tags"><a class="tag who" href="#tag">潮汐公路</a><a class="tag" href="#tag">黑膠</a></div>
+      <div class="meta"><span class="avatar xs">安</span>安琪 · 4 天前<span class="spacer"></span><a class="heart"><i></i>9</a></div>
+    </article>
+    <article class="card">
+      <div class="ph sq" data-l="照片"></div>
+      <div class="title">雨停以前 南方現場 藍光盒裝，簽名在內頁</div>
+      <div class="tags"><a class="tag who" href="#tag">雨停以前</a><a class="tag" href="#tag">簽名</a></div>
+      <div class="meta"><span class="avatar xs">哲</span>阿哲 · 上週<span class="spacer"></span><a class="heart"><i></i>27</a></div>
+    </article>
+    <article class="card">
+      <div class="ph sq" data-l="照片"></div>
+      <div class="title">凌晨四點 電台宣傳片 PROMO-04</div>
+      <div class="tags"><a class="tag who" href="#tag">微光訊號</a><a class="tag" href="#tag">宣傳片</a></div>
+      <div class="meta"><span class="avatar xs">R</span>rin · 上週<span class="spacer"></span><a class="heart"><i></i>2</a></div>
+    </article>
+  </div>
+</div>
+</section>
+
+<!-- ============ 個人頁 ============ -->
+<section class="screen" id="s-me">
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="#home">音藏</a>
+  <div class="search"><span class="ico"></span>搜尋藝人、作品、收藏</div>
+  <span class="spacer"></span>
+  <a class="ico-only" aria-label="搜尋"><span class="ico"></span></a>
+  <a class="btn primary" href="#new">炫收藏</a>
+  <span class="avatar">孟</span>
+</div></nav>
+<div class="wrap">
+  <div class="profile">
+    <span class="avatar lg">孟</span>
+    <div>
+      <h1>小孟</h1>
+      <div class="lede">台中，收獨立樂團的實體，卡帶為主。</div>
+      <div class="stats"><span><b>18</b>則分享</span><span><b>41</b>個版本</span></div>
+    </div>
+    <div class="actions" style="margin-left:auto"><a class="btn sm">編輯簡介</a></div>
+  </div>
+  <div class="tabs"><a class="on">炫收藏 18</a><a>我有的版本 41</a><a>喜愛清單</a></div>
+  <div class="grid wall">
+    <article class="card">
+      <div class="ph sq" data-l="照片"></div>
+      <div class="title">夜行採集 台灣首批紙套 CD，跟日版擺一起</div>
+      <div class="tags"><a class="tag who">山線電台</a><a class="tag">首刷</a></div>
+      <div class="meta">今天<span class="spacer"></span><a class="heart"><i></i>12</a></div>
+    </article>
+    <article class="card">
+      <div class="ph sq" data-l="照片"></div>
+      <div class="title">留聲便條 巡演限定卡帶，手寫編號 037</div>
+      <div class="tags"><a class="tag who">空房間</a><a class="tag">卡帶</a></div>
+      <div class="meta">上個月<span class="spacer"></span><a class="heart"><i></i>6</a></div>
+    </article>
+    <article class="card">
+      <div class="ph sq" data-l="照片"></div>
+      <div class="title">2016 台中書店寄賣的自製卡帶，附手繪歌詞</div>
+      <div class="tags"><a class="tag who">山線電台</a><a class="tag">卡帶</a><a class="tag">自製</a></div>
+      <div class="meta">上個月<span class="spacer"></span><a class="heart"><i></i>19</a></div>
+    </article>
+  </div>
+  <div class="note">空狀態（別人的頁或還沒分享時）只有一句：「還沒有炫過收藏」，本人多一顆「炫收藏」按鈕。喜愛清單分頁只有本人看得到。</div>
+</div>
+</section>
+
+<!-- ============ 藝人頁 ============ -->
+<section class="screen" id="s-artist">
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="#home">音藏</a>
+  <div class="search"><span class="ico"></span>搜尋藝人、作品、收藏</div>
+  <span class="spacer"></span>
+  <a class="ico-only" aria-label="搜尋"><span class="ico"></span></a>
+  <a class="btn primary" href="#new">炫收藏</a>
+  <span class="avatar">孟</span>
+</div></nav>
+<div class="wrap">
+  <div class="pagehead">
+    <div class="row">
+      <div>
+        <h1>山線電台</h1>
+        <div class="lede">台中三人樂團，2014 年至今。</div>
+      </div>
+      <div class="actions"><a class="btn sm">編輯</a><a class="btn sm">歷史</a></div>
+    </div>
+    <div class="covers" style="margin-top:24px">
+      <a class="cover" href="#work"><div class="ph sq" data-l="封面"></div><b>夜行採集</b><small>2018 · 專輯 · 2 個版本</small></a>
+      <a class="cover"><div class="ph sq" data-l="封面"></div><b>山線</b><small>2016 · 自製卡帶</small></a>
+      <a class="cover"><div class="ph sq" data-l="封面"></div><b>夜班車</b><small>2015 · 單曲</small></a>
+    </div>
+  </div>
+
+  <div class="two">
+    <div>
+      <div class="section">
+        <div class="prose">
+          <p>2014 年在台中成立，早期以自製卡帶在中部的獨立書店寄賣。2018 年的《夜行採集》是第一張正式專輯，2020 年由日本廠牌 Kanata Records 代理發行，日版加了側標並更換背面的公司資訊。</p>
+          <p>作品環繞山線鐵路沿線的地景與夜班車，主唱兼吉他手曾在台鐵擔任夜班站務。</p>
+        </div>
+        <div class="prose-foot">最後修改：阿澤，2026-09-20 · <a class="textlink">歷史</a></div>
+      </div>
+
+      <div class="section">
+        <div class="section-h"><h2>合作與客串</h2></div>
+        <ul class="list">
+          <li><b>潮汐公路《島嶼低鳴》</b>第 6 首〈北上〉合唱<span class="muted">2022</span></li>
+          <li><b>空房間《留聲便條》</b>全專輯錄音、混音<span class="muted">2017</span></li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <div class="section-h"><h2>合輯收錄</h2></div>
+        <ul class="list">
+          <li><b>2019 金音創作獎入圍合輯</b>收錄〈夜行〉<span class="muted">金音創作獎</span></li>
+          <li><b>大港開唱 2019 現場精選</b>收錄〈山線〉現場版<span class="muted">大港開唱</span></li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <div class="section-h"><h2>獎項</h2></div>
+        <table>
+          <thead><tr><th>年</th><th>獎項</th><th>類別</th><th>結果</th></tr></thead>
+          <tbody>
+            <tr><td>2019</td><td>金音創作獎</td><td>最佳專輯《夜行採集》</td><td>入圍</td></tr>
+            <tr><td>2019</td><td>金音創作獎</td><td>最佳樂團</td><td>入圍</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <div class="section">
+        <div class="section-h"><h2>相關收藏</h2><span class="spacer"></span><a href="#tag">全部 23 則</a></div>
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:16px;padding:0">
+          <article class="card"><div class="ph sq" data-l="照片"></div><div class="title" style="font-size:14px">夜行採集 台灣首批紙套 CD</div><div class="meta">小孟<span class="spacer"></span><a class="heart"><i></i>12</a></div></article>
+          <article class="card"><div class="ph sq" data-l="照片"></div><div class="title" style="font-size:14px">2019 金音獎場刊，第 14 頁專訪</div><div class="meta">安琪<span class="spacer"></span><a class="heart"><i></i>31</a></div></article>
+          <article class="card"><div class="ph sq" data-l="照片"></div><div class="title" style="font-size:14px">2016 自製卡帶，附手繪歌詞</div><div class="meta">小孟<span class="spacer"></span><a class="heart"><i></i>19</a></div></article>
+          <article class="card"><div class="ph sq" data-l="照片"></div><div class="title" style="font-size:14px">大港 2019 演出海報，三人簽名</div><div class="meta">阿哲<span class="spacer"></span><a class="heart"><i></i>8</a></div></article>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ 作品頁 ============ -->
+<section class="screen" id="s-work">
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="#home">音藏</a>
+  <div class="search"><span class="ico"></span>搜尋藝人、作品、收藏</div>
+  <span class="spacer"></span>
+  <a class="ico-only" aria-label="搜尋"><span class="ico"></span></a>
+  <a class="btn primary" href="#new">炫收藏</a>
+  <span class="avatar">孟</span>
+</div></nav>
+<div class="wrap">
+  <div class="pagehead">
+    <div class="row">
+      <div class="ph sq" data-l="封面"></div>
+      <div>
+        <div class="crumb"><a href="#artist">山線電台</a></div>
+        <h1>夜行採集</h1>
+        <div class="lede">2018 · 專輯 · 10 首 · 2 個版本</div>
+        <div class="stats"><span><b>24</b>人有</span><span><b>19</b>人想要</span><span><b>7</b>則炫收藏</span></div>
+      </div>
+      <div class="actions"><a class="btn sm">編輯</a><a class="btn sm">歷史</a></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-h"><h2>版本</h2></div>
+    <div class="cmp-wrap">
+    <table class="cmp">
+      <thead><tr>
+        <th></th>
+        <th id="v1">首批紙套版<small>2018 · 台灣 · CD</small>
+          <div class="vact"><a class="btn sm">我有</a><a class="btn sm">想要</a><span class="muted" style="align-self:center">18 有 · 7 想要</span></div></th>
+        <th id="v2">日版附側標<small>2020 · 日本 · CD</small>
+          <div class="vact"><a class="btn sm">我有</a><a class="btn sm">想要</a><span class="muted" style="align-self:center">6 有 · 12 想要</span></div></th>
+      </tr></thead>
+      <tbody>
+        <tr class="idrow"><td>辨識特徵</td><td>紙套不是塑膠盒。背面左下印「山線自製」，目錄號在紙套背面右下角，字體較小。</td><td>塑膠盒加日文側標。背面公司資訊是 Kanata Records，附日文解說書。</td></tr>
+        <tr class="diff"><td>發行年</td><td>2018</td><td>2020</td></tr>
+        <tr class="diff"><td>地區</td><td>台灣</td><td>日本</td></tr>
+        <tr class="diff"><td>發行公司</td><td>山線自製</td><td>Kanata Records</td></tr>
+        <tr><td>格式</td><td>CD</td><td>CD</td></tr>
+        <tr class="diff"><td>目錄號</td><td class="mono">ML-018-A</td><td class="mono">MLJP-020</td></tr>
+        <tr class="diff"><td>條碼</td><td class="mono">4712345678901</td><td class="mono">4988000123456</td></tr>
+        <tr class="diff"><td>包裝</td><td>紙套</td><td>塑膠盒＋側標</td></tr>
+        <tr class="diff"><td>內容物</td><td>CD、歌詞折頁</td><td>CD、歌詞折頁、日文解說、側標</td></tr>
+        <tr><td>曲目</td><td>10 首</td><td>10 首</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="prose">
+      <p>山線電台首張正式專輯，共十首，錄於台中舊倉庫改建的工作室。2018 年由自家廠牌在台灣首度發行，首批為紙套裝。2020 年日本廠牌 Kanata Records 取得代理後重新壓片，加上側標並更換背面的公司資訊，目錄號也跟著換掉。兩個版本曲目相同。</p>
+      <p>專輯獲 2019 年金音創作獎最佳專輯入圍，〈夜行〉收錄於同屆入圍合輯。</p>
+    </div>
+    <div class="prose-foot">最後修改：阿澤，2026-09-24 · <a class="textlink">歷史</a></div>
+  </div>
+
+  <div class="section">
+    <div class="section-h"><h2>相關炫收藏</h2><span class="spacer"></span><a>全部 7 則</a></div>
+    <div class="grid wall" style="padding-top:0">
+      <article class="card"><div class="ph sq" data-l="照片"></div><div class="title">夜行採集 台灣首批紙套 CD，跟日版擺一起</div><div class="tags"><span class="tag">首批紙套版</span></div><div class="meta"><span class="avatar xs">孟</span>小孟 · 今天<span class="spacer"></span><a class="heart"><i></i>12</a></div></article>
+      <article class="card"><div class="ph sq" data-l="照片"></div><div class="title">日版側標完整，解說書有譯者簽名</div><div class="tags"><span class="tag">日版附側標</span></div><div class="meta"><span class="avatar xs">R</span>rin · 上週<span class="spacer"></span><a class="heart"><i></i>5</a></div></article>
+      <article class="card"><div class="ph sq" data-l="照片"></div><div class="title">首批紙套背面的「山線自製」印刷偏移</div><div class="tags"><span class="tag">首批紙套版</span></div><div class="meta"><span class="avatar xs">哲</span>阿哲 · 上個月<span class="spacer"></span><a class="heart"><i></i>3</a></div></article>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ 炫收藏表單 ============ -->
+<section class="screen" id="s-new">
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="#home">音藏</a>
+  <span class="spacer"></span>
+  <a class="textlink" href="#home">取消</a>
+</div></nav>
+<div class="wrap">
+  <form class="form" onsubmit="return false">
+    <h1 style="margin-bottom:24px">炫收藏</h1>
+    <div class="field">
+      <div class="upload"><div class="ph sq" data-l="照片 1"></div><div class="ph sq" data-l="照片 2"></div><span>＋ 加照片</span></div>
+    </div>
+    <div class="field">
+      <label for="what">這是什麼東西</label>
+      <input class="input" id="what" value="夜行採集 台灣首批紙套 CD，跟日版擺一起">
+    </div>
+    <div class="field">
+      <label for="who">跟誰有關</label>
+      <div class="input tagsin"><span class="tag who">山線電台 ×</span><span>山</span></div>
+      <div class="suggest"><div><b>山線電台</b><small>藝人 · 台中</small></div><div><b>山下達郎</b><small>藝人</small></div><div>「山」當作標籤</div></div>
+    </div>
+    <div class="field">
+      <label for="say">想說的話<small>選填</small></label>
+      <textarea class="input ta" id="say">台灣首批是紙套，日本版多了側標，背面的公司資訊也不一樣。一直以為只是包裝差別，實際擺在一起比才發現目錄號根本不同。</textarea>
+    </div>
+    <div class="field">
+      <label for="tags">其他標籤<small>選填</small></label>
+      <div class="input tagsin"><span class="tag">首刷 ×</span><span>新增標籤</span></div>
+    </div>
+    <div class="formfoot"><button class="btn primary">發布</button><span class="muted">發布後可以再連到作品或版本</span></div>
+  </form>
+</div>
+</section>
+
+<!-- ============ 標籤頁 ============ -->
+<section class="screen" id="s-tag">
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="#home">音藏</a>
+  <div class="search"><span class="ico"></span>搜尋藝人、作品、收藏</div>
+  <span class="spacer"></span>
+  <a class="ico-only" aria-label="搜尋"><span class="ico"></span></a>
+  <a class="btn primary" href="#new">炫收藏</a>
+  <span class="avatar">孟</span>
+</div></nav>
+<div class="wrap">
+  <div class="pagehead">
+    <div class="row">
+      <div>
+        <h1>山線電台</h1>
+        <div class="lede">23 則炫收藏 · <a class="textlink" href="#artist">藝人頁</a></div>
+      </div>
+    </div>
+  </div>
+  <div class="grid wall">
+    <article class="card"><div class="ph sq" data-l="照片"></div><div class="title">夜行採集 台灣首批紙套 CD，跟日版擺一起</div><div class="tags"><span class="tag who">山線電台</span><span class="tag">首刷</span></div><div class="meta"><span class="avatar xs">孟</span>小孟 · 今天<span class="spacer"></span><a class="heart"><i></i>12</a></div></article>
+    <article class="card"><div class="ph sq" data-l="照片"></div><div class="title">2019 金音獎場刊，第 14 頁有山線電台的專訪</div><div class="tags"><span class="tag who">山線電台</span><span class="tag who">金音創作獎</span><span class="tag">場刊</span></div><div class="meta"><span class="avatar xs">安</span>安琪 · 3 天前<span class="spacer"></span><a class="heart on"><i></i>31</a></div></article>
+    <article class="card"><div class="ph sq" data-l="照片"></div><div class="title">2016 台中書店寄賣的自製卡帶，附手繪歌詞</div><div class="tags"><span class="tag who">山線電台</span><span class="tag">卡帶</span></div><div class="meta"><span class="avatar xs">孟</span>小孟 · 上個月<span class="spacer"></span><a class="heart"><i></i>19</a></div></article>
+    <article class="card"><div class="ph sq" data-l="照片"></div><div class="title">大港 2019 演出海報，三人簽名</div><div class="tags"><span class="tag who">山線電台</span><span class="tag">簽名</span><span class="tag">海報</span></div><div class="meta"><span class="avatar xs">哲</span>阿哲 · 上個月<span class="spacer"></span><a class="heart"><i></i>8</a></div></article>
+    <article class="card"><div class="ph sq" data-l="照片"></div><div class="title">日版側標完整，解說書有譯者簽名</div><div class="tags"><span class="tag who">山線電台</span><span class="tag">日版</span></div><div class="meta"><span class="avatar xs">R</span>rin · 上週<span class="spacer"></span><a class="heart"><i></i>5</a></div></article>
+    <article class="card"><div class="ph sq" data-l="照片"></div><div class="title">夜班車單曲 CD-R，2015 年現場限量</div><div class="tags"><span class="tag who">山線電台</span><span class="tag">演唱會戰利品</span></div><div class="meta"><span class="avatar xs">澤</span>阿澤 · 兩個月前<span class="spacer"></span><a class="heart"><i></i>14</a></div></article>
+  </div>
+</div>
+</section>
+
+<script>
+(function(){
+  var map={home:'s-home',me:'s-me',artist:'s-artist',work:'s-work',new:'s-new',tag:'s-tag'};
+  function show(){
+    var k=(location.hash||'#home').slice(1); if(!map[k])k='home';
+    document.querySelectorAll('.screen').forEach(function(s){s.classList.toggle('on',s.id===map[k]);});
+    document.querySelectorAll('.switcher a').forEach(function(a){a.classList.toggle('on',a.dataset.s===k);});
+    window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange',show); show();
+})();
+</script>
+</body>
+</html>
