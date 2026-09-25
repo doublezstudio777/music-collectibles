@@ -1,0 +1,298 @@
+# -*- coding: utf-8 -*-
+# 產生 方向A.html / 方向B.html：同一份排版骨架，只換皮與商品卡
+OUT = "/home/dz/AboutAI/專案/music-collectibles/產出/20260925_視覺提案_黑白橘/"
+
+# 示範資料抄自 網站/lib/data.ts，另加出售狀態（share／offer／sale／sold）
+SHARES = [
+    dict(n=1,  author="小孟", ini="孟", time="今天",   what="夜行採集 台灣首批紙套 CD，跟日版擺一起", kind="CD",  about=["山線電台"], tags=["首刷"], likes=12, state="sale", price=1200,
+         story="台灣首批是紙套，日本版多了側標，背面的公司資訊也不一樣。一直以為只是包裝差別，實際擺在一起比才發現目錄號根本不同。", link="夜行採集 › 首批紙套版"),
+    dict(n=2,  author="阿澤", ini="澤", time="昨天",   what="空房間 2017 巡演限定卡帶，外盒有場次貼紙", kind="卡帶", about=["空房間"], tags=["卡帶","演唱會戰利品"], likes=4, state="share"),
+    dict(n=3,  author="安琪", ini="安", time="3 天前", what="2019 海港音樂祭場刊，第 14 頁有山線電台的專訪", kind="場刊", about=["山線電台","海港音樂祭"], tags=["場刊"], likes=30, state="offer"),
+    dict(n=4,  author="安琪", ini="安", time="4 天前", what="島嶼低鳴 透明海藍膠，缺了內附小海報", kind="黑膠", about=["潮汐公路"], tags=["黑膠"], likes=9, state="share"),
+    dict(n=5,  author="阿哲", ini="哲", time="上週",   what="南方現場 藍光盒裝，簽名在場刊內頁", kind="藍光", about=["雨停以前"], tags=["簽名"], likes=26, state="share"),
+    dict(n=6,  author="rin",  ini="R",  time="上週",   what="凌晨四點 電台宣傳片 PROMO-04", kind="CD-R", about=["微光訊號"], tags=["宣傳片"], likes=2, state="sale", price=2400),
+    dict(n=7,  author="rin",  ini="R",  time="上週",   what="日版側標完整，解說書有譯者簽名", kind="CD", about=["Mountain Radio"], tags=["日版","簽名"], likes=5, state="sold", price=900),
+    dict(n=8,  author="小孟", ini="孟", time="上個月", what="2016 台中書店寄賣的自製卡帶，附手繪歌詞", kind="卡帶", about=["山線電台"], tags=["卡帶","自製"], likes=19, state="offer"),
+    dict(n=9,  author="阿哲", ini="哲", time="上個月", what="海港音樂祭 2019 演出海報，三人簽名", kind="海報", about=["山線電台","海港音樂祭"], tags=["簽名","海報"], likes=8, state="sale", price=1800),
+    dict(n=10, author="小孟", ini="孟", time="上個月", what="海線對話 EP，兩團合體的那張", kind="CD", about=["潮汐公路","山線電台"], tags=[], likes=14, state="share"),
+    dict(n=11, author="阿澤", ini="澤", time="兩個月前", what="海港音樂祭現場精選 CD，側標還在", kind="CD", about=["海港音樂祭"], tags=["合輯"], likes=6, state="sale", price=450),
+    dict(n=12, author="阿哲", ini="哲", time="兩個月前", what="首批紙套背面的「山線自製」印刷偏移", kind="CD", about=["山線電台"], tags=["首刷","印刷差異"], likes=3, state="sold", price=600),
+]
+
+def price_fmt(p):
+    return f"NT$ {p:,}"
+
+def tags_html(s):
+    out = "".join(f'<a class="tag tag-artist" href="#">{a}</a>' for a in s["about"])
+    out += "".join(f'<a class="tag" href="#">{t}</a>' for t in s["tags"])
+    return f'<div class="tags">{out}</div>'
+
+def card(s, variant):
+    st = s["state"]
+    # 同一個槽位放四種狀態；A 放在封面左下（膠囊），B 放在封面下方（文字列）
+    if st == "sale":
+        slot = f'<span class="slot slot-price">{price_fmt(s["price"])}</span>'
+    elif st == "offer":
+        slot = '<span class="slot slot-offer">可出價</span>'
+    elif st == "sold":
+        slot = f'<span class="slot slot-sold">已售出</span><span class="slot slot-soldprice">{price_fmt(s["price"])}</span>'
+    else:
+        slot = ''
+    cover = (f'<a class="cover" href="#" aria-label="{s["what"]}">'
+             f'<span class="ph ph-{s["n"] % 4}"><span class="kind">{s["kind"]}</span></span>'
+             + (f'<span class="slotgroup">{slot}</span>' if variant == "A" and slot else "") + '</a>')
+    body = ('<div class="cbody">'
+            + (f'<div class="pricerow">{slot}</div>' if variant == "B" and slot else "")
+            + f'<a class="title" href="#">{s["what"]}</a>'
+            + tags_html(s)
+            + f'<div class="meta"><span class="avatar">{s["ini"]}</span><span class="name">{s["author"]}</span><span class="time">{s["time"]}</span>'
+            + f'<button class="like" type="button" aria-label="點讚"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 21s-7-4.6-9.3-8.6C.9 9.2 2.4 5.5 6 5.5c2 0 3.2 1.1 4 2.3.8-1.2 2-2.3 4-2.3 3.6 0 5.1 3.7 3.3 6.9C19 16.4 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>{s["likes"]}</button></div>'
+            + '</div>')
+    cls = "card" + (" is-sold" if st == "sold" else "")
+    return f'<article class="{cls}">{cover}{body}</article>'
+
+def grid(items, variant):
+    return '<div class="grid">' + "".join(card(s, variant) for s in items) + '</div>'
+
+NAV = '''<header class="nav"><div class="wrap">
+  <a class="logo" href="#">音藏</a>
+  <form class="search" role="search"><input type="search" placeholder="搜尋藝人、作品、收藏" aria-label="搜尋"><button type="submit" aria-label="搜尋"><svg viewBox="0 0 24 24" width="18" height="18"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2"/></svg></button></form>
+  <a class="btn btn-primary btn-nav" href="#">炫收藏</a>
+  <a class="avatar avatar-nav" href="#" aria-label="小孟">孟</a>
+</div></header>'''
+
+def home(variant):
+    filters = ''.join(f'<a href="#" class="filter{" is-on" if i==0 else ""}">{t}</a>' for i,t in enumerate(["全部","出售中","可出價","純分享"]))
+    pages = ''.join(f'<a href="#" class="page{" is-on" if i==1 else ""}" {"aria-current=page" if i==1 else ""}>{i}</a>' for i in range(1,6))
+    return f'''<main class="home">
+<div class="wrap">
+  <div class="toolbar"><nav class="filters" aria-label="篩選">{filters}</nav>
+    <label class="sort"><select aria-label="排序"><option>最新</option><option>讚數</option><option>價格低到高</option><option>價格高到低</option></select></label></div>
+  {grid(SHARES, variant)}
+  <nav class="pager" aria-label="分頁"><a href="#" class="page page-arrow" aria-label="上一頁">‹</a>{pages}<a href="#" class="page page-arrow" aria-label="下一頁">›</a></nav>
+</div></main>'''
+
+def share_page(variant):
+    s = SHARES[0]
+    related_artist = [x for x in SHARES if "山線電台" in x["about"] and x["n"] != 1][:3]
+    related_tag = [x for x in SHARES if "首刷" in x["tags"] and x["n"] != 1] + [x for x in SHARES if x["n"] in (7,)]
+    related_tag = related_tag[:3]
+    return f'''<main class="share">
+<div class="wrap">
+  <div class="detail">
+    <div class="detail-cover"><span class="ph ph-1 big"><span class="kind">{s["kind"]}</span></span></div>
+    <div class="detail-info">
+      <h1>{s["what"]}</h1>
+      <div class="meta meta-detail"><span class="avatar">{s["ini"]}</span><span class="name">{s["author"]}</span><span class="time">{s["time"]}</span>
+        <button class="like like-lg" type="button" aria-label="點讚"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 21s-7-4.6-9.3-8.6C.9 9.2 2.4 5.5 6 5.5c2 0 3.2 1.1 4 2.3.8-1.2 2-2.3 4-2.3 3.6 0 5.1 3.7 3.3 6.9C19 16.4 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>{s["likes"]}</button></div>
+      <div class="deal">
+        <div class="deal-price"><span class="deal-state">定價出售</span><strong class="price">{price_fmt(s["price"])}</strong><span class="deal-note">含台灣本島運費</span></div>
+        <div class="deal-actions"><a class="btn btn-primary" href="#">我要買</a><a class="btn btn-secondary" href="#">問價</a></div>
+      </div>
+      <p class="story">{s["story"]}</p>
+      {tags_html(s)}
+      <dl class="facts"><dt>作品</dt><dd><a href="#">{s["link"]}</a></dd><dt>狀況</dt><dd>紙套邊角輕微磨損，光碟無刮</dd><dt>寄送</dt><dd>7-11 店到店、郵寄</dd></dl>
+    </div>
+  </div>
+  <section class="related"><h2>也跟山線電台有關</h2>{grid(related_artist, variant)}</section>
+  <section class="related"><h2>也是首刷</h2>{grid(related_tag, variant)}</section>
+</div></main>'''
+
+BASE_CSS = '''
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:15px;line-height:1.65;font-feature-settings:"tnum"}
+a{color:inherit;text-decoration:none}
+button,input,select{font:inherit;color:inherit}
+h1,h2{margin:0;font-weight:700;line-height:1.3}
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+.mono{font-family:var(--font-mono)}
+/* 示意切換列，不是產品的一部分 */
+.demo{position:sticky;top:0;z-index:20;background:#2B2B2B;color:#DDD;font-size:12px;padding:6px 32px;display:flex;gap:16px;align-items:center;font-family:var(--font-mono)}
+.demo span{opacity:.7}
+.demo button{background:none;border:1px solid #555;color:#DDD;padding:3px 10px;cursor:pointer}
+.demo button.is-on{background:#DDD;color:#111;border-color:#DDD}
+/* 導覽列 */
+.nav{border-bottom:1px solid var(--line);background:var(--nav-bg)}
+.nav .wrap{display:flex;align-items:center;gap:20px;height:64px}
+.logo{font-weight:700;font-size:20px;letter-spacing:.02em}
+.search{flex:1;max-width:460px;display:flex;border:1px solid var(--search-line);background:var(--search-bg);height:40px}
+.search input{flex:1;min-width:0;border:0;background:transparent;padding:0 14px;outline:none}
+.search input::placeholder{color:var(--muted)}
+.search button{border:0;background:transparent;width:40px;display:grid;place-items:center;cursor:pointer;color:var(--muted)}
+.nav .btn-nav{margin-left:auto}
+.avatar{display:inline-grid;place-items:center;width:24px;height:24px;background:var(--avatar-bg);color:var(--avatar-fg);font-size:12px;font-weight:600;flex:none}
+.avatar-nav{width:40px;height:40px;font-size:15px}
+/* 按鈕 */
+.btn{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 22px;font-weight:600;font-size:15px;border:1px solid transparent;transition:background .18s cubic-bezier(.22,1,.36,1),color .18s}
+.btn-nav{height:40px;padding:0 18px}
+.btn-primary{background:var(--orange);color:#111;border-color:var(--orange)}
+.btn-primary:hover{background:var(--orange-hover);border-color:var(--orange-hover)}
+.btn-secondary{background:transparent;color:var(--text);border-color:var(--text)}
+.btn-secondary:hover{background:var(--surface)}
+/* 工具列 */
+.toolbar{display:flex;align-items:center;gap:16px;padding:20px 0 16px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.filters{display:flex;gap:4px;overflow-x:auto}
+.filter{padding:8px 14px;font-weight:600;color:var(--muted);white-space:nowrap;border-bottom:2px solid transparent}
+.filter.is-on{color:var(--text);border-bottom-color:var(--orange)}
+.sort{margin-left:auto}
+.sort select{height:36px;border:1px solid var(--line);background:var(--bg);padding:0 10px}
+/* 牆 */
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:36px 28px}
+.card{display:flex;flex-direction:column;min-width:0}
+.cover{display:block;position:relative;aspect-ratio:1/1;overflow:hidden}
+.ph{display:block;width:100%;height:100%;position:relative}
+.ph .kind{position:absolute;right:10px;bottom:8px;font-family:var(--font-mono);font-size:12px;color:var(--ph-fg)}
+.ph-0{background:var(--ph0)}.ph-1{background:var(--ph1)}.ph-2{background:var(--ph2)}.ph-3{background:var(--ph3)}
+.cbody{display:flex;flex-direction:column;gap:8px;padding-top:12px;min-width:0}
+.title{font-weight:600;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:12px;line-height:1;padding:6px 8px;border:1px solid var(--line);color:var(--muted);background:var(--tag-bg)}
+.tag-artist{border-color:var(--text);color:var(--text);font-weight:600}
+.meta{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-top:2px}
+.meta .name{color:var(--text);font-weight:600}
+.like{margin-left:auto;display:inline-flex;align-items:center;gap:5px;min-width:44px;min-height:32px;padding:0 6px;border:0;background:transparent;color:var(--muted);cursor:pointer;font-weight:600}
+.like:hover{color:var(--text)}
+.like-lg{min-height:44px;border:1px solid var(--line);padding:0 14px;font-size:15px}
+/* 狀態槽位 */
+.slot{font-weight:700;font-size:14px;line-height:1;padding:8px 10px;font-variant-numeric:tabular-nums}
+.card.is-sold .cover .ph{opacity:var(--sold-dim)}
+.card.is-sold .title{color:var(--muted)}
+/* 分頁 */
+.pager{display:flex;justify-content:center;gap:4px;padding:48px 0 72px}
+.page{display:grid;place-items:center;min-width:44px;height:44px;padding:0 10px;font-weight:600;font-variant-numeric:tabular-nums;border:1px solid transparent}
+.page:hover{border-color:var(--line)}
+.page.is-on{background:var(--page-on-bg);color:var(--page-on-fg);border-color:var(--page-on-bg)}
+.page-arrow{font-size:20px;color:var(--muted)}
+/* 單則頁 */
+.detail{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:48px;padding:32px 0 64px}
+.detail-cover .ph.big{aspect-ratio:1/1}
+.detail-info{display:flex;flex-direction:column;gap:20px;min-width:0}
+.detail h1{font-size:28px}
+.meta-detail{font-size:14px}
+.deal{border:1px solid var(--line);padding:20px;display:flex;flex-direction:column;gap:16px;background:var(--deal-bg)}
+.deal-price{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.deal-state{font-size:13px;font-weight:600;color:var(--muted)}
+.price{font-size:32px;font-weight:700;line-height:1;color:var(--price-fg);font-variant-numeric:tabular-nums}
+.deal-note{font-size:13px;color:var(--muted)}
+.deal-actions{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:10px}
+.story{margin:0;font-size:16px}
+.facts{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 20px;font-size:14px;border-top:1px solid var(--line);padding-top:16px}
+.facts dt{color:var(--muted)}.facts dd{margin:0}
+.facts a{text-decoration:underline;text-underline-offset:3px}
+.related{padding:8px 0 40px}
+.related h2{font-size:18px;margin-bottom:20px}
+.related .grid{gap:32px 28px}
+@media (max-width:1000px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .detail{grid-template-columns:minmax(0,1fr);gap:24px}
+}
+@media (max-width:700px){
+  .wrap{padding:0 18px}
+  .demo{padding:6px 18px}
+  .nav .wrap{height:56px;gap:12px}
+  .search{flex:0;max-width:none;border:0;background:transparent}
+  .search input{display:none}
+  .search button{color:var(--text)}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 14px}
+  .title{font-size:14px}
+  .tags{display:none}
+  .cbody{gap:6px;padding-top:8px}
+  .meta{font-size:12px;gap:6px}
+  .meta .name,.meta .time{white-space:nowrap}
+  .like{min-width:0;padding:0 2px}
+  .filter{padding:8px 8px;font-size:14px}
+  .sort select{height:32px;padding:0 6px;font-size:14px}
+  .detail h1{font-size:22px}
+  .price{font-size:28px}
+  .deal-actions{grid-template-columns:minmax(0,1fr)}
+  .pager{padding:36px 0 56px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+'''
+
+THEME_A = '''
+:root{
+  --font-sans:"Inter","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --font-mono:"IBM Plex Mono","SFMono-Regular","Menlo",monospace;
+  --bg:#FFFFFF;--surface:#F5F5F5;--surface2:#EDEDED;--line:#DCDCDC;
+  --text:#111111;--muted:#5C5C5C;
+  --orange:#FF6A00;--orange-hover:#E85D00;--orange-text:#B93E0A;
+  --nav-bg:#FFFFFF;--search-line:#111111;--search-bg:#FFFFFF;
+  --avatar-bg:#111111;--avatar-fg:#FFFFFF;--tag-bg:#FFFFFF;
+  --ph0:#E6E6E6;--ph1:#D9D9D9;--ph2:#CFCFCF;--ph3:#E0E0E0;--ph-fg:#5C5C5C;
+  --sold-dim:.45;--page-on-bg:#111111;--page-on-fg:#FFFFFF;
+  --deal-bg:#FFFFFF;--price-fg:#B93E0A;
+}
+/* A：狀態槽位壓在封面左下，價格是橘底黑字膠囊（Mercari 的價格位，換成橘） */
+.slotgroup{position:absolute;left:0;bottom:0;display:flex;align-items:stretch}
+.slot-price{background:var(--orange);color:#111}
+.slot-offer{background:#FFFFFF;color:#111;border:1px solid #111;border-left:0;border-bottom:0}
+.slot-sold{background:#111;color:#FFF}
+.slot-soldprice{background:rgba(255,255,255,.9);color:#5C5C5C;text-decoration:line-through;font-weight:600}
+.card.is-sold .cover .ph{opacity:.45}
+'''
+
+THEME_B = '''
+:root{
+  --font-sans:"Inter","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --font-mono:"IBM Plex Mono","SFMono-Regular","Menlo",monospace;
+  --bg:#111111;--surface:#1A1A1A;--surface2:#262626;--line:#333333;
+  --text:#F5F5F5;--muted:#A6A6A6;
+  --orange:#FF7A1A;--orange-hover:#FF8C1A;--orange-text:#FF7A1A;
+  --nav-bg:#111111;--search-line:#333333;--search-bg:#1A1A1A;
+  --avatar-bg:#F5F5F5;--avatar-fg:#111111;--tag-bg:#1A1A1A;
+  --ph0:#2A2A2A;--ph1:#333333;--ph2:#3D3D3D;--ph3:#2F2F2F;--ph-fg:#A6A6A6;
+  --sold-dim:.35;--page-on-bg:#FF7A1A;--page-on-fg:#111111;
+  --deal-bg:#1A1A1A;--price-fg:#FF7A1A;
+}
+/* B：卡片是一塊 surface 磚，價格是封面下方第一行的橘字，不壓圖 */
+.card{background:var(--surface);border:1px solid var(--line)}
+.cbody{padding:12px 14px 14px}
+.pricerow{display:flex;align-items:baseline;gap:10px;min-height:20px}
+.pricerow .slot{padding:0;font-size:17px}
+.slot-price{color:var(--orange)}
+.slot-offer{color:var(--text);font-size:13px!important;border:1px solid var(--text);padding:5px 8px!important;font-weight:600}
+.slot-sold{color:var(--text);font-size:13px!important;background:var(--surface2);padding:5px 8px!important;font-weight:600}
+.slot-soldprice{color:var(--muted);text-decoration:line-through;font-weight:600;font-size:14px!important}
+.sort select{background:var(--surface)}
+.btn-secondary{border-color:var(--text)}
+.btn-secondary:hover{background:var(--surface2)}
+.like-lg{border-color:var(--line)}
+@media (max-width:700px){.cbody{padding:10px 10px 12px}.pricerow .slot{font-size:15px}}
+'''
+
+def page(variant):
+    theme = THEME_A if variant == "A" else THEME_B
+    name = "方向A 白牆市集" if variant == "A" else "方向B 暗房唱片行"
+    return f'''<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>音藏 視覺示意 {name}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>{theme}{BASE_CSS}</style>
+</head>
+<body>
+<div class="demo"><span>示意 {name}</span><button type="button" class="is-on" data-view="home">首頁</button><button type="button" data-view="share">單則收藏 /share/1</button></div>
+{NAV}
+<div id="view-home">{home(variant)}</div>
+<div id="view-share" hidden>{share_page(variant)}</div>
+<script>
+document.querySelectorAll('.demo button').forEach(b=>b.addEventListener('click',()=>{{
+  document.querySelectorAll('.demo button').forEach(x=>x.classList.toggle('is-on',x===b));
+  document.getElementById('view-home').hidden=b.dataset.view!=='home';
+  document.getElementById('view-share').hidden=b.dataset.view!=='share';
+  window.scrollTo(0,0);
+}}));
+if(location.hash==='#share')document.querySelector('[data-view=share]').click();
+</script>
+</body>
+</html>'''
+
+for v in ("A","B"):
+    open(OUT + f"方向{v}.html", "w", encoding="utf-8").write(page(v))
+print("ok")
