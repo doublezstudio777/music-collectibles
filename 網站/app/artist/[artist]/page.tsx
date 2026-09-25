@@ -1,147 +1,175 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Award, ChevronRight } from "lucide-react";
-import { artists, getArtist, versionsOfWork, worksOfArtist } from "@/lib/data";
+import {
+  compilationsOf,
+  creditNames,
+  getArtist,
+  guestWorksOf,
+  mainWorksOf,
+  sharesWithTag,
+  tagHref,
+  toShareView,
+  workHref,
+} from "@/lib/data";
+import { NextPhase } from "@/components/next-phase";
+import { ShareWall } from "@/components/share-wall";
+import { WorkTile } from "@/components/work-cover";
 
-export function generateStaticParams() {
-  return artists.map((artist) => ({ artist: artist.slug }));
+type Props = { params: Promise<{ artist: string }> };
+
+export async function generateMetadata({ params }: Props) {
+  const a = getArtist((await params).artist);
+  return { title: a ? a.name : "找不到藝人", description: a?.tagline };
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ artist: string }>;
-}) {
-  const { artist: slug } = await params;
-  const artist = getArtist(slug);
-  if (!artist) return { title: "找不到音樂人｜音藏" };
-  return { title: `${artist.name}｜音藏`, description: artist.summary };
-}
-
-export default async function ArtistPage({
-  params,
-}: {
-  params: Promise<{ artist: string }>;
-}) {
-  const { artist: slug } = await params;
-  const artist = getArtist(slug);
+export default async function ArtistPage({ params }: Props) {
+  const artist = getArtist((await params).artist);
   if (!artist) notFound();
 
-  const artistWorks = worksOfArtist(artist.slug);
+  const main = mainWorksOf(artist.slug);
+  const guests = guestWorksOf(artist.slug);
+  const comps = compilationsOf(artist.slug);
+  const related = sharesWithTag(artist.name);
 
   return (
-    <main className="entry-shell">
-      <nav className="breadcrumb" aria-label="麵包屑">
-        <Link href="/work">作品</Link>
-        <ChevronRight aria-hidden="true" />
-        <span aria-current="page">{artist.name}</span>
-      </nav>
+    <main className="wrap page">
+      <header className="page-head head-split">
+        <div>
+          <h1 className="page-title">{artist.name}</h1>
+          <p className="page-meta">
+            {artist.kind === "發行單位" ? (
+              <>
+                發行單位<span className="dot" aria-hidden="true">·</span>
+              </>
+            ) : null}
+            {artist.tagline}
+          </p>
+        </div>
+        <div className="head-actions">
+          <NextPhase label="編輯" />
+          <NextPhase label="歷史" />
+        </div>
+      </header>
 
-      <div className="entry-layout">
-        <article className="entry-body">
-          <header className="entry-head">
-            <h1>{artist.name}</h1>
-            <p className="entry-lede">{artist.summary}</p>
-          </header>
+      {main.length ? (
+        <section className="block">
+          <h2 className="block-title">{artist.kind === "藝人" ? "主要作品" : "發行作品"}</h2>
+          <ul className="tiles">
+            {main.map((w) => (
+              <WorkTile key={`${w.artistSlug}/${w.no}`} work={w} except={artist.slug} />
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
-          <section aria-labelledby="intro-title">
-            <h2 id="intro-title">簡介</h2>
-            <p>{artist.intro}</p>
-          </section>
+      <section className="block prose">
+        {artist.intro.map((p) => (
+          <p key={p.slice(0, 12)}>{p}</p>
+        ))}
+        <p className="edit-line">
+          最後修改：{artist.lastEdit.by}，{artist.lastEdit.date}
+        </p>
+      </section>
 
-          <section aria-labelledby="works-title">
-            <h2 id="works-title">作品</h2>
-            <ul className="artist-work-list">
-              {artistWorks.map((work) => {
-                const count = versionsOfWork(work.slug).length;
-                return (
-                  <li key={work.slug}>
-                    <Link href={`/work/${work.slug}`}>
-                      <span className="artist-work-copy">
-                        <strong>{work.title}</strong>
-                        <small>
-                          {work.firstReleaseYear} · {work.workType} · {count}{" "}
-                          個版本
-                        </small>
-                      </span>
-                      <ChevronRight aria-hidden="true" />
+      {guests.length ? (
+        <section className="block">
+          <h2 className="block-title">合作與客串</h2>
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th>作品</th>
+                <th>署名</th>
+                <th>參與</th>
+                <th className="num-col">年</th>
+              </tr>
+            </thead>
+            <tbody>
+              {guests.map(({ work, role, track }) => (
+                <tr key={`${work.artistSlug}/${work.no}-${track}`}>
+                  <td>
+                    <Link className="link" href={workHref(work)}>
+                      {work.title}
                     </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
+                  </td>
+                  <td>{creditNames(work).map((a) => a.name).join("、")}</td>
+                  <td>
+                    {track} {role}
+                  </td>
+                  <td className="num-col mono">{work.year}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      ) : null}
 
-          {/* 入圍與得獎跟官方合輯收錄分開記，見 00_現況.md */}
-          <section aria-labelledby="awards-title">
-            <h2 id="awards-title">
-              <Award aria-hidden="true" />
-              入圍與得獎
-            </h2>
-            {artist.awards.length ? (
-              <div className="version-table-wrap">
-                <table className="version-table">
-                  <thead>
-                    <tr>
-                      <th scope="col">年份</th>
-                      <th scope="col">獎項</th>
-                      <th scope="col">類別</th>
-                      <th scope="col">結果</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {artist.awards.map((award, index) => (
-                      <tr key={index}>
-                        <td>{award.year}</td>
-                        <td>{award.award}</td>
-                        <td>{award.category}</td>
-                        <td>
-                          <span
-                            className={
-                              award.result === "得獎"
-                                ? "status-chip"
-                                : "status-chip is-pending"
-                            }
-                          >
-                            {award.result}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <p className="section-note">目前沒有收錄的入圍或得獎紀錄。</p>
-            )}
-            <p className="rule-ref">
-              獎項紀錄獨立存在。官方合輯依實際發行建檔，不由入圍名單生成。
-            </p>
-          </section>
-        </article>
+      {comps.length ? (
+        <section className="block">
+          <h2 className="block-title">合輯收錄</h2>
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th>合輯</th>
+                <th>發行</th>
+                <th>收錄</th>
+                <th className="num-col">年</th>
+              </tr>
+            </thead>
+            <tbody>
+              {comps.map(({ work, track }) => (
+                <tr key={`${work.artistSlug}/${work.no}`}>
+                  <td>
+                    <Link className="link" href={workHref(work)}>
+                      {work.title}
+                    </Link>
+                  </td>
+                  <td>{creditNames(work).map((a) => a.name).join("、")}</td>
+                  <td>{track}</td>
+                  <td className="num-col mono">{work.year}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      ) : null}
 
-        <aside className="infobox" aria-label="音樂人資料">
-          <h2 className="infobox-title">{artist.name}</h2>
-          <dl className="infobox-list">
-            <div>
-              <dt>成立年份</dt>
-              <dd>{artist.formedYear}</dd>
-            </div>
-            <div>
-              <dt>所在地</dt>
-              <dd>{artist.origin}</dd>
-            </div>
-            <div>
-              <dt>收錄作品</dt>
-              <dd>{artistWorks.length}</dd>
-            </div>
-            <div>
-              <dt>入圍得獎</dt>
-              <dd>{artist.awards.length}</dd>
-            </div>
-          </dl>
-        </aside>
-      </div>
+      {artist.awards.length ? (
+        <section className="block">
+          <h2 className="block-title">獎項</h2>
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th className="num-col-l">年</th>
+                <th>獎項</th>
+                <th>類別</th>
+                <th>結果</th>
+              </tr>
+            </thead>
+            <tbody>
+              {artist.awards.map((x) => (
+                <tr key={`${x.year}-${x.category}`}>
+                  <td className="mono">{x.year}</td>
+                  <td>{x.award}</td>
+                  <td>{x.category}</td>
+                  <td>{x.result}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      ) : null}
+
+      {related.length ? (
+        <section className="block">
+          <div className="block-head">
+            <h2 className="block-title">相關收藏</h2>
+            <Link className="link" href={tagHref(artist.name)}>
+              全部 {related.length} 則
+            </Link>
+          </div>
+          <ShareWall shares={related.slice(0, 3).map(toShareView)} />
+        </section>
+      ) : null}
     </main>
   );
 }
