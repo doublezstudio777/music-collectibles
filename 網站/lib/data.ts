@@ -13,6 +13,27 @@
 
 export type DataStatus = "已確認" | "待確認" | "有爭議";
 
+export type ArtistGender = "male" | "female" | "group";
+export type ArtistRegion = "domestic" | "overseas";
+export const GENDER_LABEL: Record<ArtistGender, string> = { male: "男歌手", female: "女歌手", group: "團體" };
+export const REGION_LABEL: Record<ArtistRegion, string> = { domestic: "國內", overseas: "國外" };
+
+/*
+ * 物件類型（2026-09-26 定案改點選）：表單、商品卡、單則頁用同一套名字。
+ * 示範資料裡原本自由填的類型，由 normKind 對到這一套；對不到的歸「其他周邊」並保留原字當補充。
+ */
+export const KINDS = ["CD", "黑膠", "卡帶", "藍光／DVD", "毛巾", "T 恤", "海報", "場刊", "其他周邊"] as const;
+export type Kind = (typeof KINDS)[number];
+const KIND_ALIAS: Record<string, Kind> = {
+  "CD-R": "CD", 藍光: "藍光／DVD", "Blu-ray": "藍光／DVD", DVD: "藍光／DVD", T恤: "T 恤",
+};
+export const normKind = (raw: string): { kind: Kind; note?: string } => {
+  if (!raw) return { kind: "其他周邊" };
+  if ((KINDS as readonly string[]).includes(raw)) return { kind: raw as Kind };
+  if (KIND_ALIAS[raw]) return { kind: KIND_ALIAS[raw], note: raw === "CD-R" ? raw : undefined };
+  return { kind: "其他周邊", note: raw };
+};
+
 export type Artist = {
   /** 網址識別碼：英文名或音譯，小寫、連字號 */
   slug: string;
@@ -20,6 +41,10 @@ export type Artist = {
   /** 撞名比對用：英文名、常見寫法 */
   aliases: string[];
   kind: "藝人" | "發行單位";
+  /** 表單分類用：男歌手／女歌手／團體；發行單位不分 */
+  gender?: ArtistGender;
+  /** 表單分類用：國內／國外 */
+  region?: ArtistRegion;
   /** 名字下面那一行定位 */
   tagline: string;
   intro: string[];
@@ -42,11 +67,23 @@ export type Version = {
   tracks: string;
   /** 辨識特徵，比較表第一列 */
   identifyBy: string;
+  /** 正版辨識：逐項特徵，photo 是照片說明（示範用灰色塊代替） */
+  marks?: Mark[];
+  /** 已知仿冒 */
+  fakes?: Fake[];
   status: DataStatus;
   /** 其他人的我有／想要人數 */
   owners: number;
   wanted: number;
   color: string;
+};
+
+export type Mark = { label: string; text: string; photo?: string };
+export type Fake = {
+  name: string;
+  /** 在哪裡出現過 */
+  seen: string;
+  rows: { label: string; genuine: string; fake: string }[];
 };
 
 export type Work = {
@@ -102,6 +139,8 @@ export type Share = {
   image?: string;
   link?: { work: string; version?: string };
   sale?: Sale;
+  /** 發文者同意照片當辨識參考 */
+  refPhoto?: boolean;
 };
 
 export type User = {
@@ -113,6 +152,10 @@ export type User = {
   owned: string[];
   wanted: string[];
   liked: number[];
+  /** 認證帳號才能檢舉 */
+  verified: boolean;
+  /** 追蹤的藝人 slug */
+  follows: string[];
 };
 
 /** 沒有帳號系統前，示範用的登入者 */
@@ -124,6 +167,8 @@ export const artists: Artist[] = [
     name: "山線電台",
     aliases: ["Mountain Radio"],
     kind: "藝人",
+    gender: "group",
+    region: "domestic",
     tagline: "台中三人樂團，2014 年至今",
     intro: [
       "2014 年在台中成立，早期以自製卡帶在中部的獨立書店寄賣。2018 年的《夜行採集》是第一張正式專輯，2020 年由日本廠牌 Kanata Records 代理發行，日版加了側標並更換背面的公司資訊。",
@@ -140,6 +185,8 @@ export const artists: Artist[] = [
     name: "潮汐公路",
     aliases: ["Tide Highway"],
     kind: "藝人",
+    gender: "group",
+    region: "domestic",
     tagline: "台南四人樂團，2016 年至今",
     intro: [
       "2016 年成軍，作品多錄於自家工作室，黑膠發行量少、版本差異大。《島嶼低鳴》的首批透明海藍膠內附小海報，是否每張都有仍在確認。",
@@ -153,6 +200,8 @@ export const artists: Artist[] = [
     name: "空房間",
     aliases: ["Empty Room"],
     kind: "藝人",
+    gender: "male",
+    region: "domestic",
     tagline: "台北創作者，2015 年至今，只在巡演現場賣實體",
     intro: [
       "作品以卡帶為主，多數沒有條碼，靠場次貼紙與手寫編號辨認。",
@@ -165,6 +214,8 @@ export const artists: Artist[] = [
     name: "雨停以前",
     aliases: ["Before Rain Stops"],
     kind: "藝人",
+    gender: "group",
+    region: "domestic",
     tagline: "高雄樂團，2017 年至今，以現場錄音與影像為主",
     intro: ["2021 年的《南方現場》是首次影像發行，首批盒裝附 32 頁場刊，再版移除場刊並改用標準盒。"],
     awards: [],
@@ -175,6 +226,8 @@ export const artists: Artist[] = [
     name: "微光訊號",
     aliases: ["Faint Signal"],
     kind: "藝人",
+    gender: "group",
+    region: "domestic",
     tagline: "台北電子器樂雙人組，2018 年至今",
     intro: ["《凌晨四點》的電台宣傳片從未公開發售，流通量極少。"],
     awards: [],
@@ -189,6 +242,54 @@ export const artists: Artist[] = [
     intro: ["每年發行一張現場精選合輯，場刊另外販售。2019 年場刊第 14 頁收錄山線電台專訪。"],
     awards: [],
     lastEdit: { by: "安琪", date: "2026-09-15" },
+  },
+  {
+    slug: "lin-hsia",
+    name: "林夏",
+    aliases: ["Lin Hsia"],
+    kind: "藝人",
+    gender: "female",
+    region: "domestic",
+    tagline: "花蓮創作歌手，2019 年至今",
+    intro: ["木吉他自彈自唱，實體只做過手工裝訂的 CD 與演出毛巾。"],
+    awards: [],
+    lastEdit: { by: "安琪", date: "2026-09-19" },
+  },
+  {
+    slug: "haruka-mori",
+    name: "森遙",
+    aliases: ["Haruka Mori"],
+    kind: "藝人",
+    gender: "female",
+    region: "overseas",
+    tagline: "大阪創作歌手，2012 年至今",
+    intro: ["台灣代理版與日本原版的側標、歌詞翻譯都不同，常被拿來比對。"],
+    awards: [],
+    lastEdit: { by: "rin", date: "2026-09-17" },
+  },
+  {
+    slug: "kenji-arai",
+    name: "新井健次",
+    aliases: ["Kenji Arai"],
+    kind: "藝人",
+    gender: "male",
+    region: "overseas",
+    tagline: "東京創作歌手，2008 年至今",
+    intro: ["來台巡演三次，每次都有台灣限定的毛巾與海報。"],
+    awards: [],
+    lastEdit: { by: "rin", date: "2026-09-16" },
+  },
+  {
+    slug: "grey-pier",
+    name: "灰色碼頭",
+    aliases: ["Grey Pier"],
+    kind: "藝人",
+    gender: "group",
+    region: "overseas",
+    tagline: "香港四人樂團，2015 年至今",
+    intro: ["黑膠只在香港本地唱片行發售，台灣流通的多是轉賣。"],
+    awards: [],
+    lastEdit: { by: "阿澤", date: "2026-09-14" },
   },
 ];
 
@@ -228,6 +329,11 @@ export const works: Work[] = [
         id: "v1", edition: "首批紙套版", year: "2018", label: "山線自製", catalog: "ML-018-A",
         barcode: "4712345678901", packaging: "紙套", contents: "CD、歌詞折頁", tracks: "10 首",
         identifyBy: "紙套不是塑膠盒。背面左下印「山線自製」，目錄號在紙套背面右下角，字體較小。",
+        marks: [
+          { label: "包裝", text: "紙套，沒有塑膠盒", photo: "紙套正面" },
+          { label: "背面印刷", text: "左下「山線自製」，右下目錄號 ML-018-A，字級比日版小", photo: "紙套背面右下" },
+          { label: "碟面", text: "內圈刻 ML-018-A 與壓片廠代號 TWP", photo: "碟面內圈" },
+        ],
         owners: 17, wanted: 7, color: "#22334D",
       }),
       V({
@@ -235,6 +341,24 @@ export const works: Work[] = [
         catalog: "MLJP-020", barcode: "4988000123456", packaging: "塑膠盒＋側標",
         contents: "CD、歌詞折頁、日文解說、側標", tracks: "10 首",
         identifyBy: "塑膠盒加日文側標。背面公司資訊是 Kanata Records，附日文解說書。側標不見時看背面公司資訊與目錄號。",
+        marks: [
+          { label: "側標", text: "直式日文側標，背面印定價與 MLJP-020", photo: "側標正反面" },
+          { label: "條碼", text: "4988 開頭，印在盒背右下，不在側標上", photo: "盒背條碼" },
+          { label: "解說書", text: "8 頁日文解說，最後一頁有譯者署名" },
+          { label: "碟面", text: "內圈刻 MLJP-020 與日本壓片廠代號", photo: "碟面內圈" },
+        ],
+        fakes: [
+          {
+            name: "仿日版（無解說書）",
+            seen: "2025 年起在海外拍賣與社群二手社團出現",
+            rows: [
+              { label: "側標", genuine: "紙質霧面，背面印定價", fake: "紙質亮面，背面空白" },
+              { label: "條碼", genuine: "盒背右下，4988 開頭", fake: "印在側標上，號碼與台版相同" },
+              { label: "解說書", genuine: "8 頁日文解說", fake: "沒有" },
+              { label: "碟面內圈", genuine: "刻 MLJP-020", fake: "沒有刻字，只有印刷" },
+            ],
+          },
+        ],
         owners: 6, wanted: 11, color: "#4A2C3D",
       }),
       V({
@@ -282,6 +406,22 @@ export const works: Work[] = [
         catalog: "TS-022-LP", barcode: "4712999000123", packaging: "硬紙封套",
         contents: "黑膠、內袋、小海報", tracks: "9 首",
         identifyBy: "膠片透光呈海藍色。內袋右下有「1st press」字樣。",
+        marks: [
+          { label: "膠片", text: "對光看呈海藍色，邊緣透光均勻", photo: "膠片透光" },
+          { label: "內袋", text: "右下角印「1st press」", photo: "內袋右下" },
+          { label: "小海報", text: "A3 對折兩次，背面有錄音室平面圖" },
+        ],
+        fakes: [
+          {
+            name: "仿首批彩膠",
+            seen: "2024 年起在海外購物平台出現，標價比行情低一半",
+            rows: [
+              { label: "膠片顏色", genuine: "海藍，透光均勻", fake: "偏綠，中心混濁" },
+              { label: "內袋", genuine: "右下印「1st press」", fake: "白色素面內袋" },
+              { label: "小海報", genuine: "A3 對折兩次", fake: "A4 單張，沒有平面圖" },
+            ],
+          },
+        ],
         owners: 11, wanted: 20, color: "#1E4B57",
       }),
       V({
@@ -377,6 +517,10 @@ export const works: Work[] = [
         id: "v1", edition: "電台宣傳片", year: "2019", label: "微光訊號", catalog: "PROMO-04",
         packaging: "紙袋", contents: "CD-R", tracks: "4 首",
         identifyBy: "碟面印「PROMO 非賣品」，紙袋無印刷。",
+        marks: [
+          { label: "碟面", text: "印「PROMO 非賣品」，燒錄面偏藍", photo: "碟面" },
+          { label: "紙袋", text: "牛皮紙袋，沒有印刷" },
+        ],
         status: "待確認", owners: 2, wanted: 16, color: "#5A4634",
       }),
     ],
@@ -437,6 +581,7 @@ export const shares: Share[] = [
     image: "/images/fictional-music-collection.jpg",
     link: { work: "mountain-radio/1", version: "v1" },
     sale: { state: "sale", price: 1200 },
+    refPhoto: true,
   },
   {
     n: 2, author: "aze", time: "昨天", order: 110,
@@ -520,6 +665,20 @@ export const shares: Share[] = [
     about: ["山線電台"], tags: ["首刷", "印刷差異"], likes: 3, color: "#22334D",
     link: { work: "mountain-radio/1", version: "v1" },
     sale: { state: "sold", soldPrice: 600, soldTo: "xiaomeng", soldAt: "9 月 18 日" },
+    refPhoto: true,
+  },
+  {
+    n: 90, author: "angie", time: "2 天前", order: 105,
+    what: "林夏 2024 花蓮場演出毛巾", kind: "毛巾",
+    story: "只在花蓮場賣，白底藍字。",
+    about: ["林夏"], tags: ["周邊"], likes: 7, color: "",
+  },
+  {
+    n: 91, author: "rin", time: "5 天前", order: 90,
+    what: "新井健次 台北場限定毛巾，還有吊牌", kind: "毛巾",
+    story: "",
+    about: ["新井健次"], tags: ["周邊", "未拆"], likes: 11, color: "",
+    sale: { state: "sale", price: 650 },
   },
 ];
 /*
@@ -646,30 +805,37 @@ export const users: User[] = [
     owned: ["mountain-radio/1#v1", "mountain-radio/2#v1", "empty-room/1#v1", "tide-highway/2#v1"],
     wanted: ["mountain-radio/1#v2", "tide-highway/1#v1"],
     liked: [3, 5],
+    verified: true,
+    follows: ["mountain-radio", "tide-highway"],
   },
   {
     handle: "aze", name: "阿澤", initials: "澤",
     bio: "卡帶與現場限定，版本資料常在補。",
     owned: ["empty-room/1#v1", "harbor-fest/1#v1", "mountain-radio/1#v1"],
-    wanted: ["mountain-radio/2#v1"], liked: [],
+    wanted: ["mountain-radio/2#v1"], liked: [], verified: true, follows: [],
   },
   {
     handle: "angie", name: "安琪", initials: "安",
     bio: "黑膠與紙本，場刊收了四十幾本。",
     owned: ["tide-highway/1#v1", "harbor-fest/2#v1"],
-    wanted: ["before-rain-stops/1#v1"], liked: [],
+    wanted: ["before-rain-stops/1#v1"], liked: [], verified: true, follows: [],
   },
   {
     handle: "azhe", name: "阿哲", initials: "哲",
     bio: "南部現場，簽名控。",
     owned: ["before-rain-stops/1#v1", "mountain-radio/1#v1"],
-    wanted: [], liked: [],
+    wanted: [], liked: [], verified: false, follows: [],
   },
   {
     handle: "rin", name: "rin", initials: "R",
     bio: "日版與宣傳片。",
     owned: ["mountain-radio/1#v2", "faint-signal/1#v1"],
-    wanted: ["faint-signal/1#v1"], liked: [],
+    wanted: ["faint-signal/1#v1"], liked: [], verified: true, follows: [],
+  },
+  {
+    handle: "kai", name: "阿凱", initials: "凱",
+    bio: "剛加入，還沒完成認證。",
+    owned: [], wanted: [], liked: [], verified: false, follows: [],
   },
 ];
 
