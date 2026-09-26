@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
+import { AuthPanel } from "@/components/auth-panel";
+import { turnstileSiteKey } from "@/lib/server/services";
 
 export const metadata: Metadata = {
   title: { default: "音藏｜樂迷的收藏分享", template: "%s｜音藏" },
@@ -22,6 +24,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <SiteHeader />
         {children}
+        <AuthPanel siteKey={turnstileSiteKey()} />
         <footer className="foot">
           <div className="wrap foot-row">
             <span>音藏</span>

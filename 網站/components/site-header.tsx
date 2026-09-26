@@ -7,12 +7,15 @@ import { Mail, Search } from "lucide-react";
 import { CURRENT_USER, getUser, userHref } from "@/lib/data";
 import { NextPhase } from "@/components/next-phase";
 import { clearFollows, setAccount, useAppState } from "@/lib/state";
+import { logout, openPanel, useAccount } from "@/lib/account";
 
 export function SiteHeader() {
   const pathname = usePathname();
   const menu = useRef<HTMLDetailsElement>(null);
   const { state, verified } = useAppState();
-  const me = getUser(state.account) ?? getUser(CURRENT_USER);
+  const acc = useAccount();
+  // 檢舉示範身分（2b 改成看登入者的 Email 是否已驗證）
+  const demo = getUser(state.account) ?? getUser(CURRENT_USER);
   const other = state.account === CURRENT_USER ? "kai" : CURRENT_USER;
   const unread = state.unread.length > 0;
   const isForm = pathname === "/share/new";
@@ -46,12 +49,20 @@ export function SiteHeader() {
               <Link className="btn btn-p" href="/share/new">
                 炫收藏
               </Link>
+              {acc.status === "loading" ? <span className="ava ava-wait" aria-hidden="true" /> : null}
+              {acc.status === "anon" ? (
+                <button type="button" className="nav-login" onClick={() => openPanel("login")}>
+                  登入
+                </button>
+              ) : null}
+              {acc.status === "user" && acc.me ? (
               <details className="me-menu" ref={menu}>
                 <summary className="ava" aria-label="我的選單">
-                  {me?.initials}
+                  {Array.from(acc.me.name)[0] ?? "我"}
                 </summary>
                 <div className="menu-panel">
-                  <Link href={userHref(CURRENT_USER)} onClick={close}>
+                  <p className="menu-now">{acc.me.name}</p>
+                  <Link href={userHref(acc.me.handle)} onClick={close}>
                     我的頁
                   </Link>
                   <Link href="/me/likes" onClick={close}>
@@ -64,9 +75,9 @@ export function SiteHeader() {
                     管理後台
                   </Link>
                   <NextPhase label="設定" className="menu-item" />
-                  <p className="menu-sep">示範</p>
+                  <p className="menu-sep">檢舉示範身分</p>
                   <p className="menu-now">
-                    {me?.name}
+                    {demo?.name}
                     {verified ? "（已認證）" : "（未認證）"}
                   </p>
                   <button
@@ -84,15 +95,25 @@ export function SiteHeader() {
                     type="button"
                     className="menu-item"
                     onClick={() => {
-                      clearFollows();
+                      void clearFollows();
                       close();
                     }}
                   >
                     清掉追蹤
                   </button>
-                  <NextPhase label="登出" className="menu-item" />
+                  <button
+                    type="button"
+                    className="menu-item"
+                    onClick={() => {
+                      close();
+                      void logout();
+                    }}
+                  >
+                    登出
+                  </button>
                 </div>
               </details>
+              ) : null}
             </div>
           </>
         )}

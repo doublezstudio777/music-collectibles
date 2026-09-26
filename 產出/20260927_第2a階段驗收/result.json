@@ -1,0 +1,502 @@
+{
+  "checks": [
+    {
+      "name": "A 空資料庫套遷移成功",
+      "ok": true,
+      "detail": "['15 commands executed successfully']"
+    },
+    {
+      "name": "A 再跑一次無變更",
+      "ok": true,
+      "detail": "['✅ No migrations to apply!']"
+    },
+    {
+      "name": "A 遷移只建結構、沒有示範資料（users 0 列）",
+      "ok": true,
+      "detail": "['_cf_METADATA', 'd1_migrations', 'email_codes', 'follows', 'holdings', 'likes', 'rate_limits', 'sessions', 'sqlite_sequence', 'users']"
+    },
+    {
+      "name": "B 註冊後進驗證碼步驟、提示已寄出",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B console 拿到 6 位數驗證碼",
+      "ok": true,
+      "detail": "481918"
+    },
+    {
+      "name": "B 驗證後直接登入（導覽列出現頭像）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B 登出後導覽列回到「登入」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B 重新登入成功",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B 單則頁點讚亮起、讚數 +1",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B 藝人頁追蹤亮起",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B 版本「我有」亮起",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B 重新整理後「我有」仍在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B 重新整理後點讚仍在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B 個人頁列出追蹤藝人與我有",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B 喜愛清單有這一則",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B 另一個瀏覽器 context 登入後回到 next 頁，追蹤仍在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B 另一個 context 點讚仍在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B 另一個 context 我有仍在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "C 未登入點讚彈出登入面板、不跳頁",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "C 登入後留在原頁、愛心亮起",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "C 重新整理後仍亮（真的寫進 D1）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "D App 登入回 token（不發 cookie）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "D Bearer 讀 /api/me/state",
+      "ok": true,
+      "detail": "{'liked': [1, 2], 'owned': ['mountain-radio/1#cd-v1'], 'wanted': [], 'follows': ['mountain-radio']}"
+    },
+    {
+      "name": "D Bearer 寫入追蹤",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "D 沒帶 token 回 401 UNAUTHENTICATED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "D cookie 寫入沒帶同站 Origin 擋下（CSRF）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "D 公開個人資料只給我有／想要，不給追蹤與點讚",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "E 錯密碼：顯示「Email 或密碼不對」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "E 未驗證 Email 登入：擋下並轉到驗證碼步驟",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "E 重複註冊：顯示已註冊過",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "E 帳號名重複：409 HANDLE_TAKEN",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "E Turnstile 沒通過（無 token）：400 TURNSTILE_FAILED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "E 驗證碼錯：400 CODE_INVALID",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "E 忘記密碼：寄重設碼→重設成功→舊 token 失效→新密碼可登入",
+      "ok": true,
+      "detail": "(200, '716579', 200, 401, 200)"
+    },
+    {
+      "name": "F 44 個畫面無橫向溢出",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "F console error 0（不含 Turnstile iframe 自己的訊息）",
+      "ok": true,
+      "detail": "{}"
+    }
+  ],
+  "pages": {
+    "訪客_首頁_1440": {
+      "url": "/",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_單則_1440": {
+      "url": "/share/1",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_藝人_1440": {
+      "url": "/artist/mountain-radio",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_系列_1440": {
+      "url": "/artist/mountain-radio/1",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_個人_本人_1440": {
+      "url": "/u/fan434905",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_個人_示範_1440": {
+      "url": "/u/xiaomeng",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_喜愛清單_1440": {
+      "url": "/me/likes",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_登入頁_1440": {
+      "url": "/login",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_表單_未搬_1440": {
+      "url": "/share/new",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_私訊_未搬_1440": {
+      "url": "/messages",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_後台_未搬_1440": {
+      "url": "/admin",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_登入面板_1440": {
+      "url": "/share/1",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_首頁_390": {
+      "url": "/",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_單則_390": {
+      "url": "/share/1",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_藝人_390": {
+      "url": "/artist/mountain-radio",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_系列_390": {
+      "url": "/artist/mountain-radio/1",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_個人_本人_390": {
+      "url": "/u/fan434905",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_個人_示範_390": {
+      "url": "/u/xiaomeng",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_喜愛清單_390": {
+      "url": "/me/likes",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_登入頁_390": {
+      "url": "/login",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_表單_未搬_390": {
+      "url": "/share/new",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_私訊_未搬_390": {
+      "url": "/messages",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_後台_未搬_390": {
+      "url": "/admin",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_登入面板_390": {
+      "url": "/share/1",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_首頁_1440": {
+      "url": "/",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_單則_1440": {
+      "url": "/share/1",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_藝人_1440": {
+      "url": "/artist/mountain-radio",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_系列_1440": {
+      "url": "/artist/mountain-radio/1",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_個人_本人_1440": {
+      "url": "/u/fan434905",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_個人_示範_1440": {
+      "url": "/u/xiaomeng",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_喜愛清單_1440": {
+      "url": "/me/likes",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_表單_未搬_1440": {
+      "url": "/share/new",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_私訊_未搬_1440": {
+      "url": "/messages",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_後台_未搬_1440": {
+      "url": "/admin",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_首頁_390": {
+      "url": "/",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_單則_390": {
+      "url": "/share/1",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_藝人_390": {
+      "url": "/artist/mountain-radio",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_系列_390": {
+      "url": "/artist/mountain-radio/1",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_個人_本人_390": {
+      "url": "/u/fan434905",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_個人_示範_390": {
+      "url": "/u/xiaomeng",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_喜愛清單_390": {
+      "url": "/me/likes",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_表單_未搬_390": {
+      "url": "/share/new",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_私訊_未搬_390": {
+      "url": "/messages",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_後台_未搬_390": {
+      "url": "/admin",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    }
+  },
+  "stamp": "434905",
+  "tables": [
+    "_cf_METADATA",
+    "d1_migrations",
+    "email_codes",
+    "follows",
+    "holdings",
+    "likes",
+    "rate_limits",
+    "sessions",
+    "sqlite_sequence",
+    "users"
+  ],
+  "curl": "curl -H \"Authorization: Bearer <token>\" http://localhost:5173/api/me/state",
+  "turnstile_console": [],
+  "summary": "36/36",
+  "turnstile_fail": {
+    "ok": true,
+    "message": "機器人驗證沒過，重新整理再試一次"
+  },
+  "regression": [
+    {
+      "name": "G 示範帳號（seed）可登入",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G 出價（localStorage）照舊：送出後進私訊、出價訊息在",
+      "ok": true,
+      "detail": "/share/93"
+    },
+    {
+      "name": "G 私訊打字照舊",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G 檢舉示範（小孟已認證）照舊出表單",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G 清掉追蹤改走 API、重新整理後首頁出現熱門藝人",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G 這段沒有 console error",
+      "ok": true,
+      "detail": "[]"
+    }
+  ]
+}

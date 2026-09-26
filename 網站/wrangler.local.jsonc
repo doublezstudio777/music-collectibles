@@ -1,0 +1,15 @@
+// 只給本機遷移與 seed 用（npm run db:migrate:local／db:seed:local）。
+// 不是部署設定：database_id 是 vite.config.ts 用的同一個佔位值，本機 dev 讀同一份 .wrangler/state。
+// 部署時（2c）另建正式設定，雲端 D1 的遷移另外套用。
+{
+  "name": "yinzang-local",
+  "compatibility_date": "2026-05-15",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "site-creator-d1",
+      "database_id": "00000000-0000-4000-8000-000000000000",
+      "migrations_dir": "drizzle"
+    }
+  ]
+}

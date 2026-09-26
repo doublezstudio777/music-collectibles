@@ -25,6 +25,13 @@ const localBindingConfig = {
         },
       ]
     : [],
+  // 本機用 Cloudflare Turnstile 官方測試金鑰（永遠通過）；要測失敗時設
+  // TURNSTILE_SECRET=2x0000000000000000000000000000000AA 再冷啟動。寄信本機一律印在 console。
+  vars: {
+    TURNSTILE_SITE_KEY: process.env.TURNSTILE_SITE_KEY ?? "1x00000000000000000000AA",
+    TURNSTILE_SECRET: process.env.TURNSTILE_SECRET ?? "1x0000000000000000000000000000000AA",
+    MAIL_MODE: process.env.MAIL_MODE ?? "console",
+  },
   r2_buckets: r2
     ? [
         {

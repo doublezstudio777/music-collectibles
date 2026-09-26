@@ -12,3 +12,5 @@
 - 公開列表要「同一人只留最新一筆」時，改 flatMap 抓每條 thread 的最後一則訊息即可，不用改資料層，訊息歷史仍完整保留給私訊頁（2026-09-26）
 - 大改資料結構時先整段重寫資料區塊再用 regex 批次換鍵（版本鍵、連結），比逐處 patch 快；驗收腳本用新 context 跑，不碰使用者 localStorage（2026-09-26）
 - PM 在 repo 施工期間，主對話只 `git add` 指定檔案，禁 `git add -A`（2026-09-26 主對話兩筆 commit 誤夾 PM 未完成的網站程式碼）
+- 驗證碼、寄信內容本機印在 dev server 輸出：dev server 一律導到 scratchpad 的 log 檔，驗收腳本從 log 用 regex 抓碼；有 Turnstile 小框的頁面 networkidle 等不到，settle 加 8 秒上限（2026-09-27）
+- D1 遷移產生後先看 SQL，出現 `__new_` 暫存表＝drizzle 要重建表，違反資料永久保存，退回改設計；「從空資料庫跑」用 `--persist-to` 指到暫存資料夾，不用刪本機 .wrangler/state（2026-09-27）

@@ -1,6 +1,7 @@
-import { redirect } from "next/navigation";
-import { CURRENT_USER, userHref } from "@/lib/data";
+import { MeRedirect } from "@/components/me-redirect";
+
+export const metadata = { title: "我的頁" };
 
 export default function MePage() {
-  redirect(userHref(CURRENT_USER));
+  return <MeRedirect />;
 }

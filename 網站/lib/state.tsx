@@ -1,9 +1,11 @@
 "use client";
 
-// 目前使用者的本機狀態：點讚（＝喜愛清單）、我有、想要、自己發的炫收藏、
-// 出售狀態的變更、出價與私訊。
+// 目前使用者的狀態。
 //
-// 還沒有帳號與資料庫，狀態存在 localStorage，換裝置或清快取就會消失。
+// 第 2a 階段起：點讚（＝喜愛清單）、我有、想要、追蹤存在 D1，經 /api/me/...，
+// 由 lib/account.tsx 管；這裡的 useAppState 把兩邊合起來給元件用，元件寫法不變。
+// 其餘（自己發的炫收藏、出售狀態、出價與私訊、檢舉、申訴、後台門檻）2b 才搬，
+// 暫時照舊存 localStorage，換裝置或清快取就會消失。
 // 第一次開啟時用 data.ts 的示範資料當起點（示範登入者 CURRENT_USER、示範對話）。
 //
 // 點讚與我有／想要分開存：點讚是「留著以後看」，不代表持有。
@@ -15,7 +17,8 @@
 // 用 useSyncExternalStore：伺服器端與第一次渲染都是空狀態，
 // 掛載後訂閱才讀 localStorage，避免 hydration 不一致。
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useMemo, useSyncExternalStore } from "react";
+import { useAccount } from "@/lib/account";
 import {
   appealSeeds,
   CURRENT_USER,
@@ -45,17 +48,13 @@ import {
 
 export type Bucket = "owned" | "wanted";
 
-type Snapshot = {
-  owned: string[];
-  wanted: string[];
-  liked: number[];
+/** 本機（localStorage）那一半 */
+type LocalSnapshot = {
   myShares: ShareView[];
   /** 本機改過的出售狀態，蓋過 data.ts */
   sales: Record<number, Sale>;
   threads: Thread[];
   unread: string[];
-  /** 追蹤的藝人 slug */
-  follows: string[];
   /** 示範：目前用哪個帳號的認證狀態（小孟已認證、阿凱未認證） */
   account: string;
   /** 自己投的檢舉，每個對象一次 */
@@ -69,31 +68,29 @@ type Snapshot = {
   ready: boolean;
 };
 
+/** 元件看到的合併狀態：D1 的點讚、我有、想要、追蹤＋本機其餘 */
+type Snapshot = LocalSnapshot & { owned: string[]; wanted: string[]; liked: number[]; follows: string[] };
+
 const STORAGE_KEY = "yinzang.state.v4";
 const OLD_KEY = "yinzang.state.v3";
-const EMPTY: Snapshot = {
-  owned: [], wanted: [], liked: [], myShares: [], sales: {}, threads: [], unread: [],
-  follows: [], account: CURRENT_USER, reports: [], threshold: DEFAULT_THRESHOLD, appeals: [], decisions: {},
+const EMPTY: LocalSnapshot = {
+  myShares: [], sales: {}, threads: [], unread: [],
+  account: CURRENT_USER, reports: [], threshold: DEFAULT_THRESHOLD, appeals: [], decisions: {},
   ready: false,
 };
 
-let snapshot: Snapshot = EMPTY;
+let snapshot: LocalSnapshot = EMPTY;
 let hydrated = false;
 const listeners = new Set<() => void>();
 
 const emit = () => listeners.forEach((l) => l());
 
-function seed(): Snapshot {
-  const me = getUser(CURRENT_USER);
+function seed(): LocalSnapshot {
   return {
-    owned: me?.owned ?? [],
-    wanted: me?.wanted ?? [],
-    liked: me?.liked ?? [],
     myShares: [],
     sales: {},
     threads: seedThreads,
     unread: UNREAD_SEED,
-    follows: me?.follows ?? [],
     account: CURRENT_USER,
     reports: [],
     threshold: DEFAULT_THRESHOLD,
@@ -109,7 +106,9 @@ function hydrateOnce() {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (raw) {
-      const p = JSON.parse(raw) as Partial<Snapshot>;
+      // v4 舊資料裡的 owned／wanted／liked／follows 不再讀（改存 D1），順手丟掉
+      const { owned: _o, wanted: _w, liked: _l, follows: _f, ...p } = JSON.parse(raw) as Partial<Snapshot>;
+      void [_o, _w, _l, _f];
       snapshot = { ...seed(), ...p, ready: true };
     } else {
       // 上一版（第 1 階段）：出售、私訊、點讚、自己發的搬過來；我有／想要的鍵改成系列層格式，重新從示範資料起算
@@ -117,7 +116,6 @@ function hydrateOnce() {
       const p = old ? (JSON.parse(old) as Partial<Snapshot>) : {};
       snapshot = {
         ...seed(),
-        ...(p.liked ? { liked: p.liked } : {}),
         ...(p.sales ? { sales: p.sales } : {}),
         ...(p.threads ? { threads: p.threads } : {}),
         ...(p.unread ? { unread: p.unread } : {}),
@@ -149,7 +147,7 @@ function persist() {
   }
 }
 
-function commit(next: Snapshot) {
+function commit(next: LocalSnapshot) {
   const prev = snapshot;
   snapshot = next;
   if (!persist()) {
@@ -160,17 +158,7 @@ function commit(next: Snapshot) {
   return true;
 }
 
-function toggleIn<T>(list: T[], item: T) {
-  return list.includes(item) ? list.filter((x) => x !== item) : [...list, item];
-}
-
-export function toggleHolding(bucket: Bucket, key: string) {
-  commit({ ...snapshot, [bucket]: toggleIn(snapshot[bucket], key) });
-}
-
-export function toggleLike(n: number) {
-  commit({ ...snapshot, liked: toggleIn(snapshot.liked, n) });
-}
+export { clearFollows, toggleFollow, toggleHolding, toggleLike } from "@/lib/account";
 
 /** 回傳新分享的流水號；存不進去（容量滿）回傳 null */
 export function addMyShare(draft: Omit<ShareView, "n" | "order" | "local">): number | null {
@@ -252,7 +240,7 @@ function shareForLock(n: number): Pick<ShareView, "n" | "link" | "local"> | unde
 
 function isLockedShare(n: number): boolean {
   const s = shareForLock(n);
-  return s ? Boolean(lockOfShare(snapshot, s)) : false;
+  return s ? Boolean(lockOfShare({ ...snapshot, owned: [], wanted: [], liked: [], follows: [] }, s)) : false;
 }
 
 /** 買家出價或按「我要買」：結構化訊息，回傳對話 id */
@@ -341,10 +329,22 @@ export function markRead(tid: string) {
 }
 
 export function useAppState() {
-  const state = useSyncExternalStore(
+  const local = useSyncExternalStore(
     subscribe,
     () => snapshot,
     () => EMPTY,
+  );
+  const acc = useAccount();
+  const state: Snapshot = useMemo(
+    () => ({
+      ...local,
+      liked: acc.liked,
+      owned: acc.owned,
+      wanted: acc.wanted,
+      follows: acc.follows,
+      ready: local.ready && acc.status !== "loading",
+    }),
+    [local, acc],
   );
   const liked = useCallback((n: number) => state.liked.includes(n), [state]);
   const holds = useCallback((b: Bucket, key: string) => state[b].includes(key), [state]);
@@ -353,17 +353,6 @@ export function useAppState() {
   const follows = useCallback((slug: string) => state.follows.includes(slug), [state]);
   const verified = Boolean(getUser(state.account)?.verified);
   return { state, liked, holds, saleOf, follows, verified, ready: state.ready };
-}
-
-/* ---------- 追蹤 ---------- */
-
-export function toggleFollow(slug: string) {
-  commit({ ...snapshot, follows: toggleIn(snapshot.follows, slug) });
-}
-
-/** 示範：清掉追蹤，看沒追蹤任何藝人的首頁 */
-export function clearFollows() {
-  commit({ ...snapshot, follows: [] });
 }
 
 /* ---------- 示範帳號 ---------- */

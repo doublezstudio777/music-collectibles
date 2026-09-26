@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { HoldingView } from "@/lib/data";
 import { useAppState } from "@/lib/state";
+import { useIsSelf } from "@/components/self-only";
 
 function Table({ rows }: { rows: HoldingView[] }) {
   return (
@@ -43,24 +44,24 @@ function Table({ rows }: { rows: HoldingView[] }) {
   );
 }
 
-/** 個人頁的我有／想要，兩者都公開。本人的清單讀本機狀態，別人讀示範資料 */
+/** 個人頁的我有／想要，兩者都公開。本人看自己時跟著按鈕即時變，別人看讀伺服器給的清單 */
 export function HoldingsList({
-  isSelf,
+  handle,
   owned,
   wanted,
   catalog,
 }: {
-  isSelf: boolean;
+  handle: string;
   owned: string[];
   wanted: string[];
   catalog: HoldingView[];
 }) {
   const { state, ready } = useAppState();
-  if (isSelf && !ready) return null;
+  const { isSelf } = useIsSelf(handle);
   const pick = (keys: string[]) =>
     keys.map((k) => catalog.find((c) => c.key === k)).filter((x): x is HoldingView => Boolean(x));
-  const ownRows = pick(isSelf ? state.owned : owned);
-  const wantRows = pick(isSelf ? state.wanted : wanted);
+  const ownRows = pick(isSelf && ready ? state.owned : owned);
+  const wantRows = pick(isSelf && ready ? state.wanted : wanted);
 
   return (
     <>
