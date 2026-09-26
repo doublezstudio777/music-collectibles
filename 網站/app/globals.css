@@ -790,3 +790,4 @@ a.pg:hover { border-color: var(--line); }
   .fake-photos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .appeal-st { margin-left: 0; }
 }
+.form > .check { margin-bottom: 12px; }
