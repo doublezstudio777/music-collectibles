@@ -7,7 +7,24 @@ import { lockOfShare, useAppState } from "@/lib/state";
 import { ShareCard } from "@/components/share-card";
 import { FollowButton } from "@/components/follow-button";
 
-type Scope = { all: true } | { tag: string } | { author: string } | { none: true };
+type Scope =
+  | { all: true }
+  | { tag: string }
+  | { author: string }
+  | { none: true }
+  /** 同系列（任何品項、版本） */
+  | { series: string }
+  /** 同品項，鍵＝itemKey：`{發行方}/{流水號}#{品項}` */
+  | { item: string }
+  /** 同品項但版本未定（沒選版本） */
+  | { itemLoose: string }
+  /** 同版本，鍵＝versionKey：`{發行方}/{流水號}#{品項}-{版本}` */
+  | { version: string };
+
+const shareItemKey = (s: Pick<ShareView, "link">) =>
+  s.link?.seriesKey && s.link.itemId ? `${s.link.seriesKey}#${s.link.itemId}` : undefined;
+const shareVersionKey = (s: Pick<ShareView, "link">) =>
+  s.link?.seriesKey && s.link.itemId && s.link.versionId ? `${s.link.seriesKey}#${s.link.itemId}-${s.link.versionId}` : undefined;
 
 /** 首頁以炫收藏為主：排序在前，「只看在賣」是次要開關 */
 export type WallFilter = "all" | "selling";
@@ -150,6 +167,10 @@ export function ShareWall({
     if ("all" in scope) return true;
     if ("tag" in scope) return shareHasTag(s, scope.tag);
     if ("author" in scope) return scope.author === CURRENT_USER;
+    if ("series" in scope) return s.link?.seriesKey === scope.series;
+    if ("item" in scope) return shareItemKey(s) === scope.item;
+    if ("itemLoose" in scope) return !s.link?.versionId && shareItemKey(s) === scope.itemLoose;
+    if ("version" in scope) return shareVersionKey(s) === scope.version;
     return false;
   });
 
@@ -243,5 +264,21 @@ export function ShareWall({
       )}
       {paged && !waiting ? <Pager page={current} total={totalPages} query={{ sort, filter }} /> : null}
     </div>
+  );
+}
+
+/**
+ * 系列頁「不確定版本」區塊：伺服器給的清單＋本機同品項沒選版本的炫收藏。
+ * 兩邊都空才整塊不出現（本機那份要等 client 掛載才知道，所以這塊本身要是 client component）。
+ */
+export function ItemLooseWall({ itemScopeKey, shares }: { itemScopeKey: string; shares: ShareView[] }) {
+  const { state } = useAppState();
+  const hasMine = state.myShares.some((s) => !s.link?.versionId && shareItemKey(s) === itemScopeKey);
+  if (shares.length === 0 && !hasMine) return null;
+  return (
+    <section className="ver-block">
+      <h3 className="ver-title">不確定版本</h3>
+      <ShareWall shares={shares} scope={{ itemLoose: itemScopeKey }} />
+    </section>
   );
 }

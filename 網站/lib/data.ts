@@ -1302,11 +1302,13 @@ export const search = (query: string) => {
  * 不放「同一位會員的其他收藏」；會員本人的其他則不排除也不優先。
  * 最多兩塊、每塊三張；來源不足三則的整塊不出現，不拿別的來源湊數。
  */
-export type RelatedBlock = { title: string; href: string; total: number; items: Share[] };
+/** scope 給 <ShareWall> 疊本機的 myShares 用，欄位跟 components/share-wall.tsx 的 Scope 對齊 */
+export type RelatedScope = { series: string } | { tag: string };
+export type RelatedBlock = { title: string; href: string; total: number; items: Share[]; scope: RelatedScope };
 
 export const relatedFor = (share: Share): RelatedBlock[] => {
   const others = shares.filter((s) => s.n !== share.n).sort((a, b) => b.order - a.order);
-  const sources: { title: string; href: string; match: (s: Share) => boolean }[] = [];
+  const sources: { title: string; href: string; match: (s: Share) => boolean; scope: RelatedScope }[] = [];
 
   const series = share.link ? getSeriesByKey(share.link.series) : undefined;
   if (series) {
@@ -1314,6 +1316,7 @@ export const relatedFor = (share: Share): RelatedBlock[] => {
       title: `${series.name}的其他收藏`,
       href: seriesHref(series),
       match: (s) => s.link?.series === share.link?.series,
+      scope: { series: seriesKey(series) },
     });
   }
   const artistsFirst = [...share.about, ...share.tags].filter((t) => resolveTagArtist(t));
@@ -1323,7 +1326,7 @@ export const relatedFor = (share: Share): RelatedBlock[] => {
     if (seen.has(key)) continue;
     seen.add(key);
     const name = resolveTagArtist(t)?.name ?? t;
-    sources.push({ title: `跟${name}有關的其他收藏`, href: tagHref(name), match: (s) => shareHasTag(s, t) });
+    sources.push({ title: `跟${name}有關的其他收藏`, href: tagHref(name), match: (s) => shareHasTag(s, t), scope: { tag: name } });
   }
 
   const used = new Set<number>();
@@ -1335,7 +1338,7 @@ export const relatedFor = (share: Share): RelatedBlock[] => {
     if (fresh.length < 3) continue;
     const items = fresh.slice(0, 3);
     items.forEach((s) => used.add(s.n));
-    blocks.push({ title: src.title, href: src.href, total: all.length, items });
+    blocks.push({ title: src.title, href: src.href, total: all.length, items, scope: src.scope });
   }
   return blocks;
 };

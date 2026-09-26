@@ -20,12 +20,14 @@ import {
   appealSeeds,
   CURRENT_USER,
   DEFAULT_THRESHOLD,
+  getShare,
   getUser,
   lockLabel,
   parentTargets,
   seedReportCount,
   shareTarget,
   targetLevel,
+  toShareView,
   type Appeal,
   type ReportReason,
   type TargetKey,
@@ -238,9 +240,25 @@ export function setSale(n: number, next: Sale, before: Sale) {
   });
 }
 
+/**
+ * 出價／我要買／接受／撤回前都要擋鎖定，跟單則頁同一個判斷來源 lockOfShare，
+ * 不能只靠畫面藏按鈕（私訊頁可能漏擋，這裡是最後一道）。
+ */
+function shareForLock(n: number): Pick<ShareView, "n" | "link" | "local"> | undefined {
+  const s = getShare(n);
+  if (s) return toShareView(s);
+  return snapshot.myShares.find((x) => x.n === n);
+}
+
+function isLockedShare(n: number): boolean {
+  const s = shareForLock(n);
+  return s ? Boolean(lockOfShare(snapshot, s)) : false;
+}
+
 /** 買家出價或按「我要買」：結構化訊息，回傳對話 id */
 export function sendOffer(n: number, kind: OfferKind, price: number) {
   const tid = threadId(n, CURRENT_USER);
+  if (isLockedShare(n)) return tid;
   const msg: Message = { id: newId(tid), from: CURRENT_USER, time: now(), offer: { kind, price, status: "open" } };
   commit({
     ...snapshot,
@@ -277,6 +295,7 @@ export function respondOffer(tid: string, msgId: string, answer: "accepted" | "r
   const t = snapshot.threads.find((x) => x.id === tid);
   const m = t?.messages.find((x) => x.id === msgId);
   if (!t || !m?.offer) return;
+  if (isLockedShare(t.n)) return;
   const line = `賣家${answer === "accepted" ? "接受" : "拒絕"}了 ${priceText(m.offer.price)}`;
   let list = setOfferStatus(snapshot.threads, msgId, answer);
   list = list.map((x) => (x.id === tid ? { ...x, messages: [...x.messages, sys(tid, line)] } : x));
@@ -288,6 +307,7 @@ export function withdrawOffer(tid: string, msgId: string) {
   const t = snapshot.threads.find((x) => x.id === tid);
   const m = t?.messages.find((x) => x.id === msgId);
   if (!t || !m?.offer || m.from !== CURRENT_USER || m.offer.status !== "open") return;
+  if (isLockedShare(t.n)) return;
   const line = `買家撤回了 ${priceText(m.offer.price)}`;
   let list = setOfferStatus(snapshot.threads, msgId, "withdrawn");
   list = list.map((x) => (x.id === tid ? { ...x, messages: [...x.messages, sys(tid, line)] } : x));

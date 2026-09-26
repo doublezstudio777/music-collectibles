@@ -14,7 +14,7 @@ import {
   type ShareView,
   type Thread,
 } from "@/lib/data";
-import { markRead, respondOffer, sendOffer, sendText, useAppState, withdrawOffer } from "@/lib/state";
+import { lockOfShare, markRead, respondOffer, sendOffer, sendText, useAppState, withdrawOffer } from "@/lib/state";
 import { Photo } from "@/components/share-card";
 import { MoneyInput, parsePrice } from "@/components/share-detail";
 
@@ -41,10 +41,12 @@ function OfferBubble({
   msg,
   row,
   sale,
+  frozen,
 }: {
   msg: Message;
   row: Row;
   sale: Sale;
+  frozen: boolean;
 }) {
   const o = msg.offer!;
   const mine = msg.from === CURRENT_USER;
@@ -68,7 +70,7 @@ function OfferBubble({
       <span className={`offer-status${o.status === "sold" ? " is-deal" : o.status === "accepted" ? " is-ok" : ""}`}>
         {status}
       </span>
-      {row.iAmSeller && !closed && o.status === "open" ? (
+      {row.iAmSeller && !closed && !frozen && o.status === "open" ? (
         <div className="offer-acts">
           <button type="button" className="btn btn-line" onClick={() => respondOffer(row.thread.id, msg.id, "accepted")}>
             接受
@@ -78,26 +80,29 @@ function OfferBubble({
           </button>
         </div>
       ) : null}
-      {row.iAmSeller && !closed && o.status === "accepted" ? (
+      {row.iAmSeller && !closed && !frozen && o.status === "accepted" ? (
         <Link className="btn btn-text" href={shareHref(row.share.n)}>
           去單則頁成交
         </Link>
       ) : null}
-      {!row.iAmSeller && mine && !closed && o.status === "open" ? (
+      {!row.iAmSeller && mine && !closed && !frozen && o.status === "open" ? (
         <div className="offer-acts">
           <button type="button" className="btn btn-line" onClick={() => withdrawOffer(row.thread.id, msg.id)}>
             撤回
           </button>
         </div>
       ) : null}
+      {frozen && o.status === "open" ? <span className="offer-frozen-note">交易暫停</span> : null}
       <time>{msg.time}</time>
     </div>
   );
 }
 
 function Conversation({ row }: { row: Row }) {
-  const { saleOf } = useAppState();
+  const { state, saleOf } = useAppState();
   const sale = saleOf(row.share);
+  const lock = lockOfShare(state, row.share);
+  const frozen = Boolean(lock) && sale.state !== "sold";
   const [text, setText] = useState("");
   const [offering, setOffering] = useState(false);
   const [amount, setAmount] = useState("");
@@ -160,7 +165,7 @@ function Conversation({ row }: { row: Row }) {
               {m.text} · {m.time}
             </p>
           ) : m.offer ? (
-            <OfferBubble key={m.id} msg={m} row={row} sale={sale} />
+            <OfferBubble key={m.id} msg={m} row={row} sale={sale} frozen={frozen} />
           ) : (
             <div key={m.id} className={`msg${m.from === CURRENT_USER ? " mine" : ""}`}>
               <p>{m.text}</p>
@@ -170,7 +175,8 @@ function Conversation({ row }: { row: Row }) {
         )}
       </div>
       <div className="composer">
-        {!iAmSeller && sale.state === "offer" ? (
+        {frozen ? <p className="msg-sys">交易暫停</p> : null}
+        {!frozen && !iAmSeller && sale.state === "offer" ? (
           offering ? (
             <div className="composer-offer">
               <MoneyInput id="convo-offer" value={amount} onChange={setAmount} label="出價金額" />
@@ -190,7 +196,7 @@ function Conversation({ row }: { row: Row }) {
             </div>
           )
         ) : null}
-        {!iAmSeller && sale.state === "sale" && !hasBuy ? (
+        {!frozen && !iAmSeller && sale.state === "sale" && !hasBuy ? (
           <div>
             <button type="button" className="btn btn-line" onClick={() => sendOffer(share.n, "buy", sale.price ?? 0)}>
               我要買 {priceText(sale.price ?? 0)}

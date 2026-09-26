@@ -169,7 +169,7 @@ export default async function ArtistPage({ params }: Props) {
               全部 {related.length} 則
             </Link>
           </div>
-          <ShareWall shares={related.slice(0, 3).map(toShareView)} />
+          <ShareWall shares={related.slice(0, 3).map(toShareView)} scope={{ tag: artist.name }} />
         </section>
       ) : null}
     </main>

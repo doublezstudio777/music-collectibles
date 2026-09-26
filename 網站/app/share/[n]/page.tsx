@@ -37,7 +37,7 @@ export default async function SharePage({ params }: Props) {
               全部 {b.total} 則
             </Link>
           </div>
-          <ShareWall shares={b.items.map(toShareView)} />
+          <ShareWall shares={b.items.map(toShareView)} scope={b.scope} />
         </section>
       ))}
     </main>

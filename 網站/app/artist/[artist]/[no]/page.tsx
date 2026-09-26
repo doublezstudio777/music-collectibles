@@ -21,7 +21,7 @@ import {
 import { HoldingButtons } from "@/components/holding-buttons";
 import { NextPhase } from "@/components/next-phase";
 import { LockBanner, ReportBox } from "@/components/report";
-import { ShareWall } from "@/components/share-wall";
+import { ItemLooseWall, ShareWall } from "@/components/share-wall";
 
 type Props = { params: Promise<{ artist: string; no: string }> };
 
@@ -213,7 +213,11 @@ function VersionBlock({ series, item, v, related }: { series: Series; item: Item
       <h4 className="sub-title">
         炫收藏<span className="count">{list.length}</span>
       </h4>
-      <ShareWall shares={list.map(toShareView)} empty={<p className="empty">還沒有人炫過這個版本</p>} />
+      <ShareWall
+        shares={list.map(toShareView)}
+        scope={{ version: versionKey(series, item, v) }}
+        empty={<p className="empty">還沒有人炫過這個版本</p>}
+      />
       <ReportBox target={versionTarget(vkey)} label="檢舉這個版本" />
     </section>
   );
@@ -294,12 +298,7 @@ export default async function SeriesPage({ params }: Props) {
             {it.versions.map((v) => (
               <VersionBlock key={v.id} series={series} item={it} v={v} related={inItem} />
             ))}
-            {loose.length ? (
-              <section className="ver-block">
-                <h3 className="ver-title">不確定版本</h3>
-                <ShareWall shares={loose.map(toShareView)} />
-              </section>
-            ) : null}
+            <ItemLooseWall itemScopeKey={itemKey(series, it)} shares={loose.map(toShareView)} />
             <ReportBox target={itemTarget(itemKey(series, it))} label={`檢舉這個品項（${it.kind}）`} />
           </section>
         );
