@@ -32,7 +32,7 @@ export function SiteHeader() {
         ) : (
           <>
             <form className="nav-search" action="/search" role="search">
-              <input name="q" className="input" placeholder="搜尋藝人、作品、收藏" aria-label="搜尋藝人、作品、收藏" />
+              <input name="q" className="input" placeholder="搜尋藝人、系列、收藏" aria-label="搜尋藝人、系列、收藏" />
             </form>
             <div className="nav-right">
               <Link className="nav-icon" href="/search" aria-label="搜尋">

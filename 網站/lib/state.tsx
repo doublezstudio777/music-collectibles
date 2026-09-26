@@ -9,13 +9,27 @@
 // 點讚與我有／想要分開存：點讚是「留著以後看」，不代表持有。
 // 錢貨不經過平台：成交只是賣家把這則標成已售出，之後雙方自己約。
 //
+// 第 1.5 階段加：追蹤藝人、示範帳號切換（認證／未認證）、檢舉、申訴、管理後台的門檻與裁決。
+// 檢舉數＝data.ts 的示範計數＋自己這一票；達門檻就鎖，管理者裁決「解鎖」優先於門檻。
+//
 // 用 useSyncExternalStore：伺服器端與第一次渲染都是空狀態，
 // 掛載後訂閱才讀 localStorage，避免 hydration 不一致。
 
 import { useCallback, useSyncExternalStore } from "react";
 import {
+  appealSeeds,
   CURRENT_USER,
+  DEFAULT_THRESHOLD,
   getUser,
+  lockLabel,
+  parentTargets,
+  seedReportCount,
+  shareTarget,
+  targetLevel,
+  type Appeal,
+  type ReportReason,
+  type TargetKey,
+  type TargetLevel,
   priceText,
   threads as seedThreads,
   UNREAD_SEED,
@@ -38,13 +52,27 @@ type Snapshot = {
   sales: Record<number, Sale>;
   threads: Thread[];
   unread: string[];
+  /** 追蹤的藝人 slug */
+  follows: string[];
+  /** 示範：目前用哪個帳號的認證狀態（小孟已認證、阿凱未認證） */
+  account: string;
+  /** 自己投的檢舉，每個對象一次 */
+  reports: { target: TargetKey; reason: ReportReason; note: string }[];
+  /** 管理後台：檢舉門檻 */
+  threshold: number;
+  /** 申訴（示範資料＋自己送的） */
+  appeals: Appeal[];
+  /** 管理者裁決：解鎖優先於門檻，維持鎖定則不看門檻 */
+  decisions: Partial<Record<TargetKey, "unlocked" | "kept">>;
   ready: boolean;
 };
 
-const STORAGE_KEY = "yinzang.state.v3";
-const OLD_KEY = "yinzang.state.v2";
+const STORAGE_KEY = "yinzang.state.v4";
+const OLD_KEY = "yinzang.state.v3";
 const EMPTY: Snapshot = {
-  owned: [], wanted: [], liked: [], myShares: [], sales: {}, threads: [], unread: [], ready: false,
+  owned: [], wanted: [], liked: [], myShares: [], sales: {}, threads: [], unread: [],
+  follows: [], account: CURRENT_USER, reports: [], threshold: DEFAULT_THRESHOLD, appeals: [], decisions: {},
+  ready: false,
 };
 
 let snapshot: Snapshot = EMPTY;
@@ -63,6 +91,12 @@ function seed(): Snapshot {
     sales: {},
     threads: seedThreads,
     unread: UNREAD_SEED,
+    follows: me?.follows ?? [],
+    account: CURRENT_USER,
+    reports: [],
+    threshold: DEFAULT_THRESHOLD,
+    appeals: appealSeeds,
+    decisions: {},
     ready: true,
   };
 }
@@ -76,15 +110,16 @@ function hydrateOnce() {
       const p = JSON.parse(raw) as Partial<Snapshot>;
       snapshot = { ...seed(), ...p, ready: true };
     } else {
-      // 上一版只存點讚、我有、想要、自己發的，搬過來，其餘用示範資料
+      // 上一版（第 1 階段）：出售、私訊、點讚、自己發的搬過來；我有／想要的鍵改成系列層格式，重新從示範資料起算
       const old = window.localStorage.getItem(OLD_KEY);
       const p = old ? (JSON.parse(old) as Partial<Snapshot>) : {};
       snapshot = {
         ...seed(),
-        ...(p.owned ? { owned: p.owned } : {}),
-        ...(p.wanted ? { wanted: p.wanted } : {}),
         ...(p.liked ? { liked: p.liked } : {}),
-        myShares: (p.myShares ?? []).map((s) => ({ ...s, sale: s.sale ?? { state: "share" } })),
+        ...(p.sales ? { sales: p.sales } : {}),
+        ...(p.threads ? { threads: p.threads } : {}),
+        ...(p.unread ? { unread: p.unread } : {}),
+        myShares: (p.myShares ?? []).map((s) => ({ ...s, kind: s.kind || "其他周邊", sale: s.sale ?? { state: "share" } })),
       };
     }
   } catch {
@@ -295,5 +330,84 @@ export function useAppState() {
   const holds = useCallback((b: Bucket, key: string) => state[b].includes(key), [state]);
   /** 這則現在的出售狀態：本機改過的優先 */
   const saleOf = useCallback((s: Pick<ShareView, "n" | "sale">): Sale => state.sales[s.n] ?? s.sale, [state]);
-  return { state, liked, holds, saleOf, ready: state.ready };
+  const follows = useCallback((slug: string) => state.follows.includes(slug), [state]);
+  const verified = Boolean(getUser(state.account)?.verified);
+  return { state, liked, holds, saleOf, follows, verified, ready: state.ready };
+}
+
+/* ---------- 追蹤 ---------- */
+
+export function toggleFollow(slug: string) {
+  commit({ ...snapshot, follows: toggleIn(snapshot.follows, slug) });
+}
+
+/** 示範：清掉追蹤，看沒追蹤任何藝人的首頁 */
+export function clearFollows() {
+  commit({ ...snapshot, follows: [] });
+}
+
+/* ---------- 示範帳號 ---------- */
+
+export function setAccount(handle: string) {
+  commit({ ...snapshot, account: handle });
+}
+
+/* ---------- 檢舉、鎖定、申訴 ---------- */
+
+export function report(target: TargetKey, reason: ReportReason, note: string) {
+  if (snapshot.reports.some((r) => r.target === target)) return;
+  if (!getUser(snapshot.account)?.verified) return;
+  commit({ ...snapshot, reports: [...snapshot.reports, { target, reason, note: note.trim() }] });
+}
+
+export function submitAppeal(target: TargetKey, text: string, photos: string[]) {
+  const appeal: Appeal = {
+    id: `local-${Date.now().toString(36)}`,
+    target,
+    by: CURRENT_USER,
+    time: "剛剛",
+    text: text.trim(),
+    photos,
+    status: "pending",
+  };
+  return commit({ ...snapshot, appeals: [appeal, ...snapshot.appeals] });
+}
+
+export function decideAppeal(id: string, decision: "unlocked" | "kept") {
+  const a = snapshot.appeals.find((x) => x.id === id);
+  if (!a) return;
+  commit({
+    ...snapshot,
+    appeals: snapshot.appeals.map((x) => (x.id === id ? { ...x, status: decision } : x)),
+    decisions: { ...snapshot.decisions, [a.target]: decision },
+  });
+}
+
+export function setThreshold(n: number) {
+  if (!Number.isInteger(n) || n < 1) return;
+  commit({ ...snapshot, threshold: n });
+}
+
+export type TargetState = { count: number; locked: boolean; mine: boolean; decision?: "unlocked" | "kept" };
+
+export function targetState(state: Snapshot, t: TargetKey): TargetState {
+  const mine = state.reports.some((r) => r.target === t);
+  const count = seedReportCount(t) + (mine ? 1 : 0);
+  const decision = state.decisions[t];
+  const locked = !state.ready ? false : decision === "unlocked" ? false : decision === "kept" ? true : count >= state.threshold;
+  return { count, locked, mine, decision };
+}
+
+export type Lock = { target: TargetKey; level: TargetLevel; label: string };
+
+/** 這則收藏是否被鎖：品項、版本被鎖的優先顯示，其次這則本身 */
+export function lockOfShare(state: Snapshot, s: Pick<ShareView, "n" | "link" | "local">): Lock | null {
+  const targets: TargetKey[] = [...parentTargets(s.link), ...(s.local ? [] : [shareTarget(s.n)])];
+  const hit = targets.find((t) => targetState(state, t).locked);
+  return hit ? { target: hit, level: targetLevel(hit), label: lockLabel(targetLevel(hit)) } : null;
+}
+
+export function useLock(s: Pick<ShareView, "n" | "link" | "local">) {
+  const { state } = useAppState();
+  return lockOfShare(state, s);
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { artistHref, creditNames, search, toShareView, workHref } from "@/lib/data";
+import { artistHref, creditNames, search, toShareView, seriesHref } from "@/lib/data";
 import { ShareWall } from "@/components/share-wall";
 
 type Props = { searchParams: Promise<{ q?: string | string[] }> };
@@ -14,19 +14,19 @@ export default async function SearchPage({ searchParams }: Props) {
   const raw = (await searchParams).q;
   const q = (Array.isArray(raw) ? raw[0] : raw)?.trim() ?? "";
   const r = search(q);
-  const total = r.artists.length + r.works.length + r.shares.length;
+  const total = r.artists.length + r.series.length + r.shares.length;
 
   return (
     <main className="wrap page">
       <form className="page-search" action="/search" role="search">
-        <input name="q" className="input" defaultValue={q} placeholder="搜尋藝人、作品、收藏" aria-label="搜尋藝人、作品、收藏" />
+        <input name="q" className="input" defaultValue={q} placeholder="搜尋藝人、系列、收藏" aria-label="搜尋藝人、系列、收藏" />
         <button className="btn btn-p" type="submit">
           搜尋
         </button>
       </form>
 
       <header className="page-head">
-        <h1 className="page-title">{q ? `「${q}」` : "全部作品"}</h1>
+        <h1 className="page-title">{q ? `「${q}」` : "全部系列"}</h1>
         {q ? (
           <p className="page-meta">
             <span className="num">{total}</span> 筆
@@ -57,21 +57,21 @@ export default async function SearchPage({ searchParams }: Props) {
         </section>
       ) : null}
 
-      {r.works.length ? (
+      {r.series.length ? (
         <section className="block">
           <h2 className="block-title">
-            作品 <span className="count">{r.works.length}</span>
+            系列 <span className="count">{r.series.length}</span>
           </h2>
           <ul className="rows">
-            {r.works.map((w) => (
+            {r.series.map((w) => (
               <li key={`${w.artistSlug}/${w.no}`} className="row-cover">
                 <span className="cover cover-sm" aria-hidden="true" />
                 <span>
-                  <Link className="link row-main" href={workHref(w)}>
-                    {w.title}
+                  <Link className="link row-main" href={seriesHref(w)}>
+                    {w.name}
                   </Link>
                   <span className="sub">
-                    {creditNames(w).map((a) => a.name).join("、")} · {w.year} · {w.workType} · {w.versions.length} 個版本
+                    {creditNames(w).map((a) => a.name).join("、")} · {w.items.map((i) => i.kind).join("・")}
                   </span>
                 </span>
               </li>

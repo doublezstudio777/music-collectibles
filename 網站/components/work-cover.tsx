@@ -1,18 +1,16 @@
 import Link from "next/link";
-import { creditNames, workHref, type Work } from "@/lib/data";
+import { creditNames, seriesHref, type Series } from "@/lib/data";
 
-/** 作品封面：純色塊，沒有真封面前不畫假圖 */
-export function WorkTile({ work, except }: { work: Work; except?: string }) {
-  const others = creditNames(work).filter((a) => a.slug !== except);
+/** 系列封面：純色塊，沒有真封面前不畫假圖 */
+export function SeriesTile({ series, except }: { series: Series; except?: string }) {
+  const others = creditNames(series).filter((a) => a.slug !== except);
   return (
     <li className="tile">
-      <Link href={workHref(work)} className="tile-link">
+      <Link href={seriesHref(series)} className="tile-link">
         <span className="cover" aria-hidden="true" />
-        <span className="tile-title">{work.title}</span>
+        <span className="tile-title">{series.name}</span>
       </Link>
-      <span className="sub">
-        {work.year} · {work.workType} · {work.versions.length} 個版本
-      </span>
+      <span className="sub">{series.items.map((i) => i.kind).join("・")}</span>
       {others.length && except ? <span className="sub">與{others.map((a) => a.name).join("、")}共同署名</span> : null}
     </li>
   );

@@ -12,7 +12,7 @@ function Table({ rows }: { rows: HoldingView[] }) {
           <th className="col-cover">
             <span className="sr-only">封面</span>
           </th>
-          <th>作品</th>
+          <th>系列</th>
           <th>版本</th>
           <th className="hide-md">格式</th>
           <th className="hide-md">目錄號</th>

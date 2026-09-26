@@ -4,16 +4,17 @@ import {
   compilationsOf,
   creditNames,
   getArtist,
-  guestWorksOf,
-  mainWorksOf,
+  guestSeriesOf,
+  mainSeriesOf,
   sharesWithTag,
   tagHref,
   toShareView,
-  workHref,
+  seriesHref,
 } from "@/lib/data";
+import { FollowButton } from "@/components/follow-button";
 import { NextPhase } from "@/components/next-phase";
 import { ShareWall } from "@/components/share-wall";
-import { WorkTile } from "@/components/work-cover";
+import { SeriesTile } from "@/components/work-cover";
 
 type Props = { params: Promise<{ artist: string }> };
 
@@ -26,8 +27,8 @@ export default async function ArtistPage({ params }: Props) {
   const artist = getArtist((await params).artist);
   if (!artist) notFound();
 
-  const main = mainWorksOf(artist.slug);
-  const guests = guestWorksOf(artist.slug);
+  const main = mainSeriesOf(artist.slug);
+  const guests = guestSeriesOf(artist.slug);
   const comps = compilationsOf(artist.slug);
   const related = sharesWithTag(artist.name);
 
@@ -46,6 +47,7 @@ export default async function ArtistPage({ params }: Props) {
           </p>
         </div>
         <div className="head-actions">
+          <FollowButton slug={artist.slug} name={artist.name} />
           <NextPhase label="編輯" />
           <NextPhase label="歷史" />
         </div>
@@ -53,10 +55,10 @@ export default async function ArtistPage({ params }: Props) {
 
       {main.length ? (
         <section className="block">
-          <h2 className="block-title">{artist.kind === "藝人" ? "主要作品" : "發行作品"}</h2>
+          <h2 className="block-title">系列</h2>
           <ul className="tiles">
             {main.map((w) => (
-              <WorkTile key={`${w.artistSlug}/${w.no}`} work={w} except={artist.slug} />
+              <SeriesTile key={`${w.artistSlug}/${w.no}`} series={w} except={artist.slug} />
             ))}
           </ul>
         </section>
@@ -77,18 +79,18 @@ export default async function ArtistPage({ params }: Props) {
           <table className="tbl">
             <thead>
               <tr>
-                <th>作品</th>
+                <th>系列</th>
                 <th>署名</th>
                 <th>參與</th>
                 <th className="num-col">年</th>
               </tr>
             </thead>
             <tbody>
-              {guests.map(({ work, role, track }) => (
+              {guests.map(({ series: work, role, track }) => (
                 <tr key={`${work.artistSlug}/${work.no}-${track}`}>
                   <td>
-                    <Link className="link" href={workHref(work)}>
-                      {work.title}
+                    <Link className="link" href={seriesHref(work)}>
+                      {work.name}
                     </Link>
                   </td>
                   <td>{creditNames(work).map((a) => a.name).join("、")}</td>
@@ -109,18 +111,18 @@ export default async function ArtistPage({ params }: Props) {
           <table className="tbl">
             <thead>
               <tr>
-                <th>合輯</th>
+                <th>系列</th>
                 <th>發行</th>
                 <th>收錄</th>
                 <th className="num-col">年</th>
               </tr>
             </thead>
             <tbody>
-              {comps.map(({ work, track }) => (
+              {comps.map(({ series: work, track }) => (
                 <tr key={`${work.artistSlug}/${work.no}`}>
                   <td>
-                    <Link className="link" href={workHref(work)}>
-                      {work.title}
+                    <Link className="link" href={seriesHref(work)}>
+                      {work.name}
                     </Link>
                   </td>
                   <td>{creditNames(work).map((a) => a.name).join("、")}</td>

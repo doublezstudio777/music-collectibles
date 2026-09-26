@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/site-header";
 
 export const metadata: Metadata = {
   title: { default: "音藏｜樂迷的收藏分享", template: "%s｜音藏" },
-  description: "看樂迷收了什麼、炫自己的收藏，沿著藝人、作品、版本與標籤找下去。",
+  description: "看樂迷收了什麼、炫自己的收藏，沿著藝人、系列、版本與標籤找下去。",
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
 };
 
