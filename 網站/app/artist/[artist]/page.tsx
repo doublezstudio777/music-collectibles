@@ -1,16 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import {
-  compilationsOf,
-  creditNames,
-  getArtist,
-  guestSeriesOf,
-  mainSeriesOf,
-  sharesWithTag,
-  tagHref,
-  toShareView,
-  seriesHref,
-} from "@/lib/data";
+import { seriesHref, tagHref } from "@/lib/data";
+import { pageData } from "@/lib/server/viewer";
 import { FollowButton } from "@/components/follow-button";
 import { NextPhase } from "@/components/next-phase";
 import { ShareWall } from "@/components/share-wall";
@@ -19,18 +10,20 @@ import { SeriesTile } from "@/components/work-cover";
 type Props = { params: Promise<{ artist: string }> };
 
 export async function generateMetadata({ params }: Props) {
-  const a = getArtist((await params).artist);
+  const { c } = await pageData();
+  const a = c.getArtist((await params).artist);
   return { title: a ? a.name : "找不到藝人", description: a?.tagline };
 }
 
 export default async function ArtistPage({ params }: Props) {
-  const artist = getArtist((await params).artist);
+  const { c } = await pageData();
+  const artist = c.getArtist((await params).artist);
   if (!artist) notFound();
 
-  const main = mainSeriesOf(artist.slug);
-  const guests = guestSeriesOf(artist.slug);
-  const comps = compilationsOf(artist.slug);
-  const related = sharesWithTag(artist.name);
+  const main = c.mainSeriesOf(artist.slug);
+  const guests = c.guestSeriesOf(artist.slug);
+  const comps = c.compilationsOf(artist.slug);
+  const related = c.sharesWithTag(artist.name);
 
   return (
     <main className="wrap page">
@@ -58,20 +51,36 @@ export default async function ArtistPage({ params }: Props) {
           <h2 className="block-title">系列</h2>
           <ul className="tiles">
             {main.map((w) => (
-              <SeriesTile key={`${w.artistSlug}/${w.no}`} series={w} except={artist.slug} />
+              <SeriesTile key={`${w.artistSlug}/${w.no}`} series={w} credits={c.creditNames(w)} except={artist.slug} />
             ))}
           </ul>
         </section>
       ) : null}
 
-      <section className="block prose">
-        {artist.intro.map((p) => (
-          <p key={p.slice(0, 12)}>{p}</p>
-        ))}
-        <p className="edit-line">
-          最後修改：{artist.lastEdit.by}，{artist.lastEdit.date}
-        </p>
-      </section>
+      {artist.intro.length ? (
+        <section className="block prose">
+          {artist.intro.map((p) => (
+            <p key={p.slice(0, 12)}>{p}</p>
+          ))}
+          {artist.wiki ? (
+            <p className="edit-line" data-testid="wiki-credit">
+              來源：
+              <a className="link" href={artist.wiki.url} rel="noopener" target="_blank">
+                維基百科
+              </a>
+              ，以{" "}
+              <a className="link" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh-hant" rel="license noopener" target="_blank">
+                {artist.wiki.license}
+              </a>{" "}
+              授權
+            </p>
+          ) : (
+            <p className="edit-line">
+              最後修改：{artist.lastEdit.by}，{artist.lastEdit.date}
+            </p>
+          )}
+        </section>
+      ) : null}
 
       {guests.length ? (
         <section className="block">
@@ -93,7 +102,7 @@ export default async function ArtistPage({ params }: Props) {
                       {work.name}
                     </Link>
                   </td>
-                  <td>{creditNames(work).map((a) => a.name).join("、")}</td>
+                  <td>{c.creditNames(work).map((a) => a.name).join("、")}</td>
                   <td>
                     {track} {role}
                   </td>
@@ -125,7 +134,7 @@ export default async function ArtistPage({ params }: Props) {
                       {work.name}
                     </Link>
                   </td>
-                  <td>{creditNames(work).map((a) => a.name).join("、")}</td>
+                  <td>{c.creditNames(work).map((a) => a.name).join("、")}</td>
                   <td>{track}</td>
                   <td className="num-col mono">{work.year}</td>
                 </tr>
@@ -169,7 +178,7 @@ export default async function ArtistPage({ params }: Props) {
               全部 {related.length} 則
             </Link>
           </div>
-          <ShareWall shares={related.slice(0, 3).map(toShareView)} scope={{ tag: artist.name }} />
+          <ShareWall shares={related.slice(0, 3).map(c.toShareView)} />
         </section>
       ) : null}
     </main>

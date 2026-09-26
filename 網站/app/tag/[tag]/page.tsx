@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { artistHref, resolveTagArtist, sharesWithTag, toShareView } from "@/lib/data";
+import { artistHref } from "@/lib/data";
+import { pageData } from "@/lib/server/viewer";
 import { ShareWall } from "@/components/share-wall";
 
 type Props = { params: Promise<{ tag: string }> };
@@ -19,8 +20,9 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function TagPage({ params }: Props) {
   const tag = decode((await params).tag);
-  const artist = resolveTagArtist(tag);
-  const list = sharesWithTag(tag).map(toShareView);
+  const { c } = await pageData();
+  const artist = c.resolveTagArtist(tag);
+  const list = c.sharesWithTag(tag).map(c.toShareView);
 
   return (
     <main className="wrap page">
@@ -38,7 +40,7 @@ export default async function TagPage({ params }: Props) {
           ) : null}
         </p>
       </header>
-      <ShareWall shares={list} scope={{ tag }} empty={<p className="empty">還沒有人用過這個標籤</p>} />
+      <ShareWall shares={list} empty={<p className="empty">還沒有人用過這個標籤</p>} />
     </main>
   );
 }

@@ -1,0 +1,752 @@
+{
+  "checks": [
+    {
+      "name": "0 三個真帳號＋管理員登入",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1 作者是登入的 A（不是小孟）",
+      "ok": true,
+      "detail": "xK_NaqQF2VM8D0xq"
+    },
+    {
+      "name": "1 系列＋品項＋版本、開放出價寫進 D1",
+      "ok": true,
+      "detail": "{'author_id': 'xK_NaqQF2VM8D0xq', 'sale_state': 'offer', 'series_key': 'mountain-radio/1', 'r2_key': 'p/FLV0BCAsQi_Hazh1.webp', 'thumb_key': 'p/FLV0BCAsQi_Hazh1_t.webp', 'bytes': 4444, 'width': 1600, 'height': 1067, 'content_type': 'image/webp'}"
+    },
+    {
+      "name": "1 照片轉 WebP、長邊 ≤1600",
+      "ok": true,
+      "detail": "1600x1067 4444B（原檔 3000x2000 94629B）"
+    },
+    {
+      "name": "1 照片走網站路徑＋快取標頭",
+      "ok": true,
+      "detail": "{'vary': 'RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Next-Url, X-Vinext-Interception-Context, X-Vinext-Mounted-Slots, X-Vinext-Rsc-Render-Mode', 'cache-control': 'public, max-age=31536000, immutable', 'content-type': 'image/webp', 'etag': '\"a9fdb8b6295a5e08623ed233ca13f858\"', 'transfer-encoding': 'chunked', 'Date': 'Sat, 26 Sep 2026 15:55:14 GMT', 'Connection'"
+    },
+    {
+      "name": "1 另產縮圖（長邊 480）",
+      "ok": true,
+      "detail": "(480, 320)"
+    },
+    {
+      "name": "1 首頁（最新）看得到",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1 系列頁看得到",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "10 瀏覽器 localStorage 沒有音藏的鍵",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "2 B 出價 500",
+      "ok": true,
+      "detail": "{'ok': True, 'result': 18}"
+    },
+    {
+      "name": "2 A 拒絕",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "2 B 再出價 800（同一條對話）",
+      "ok": true,
+      "detail": "(16, 17)"
+    },
+    {
+      "name": "3 越權：B 不能替 A 接受出價",
+      "ok": true,
+      "detail": "{'error': {'code': 'FORBIDDEN', 'message': '只有這則的作者可以這樣做'}}"
+    },
+    {
+      "name": "3 越權：B 不能改 A 的收藏",
+      "ok": true,
+      "detail": "{'error': {'code': 'FORBIDDEN', 'message': '只有這則的作者可以這樣做'}}"
+    },
+    {
+      "name": "3 越權：B 不能替 A 成交、A 不能對自己出價",
+      "ok": true,
+      "detail": "(403, 403)"
+    },
+    {
+      "name": "2 還沒接受不能成交",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "2 A 接受 800",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "2 成交 → 已售出（成交價 800、成交對象 B）",
+      "ok": true,
+      "detail": "{'sale_state': 'sold', 'sold_price': 800, 'sold_to': 'c-u2dht-TRSrGN57'}"
+    },
+    {
+      "name": "3 越權：B 不能把 A 的改回出售中",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "2 A 改回出售中（回到開放出價）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "2 私訊裡有系統訊息（拒絕、接受、成交、改回）",
+      "ok": true,
+      "detail": "['賣家拒絕了 NT$ 500', '賣家接受了 NT$ 800', '已成交 NT$ 800', '賣家改回出售中']"
+    },
+    {
+      "name": "5 私訊雙方可讀寫、第三人讀不到",
+      "ok": true,
+      "detail": "(200, 404)"
+    },
+    {
+      "name": "4 格式錯誤被拒（415）",
+      "ok": true,
+      "detail": "{'error': {'code': 'BAD_FORMAT', 'message': '只收 WebP 或 JPEG 照片'}}"
+    },
+    {
+      "name": "4 PNG 被拒（只收 WebP／JPEG）",
+      "ok": true,
+      "detail": "{'error': {'code': 'BAD_FORMAT', 'message': '只收 WebP 或 JPEG 照片'}}"
+    },
+    {
+      "name": "4 超過單檔大小被拒（413）",
+      "ok": true,
+      "detail": "{'error': {'code': 'TOO_LARGE', 'message': '照片太大，換一張再試'}}"
+    },
+    {
+      "name": "4 每人每日 30 張上限（第 31 張 429）",
+      "ok": true,
+      "detail": "(30, 429, {'error': {'code': 'DAILY_LIMIT', 'message': '今天已經上傳 30 張，明天再來'}})"
+    },
+    {
+      "name": "4 累計 8GB 邊界（剩 100 位元組）上傳被拒",
+      "ok": true,
+      "detail": "{'error': {'code': 'STORAGE_FULL', 'message': '上傳暫停'}}"
+    },
+    {
+      "name": "4 容量滿時 /api/uploads 回 paused",
+      "ok": true,
+      "detail": "{'paused': True}"
+    },
+    {
+      "name": "4 表單顯示一行「上傳暫停」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "4 剛好 8GB 也拒絕",
+      "ok": true,
+      "detail": "{'error': {'code': 'STORAGE_FULL', 'message': '上傳暫停'}}"
+    },
+    {
+      "name": "4 還原累計值後可上傳",
+      "ok": true,
+      "detail": "{'id': 'rImNLn3RjxSJBhrP', 'url': '/img/p/rImNLn3RjxSJBhrP.webp', 'thumbUrl': '/img/p/rImNLn3RjxSJBhrP_t.webp'}"
+    },
+    {
+      "name": "7 管理員把門檻調成 2（寫進 settings）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "6 不能檢舉自己的收藏",
+      "ok": true,
+      "detail": "{'error': {'code': 'FORBIDDEN', 'message': '不能檢舉自己的收藏'}}"
+    },
+    {
+      "name": "6 Email 未驗證不能檢舉",
+      "ok": true,
+      "detail": "{'error': {'code': 'NOT_VERIFIED', 'message': '認證後才能檢舉'}}"
+    },
+    {
+      "name": "6 一人一次（重複 409）",
+      "ok": true,
+      "detail": "{'error': {'code': 'ALREADY_REPORTED', 'message': '已經檢舉過了'}}"
+    },
+    {
+      "name": "6 檢舉不存在的對象 404",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "6 未達門檻時還能出價",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "6 第 2 人檢舉 → 計數 2（資料庫）",
+      "ok": true,
+      "detail": "{'count': 2}"
+    },
+    {
+      "name": "6 達門檻鎖定：出價被擋（423）",
+      "ok": true,
+      "detail": "{'error': {'code': 'LOCKED', 'message': '多人檢舉：疑似盜版，交易暫停'}}"
+    },
+    {
+      "name": "6 鎖定時賣家也不能接受（同一個判斷）",
+      "ok": true,
+      "detail": "{'error': {'code': 'LOCKED', 'message': '多人檢舉：疑似盜版，交易暫停'}}"
+    },
+    {
+      "name": "6 鎖定時不能改定價",
+      "ok": true,
+      "detail": "{'error': {'code': 'LOCKED', 'message': '多人檢舉：疑似盜版，交易暫停'}}"
+    },
+    {
+      "name": "6 單則頁顯示鎖定＋交易暫停",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "6 A 申訴 → 審核中",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "6 不是發文者不能申訴",
+      "ok": true,
+      "detail": "{'error': {'code': 'FORBIDDEN', 'message': '只有被鎖的收藏的發文者可以申訴'}}"
+    },
+    {
+      "name": "7 非管理員打 /api/admin 被擋（403／401）",
+      "ok": true,
+      "detail": "(403, 401)"
+    },
+    {
+      "name": "7 非管理員進 /admin 頁面被擋",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "7 非管理員選單沒有「管理後台」",
+      "ok": true,
+      "detail": "['我的頁', '喜愛清單', '私訊', '設定']"
+    },
+    {
+      "name": "7 後台看得到申訴與鎖定",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "7 解鎖寫進資料庫＋操作紀錄",
+      "ok": true,
+      "detail": "([{'decision': 'unlocked'}], [{'action': '解鎖', 'target': 'share:99'}, {'action': '調整檢舉門檻', 'target': 'report_threshold'}, {'action': '核准新增', 'target': 'version:20'}, {'action': '核准新增', 'target': 'item:15'}, {'action': '核准新增', 'target': 'series:10'}])"
+    },
+    {
+      "name": "7 調門檻也有操作紀錄",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "6 解鎖後 B 又能出價",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "8 新增系列送出後是待審核、表單看不到",
+      "ok": true,
+      "detail": "{'type': 'series', 'key': 'mountain-radio/4'}"
+    },
+    {
+      "name": "8 新增品項、藝人也是待審核",
+      "ok": true,
+      "detail": "({'type': 'item', 'key': 'mountain-radio/1#towel2'}, {'type': 'artist', 'key': 'verify-artist-438097'})"
+    },
+    {
+      "name": "8 管理員核准後才出現（系列、品項＋版本、藝人）",
+      "ok": true,
+      "detail": "(True, True, True)"
+    },
+    {
+      "name": "8 核准有操作紀錄",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "9 同一個 Email 每小時 5 次（第 6 次 429）",
+      "ok": true,
+      "detail": "[200, 200, 200, 200, 200, 429, 429]"
+    },
+    {
+      "name": "9 同一個 IP 每小時 10 次（第 11 次 429）",
+      "ok": true,
+      "detail": "[200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 429, 429]"
+    },
+    {
+      "name": "10 點讚／我有／追蹤不存在的對象 404",
+      "ok": true,
+      "detail": "(404, 404, 404)"
+    },
+    {
+      "name": "10 讚數＝資料庫實際計數",
+      "ok": true,
+      "detail": "(0, 2, 2)"
+    },
+    {
+      "name": "10 持有人數＝資料庫實際計數（訪客看）",
+      "ok": true,
+      "detail": "('5', 5)"
+    },
+    {
+      "name": "11 改顯示名稱",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "11 刪除帳號確認流程（只記申請，帳號照常可用）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "11 改密碼（舊密碼錯擋下、對了成功）",
+      "ok": true,
+      "detail": "{'error': {'code': 'WRONG_PASSWORD', 'message': '目前的密碼不對'}}"
+    },
+    {
+      "name": "11 改密碼後這個裝置保持登入、其他裝置登出",
+      "ok": true,
+      "detail": "(200, False)"
+    },
+    {
+      "name": "11 登出所有裝置",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "12 64 個畫面無橫向溢出",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "12 console error 0（不含 Turnstile iframe）",
+      "ok": true,
+      "detail": "{}"
+    },
+    {
+      "name": "12 管理員後台 1440 無溢出",
+      "ok": true,
+      "detail": "(1440, 1440)"
+    },
+    {
+      "name": "12 管理員後台 390 無溢出",
+      "ok": true,
+      "detail": "(390, 390)"
+    }
+  ],
+  "pages": {
+    "訪客_首頁_1440": {
+      "url": "/",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_首頁_最新_1440": {
+      "url": "/?sort=new",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_單則_新發_1440": {
+      "url": "/share/99",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_單則_鎖定_1440": {
+      "url": "/share/8",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_藝人_1440": {
+      "url": "/artist/mountain-radio",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_藝人_維基_1440": {
+      "url": "/artist/elephant-gym",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_系列_1440": {
+      "url": "/artist/mountain-radio/1",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_標籤_1440": {
+      "url": "/tag/%E5%B1%B1%E7%B7%9A%E9%9B%BB%E5%8F%B0",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_搜尋_1440": {
+      "url": "/search?q=%E5%A4%9C",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_個人_1440": {
+      "url": "/u/a438097",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_喜愛清單_1440": {
+      "url": "/me/likes",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_表單_1440": {
+      "url": "/share/new",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_私訊_1440": {
+      "url": "/messages",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_私訊_對話_1440": {
+      "url": "/messages/18",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_設定_1440": {
+      "url": "/settings",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_後台_1440": {
+      "url": "/admin",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "訪客_首頁_390": {
+      "url": "/",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_首頁_最新_390": {
+      "url": "/?sort=new",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_單則_新發_390": {
+      "url": "/share/99",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_單則_鎖定_390": {
+      "url": "/share/8",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_藝人_390": {
+      "url": "/artist/mountain-radio",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_藝人_維基_390": {
+      "url": "/artist/elephant-gym",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_系列_390": {
+      "url": "/artist/mountain-radio/1",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_標籤_390": {
+      "url": "/tag/%E5%B1%B1%E7%B7%9A%E9%9B%BB%E5%8F%B0",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_搜尋_390": {
+      "url": "/search?q=%E5%A4%9C",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_個人_390": {
+      "url": "/u/a438097",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_喜愛清單_390": {
+      "url": "/me/likes",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_表單_390": {
+      "url": "/share/new",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_私訊_390": {
+      "url": "/messages",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_私訊_對話_390": {
+      "url": "/messages/18",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_設定_390": {
+      "url": "/settings",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "訪客_後台_390": {
+      "url": "/admin",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_首頁_1440": {
+      "url": "/",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_首頁_最新_1440": {
+      "url": "/?sort=new",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_單則_新發_1440": {
+      "url": "/share/99",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_單則_鎖定_1440": {
+      "url": "/share/8",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_藝人_1440": {
+      "url": "/artist/mountain-radio",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_藝人_維基_1440": {
+      "url": "/artist/elephant-gym",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_系列_1440": {
+      "url": "/artist/mountain-radio/1",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_標籤_1440": {
+      "url": "/tag/%E5%B1%B1%E7%B7%9A%E9%9B%BB%E5%8F%B0",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_搜尋_1440": {
+      "url": "/search?q=%E5%A4%9C",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_個人_1440": {
+      "url": "/u/a438097",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_喜愛清單_1440": {
+      "url": "/me/likes",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_表單_1440": {
+      "url": "/share/new",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_私訊_1440": {
+      "url": "/messages",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_私訊_對話_1440": {
+      "url": "/messages/18",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_設定_1440": {
+      "url": "/settings",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_後台_1440": {
+      "url": "/admin",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "登入_首頁_390": {
+      "url": "/",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_首頁_最新_390": {
+      "url": "/?sort=new",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_單則_新發_390": {
+      "url": "/share/99",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_單則_鎖定_390": {
+      "url": "/share/8",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_藝人_390": {
+      "url": "/artist/mountain-radio",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_藝人_維基_390": {
+      "url": "/artist/elephant-gym",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_系列_390": {
+      "url": "/artist/mountain-radio/1",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_標籤_390": {
+      "url": "/tag/%E5%B1%B1%E7%B7%9A%E9%9B%BB%E5%8F%B0",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_搜尋_390": {
+      "url": "/search?q=%E5%A4%9C",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_個人_390": {
+      "url": "/u/a438097",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_喜愛清單_390": {
+      "url": "/me/likes",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_表單_390": {
+      "url": "/share/new",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_私訊_390": {
+      "url": "/messages",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_私訊_對話_390": {
+      "url": "/messages/18",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_設定_390": {
+      "url": "/settings",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "登入_後台_390": {
+      "url": "/admin",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    },
+    "管理員_後台_1440": {
+      "url": "/admin",
+      "sw": 1440,
+      "iw": 1440,
+      "errors": []
+    },
+    "管理員_後台_390": {
+      "url": "/admin",
+      "sw": 390,
+      "iw": 390,
+      "errors": []
+    }
+  },
+  "stamp": "438097",
+  "big_photo_bytes": 94629,
+  "share_no": 99,
+  "r2_bytes_before_limit_test": 363705,
+  "summary": "69/69"
+}

@@ -1,5 +1,6 @@
 // 帳號與 session。網頁用 HttpOnly cookie，App 用 Authorization: Bearer，兩者是同一張 sessions 表、同一種 token。
 
+import { env } from "cloudflare:workers";
 import { and, desc, eq, gt, isNull } from "drizzle-orm";
 import { getDb } from "@/db";
 import { emailCodes, sessions, users } from "@/db/schema";
@@ -14,6 +15,16 @@ const RESEND_COOLDOWN_SEC = 60;
 
 export type User = typeof users.$inferSelect;
 
+/** 管理員：Email 在環境變數 ADMIN_EMAILS（逗號分隔）裡、且 Email 已驗證。沒有 API 能改這份名單 */
+export function isAdmin(u: Pick<User, "email" | "emailVerifiedAt"> | null | undefined) {
+  if (!u?.emailVerifiedAt) return false;
+  const list = (env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((x) => x.trim().toLowerCase())
+    .filter(Boolean);
+  return list.includes(u.email.toLowerCase());
+}
+
 /** API 回給前端的使用者（不含雜湊與 email 以外的敏感欄位） */
 export const publicMe = (u: User) => ({
   id: u.id,
@@ -23,6 +34,8 @@ export const publicMe = (u: User) => ({
   bio: u.bio,
   role: u.role,
   verified: Boolean(u.emailVerifiedAt),
+  admin: isAdmin(u),
+  deletionRequested: Boolean(u.deletionRequestedAt),
 });
 export type Me = ReturnType<typeof publicMe>;
 
@@ -223,4 +236,12 @@ export async function userByEmail(email: string) {
 export async function userByHandle(handle: string) {
   const [u] = await getDb().select().from(users).where(eq(users.handle, handle));
   return u ?? null;
+}
+
+/** 管理後台 API 用：沒登入 401、不是管理員 403 */
+export async function requireAdmin(req: Request): Promise<{ user: User; sessionId: string } | Response> {
+  const s = await requireUser(req);
+  if (s instanceof Response) return s;
+  if (!isAdmin(s.user)) return fail(403, "FORBIDDEN", "只有管理員可以用");
+  return s;
 }

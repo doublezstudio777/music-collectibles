@@ -1,15 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { artistHref, getArtist } from "@/lib/data";
+import { artistHref } from "@/lib/data";
 import { useAppState } from "@/lib/state";
 import { FollowButton } from "@/components/follow-button";
 
-/** 個人頁：追蹤的藝人（本人才看得到，追蹤存在這台瀏覽器） */
-export function FollowList() {
+type A = { slug: string; name: string; tagline: string };
+
+/** 個人頁：追蹤的藝人（本人才看得到） */
+export function FollowList({ artists }: { artists: A[] }) {
   const { state, ready } = useAppState();
   if (!ready) return null;
-  const list = state.follows.map(getArtist).filter((a) => a !== undefined);
+  const list = state.follows.map((slug) => artists.find((a) => a.slug === slug)).filter((a): a is A => a !== undefined);
   return (
     <section className="block" data-testid="follow-list">
       <h2 className="block-title">

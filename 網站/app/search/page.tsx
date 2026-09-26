@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { artistHref, creditNames, search, toShareView, seriesHref } from "@/lib/data";
+import { artistHref, seriesHref } from "@/lib/data";
+import { pageData } from "@/lib/server/viewer";
 import { ShareWall } from "@/components/share-wall";
 
 type Props = { searchParams: Promise<{ q?: string | string[] }> };
@@ -13,7 +14,8 @@ export async function generateMetadata({ searchParams }: Props) {
 export default async function SearchPage({ searchParams }: Props) {
   const raw = (await searchParams).q;
   const q = (Array.isArray(raw) ? raw[0] : raw)?.trim() ?? "";
-  const r = search(q);
+  const { c } = await pageData();
+  const r = c.search(q);
   const total = r.artists.length + r.series.length + r.shares.length;
 
   return (
@@ -71,7 +73,7 @@ export default async function SearchPage({ searchParams }: Props) {
                     {w.name}
                   </Link>
                   <span className="sub">
-                    {creditNames(w).map((a) => a.name).join("、")} · {w.items.map((i) => i.kind).join("・")}
+                    {c.creditNames(w).map((a) => a.name).join("、")} · {w.items.map((i) => i.kind).join("・")}
                   </span>
                 </span>
               </li>
@@ -85,7 +87,7 @@ export default async function SearchPage({ searchParams }: Props) {
           <h2 className="block-title">
             炫收藏 <span className="count">{r.shares.length}</span>
           </h2>
-          <ShareWall shares={r.shares.map(toShareView)} />
+          <ShareWall shares={r.shares.map(c.toShareView)} />
         </section>
       ) : null}
     </main>

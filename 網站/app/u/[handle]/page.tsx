@@ -1,21 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { allHoldingViews, getUser, shares, toShareView } from "@/lib/data";
 import { userByHandle } from "@/lib/server/auth";
 import { publicHoldings } from "@/lib/server/me";
+import { pageData } from "@/lib/server/viewer";
 import { SelfOnly } from "@/components/self-only";
 import { FollowList } from "@/components/follow-list";
 import { HoldingsList } from "@/components/holdings-list";
-import { NextPhase } from "@/components/next-phase";
 import { SaleWall } from "@/components/sale-wall";
 import { ShareWall } from "@/components/share-wall";
 
 type Props = { params: Promise<{ handle: string }> };
 
-/**
- * 個人頁的人：先找 D1 的帳號（含本機 seed 進去的示範帳號），找不到再退回 data.ts 的示範資料
- * （示範炫收藏的作者在正式資料庫裡不會有帳號）。
- */
+/** 個人頁的人：D1 的帳號 */
 async function loadUser(handle: string) {
   const h = handle.toLowerCase();
   const u = await userByHandle(h);
@@ -29,7 +25,7 @@ async function loadUser(handle: string) {
       ...(await publicHoldings(u.id)),
     };
   }
-  return getUser(h) ?? null;
+  return null;
 }
 
 export async function generateMetadata({ params }: Props) {
@@ -40,7 +36,10 @@ export async function generateMetadata({ params }: Props) {
 export default async function UserPage({ params }: Props) {
   const user = await loadUser((await params).handle);
   if (!user) notFound();
-  const own = shares.filter((s) => s.author === user.handle).map(toShareView);
+  const { c } = await pageData();
+  const own = c.shares.filter((s) => s.author === user.handle).map(c.toShareView);
+  // 我有／想要的版本：別人看用伺服器給的清單；本人看時按鈕即時變，所以把全部版本的列都給
+  const catalog = c.holdingViews(c.seriesList.flatMap((w) => w.items.flatMap((it) => it.versions.map((v) => `${w.artistSlug}/${w.no}#${it.id}-${v.id}`))));
 
   return (
     <main className="wrap page">
@@ -60,7 +59,9 @@ export default async function UserPage({ params }: Props) {
             <Link className="btn btn-line" href="/me/likes">
               喜愛清單
             </Link>
-            <NextPhase label="編輯簡介" />
+            <Link className="btn btn-line" href="/settings">
+              設定
+            </Link>
           </div>
         </SelfOnly>
       </header>
@@ -69,7 +70,6 @@ export default async function UserPage({ params }: Props) {
         <h2 className="block-title">炫收藏</h2>
         <ShareWall
           shares={own}
-          scope={{ author: user.handle }}
           empty={
             <p className="empty">
               還沒有炫過收藏
@@ -83,13 +83,13 @@ export default async function UserPage({ params }: Props) {
         />
       </section>
 
-      <SaleWall shares={own} scopeAuthor={user.handle} />
+      <SaleWall shares={own} />
 
       <SelfOnly handle={user.handle}>
-        <FollowList />
+        <FollowList artists={c.artists.map((a) => ({ slug: a.slug, name: a.name, tagline: a.tagline }))} />
       </SelfOnly>
 
-      <HoldingsList handle={user.handle} owned={user.owned} wanted={user.wanted} catalog={allHoldingViews()} />
+      <HoldingsList handle={user.handle} owned={user.owned} wanted={user.wanted} catalog={catalog} />
     </main>
   );
 }

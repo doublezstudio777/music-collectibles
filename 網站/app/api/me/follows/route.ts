@@ -1,5 +1,5 @@
 import { fail, json, readBody, requireUser } from "@/lib/server/auth";
-import { clearFollows, setFollow, validSlug } from "@/lib/server/me";
+import { artistExists, clearFollows, setFollow, validSlug } from "@/lib/server/me";
 
 /** { artist: 藝人 slug, on: true|false } */
 export async function POST(req: Request) {
@@ -7,6 +7,7 @@ export async function POST(req: Request) {
   if (s instanceof Response) return s;
   const body = await readBody(req);
   if (!validSlug(body.artist) || typeof body.on !== "boolean") return fail(400, "BAD_REQUEST", "參數不對");
+  if (body.on && !(await artistExists(body.artist))) return fail(404, "NOT_FOUND", "找不到這位藝人");
   await setFollow(s.user.id, body.artist, body.on);
   return json({ artist: body.artist, on: body.on });
 }

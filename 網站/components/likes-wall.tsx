@@ -19,7 +19,7 @@ export function LikesWall({ all }: { all: ShareView[] }) {
       </p>
     );
   }
-  const pool = [...state.myShares, ...all];
+  const pool = all;
   const list = state.liked
     .slice()
     .reverse()

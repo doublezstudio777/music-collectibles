@@ -2,29 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { artistHref, CURRENT_USER, hotArtists, shareAboutArtist, shareHasTag, type ShareView } from "@/lib/data";
-import { lockOfShare, useAppState } from "@/lib/state";
+import { artistHref, type ShareView } from "@/lib/data";
+import { useAppState } from "@/lib/state";
 import { ShareCard } from "@/components/share-card";
 import { FollowButton } from "@/components/follow-button";
-
-type Scope =
-  | { all: true }
-  | { tag: string }
-  | { author: string }
-  | { none: true }
-  /** 同系列（任何品項、版本） */
-  | { series: string }
-  /** 同品項，鍵＝itemKey：`{發行方}/{流水號}#{品項}` */
-  | { item: string }
-  /** 同品項但版本未定（沒選版本） */
-  | { itemLoose: string }
-  /** 同版本，鍵＝versionKey：`{發行方}/{流水號}#{品項}-{版本}` */
-  | { version: string };
-
-const shareItemKey = (s: Pick<ShareView, "link">) =>
-  s.link?.seriesKey && s.link.itemId ? `${s.link.seriesKey}#${s.link.itemId}` : undefined;
-const shareVersionKey = (s: Pick<ShareView, "link">) =>
-  s.link?.seriesKey && s.link.itemId && s.link.versionId ? `${s.link.seriesKey}#${s.link.itemId}-${s.link.versionId}` : undefined;
 
 /** 首頁以炫收藏為主：排序在前，「只看在賣」是次要開關 */
 export type WallFilter = "all" | "selling";
@@ -111,20 +92,22 @@ function Pager({ page, total, query }: { page: number; total: number; query: Wal
   );
 }
 
+export type HotArtist = { slug: string; name: string; count: number };
+
 /** 還沒追蹤任何藝人：一排熱門藝人，直接點追蹤 */
-function HotArtists() {
+function HotArtists({ list }: { list: HotArtist[] }) {
   return (
     <section className="hot" aria-labelledby="hot-title">
       <h2 id="hot-title" className="hot-title">
         熱門藝人
       </h2>
       <ul className="hot-list">
-        {hotArtists().map(({ artist, count }) => (
+        {list.map((artist) => (
           <li key={artist.slug} className="hot-item">
             <Link className="hot-name" href={artistHref(artist.slug)}>
               {artist.name}
             </Link>
-            <span className="sub">{count} 則收藏</span>
+            <span className="sub">{artist.count} 則收藏</span>
             <FollowButton slug={artist.slug} name={artist.name} small />
           </li>
         ))}
@@ -133,10 +116,10 @@ function HotArtists() {
   );
 }
 
-/** 炫收藏牆。伺服器給的示範資料，再疊上本機自己發的（符合範圍的才疊） */
+/** 炫收藏牆。資料都是伺服器從 D1 讀的；追蹤中、只看在賣、排序在這裡做 */
 export function ShareWall({
   shares,
-  scope = { none: true },
+  hot = [],
   sortable = false,
   paged = false,
   filter = "all",
@@ -146,7 +129,8 @@ export function ShareWall({
   empty,
 }: {
   shares: ShareView[];
-  scope?: Scope;
+  /** 首頁：還沒追蹤藝人時上方那一排 */
+  hot?: HotArtist[];
   sortable?: boolean;
   /** 首頁：排序分頁籤＋只看在賣＋每頁 24 則 */
   paged?: boolean;
@@ -156,33 +140,22 @@ export function ShareWall({
   limit?: number;
   empty?: React.ReactNode;
 }) {
-  const { state, liked, saleOf } = useAppState();
+  const { state, liked } = useAppState();
   const [localSort, setSort] = useState<WallSort>("new");
   const sort = paged ? initialSort : localSort;
   /** 追蹤中分頁：沒追蹤任何藝人時，上方熱門藝人、下方照最新排 */
   const followingTab = paged && sort === "following";
   const noFollows = followingTab && state.ready && state.follows.length === 0;
 
-  const mine = state.myShares.filter((s) => {
-    if ("all" in scope) return true;
-    if ("tag" in scope) return shareHasTag(s, scope.tag);
-    if ("author" in scope) return scope.author === CURRENT_USER;
-    if ("series" in scope) return s.link?.seriesKey === scope.series;
-    if ("item" in scope) return shareItemKey(s) === scope.item;
-    if ("itemLoose" in scope) return !s.link?.versionId && shareItemKey(s) === scope.itemLoose;
-    if ("version" in scope) return shareVersionKey(s) === scope.version;
-    return false;
-  });
-
-  const list = [...mine, ...shares]
+  const list = [...shares]
     .filter((s) => {
       if (!followingTab || noFollows) return true;
-      return state.follows.some((slug) => shareAboutArtist(s, slug));
+      return state.follows.some((slug) => s.aboutSlugs.includes(slug));
     })
     .filter((s) => {
       if (filter === "all") return true;
-      const st = saleOf(s).state;
-      return (st === "sale" || st === "offer") && !lockOfShare(state, s);
+      const st = s.sale.state;
+      return (st === "sale" || st === "offer") && !s.lock;
     })
     .sort((a, b) =>
       sort === "likes"
@@ -197,7 +170,7 @@ export function ShareWall({
       ? list.slice(0, limit)
       : list;
 
-  /** 追蹤中要等 localStorage 讀進來才知道追了誰，之前不畫牆 */
+  /** 追蹤中要等 /api/me 讀進來才知道追了誰，之前不畫牆 */
   const waiting = followingTab && !state.ready;
 
   return (
@@ -248,7 +221,7 @@ export function ShareWall({
           ) : null}
         </div>
       ) : null}
-      {noFollows ? <HotArtists /> : null}
+      {noFollows ? <HotArtists list={hot} /> : null}
       {waiting ? null : shown.length === 0 ? (
         followingTab ? (
           <p className="empty">追蹤的藝人還沒有新的收藏</p>
@@ -267,18 +240,13 @@ export function ShareWall({
   );
 }
 
-/**
- * 系列頁「不確定版本」區塊：伺服器給的清單＋本機同品項沒選版本的炫收藏。
- * 兩邊都空才整塊不出現（本機那份要等 client 掛載才知道，所以這塊本身要是 client component）。
- */
-export function ItemLooseWall({ itemScopeKey, shares }: { itemScopeKey: string; shares: ShareView[] }) {
-  const { state } = useAppState();
-  const hasMine = state.myShares.some((s) => !s.link?.versionId && shareItemKey(s) === itemScopeKey);
-  if (shares.length === 0 && !hasMine) return null;
+/** 系列頁「不確定版本」區塊：同品項沒選版本的炫收藏，沒有就整塊不出現 */
+export function ItemLooseWall({ shares }: { shares: ShareView[] }) {
+  if (shares.length === 0) return null;
   return (
     <section className="ver-block">
       <h3 className="ver-title">不確定版本</h3>
-      <ShareWall shares={shares} scope={{ itemLoose: itemScopeKey }} />
+      <ShareWall shares={shares} />
     </section>
   );
 }

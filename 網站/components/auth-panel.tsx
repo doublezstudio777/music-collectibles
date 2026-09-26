@@ -4,15 +4,26 @@
 // 掛在 layout，一個站只有一個。站金鑰從伺服器（layout）傳進來。
 
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { clearError, closePanel, openPanel, useAccount } from "@/lib/account";
 import { AuthForm } from "@/components/auth-form";
 import { setTurnstileSiteKey } from "@/components/turnstile";
 
 export function AuthPanel({ siteKey }: { siteKey: string }) {
   setTurnstileSiteKey(siteKey);
-  const { panel, error } = useAccount();
+  const { panel, error, me, status } = useAccount();
   const box = useRef<HTMLDivElement>(null);
   const open = Boolean(panel);
+  const router = useRouter();
+  const who = useRef<string | null | undefined>(undefined);
+
+  // 登入、登出、換帳號後重新讀頁面：頁面上的讚數與我有／想要人數是伺服器依登入者算的
+  useEffect(() => {
+    if (status === "loading") return;
+    const id = me?.id ?? null;
+    if (who.current !== undefined && who.current !== id) router.refresh();
+    who.current = id;
+  }, [me?.id, status, router]);
 
   useEffect(() => {
     if (!open) return;

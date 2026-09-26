@@ -31,15 +31,14 @@ const localBindingConfig = {
     TURNSTILE_SITE_KEY: process.env.TURNSTILE_SITE_KEY ?? "1x00000000000000000000AA",
     TURNSTILE_SECRET: process.env.TURNSTILE_SECRET ?? "1x0000000000000000000000000000000AA",
     MAIL_MODE: process.env.MAIL_MODE ?? "console",
+    // 管理員名單（逗號分隔 Email）。本機預設一個測試管理員；正式用 wrangler 設成 zukawork0312@gmail.com
+    ADMIN_EMAILS: process.env.ADMIN_EMAILS ?? "admin@demo.yinzang.test",
   },
-  r2_buckets: r2
-    ? [
-        {
-          binding: r2,
-          bucket_name: "site-creator-r2",
-        },
-      ]
-    : [],
+  // 照片：本機 Miniflare 模擬 R2（與 D1 同放 .wrangler/state），雲端 0 個 bucket
+  r2_buckets: [
+    { binding: "PHOTOS", bucket_name: "yinzang-photos" },
+    ...(r2 ? [{ binding: r2, bucket_name: "site-creator-r2" }] : []),
+  ],
 };
 
 export default defineConfig(async () => {

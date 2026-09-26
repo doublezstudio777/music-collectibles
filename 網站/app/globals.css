@@ -826,3 +826,14 @@ body.has-modal { overflow: hidden; }
   .auth-page { border: 0; padding: 0; }
 }
 .ava-wait { background: var(--surface2); }
+
+/* 第 2b 階段 */
+.thread-thumb { background-position: center; background-size: cover; inset: 0; position: absolute; }
+.settings-block { display: grid; gap: 8px; }
+.settings-row { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.settings-row .input { flex: 1 1 200px; min-width: 0; }
+.field-ok { color: var(--muted); font-size: var(--text-sm); }
+.btn-danger { background: var(--text); border-color: var(--text); color: var(--bg); }
+.upload-paused { border: 1px solid var(--line); font-size: var(--text-sm); padding: 12px; }
+.submit-new { border: 1px solid var(--line); display: grid; flex-basis: 100%; gap: 8px; padding: 12px; }
+.submit-field { display: grid; font-size: 13px; gap: 4px; }

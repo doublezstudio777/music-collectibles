@@ -16,6 +16,8 @@ export type Me = {
   bio: string;
   role: string;
   verified: boolean;
+  admin: boolean;
+  deletionRequested: boolean;
 };
 
 export type PanelMode = "login" | "register" | "verify" | "forgot" | "reset";
@@ -27,6 +29,12 @@ type Account = {
   owned: string[];
   wanted: string[];
   follows: string[];
+  /** 自己檢舉過的對象 */
+  reported: string[];
+  /** 自己的申訴 */
+  appeals: { target: string; status: string }[];
+  /** 有未讀的對話數 */
+  unread: number;
   /** 登入小面板：開著時的模式與一句原因（「登入後才能點讚」） */
   panel: { mode: PanelMode; reason?: string; email?: string } | null;
   /** 最近一次寫入失敗的訊息 */
@@ -34,8 +42,10 @@ type Account = {
 };
 
 const EMPTY: Account = {
-  status: "loading", me: null, liked: [], owned: [], wanted: [], follows: [], panel: null, error: null,
+  status: "loading", me: null, liked: [], owned: [], wanted: [], follows: [], reported: [], appeals: [], unread: 0,
+  panel: null, error: null,
 };
+const SIGNED_OUT = { status: "anon" as const, me: null, liked: [], owned: [], wanted: [], follows: [], reported: [], appeals: [], unread: 0 };
 
 let acc: Account = EMPTY;
 let started = false;
@@ -49,13 +59,14 @@ const set = (patch: Partial<Account>) => {
 type ApiError = { code: string; message: string; email?: string; wait?: number };
 export type ApiResult<T> = { ok: true; data: T } | { ok: false; status: number; error: ApiError };
 
-/** 同站呼叫：cookie 自動帶，錯誤統一成 { code, message } */
+/** 同站呼叫：cookie 自動帶，錯誤統一成 { code, message }。body 是 FormData 時原樣送（上傳） */
 export async function api<T>(path: string, init?: { method?: string; body?: unknown }): Promise<ApiResult<T>> {
   try {
+    const form = typeof FormData !== "undefined" && init?.body instanceof FormData;
     const res = await fetch(path, {
       method: init?.method ?? (init?.body === undefined ? "GET" : "POST"),
-      headers: init?.body === undefined ? undefined : { "Content-Type": "application/json" },
-      body: init?.body === undefined ? undefined : JSON.stringify(init.body),
+      headers: init?.body === undefined || form ? undefined : { "Content-Type": "application/json" },
+      body: init?.body === undefined ? undefined : form ? (init.body as FormData) : JSON.stringify(init.body),
       credentials: "same-origin",
       cache: "no-store",
     });
@@ -69,13 +80,13 @@ export async function api<T>(path: string, init?: { method?: string; body?: unkn
 
 type MeResponse = {
   user: Me | null;
-  state: { liked: number[]; owned: string[]; wanted: string[]; follows: string[] } | null;
+  state: Pick<Account, "liked" | "owned" | "wanted" | "follows" | "reported" | "appeals" | "unread"> | null;
 };
 
 export async function refreshAccount() {
   const r = await api<MeResponse>("/api/me");
   if (!r.ok || !r.data.user || !r.data.state) {
-    set({ status: "anon", me: null, liked: [], owned: [], wanted: [], follows: [] });
+    set(SIGNED_OUT);
     return;
   }
   set({ status: "user", me: r.data.user, ...r.data.state });
@@ -134,7 +145,7 @@ export async function afterLogin() {
 export async function logout() {
   await api("/api/auth/logout", { body: {} });
   pending = null;
-  set({ status: "anon", me: null, liked: [], owned: [], wanted: [], follows: [], panel: null });
+  set({ ...SIGNED_OUT, panel: null });
 }
 
 /* ---------- 四種個人狀態 ---------- */
@@ -185,4 +196,13 @@ export async function clearFollows() {
   set({ follows: [] });
   const r = await api("/api/me/follows", { method: "DELETE" });
   if (!r.ok) set({ follows: before, error: r.error.message });
+}
+
+/** 登入後才能做的動作（出價、發文、檢舉…）：沒登入先開面板 */
+export function whenLoggedIn(reason: string, action: () => void) {
+  requireLogin(reason, () => action());
+}
+
+export function setMe(me: Me) {
+  set({ me });
 }

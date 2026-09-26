@@ -2,22 +2,22 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   artistHref,
-  creditNames,
-  getSeries,
+  isTargetLocked,
   itemAnchor,
   itemKey,
   itemTarget,
   shareHref,
-  sharesOfSeries,
-  toShareView,
   versionAnchor,
   versionKey,
   versionTarget,
   type Item,
+  type LockData,
   type Series,
   type Share,
+  type ShareView,
   type Version,
 } from "@/lib/data";
+import { pageData } from "@/lib/server/viewer";
 import { HoldingButtons } from "@/components/holding-buttons";
 import { NextPhase } from "@/components/next-phase";
 import { LockBanner, ReportBox } from "@/components/report";
@@ -43,13 +43,14 @@ const hasValue = (x: string) => x && x !== "—" && x !== "待查證" && x !== "
 
 async function load(params: Props["params"]) {
   const { artist, no } = await params;
-  return getSeries(artist, Number(no));
+  const { c } = await pageData();
+  return { c, series: c.getSeries(artist, Number(no)) };
 }
 
 export async function generateMetadata({ params }: Props) {
-  const w = await load(params);
+  const { c, series: w } = await load(params);
   if (!w) return { title: "找不到系列" };
-  return { title: `${w.name}｜${creditNames(w).map((a) => a.name).join("、")}` };
+  return { title: `${w.name}｜${c.creditNames(w).map((a) => a.name).join("、")}` };
 }
 
 function Compare({ series, item }: { series: Series; item: Item }) {
@@ -122,7 +123,21 @@ function PhotoBlock({ caption }: { caption: string }) {
   );
 }
 
-function VersionBlock({ series, item, v, related }: { series: Series; item: Item; v: Version; related: Share[] }) {
+function VersionBlock({
+  series,
+  item,
+  v,
+  related,
+  view,
+  locks,
+}: {
+  series: Series;
+  item: Item;
+  v: Version;
+  related: Share[];
+  view: (s: Share) => ShareView;
+  locks: LockData;
+}) {
   const list = related.filter((s) => s.link?.version === v.id);
   const refs = list.filter((s) => s.refPhoto);
   const marks = [
@@ -137,7 +152,7 @@ function VersionBlock({ series, item, v, related }: { series: Series; item: Item
         {v.edition} {hasValue(v.catalog) ? <span className="mono sub-inline">{v.catalog}</span> : null}
         {v.fakes?.length ? <span className="flag flag-fake">有已知仿冒</span> : null}
       </h3>
-      <LockBanner target={versionTarget(vkey)} />
+      <LockBanner target={versionTarget(vkey)} locked={isTargetLocked(locks, versionTarget(vkey))} />
 
       <h4 className="sub-title">正版辨識</h4>
       <ul className="marks">
@@ -158,7 +173,11 @@ function VersionBlock({ series, item, v, related }: { series: Series; item: Item
             {refs.map((s) => (
               <li key={s.n}>
                 <Link href={shareHref(s.n)} className="ref-thumb" aria-label={s.what}>
-                  {s.image ? <span className="ref-img" style={{ backgroundImage: `url(${s.image})` }} /> : <PhotoBlock caption={s.kind} />}
+                  {s.thumb || s.image ? (
+                    <span className="ref-img" style={{ backgroundImage: `url(${s.thumb ?? s.image})` }} />
+                  ) : (
+                    <PhotoBlock caption={s.kind} />
+                  )}
                 </Link>
               </li>
             ))}
@@ -213,22 +232,18 @@ function VersionBlock({ series, item, v, related }: { series: Series; item: Item
       <h4 className="sub-title">
         炫收藏<span className="count">{list.length}</span>
       </h4>
-      <ShareWall
-        shares={list.map(toShareView)}
-        scope={{ version: versionKey(series, item, v) }}
-        empty={<p className="empty">還沒有人炫過這個版本</p>}
-      />
+      <ShareWall shares={list.map(view)} empty={<p className="empty">還沒有人炫過這個版本</p>} />
       <ReportBox target={versionTarget(vkey)} label="檢舉這個版本" />
     </section>
   );
 }
 
 export default async function SeriesPage({ params }: Props) {
-  const series = await load(params);
+  const { c, series } = await load(params);
   if (!series) notFound();
 
-  const credits = creditNames(series);
-  const related = sharesOfSeries(series);
+  const credits = c.creditNames(series);
+  const related = c.sharesOfSeries(series);
   const versions = series.items.flatMap((i) => i.versions);
   const owners = versions.reduce((n, v) => n + v.owners, 0);
   const wanted = versions.reduce((n, v) => n + v.wanted, 0);
@@ -289,16 +304,16 @@ export default async function SeriesPage({ params }: Props) {
         return (
           <section key={it.id} id={itemAnchor(it)} className="block item-block">
             <h2 className="item-title">{it.kind}</h2>
-            <LockBanner target={itemTarget(itemKey(series, it))} />
+            <LockBanner target={itemTarget(itemKey(series, it))} locked={isTargetLocked(c.lockData, itemTarget(itemKey(series, it)))} />
             {it.versions.length > 1 ? (
               <Compare series={series} item={it} />
             ) : (
               <Spec series={series} item={it} v={it.versions[0]} />
             )}
             {it.versions.map((v) => (
-              <VersionBlock key={v.id} series={series} item={it} v={v} related={inItem} />
+              <VersionBlock key={v.id} series={series} item={it} v={v} related={inItem} view={c.toShareView} locks={c.lockData} />
             ))}
-            <ItemLooseWall itemScopeKey={itemKey(series, it)} shares={loose.map(toShareView)} />
+            <ItemLooseWall shares={loose.map(c.toShareView)} />
             <ReportBox target={itemTarget(itemKey(series, it))} label={`檢舉這個品項（${it.kind}）`} />
           </section>
         );

@@ -4,20 +4,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRef } from "react";
 import { Mail, Search } from "lucide-react";
-import { CURRENT_USER, getUser, userHref } from "@/lib/data";
-import { NextPhase } from "@/components/next-phase";
-import { clearFollows, setAccount, useAppState } from "@/lib/state";
+import { userHref } from "@/lib/data";
+import { clearFollows } from "@/lib/state";
 import { logout, openPanel, useAccount } from "@/lib/account";
 
 export function SiteHeader() {
   const pathname = usePathname();
   const menu = useRef<HTMLDetailsElement>(null);
-  const { state, verified } = useAppState();
   const acc = useAccount();
-  // 檢舉示範身分（2b 改成看登入者的 Email 是否已驗證）
-  const demo = getUser(state.account) ?? getUser(CURRENT_USER);
-  const other = state.account === CURRENT_USER ? "kai" : CURRENT_USER;
-  const unread = state.unread.length > 0;
+  const unread = acc.unread > 0;
   const isForm = pathname === "/share/new";
   const close = () => {
     if (menu.current) menu.current.open = false;
@@ -71,26 +66,14 @@ export function SiteHeader() {
                   <Link href="/messages" onClick={close}>
                     私訊
                   </Link>
-                  <Link href="/admin" onClick={close}>
-                    管理後台
+                  {acc.me.admin ? (
+                    <Link href="/admin" onClick={close}>
+                      管理後台
+                    </Link>
+                  ) : null}
+                  <Link href="/settings" onClick={close}>
+                    設定
                   </Link>
-                  <NextPhase label="設定" className="menu-item" />
-                  <p className="menu-sep">檢舉示範身分</p>
-                  <p className="menu-now">
-                    {demo?.name}
-                    {verified ? "（已認證）" : "（未認證）"}
-                  </p>
-                  <button
-                    type="button"
-                    className="menu-item"
-                    onClick={() => {
-                      setAccount(other);
-                      close();
-                    }}
-                  >
-                    切換到{getUser(other)?.name}
-                    {getUser(other)?.verified ? "（已認證）" : "（未認證）"}
-                  </button>
                   <button
                     type="button"
                     className="menu-item"
