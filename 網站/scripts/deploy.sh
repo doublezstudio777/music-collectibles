@@ -22,7 +22,8 @@ if grep -q "__填入_" "$CFG"; then
 fi
 "${W[@]}" whoami >/dev/null
 for s in TURNSTILE_SECRET RESEND_API_KEY BUDGET_WEBHOOK_SECRET; do
-  "${W[@]}" secret list --config "$CFG" 2>/dev/null | grep -q "\"$s\"" || { echo "缺 secret：$s（wrangler secret put $s --config $CFG）"; exit 1; }
+  SECRETS=$("${W[@]}" secret list --config "$CFG" 2>/dev/null || true)
+  grep -q "\"$s\"" <<<"$SECRETS" || { echo "缺 secret：$s（wrangler secret put $s --config $CFG）"; exit 1; }
 done
 
 step "1. 型別、lint、遷移檔檢查"
@@ -51,8 +52,12 @@ step "5. 部署程式"
 
 step "6. 煙霧測試"
 URL="https://yinzang.dblzm.workers.dev"
-curl -fsS -o /dev/null "$URL/" && echo "首頁 200"
-curl -fsS -D - -o /dev/null "$URL/" | grep -qi "^x-robots-tag: noindex" && echo "X-Robots-Tag noindex"
-curl -fsS "$URL/" | grep -q '<meta name="robots" content="noindex"' && echo "meta robots noindex"
-curl -fsS "$URL/robots.txt" | grep -q "Disallow: /admin" && echo "robots.txt 正常"
+curl -fsS -o /dev/null "$URL/" || { echo "煙霧測試失敗：首頁"; exit 1; }; echo "首頁 200"
+# 先把回應存進變數再 grep：管線裡的 grep -q 提早關閉會讓 curl 收到 SIGPIPE，pipefail 下誤判失敗
+HEAD=$(curl -fsS -D - -o /dev/null "$URL/")
+grep -qi "^x-robots-tag: noindex" <<<"$HEAD" || { echo "煙霧測試失敗：X-Robots-Tag noindex"; exit 1; }; echo "X-Robots-Tag noindex"
+BODY=$(curl -fsS "$URL/")
+grep -q '<meta name="robots" content="noindex"' <<<"$BODY" || { echo "煙霧測試失敗：meta robots noindex"; exit 1; }; echo "meta robots noindex"
+ROBOTS=$(curl -fsS "$URL/robots.txt")
+grep -q "Disallow: /admin" <<<"$ROBOTS" || { echo "煙霧測試失敗：robots.txt 正常"; exit 1; }; echo "robots.txt 正常"
 echo "部署完成。接著照部署手冊跑「部署後檢查」。"
