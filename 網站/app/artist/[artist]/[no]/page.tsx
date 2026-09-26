@@ -75,7 +75,7 @@ function Compare({ series, item }: { series: Series; item: Item }) {
           </tr>
         </thead>
         <tbody>
-          {ROWS.map((row) => {
+          {ROWS.filter((row) => item.versions.some((v) => hasValue(row.get(v)))).map((row) => {
             const values = item.versions.map(row.get);
             const differs = new Set(values).size > 1;
             return (
