@@ -2,17 +2,19 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { CURRENT_USER, shareHasTag, type ShareView } from "@/lib/data";
-import { useAppState } from "@/lib/state";
+import { artistHref, CURRENT_USER, hotArtists, shareAboutArtist, shareHasTag, type ShareView } from "@/lib/data";
+import { lockOfShare, useAppState } from "@/lib/state";
 import { ShareCard } from "@/components/share-card";
+import { FollowButton } from "@/components/follow-button";
 
 type Scope = { all: true } | { tag: string } | { author: string } | { none: true };
 
 /** 首頁以炫收藏為主：排序在前，「只看在賣」是次要開關 */
 export type WallFilter = "all" | "selling";
-export type WallSort = "new" | "likes";
+export type WallSort = "following" | "new" | "likes";
 
 const SORTS: { key: WallSort; label: string }[] = [
+  { key: "following", label: "追蹤中" },
   { key: "new", label: "最新" },
   { key: "likes", label: "最多讚" },
 ];
@@ -23,7 +25,7 @@ type WallQuery = { sort: WallSort; filter: WallFilter };
 
 const wallHref = ({ sort, filter }: WallQuery, page: number) => {
   const q = new URLSearchParams();
-  if (sort !== "new") q.set("sort", sort);
+  if (sort !== "following") q.set("sort", sort);
   if (filter !== "all") q.set("state", filter);
   if (page > 1) q.set("page", String(page));
   const s = q.toString();
@@ -92,6 +94,28 @@ function Pager({ page, total, query }: { page: number; total: number; query: Wal
   );
 }
 
+/** 還沒追蹤任何藝人：一排熱門藝人，直接點追蹤 */
+function HotArtists() {
+  return (
+    <section className="hot" aria-labelledby="hot-title">
+      <h2 id="hot-title" className="hot-title">
+        熱門藝人
+      </h2>
+      <ul className="hot-list">
+        {hotArtists().map(({ artist, count }) => (
+          <li key={artist.slug} className="hot-item">
+            <Link className="hot-name" href={artistHref(artist.slug)}>
+              {artist.name}
+            </Link>
+            <span className="sub">{count} 則收藏</span>
+            <FollowButton slug={artist.slug} name={artist.name} small />
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 /** 炫收藏牆。伺服器給的示範資料，再疊上本機自己發的（符合範圍的才疊） */
 export function ShareWall({
   shares,
@@ -118,6 +142,9 @@ export function ShareWall({
   const { state, liked, saleOf } = useAppState();
   const [localSort, setSort] = useState<WallSort>("new");
   const sort = paged ? initialSort : localSort;
+  /** 追蹤中分頁：沒追蹤任何藝人時，上方熱門藝人、下方照最新排 */
+  const followingTab = paged && sort === "following";
+  const noFollows = followingTab && state.ready && state.follows.length === 0;
 
   const mine = state.myShares.filter((s) => {
     if ("all" in scope) return true;
@@ -128,9 +155,13 @@ export function ShareWall({
 
   const list = [...mine, ...shares]
     .filter((s) => {
+      if (!followingTab || noFollows) return true;
+      return state.follows.some((slug) => shareAboutArtist(s, slug));
+    })
+    .filter((s) => {
       if (filter === "all") return true;
       const st = saleOf(s).state;
-      return st === "sale" || st === "offer";
+      return (st === "sale" || st === "offer") && !lockOfShare(state, s);
     })
     .sort((a, b) =>
       sort === "likes"
@@ -145,8 +176,11 @@ export function ShareWall({
       ? list.slice(0, limit)
       : list;
 
+  /** 追蹤中要等 localStorage 讀進來才知道追了誰，之前不畫牆 */
+  const waiting = followingTab && !state.ready;
+
   return (
-    <div className="wall-wrap">
+    <div className="wall-wrap" data-tab={paged ? sort : undefined}>
       {paged || sortable ? (
         <div className="wall-bar">
           {paged ? (
@@ -193,8 +227,13 @@ export function ShareWall({
           ) : null}
         </div>
       ) : null}
-      {shown.length === 0 ? (
-        (empty ?? null)
+      {noFollows ? <HotArtists /> : null}
+      {waiting ? null : shown.length === 0 ? (
+        followingTab ? (
+          <p className="empty">追蹤的藝人還沒有新的收藏</p>
+        ) : (
+          (empty ?? null)
+        )
       ) : (
         <div className="wall">
           {shown.map((s) => (
@@ -202,7 +241,7 @@ export function ShareWall({
           ))}
         </div>
       )}
-      {paged ? <Pager page={current} total={totalPages} query={{ sort, filter }} /> : null}
+      {paged && !waiting ? <Pager page={current} total={totalPages} query={{ sort, filter }} /> : null}
     </div>
   );
 }

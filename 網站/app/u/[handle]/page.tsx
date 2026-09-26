@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { allHoldingViews, CURRENT_USER, getUser, shares, toShareView } from "@/lib/data";
+import { FollowList } from "@/components/follow-list";
 import { HoldingsList } from "@/components/holdings-list";
 import { NextPhase } from "@/components/next-phase";
 import { SaleWall } from "@/components/sale-wall";
@@ -26,7 +27,10 @@ export default async function UserPage({ params }: Props) {
           {user.initials}
         </span>
         <div className="profile-text">
-          <h1 className="page-title">{user.name}</h1>
+          <h1 className="page-title">
+            {user.name}
+            {user.verified ? <span className="verified">已認證</span> : null}
+          </h1>
           <p className="page-meta">{user.bio}</p>
         </div>
         {isSelf ? (
@@ -58,6 +62,8 @@ export default async function UserPage({ params }: Props) {
       </section>
 
       <SaleWall shares={own} scopeAuthor={user.handle} />
+
+      {isSelf ? <FollowList /> : null}
 
       <HoldingsList isSelf={isSelf} owned={user.owned} wanted={user.wanted} catalog={allHoldingViews()} />
     </main>

@@ -6,13 +6,14 @@ import { useRef } from "react";
 import { Mail, Search } from "lucide-react";
 import { CURRENT_USER, getUser, userHref } from "@/lib/data";
 import { NextPhase } from "@/components/next-phase";
-import { useAppState } from "@/lib/state";
+import { clearFollows, setAccount, useAppState } from "@/lib/state";
 
 export function SiteHeader() {
   const pathname = usePathname();
   const menu = useRef<HTMLDetailsElement>(null);
-  const me = getUser(CURRENT_USER);
-  const { state } = useAppState();
+  const { state, verified } = useAppState();
+  const me = getUser(state.account) ?? getUser(CURRENT_USER);
+  const other = state.account === CURRENT_USER ? "kai" : CURRENT_USER;
   const unread = state.unread.length > 0;
   const isForm = pathname === "/share/new";
   const close = () => {
@@ -59,7 +60,36 @@ export function SiteHeader() {
                   <Link href="/messages" onClick={close}>
                     私訊
                   </Link>
+                  <Link href="/admin" onClick={close}>
+                    管理後台
+                  </Link>
                   <NextPhase label="設定" className="menu-item" />
+                  <p className="menu-sep">示範</p>
+                  <p className="menu-now">
+                    {me?.name}
+                    {verified ? "（已認證）" : "（未認證）"}
+                  </p>
+                  <button
+                    type="button"
+                    className="menu-item"
+                    onClick={() => {
+                      setAccount(other);
+                      close();
+                    }}
+                  >
+                    切換到{getUser(other)?.name}
+                    {getUser(other)?.verified ? "（已認證）" : "（未認證）"}
+                  </button>
+                  <button
+                    type="button"
+                    className="menu-item"
+                    onClick={() => {
+                      clearFollows();
+                      close();
+                    }}
+                  >
+                    清掉追蹤
+                  </button>
                   <NextPhase label="登出" className="menu-item" />
                 </div>
               </details>
