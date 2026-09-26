@@ -7,6 +7,8 @@ import { getDb } from "@/db";
 import { rateLimits } from "@/db/schema";
 
 /* ---------- 寄信 ---------- */
+// 2c：環境變數有 RESEND_API_KEY 就走 Resend，沒有就印在 console（本機開發、驗收都走 console）。
+// MAIL_ALLOWLIST（逗號分隔）有設時，只寄給名單裡的收件人，其他照樣印 console：本機做真實寄信測試用，正式環境不設。
 
 export type Mail = { to: string; subject: string; text: string };
 
@@ -21,25 +23,65 @@ const consoleMailer: Mailer = {
   },
 };
 
-export function getMailer(): Mailer {
-  const mode = env.MAIL_MODE ?? "console";
-  if (mode === "console") return consoleMailer;
-  // 正式寄信服務（Resend／Brevo…）在 2b 或 2c 接；沒設定前寧可失敗也不要默默吞信
-  throw new Error(`寄信服務 ${mode} 還沒接上`);
+const RESEND_URL = "https://api.resend.com/emails";
+export const MAIL_FROM = "音藏 <noreply@notify.dblzm.com>";
+export const MAIL_REPLY_TO = "zukawork0312@gmail.com";
+
+function resendMailer(key: string): Mailer {
+  return {
+    async send(mail) {
+      const res = await fetch(RESEND_URL, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          from: env.MAIL_FROM || MAIL_FROM,
+          to: [mail.to],
+          reply_to: env.MAIL_REPLY_TO || MAIL_REPLY_TO,
+          subject: mail.subject,
+          text: mail.text,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { id?: string; message?: string; name?: string };
+      if (!res.ok) {
+        // 不印信件內容（有驗證碼），只印錯誤
+        console.error(`[音藏寄信] Resend 失敗 status=${res.status} ${data.name ?? ""} ${data.message ?? ""}`);
+        throw new Error("寄信失敗");
+      }
+      console.log(`[音藏寄信] Resend 已送出 id=${data.id} to=${mail.to}`);
+    },
+  };
 }
 
+export function getMailer(): Mailer {
+  const key = env.RESEND_API_KEY;
+  if (!key) return consoleMailer;
+  const allow = (env.MAIL_ALLOWLIST ?? "")
+    .split(",")
+    .map((x) => x.trim().toLowerCase())
+    .filter(Boolean);
+  const resend = resendMailer(key);
+  if (!allow.length) return resend;
+  return { send: (mail) => (allow.includes(mail.to.toLowerCase()) ? resend.send(mail) : consoleMailer.send(mail)) };
+}
+
+export const mailerMode = () => (env.RESEND_API_KEY ? (env.MAIL_ALLOWLIST ? "resend（限名單）" : "resend") : "console");
+
+/** 信件只放驗證碼與一句說明 */
 export const codeMail = (to: string, purpose: "verify" | "reset", code: string): Mail =>
   purpose === "verify"
-    ? {
-        to,
-        subject: `音藏驗證碼 ${code}`,
-        text: `你的音藏驗證碼是 ${code}\n15 分鐘內有效。不是你註冊的話，不用理會這封信。`,
-      }
-    : {
-        to,
-        subject: `音藏重設密碼驗證碼 ${code}`,
-        text: `重設密碼的驗證碼是 ${code}\n15 分鐘內有效。不是你要重設的話，不用理會這封信，密碼不會變。`,
-      };
+    ? { to, subject: `音藏驗證碼 ${code}`, text: `音藏驗證碼：${code}\n15 分鐘內有效，不是你本人註冊的話，不用理會這封信。` }
+    : { to, subject: `音藏重設密碼驗證碼 ${code}`, text: `音藏重設密碼驗證碼：${code}\n15 分鐘內有效，不是你本人要重設的話，不用理會這封信，密碼不會變。` };
+
+/* ---------- 密碼雜湊次數 ---------- */
+
+/**
+ * PBKDF2 次數。Workers 上限 100,000；免費方案每次請求 CPU 10ms，部署後實測超過就用環境變數
+ * PBKDF2_ITERATIONS 調低（10,000～100,000），不升級付費。舊密碼在下次登入成功時自動改用新次數。
+ */
+export function passwordIterations() {
+  const n = Number(env.PBKDF2_ITERATIONS);
+  return Number.isInteger(n) && n >= 10_000 && n <= 100_000 ? n : 100_000;
+}
 
 /* ---------- Turnstile ---------- */
 

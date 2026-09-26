@@ -10,6 +10,7 @@ import {
   adminLog,
   appeals,
   artists,
+  counters,
   items,
   photos,
   reports,
@@ -22,7 +23,9 @@ import {
 import { isTargetLocked, KINDS, reasonsFor, targetLevel, type Kind, type ReportReason, type TargetKey } from "@/lib/data";
 import { loadLockData, parseJson, photoUrl, threshold, userNames } from "@/lib/server/content";
 import { contentKeyExists, parseContentKey, shareExists } from "@/lib/server/me";
-import { unattachedPhotos } from "@/lib/server/photos";
+import { STORAGE_LIMIT, storageUsed, unattachedPhotos } from "@/lib/server/photos";
+import { siteStatus } from "@/lib/server/guard";
+import { hiddenList } from "@/lib/server/takedown";
 import { hit } from "@/lib/server/services";
 import { HttpError } from "@/lib/server/trade";
 import type { User } from "@/lib/server/auth";
@@ -166,7 +169,9 @@ export async function submitContent(u: User, type: unknown, b: Record<string, un
     if (!a) throw new HttpError(404, "NOT_FOUND", "找不到這位藝人");
     // 流水號永不重用：待審、被退回的也算
     const [m] = await db.select({ n: max(series.no) }).from(series).where(eq(series.artistSlug, artist));
-    const no = (m?.n ?? 0) + 1;
+    // 永久刪除過的系列號也不重用（takedown.ts 記在 counters）
+    const [c] = await db.select({ v: counters.value }).from(counters).where(eq(counters.key, `series_no:${artist}`));
+    const no = Math.max(m?.n ?? 0, c?.v ?? 0) + 1;
     await db.insert(series).values({
       artistSlug: artist,
       no,
@@ -224,8 +229,10 @@ export async function submitContent(u: User, type: unknown, b: Record<string, un
         ),
       );
     if (!row) throw new HttpError(404, "NOT_FOUND", "找不到這個品項");
-    const [c] = await db.select({ n: count() }).from(versions).where(eq(versions.itemRef, row.id));
-    const versionId = `v${(c?.n ?? 0) + 1}`;
+    // 用最大號＋1（不用筆數），永久刪除過版本也不會撞號
+    const vids = await db.select({ v: versions.versionId }).from(versions).where(eq(versions.itemRef, row.id));
+    const top = vids.reduce((n, x) => Math.max(n, Number(x.v.replace(/^v/, "")) || 0), 0);
+    const versionId = `v${top + 1}`;
     await db.insert(versions).values({
       itemRef: row.id,
       versionId,
@@ -296,9 +303,12 @@ export async function adminOverview(viewer: User) {
     ...logRows.map((l) => l.adminId),
     ...[...pa, ...ps, ...pi, ...pv].map((x) => x.createdBy ?? ""),
   ]);
-  const who = (id: string | null) => (id ? (names.get(id)?.name ?? "（已刪除）") : "");
+  const who = (id: string | null) => (id === "system" ? "系統" : id ? (names.get(id)?.name ?? "（已刪除）") : "");
+  const { status } = await siteStatus();
   return {
     me: { name: viewer.name },
+    site: { ...status, storageUsed: await storageUsed(), storageLimit: STORAGE_LIMIT },
+    ...(await hiddenList()),
     threshold: th,
     targets: [...allTargets].map((t) => ({
       target: t,

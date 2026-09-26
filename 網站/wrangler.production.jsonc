@@ -1,0 +1,29 @@
+// 音藏正式環境（Cloudflare Workers，yinzang.dblzm.workers.dev）。
+// 只有 scripts/deploy.sh 會用（YINZANG_DEPLOY=production）。本機 dev 不讀這份。
+// 部署前要填：account_id、d1_databases[0].database_id（建立 D1 後由 wrangler 回報）。步驟見 產出/20260927_部署手冊.md
+// 密鑰一律 `wrangler secret put`，不寫在這裡：TURNSTILE_SECRET、RESEND_API_KEY、BUDGET_WEBHOOK_SECRET
+{
+  "name": "yinzang",
+  "main": "vinext/server/fetch-handler",
+  "compatibility_date": "2026-05-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "account_id": "__填入_CLOUDFLARE_ACCOUNT_ID__",
+  "workers_dev": true,
+  "preview_urls": false,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "yinzang",
+      "database_id": "__填入_D1_DATABASE_ID__",
+      "migrations_dir": "drizzle"
+    }
+  ],
+  "r2_buckets": [{ "binding": "PHOTOS", "bucket_name": "yinzang-photos" }],
+  "vars": {
+    "TURNSTILE_SITE_KEY": "__填入_TURNSTILE_SITE_KEY__",
+    "ADMIN_EMAILS": "zukawork0312@gmail.com",
+    "ALLOW_INDEXING": "0",
+    "PBKDF2_ITERATIONS": "100000"
+  },
+  "observability": { "enabled": true }
+}

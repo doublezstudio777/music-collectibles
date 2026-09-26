@@ -19,11 +19,15 @@ import {
 } from "@/lib/data";
 import { pageData } from "@/lib/server/viewer";
 import { HoldingButtons } from "@/components/holding-buttons";
-import { NextPhase } from "@/components/next-phase";
+import { PriceHistory } from "@/components/price-history";
+import { WikiEditor } from "@/components/wiki-editor";
+import { priceSummaries } from "@/lib/server/prices";
+import { isLocked, lastEdit, latestRevisionId, loadPage } from "@/lib/server/wiki";
+import type { PriceSummary } from "@/lib/prices";
 import { LockBanner, ReportBox } from "@/components/report";
 import { ItemLooseWall, ShareWall } from "@/components/share-wall";
 
-type Props = { params: Promise<{ artist: string; no: string }> };
+type Props = { params: Promise<{ artist: string; no: string }>; searchParams?: Promise<{ edit?: string }> };
 
 const ROWS: { label: string; get: (v: Version) => string; mono?: boolean }[] = [
   { label: "辨識特徵", get: (v) => v.identifyBy },
@@ -130,6 +134,7 @@ function VersionBlock({
   related,
   view,
   locks,
+  price,
 }: {
   series: Series;
   item: Item;
@@ -137,6 +142,7 @@ function VersionBlock({
   related: Share[];
   view: (s: Share) => ShareView;
   locks: LockData;
+  price?: PriceSummary;
 }) {
   const list = related.filter((s) => s.link?.version === v.id);
   const refs = list.filter((s) => s.refPhoto);
@@ -153,6 +159,8 @@ function VersionBlock({
         {v.fakes?.length ? <span className="flag flag-fake">有已知仿冒</span> : null}
       </h3>
       <LockBanner target={versionTarget(vkey)} locked={isTargetLocked(locks, versionTarget(vkey))} />
+
+      {price ? <PriceHistory summary={price} /> : null}
 
       <h4 className="sub-title">正版辨識</h4>
       <ul className="marks">
@@ -238,9 +246,22 @@ function VersionBlock({
   );
 }
 
-export default async function SeriesPage({ params }: Props) {
+export default async function SeriesPage({ params, searchParams }: Props) {
   const { c, series } = await load(params);
   if (!series) notFound();
+  const editing = (await searchParams)?.edit === "1";
+  const wt = { kind: "series" as const, slug: series.artistSlug, no: series.no };
+  const skey = `${series.artistSlug}/${series.no}`;
+  const lockedShares = new Set(c.sharesOfSeries(series).filter((s) => c.toShareView(s).lock).map((s) => s.n));
+  const [page, pageLocked, edited, baseId, prices] = await Promise.all([
+    editing ? loadPage(wt) : null,
+    editing ? isLocked(wt) : false,
+    lastEdit(wt),
+    editing ? latestRevisionId(`series:${skey}`) : 0,
+    priceSummaries(skey, lockedShares),
+  ]);
+  const self = `/artist/${skey}`;
+  const lastBy = edited ?? series.lastEdit;
 
   const credits = c.creditNames(series);
   const related = c.sharesOfSeries(series);
@@ -257,9 +278,13 @@ export default async function SeriesPage({ params }: Props) {
             {credits.map((a, i) => (
               <span key={a.slug}>
                 {i > 0 ? "、" : null}
-                <Link className="link" href={artistHref(a.slug)}>
-                  {a.name}
-                </Link>
+                {c.artistVisible(a) ? (
+                  <Link className="link" href={artistHref(a.slug)}>
+                    {a.name}
+                  </Link>
+                ) : (
+                  a.name
+                )}
               </span>
             ))}
           </p>
@@ -270,8 +295,12 @@ export default async function SeriesPage({ params }: Props) {
           </p>
         </div>
         <div className="head-actions">
-          <NextPhase label="編輯" />
-          <NextPhase label="歷史" />
+          <Link className="btn btn-line" href={`${self}?edit=1#body`} data-testid="edit-link">
+            編輯
+          </Link>
+          <Link className="btn btn-line" href={`${self}/history`}>
+            歷史
+          </Link>
         </div>
       </header>
 
@@ -289,12 +318,18 @@ export default async function SeriesPage({ params }: Props) {
         })}
       </nav>
 
-      <section className="block prose">
-        {series.body.map((p) => (
-          <p key={p.slice(0, 12)}>{p}</p>
-        ))}
-        <p className="edit-line">
-          最後修改：{series.lastEdit.by}，{series.lastEdit.date}
+      <section id="body" className="block prose">
+        {editing ? (
+          <WikiEditor target={`series:${skey}`} paras={page?.content ?? series.body} baseId={baseId} locked={pageLocked} closeHref={self} label="正文" />
+        ) : (
+          series.body.map((p, i) => <p key={i}>{p}</p>)
+        )}
+        <p className="edit-line" data-testid="last-edit">
+          最後修改：{lastBy.by}，{lastBy.date}
+          <span className="dot" aria-hidden="true">·</span>
+          <Link className="link" href={`${self}/history`}>
+            歷史
+          </Link>
         </p>
       </section>
 
@@ -311,7 +346,16 @@ export default async function SeriesPage({ params }: Props) {
               <Spec series={series} item={it} v={it.versions[0]} />
             )}
             {it.versions.map((v) => (
-              <VersionBlock key={v.id} series={series} item={it} v={v} related={inItem} view={c.toShareView} locks={c.lockData} />
+              <VersionBlock
+                key={v.id}
+                series={series}
+                item={it}
+                v={v}
+                related={inItem}
+                view={c.toShareView}
+                locks={c.lockData}
+                price={prices.get(versionKey(series, it, v))}
+              />
             ))}
             <ItemLooseWall shares={loose.map(c.toShareView)} />
             <ReportBox target={itemTarget(itemKey(series, it))} label={`檢舉這個品項（${it.kind}）`} />

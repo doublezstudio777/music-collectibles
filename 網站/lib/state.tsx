@@ -13,7 +13,7 @@ import { api, useAccount, type ApiResult } from "@/lib/account";
 
 export type Bucket = "owned" | "wanted";
 
-export { clearFollows, toggleFollow, toggleHolding, toggleLike } from "@/lib/account";
+export { clearFollows, dismissArtist, toggleFollow, toggleHolding, toggleLike } from "@/lib/account";
 
 export function useAppState() {
   const acc = useAccount();
@@ -22,7 +22,10 @@ export function useAppState() {
   const holds = useCallback((b: Bucket, key: string) => acc[b].includes(key), [acc]);
   const follows = useCallback((slug: string) => acc.follows.includes(slug), [acc.follows]);
   const reported = useCallback((t: string) => acc.reported.includes(t), [acc.reported]);
-  const state = useMemo(() => ({ follows: acc.follows, liked: acc.liked, owned: acc.owned, wanted: acc.wanted, ready }), [acc, ready]);
+  const state = useMemo(
+    () => ({ follows: acc.follows, liked: acc.liked, owned: acc.owned, wanted: acc.wanted, dismissed: acc.dismissed, ready }),
+    [acc, ready],
+  );
   return {
     state,
     me: acc.me,

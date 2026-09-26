@@ -35,6 +35,8 @@ type Account = {
   appeals: { target: string; status: string }[];
   /** 有未讀的對話數 */
   unread: number;
+  /** 熱門藝人按過「不感興趣」的 */
+  dismissed: string[];
   /** 登入小面板：開著時的模式與一句原因（「登入後才能點讚」） */
   panel: { mode: PanelMode; reason?: string; email?: string } | null;
   /** 最近一次寫入失敗的訊息 */
@@ -42,10 +44,10 @@ type Account = {
 };
 
 const EMPTY: Account = {
-  status: "loading", me: null, liked: [], owned: [], wanted: [], follows: [], reported: [], appeals: [], unread: 0,
+  status: "loading", me: null, liked: [], owned: [], wanted: [], follows: [], reported: [], appeals: [], unread: 0, dismissed: [],
   panel: null, error: null,
 };
-const SIGNED_OUT = { status: "anon" as const, me: null, liked: [], owned: [], wanted: [], follows: [], reported: [], appeals: [], unread: 0 };
+const SIGNED_OUT = { status: "anon" as const, me: null, liked: [], owned: [], wanted: [], follows: [], reported: [], appeals: [], unread: 0, dismissed: [] };
 
 let acc: Account = EMPTY;
 let started = false;
@@ -80,7 +82,7 @@ export async function api<T>(path: string, init?: { method?: string; body?: unkn
 
 type MeResponse = {
   user: Me | null;
-  state: Pick<Account, "liked" | "owned" | "wanted" | "follows" | "reported" | "appeals" | "unread"> | null;
+  state: Pick<Account, "liked" | "owned" | "wanted" | "follows" | "reported" | "appeals" | "unread" | "dismissed"> | null;
 };
 
 export async function refreshAccount() {
@@ -153,7 +155,7 @@ export async function logout() {
 const toggled = <T,>(list: T[], item: T, on: boolean) =>
   on ? (list.includes(item) ? list : [...list, item]) : list.filter((x) => x !== item);
 
-async function write<K extends "liked" | "owned" | "wanted" | "follows">(
+async function write<K extends "liked" | "owned" | "wanted" | "follows" | "dismissed">(
   field: K,
   item: Account[K][number],
   on: boolean,
@@ -187,6 +189,13 @@ export function toggleFollow(slug: string) {
   requireLogin("登入後才能追蹤藝人", (late) => {
     const on = late || !acc.follows.includes(slug);
     void write("follows", slug, on, "/api/me/follows", { artist: slug, on });
+  });
+}
+
+/** 熱門藝人「不感興趣」：之後不再推薦 */
+export function dismissArtist(slug: string) {
+  requireLogin("登入後才能標記不感興趣", () => {
+    void write("dismissed", slug, true, "/api/me/dismissals", { artist: slug, on: true });
   });
 }
 

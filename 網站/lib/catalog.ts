@@ -20,6 +20,8 @@ import {
   versionHref,
   versionKey,
   type Artist,
+  type ArtistGender,
+  type ArtistRegion,
   type HoldingView,
   type LockData,
   type Series,
@@ -42,6 +44,34 @@ export class Catalog {
   ) {}
 
   getArtist = (slug: string) => this.artists.find((a) => a.slug === slug);
+
+  /**
+   * 藝人頁對外顯示嗎（2c）：沒有任何系列（主要、客串、合輯）也沒有任何相關收藏就不顯示，
+   * 直接打網址回 404。管理員可強制開（on）或關（off）。名單可以先匯入，等有人發了收藏才自動出現。
+   */
+  artistVisible = (a: Artist) => {
+    if (a.display === "on") return true;
+    if (a.display === "off") return false;
+    return (
+      this.mainSeriesOf(a.slug).length > 0 ||
+      this.guestSeriesOf(a.slug).length > 0 ||
+      this.compilationsOf(a.slug).length > 0 ||
+      this.sharesWithTag(a.name).length > 0
+    );
+  };
+
+  /** 前台看得到的藝人頁 */
+  visibleArtist = (slug: string) => {
+    const a = this.getArtist(slug);
+    return a && this.artistVisible(a) ? a : undefined;
+  };
+
+  /** 藝人目錄：只列藝人（不含發行單位）、只列看得到的，照類型與地區篩 */
+  artistDirectory = (gender?: ArtistGender, region?: ArtistRegion) =>
+    this.artists
+      .filter((a) => a.kind === "藝人" && this.artistVisible(a))
+      .filter((a) => (!gender || a.gender === gender) && (!region || a.region === region))
+      .map((a) => ({ artist: a, count: this.sharesWithTag(a.name).length }));
   getShare = (n: number) => this.shares.find((s) => s.n === n);
   getSeriesByKey = (key: string) => this.seriesList.find((w) => seriesKey(w) === key);
   getSeries = (artistSlug: string, no: number) => this.seriesList.find((w) => w.artistSlug === artistSlug && w.no === no);
@@ -174,7 +204,7 @@ export class Catalog {
     if (!q) return { artists: [] as Artist[], series: this.seriesList, shares: [] as Share[] };
     const hit = (...xs: (string | undefined)[]) => xs.some((x) => x && norm(x).includes(q));
     return {
-      artists: this.artists.filter((a) => hit(a.name, a.tagline, ...a.aliases)),
+      artists: this.artists.filter((a) => this.artistVisible(a) && hit(a.name, a.tagline, ...a.aliases)),
       series: this.seriesList.filter(
         (w) =>
           hit(w.name, w.seriesType, ...this.creditNames(w).flatMap((a) => [a.name, ...a.aliases])) ||
@@ -221,10 +251,10 @@ export class Catalog {
     return blocks;
   };
 
-  /** 熱門藝人：相關收藏多的在前，只列藝人不列發行單位 */
-  hotArtists = (limit = 6) =>
+  /** 熱門藝人：相關收藏多的在前，只列藝人不列發行單位。多給幾位，按了不感興趣由下一位補上 */
+  hotArtists = (limit = 30) =>
     this.artists
-      .filter((a) => a.kind === "藝人")
+      .filter((a) => a.kind === "藝人" && this.artistVisible(a))
       .map((a) => ({ slug: a.slug, name: a.name, count: this.sharesWithTag(a.name).length }))
       .filter((x) => x.count > 0)
       .sort((a, b) => b.count - a.count)

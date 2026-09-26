@@ -15,6 +15,7 @@ import { contentKeyExists, parseContentKey } from "@/lib/server/me";
 import { unattachedPhotos } from "@/lib/server/photos";
 import { hit } from "@/lib/server/services";
 import { fail, type User } from "@/lib/server/auth";
+import { recordDeal, voidDeals } from "@/lib/server/prices";
 
 export class HttpError extends Error {
   constructor(
@@ -44,7 +45,7 @@ export async function shareRow(no: number): Promise<ShareRow> {
   const [row] = await getDb()
     .select()
     .from(shares)
-    .where(and(eq(shares.no, no), isNull(shares.deletedAt)));
+    .where(and(eq(shares.no, no), isNull(shares.deletedAt), isNull(shares.hiddenAt)));
   if (!row) throw new HttpError(404, "NOT_FOUND", "找不到這則收藏");
   return row;
 }
@@ -225,6 +226,8 @@ export async function reopen(u: User, no: number) {
     .update(offers)
     .set({ status: "withdrawn", updatedAt: nowIso() })
     .where(and(eq(offers.shareNo, no), eq(offers.status, "sold")));
+  // 歷史價格：這筆成交不算了（紀錄留著，標作廢）
+  await voidDeals(no);
   await broadcast(no, () => "賣家改回出售中");
 }
 
@@ -302,6 +305,7 @@ export async function closeDeal(u: User, no: number, offerId: unknown) {
     .update(shares)
     .set({ saleState: "sold", soldPrice: o.price, soldTo: o.buyerId, soldAt: at, updatedAt: at })
     .where(eq(shares.no, no));
+  await recordDeal(s, o, at);
   await broadcast(no, (tid) => (tid === o.threadId ? `已成交 ${priceText(o.price)}` : "這件已售出"));
 }
 

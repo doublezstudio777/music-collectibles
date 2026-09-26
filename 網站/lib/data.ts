@@ -30,6 +30,9 @@ export const normKind = (raw: string): { kind: Kind; note?: string } => {
   return { kind: "其他周邊", note: raw };
 };
 
+/** og:description 沒有故事時的物件類型預設字 */
+export const KIND_LABEL_FALLBACK = "收藏";
+
 export type Artist = {
   /** 網址識別碼：英文名或音譯，小寫、連字號 */
   slug: string;
@@ -48,6 +51,8 @@ export type Artist = {
   lastEdit: { by: string; date: string };
   /** 簡介取自維基百科時的來源（CC BY-SA 4.0） */
   wiki?: { url: string; license: string };
+  /** 藝人頁顯示：auto＝有系列或收藏才顯示；on／off＝管理員強制 */
+  display?: "auto" | "on" | "off";
 };
 
 export type Version = {

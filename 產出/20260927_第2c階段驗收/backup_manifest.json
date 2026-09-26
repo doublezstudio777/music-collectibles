@@ -1,0 +1,49 @@
+{
+  "at": "2026-09-26T18:36:06.908Z",
+  "where": "local",
+  "sqlBytes": 179407,
+  "counts": {
+    "admin_log": 17,
+    "appeals": 3,
+    "artist_dismissals": 0,
+    "artists": 43,
+    "counters": 1,
+    "d1_migrations": 3,
+    "deals": 0,
+    "email_codes": 33,
+    "follows": 5,
+    "holdings": 20,
+    "items": 16,
+    "likes": 14,
+    "messages": 58,
+    "offers": 23,
+    "page_locks": 0,
+    "photos": 130,
+    "rate_limits": 108,
+    "reports": 41,
+    "revisions": 0,
+    "series": 11,
+    "sessions": 57,
+    "settings": 1,
+    "shares": 71,
+    "target_decisions": 2,
+    "thread_reads": 26,
+    "threads": 15,
+    "users": 49,
+    "version_fakes": 2,
+    "version_marks": 17,
+    "versions": 21
+  },
+  "photos": {
+    "total": 259,
+    "downloaded": 259,
+    "missing": []
+  },
+  "orphans": {
+    "likes": 0,
+    "follows": 0,
+    "photosWithoutShare": 123
+  },
+  "previous": null,
+  "shrunk": []
+}

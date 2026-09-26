@@ -1,3 +1,4 @@
+import { passwordIterations } from "@/lib/server/services";
 import { getDb } from "@/db";
 import { users } from "@/db/schema";
 import {
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
 
   const [user] = await getDb()
     .insert(users)
-    .values({ id: randomToken(12), email, passwordHash: await hashPassword(password), handle, name })
+    .values({ id: randomToken(12), email, passwordHash: await hashPassword(password, passwordIterations()), handle, name })
     .returning();
   await sendCode(user, "verify");
   return json({ pending: "verify", email }, 201);

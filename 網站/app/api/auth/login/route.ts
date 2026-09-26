@@ -1,8 +1,11 @@
+import { eq } from "drizzle-orm";
+import { getDb } from "@/db";
+import { users } from "@/db/schema";
 import {
-  clearHits, hit, verifyTurnstile,
+  clearHits, hit, passwordIterations, verifyTurnstile,
 } from "@/lib/server/services";
 import { clientIp, fail, loginResponse, normEmail, readBody, sendCode, userByEmail } from "@/lib/server/auth";
-import { burnPasswordTime, verifyPassword } from "@/lib/server/crypto";
+import { burnPasswordTime, hashIterations, hashPassword, verifyPassword } from "@/lib/server/crypto";
 
 /** 登入。body.client = "app" 時 token 放 body（App 用 Bearer），否則寫 HttpOnly cookie */
 export async function POST(req: Request) {
@@ -18,7 +21,7 @@ export async function POST(req: Request) {
 
   const user = email ? await userByEmail(email) : null;
   if (!user) {
-    await burnPasswordTime(password);
+    await burnPasswordTime(password, passwordIterations());
     return fail(401, "INVALID_CREDENTIALS", "Email 或密碼不對");
   }
   if (!(await verifyPassword(password, user.passwordHash))) {
@@ -33,5 +36,12 @@ export async function POST(req: Request) {
     });
   }
   await clearHits(key);
+  // 雜湊次數跟目前設定不同（部署後調過 PBKDF2_ITERATIONS）→ 用新次數重新雜湊
+  if (hashIterations(user.passwordHash) !== passwordIterations()) {
+    await getDb()
+      .update(users)
+      .set({ passwordHash: await hashPassword(password, passwordIterations()) })
+      .where(eq(users.id, user.id));
+  }
   return loginResponse(user, req, client);
 }

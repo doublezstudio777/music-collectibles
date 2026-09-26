@@ -1,3 +1,4 @@
+import { passwordIterations } from "@/lib/server/services";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { users } from "@/db/schema";
@@ -23,7 +24,7 @@ export async function POST(req: Request) {
   const [updated] = await getDb()
     .update(users)
     // 重設碼寄到信箱也證明了信箱是本人的
-    .set({ passwordHash: await hashPassword(password), emailVerifiedAt: user.emailVerifiedAt ?? now, updatedAt: now })
+    .set({ passwordHash: await hashPassword(password, passwordIterations()), emailVerifiedAt: user.emailVerifiedAt ?? now, updatedAt: now })
     .where(eq(users.id, user.id))
     .returning();
   await destroyAllSessions(user.id);

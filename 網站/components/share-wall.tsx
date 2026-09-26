@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { artistHref, type ShareView } from "@/lib/data";
-import { useAppState } from "@/lib/state";
+import { dismissArtist, useAppState } from "@/lib/state";
 import { ShareCard } from "@/components/share-card";
 import { FollowButton } from "@/components/follow-button";
 
@@ -94,23 +94,42 @@ function Pager({ page, total, query }: { page: number; total: number; query: Wal
 
 export type HotArtist = { slug: string; name: string; count: number };
 
-/** 還沒追蹤任何藝人：一排熱門藝人，直接點追蹤 */
+/** 熱門藝人顯示幾位（第 6 格是「看全部藝人」） */
+const HOT_SHOWN = 5;
+
+/**
+ * 還沒追蹤任何藝人：一排熱門藝人。點名字進藝人頁；每位有「追蹤」「不感興趣」，
+ * 按了不感興趣由下一位補上、之後不再推薦。最後一格連到藝人目錄。
+ */
 function HotArtists({ list }: { list: HotArtist[] }) {
+  const { state } = useAppState();
+  const shown = list.filter((a) => !state.dismissed.includes(a.slug)).slice(0, HOT_SHOWN);
   return (
     <section className="hot" aria-labelledby="hot-title">
       <h2 id="hot-title" className="hot-title">
         熱門藝人
       </h2>
       <ul className="hot-list">
-        {list.map((artist) => (
-          <li key={artist.slug} className="hot-item">
+        {shown.map((artist) => (
+          <li key={artist.slug} className="hot-item" data-artist={artist.slug}>
             <Link className="hot-name" href={artistHref(artist.slug)}>
               {artist.name}
             </Link>
             <span className="sub">{artist.count} 則收藏</span>
-            <FollowButton slug={artist.slug} name={artist.name} small />
+            <span className="hot-acts">
+              <FollowButton slug={artist.slug} name={artist.name} small />
+              <button type="button" className="btn-text hot-dismiss" aria-label={`不感興趣：${artist.name}`} onClick={() => dismissArtist(artist.slug)}>
+                不感興趣
+              </button>
+            </span>
           </li>
         ))}
+        <li className="hot-item hot-all">
+          <Link className="hot-name" href="/artists">
+            看全部藝人
+          </Link>
+          <span className="sub">依類型與地區找</span>
+        </li>
       </ul>
     </section>
   );

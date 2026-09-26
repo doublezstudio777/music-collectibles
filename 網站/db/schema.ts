@@ -163,6 +163,10 @@ export const artists = sqliteTable(
     createdAt: text("created_at").notNull().default(now),
     updatedAt: text("updated_at").notNull().default(now),
     deletedAt: text("deleted_at"),
+    /** 2c：管理員隱藏（前台看不到、可恢復） */
+    hiddenAt: text("hidden_at"),
+    /** 2c：藝人頁顯示。auto＝有系列或收藏才顯示；on＝強制顯示；off＝強制不顯示 */
+    display: text("display").notNull().default("auto"),
   },
   (t) => [index("artists_status_idx").on(t.status)],
 );
@@ -193,6 +197,7 @@ export const series = sqliteTable(
     createdAt: text("created_at").notNull().default(now),
     updatedAt: text("updated_at").notNull().default(now),
     deletedAt: text("deleted_at"),
+    hiddenAt: text("hidden_at"),
   },
   (t) => [uniqueIndex("series_artist_no_uq").on(t.artistSlug, t.no), index("series_status_idx").on(t.status)],
 );
@@ -210,6 +215,7 @@ export const items = sqliteTable(
     createdBy: text("created_by"),
     createdAt: text("created_at").notNull().default(now),
     deletedAt: text("deleted_at"),
+    hiddenAt: text("hidden_at"),
   },
   (t) => [uniqueIndex("items_series_item_uq").on(t.seriesId, t.itemId)],
 );
@@ -239,6 +245,7 @@ export const versions = sqliteTable(
     createdBy: text("created_by"),
     createdAt: text("created_at").notNull().default(now),
     deletedAt: text("deleted_at"),
+    hiddenAt: text("hidden_at"),
   },
   (t) => [uniqueIndex("versions_item_version_uq").on(t.itemRef, t.versionId)],
 );
@@ -307,6 +314,7 @@ export const shares = sqliteTable(
     createdAt: text("created_at").notNull().default(now),
     updatedAt: text("updated_at").notNull().default(now),
     deletedAt: text("deleted_at"),
+    hiddenAt: text("hidden_at"),
   },
   (t) => [index("shares_author_idx").on(t.authorId), index("shares_series_idx").on(t.seriesKey)],
 );
@@ -330,7 +338,13 @@ export const photos = sqliteTable(
     createdAt: text("created_at").notNull().default(now),
     deletedAt: text("deleted_at"),
   },
-  (t) => [index("photos_share_idx").on(t.shareNo), index("photos_owner_idx").on(t.ownerId, t.createdAt)],
+  (t) => [
+    index("photos_share_idx").on(t.shareNo),
+    index("photos_owner_idx").on(t.ownerId, t.createdAt),
+    // 2c：/img/ 依檔名查是誰的、什麼用途（申訴證據只給本人與管理員）
+    index("photos_r2key_idx").on(t.r2Key),
+    index("photos_thumbkey_idx").on(t.thumbKey),
+  ],
 );
 
 /** 整數計數器：r2_bytes（R2 累計位元組） */
@@ -455,4 +469,72 @@ export const adminLog = sqliteTable(
     createdAt: text("created_at").notNull().default(now),
   },
   (t) => [index("admin_log_created_idx").on(t.createdAt)],
+);
+
+/* =====================================================================
+ * 第 2c 階段（drizzle/0002）：維基式編輯、頁面鎖定、成交紀錄、不感興趣。
+ * 全部是新表；既有表只加可為 NULL（或有常數預設值）的欄位與索引。
+ * ===================================================================== */
+
+/**
+ * 維基式編輯紀錄。target＝artist:{slug}｜series:{slug}/{no}；field＝intro｜body。
+ * 每筆存整份內容（JSON string[]，一段一個），不存差異；差異在歷史頁即時算。
+ * 還原＝新增一筆內容等於舊版的紀錄（reverted_from 指向舊版），不刪任何一筆。
+ */
+export const revisions = sqliteTable(
+  "revisions",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    target: text("target").notNull(),
+    field: text("field").notNull(),
+    content: text("content").notNull(),
+    /** 修改說明（必填） */
+    summary: text("summary").notNull(),
+    /** NULL＝匯入時的初始版本（沒有作者） */
+    authorId: text("author_id"),
+    revertedFrom: integer("reverted_from"),
+    /** 以維基百科為底的內容：CC BY-SA 4.0 */
+    license: text("license"),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [index("revisions_target_idx").on(t.target, t.id)],
+);
+
+/** 管理員鎖定頁面（禁止編輯）。target 同 revisions */
+export const pageLocks = sqliteTable("page_locks", {
+  target: text("target").primaryKey(),
+  lockedBy: text("locked_by").notNull(),
+  lockedAt: text("locked_at").notNull().default(now),
+});
+
+/**
+ * 成交紀錄（歷史價格用）。成交時寫一筆；賣家改回出售中時標 voided_at，不刪。
+ * 買賣雙方只存 id，前台永遠不顯示是誰。
+ */
+export const deals = sqliteTable(
+  "deals",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    shareNo: integer("share_no").notNull(),
+    offerId: integer("offer_id"),
+    /** `{slug}/{no}#{品項}-{版本}`；沒選版本的收藏為 NULL，不進行情 */
+    versionKey: text("version_key"),
+    price: integer("price").notNull(),
+    sellerId: text("seller_id").notNull(),
+    buyerId: text("buyer_id").notNull(),
+    soldAt: text("sold_at").notNull().default(now),
+    voidedAt: text("voided_at"),
+  },
+  (t) => [index("deals_version_idx").on(t.versionKey, t.soldAt), index("deals_share_idx").on(t.shareNo)],
+);
+
+/** 首頁熱門藝人「不感興趣」：之後不再推薦 */
+export const artistDismissals = sqliteTable(
+  "artist_dismissals",
+  {
+    userId: text("user_id").notNull(),
+    artistSlug: text("artist_slug").notNull(),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.artistSlug] })],
 );

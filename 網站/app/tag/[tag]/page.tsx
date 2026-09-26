@@ -21,7 +21,8 @@ export async function generateMetadata({ params }: Props) {
 export default async function TagPage({ params }: Props) {
   const tag = decode((await params).tag);
   const { c } = await pageData();
-  const artist = c.resolveTagArtist(tag);
+  const tagArtist = c.resolveTagArtist(tag);
+  const artist = tagArtist && c.artistVisible(tagArtist) ? tagArtist : undefined;
   const list = c.sharesWithTag(tag).map(c.toShareView);
 
   return (

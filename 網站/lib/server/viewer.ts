@@ -22,3 +22,12 @@ export async function pageData() {
   const viewer = await getViewer();
   return { viewer, c: await getCatalog(viewer?.id ?? null) };
 }
+
+/** 目前網站的來源（https://yinzang.dblzm.workers.dev），給 og:url、og:image 這類要絕對網址的地方 */
+export async function siteOrigin() {
+  const h = await headers();
+  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:5173";
+  const local = /^(localhost|127\.0\.0\.1)(:\d+)?$/.test(host);
+  const proto = h.get("x-forwarded-proto") ?? (local ? "http" : "https");
+  return `${proto}://${host}`;
+}

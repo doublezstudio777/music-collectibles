@@ -4,6 +4,7 @@ import { and, asc, eq, gt, isNull, ne, or, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import {
   appeals,
+  artistDismissals,
   artists,
   follows,
   holdings,
@@ -29,11 +30,13 @@ export type MyState = {
   appeals: { target: string; status: string }[];
   /** 有未讀訊息的對話數 */
   unread: number;
+  /** 首頁熱門藝人按過「不感興趣」的 */
+  dismissed: string[];
 };
 
 export async function myState(userId: string): Promise<MyState> {
   const db = getDb();
-  const [l, h, f] = await db.batch([
+  const [l, h, f, d] = await db.batch([
     db.select({ n: likes.shareNo }).from(likes).where(eq(likes.userId, userId)).orderBy(asc(likes.createdAt)),
     db
       .select({ kind: holdings.kind, key: holdings.targetKey })
@@ -41,12 +44,14 @@ export async function myState(userId: string): Promise<MyState> {
       .where(eq(holdings.userId, userId))
       .orderBy(asc(holdings.createdAt)),
     db.select({ slug: follows.artistSlug }).from(follows).where(eq(follows.userId, userId)).orderBy(asc(follows.createdAt)),
+    db.select({ slug: artistDismissals.artistSlug }).from(artistDismissals).where(eq(artistDismissals.userId, userId)),
   ]);
   return {
     liked: l.map((x) => x.n),
     owned: h.filter((x) => x.kind === "owned").map((x) => x.key),
     wanted: h.filter((x) => x.kind === "wanted").map((x) => x.key),
     follows: f.map((x) => x.slug),
+    dismissed: d.map((x) => x.slug),
     ...(await tradeState(userId)),
   };
 }
@@ -93,7 +98,7 @@ export async function shareExists(no: number) {
   const [r] = await getDb()
     .select({ no: shares.no })
     .from(shares)
-    .where(and(eq(shares.no, no), isNull(shares.deletedAt)));
+    .where(and(eq(shares.no, no), isNull(shares.deletedAt), isNull(shares.hiddenAt)));
   return Boolean(r);
 }
 
@@ -101,7 +106,7 @@ export async function artistExists(slug: string) {
   const [r] = await getDb()
     .select({ slug: artists.slug })
     .from(artists)
-    .where(and(eq(artists.slug, slug), eq(artists.status, "approved"), isNull(artists.deletedAt)));
+    .where(and(eq(artists.slug, slug), eq(artists.status, "approved"), isNull(artists.deletedAt), isNull(artists.hiddenAt)));
   return Boolean(r);
 }
 
@@ -122,12 +127,12 @@ export async function contentKeyExists(key: string, level: "series" | "item" | "
   const [row] = await db
     .select({ s: series.id, i: items.id, v: versions.id })
     .from(series)
-    .leftJoin(items, and(eq(items.seriesId, series.id), eq(items.itemId, k.itemId ?? ""), eq(items.status, "approved"), isNull(items.deletedAt)))
+    .leftJoin(items, and(eq(items.seriesId, series.id), eq(items.itemId, k.itemId ?? ""), eq(items.status, "approved"), isNull(items.deletedAt), isNull(items.hiddenAt)))
     .leftJoin(
       versions,
-      and(eq(versions.itemRef, items.id), eq(versions.versionId, k.versionId ?? ""), eq(versions.status, "approved"), isNull(versions.deletedAt)),
+      and(eq(versions.itemRef, items.id), eq(versions.versionId, k.versionId ?? ""), eq(versions.status, "approved"), isNull(versions.deletedAt), isNull(versions.hiddenAt)),
     )
-    .where(and(eq(series.artistSlug, k.artist), eq(series.no, k.no), eq(series.status, "approved"), isNull(series.deletedAt)));
+    .where(and(eq(series.artistSlug, k.artist), eq(series.no, k.no), eq(series.status, "approved"), isNull(series.deletedAt), isNull(series.hiddenAt)));
   if (!row) return false;
   if (level === "series") return true;
   if (level === "item") return row.i !== null;
@@ -157,4 +162,10 @@ export async function setFollow(userId: string, artistSlug: string, on: boolean)
 
 export async function clearFollows(userId: string) {
   await getDb().delete(follows).where(eq(follows.userId, userId));
+}
+
+export async function setDismiss(userId: string, artistSlug: string, on: boolean) {
+  const db = getDb();
+  if (on) await db.insert(artistDismissals).values({ userId, artistSlug }).onConflictDoNothing();
+  else await db.delete(artistDismissals).where(and(eq(artistDismissals.userId, userId), eq(artistDismissals.artistSlug, artistSlug)));
 }

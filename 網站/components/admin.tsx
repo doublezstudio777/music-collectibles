@@ -8,7 +8,23 @@ import { api } from "@/lib/account";
 const STATUS_WORD: Record<string, string> = { pending: "審核中", unlocked: "已解鎖", kept: "維持鎖定" };
 const TYPE_WORD = { artist: "藝人", series: "系列", item: "品項", version: "版本" } as const;
 
+type HideType = "artist" | "series" | "item" | "version" | "share";
+const HIDE_WORD: Record<HideType, string> = { artist: "藝人", series: "系列", item: "品項", version: "版本", share: "炫收藏" };
+const HIDE_HINT: Record<HideType, string> = {
+  artist: "藝人網址識別碼，例：mountain-radio",
+  series: "藝人/系列號，例：mountain-radio/1",
+  item: "系列#品項，例：mountain-radio/1#cd",
+  version: "系列#品項-版本，例：mountain-radio/1#cd-v1",
+  share: "炫收藏號碼，例：12",
+};
+const DISPLAY_WORD = { auto: "自動", on: "強制顯示", off: "強制不顯示" } as const;
+
+type Site = { paused: boolean; pausedAt: string | null; pausedReason: string; reads: number; readLimit: number; storageUsed: number; storageLimit: number };
+
 type Overview = {
+  site: Site;
+  hidden: { type: HideType; key: string; title: string; at: string }[];
+  display: { slug: string; name: string; display: keyof typeof DISPLAY_WORD }[];
   threshold: number;
   targets: { target: string; counts: Record<string, number>; total: number; locked: boolean; decision: "unlocked" | "kept" | null }[];
   appeals: { id: number; target: string; by: string; text: string; status: string; createdAt: string; photos: string[] }[];
@@ -25,7 +41,147 @@ function targetLink(t: string) {
   return { name: level === "item" ? "品項" : "版本", href: `/artist/${sk}#${anchor}`, title: key };
 }
 
-const day = (iso: string) => iso.slice(0, 16).replace("T", " ");
+/** 台灣時間（資料庫存 UTC） */
+const day = (iso: string) => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 16).replace("T", " ");
+const gb = (n: number) => `${(n / 1024 ** 3).toFixed(2)} GB`;
+const pct = (a: number, b: number) => `${Math.round((a / b) * 1000) / 10}%`;
+
+/** 網站狀態：暫停模式（第三道防線）、本月照片讀取（第二道）、照片容量（第一道） */
+function SiteStatus({ site, run }: { site: Site; run: (path: string, body: unknown) => Promise<void> }) {
+  return (
+    <section className="block">
+      <h2 className="block-title">網站狀態</h2>
+      <dl className="spec-list site-status" data-testid="site-status">
+        <div>
+          <dt>暫停模式</dt>
+          <dd data-paused={site.paused}>
+            {site.paused ? (
+              <>
+                <span className="flag flag-lock">暫停中</span> {site.pausedReason}
+                {site.pausedAt ? <span className="sub"> · {day(site.pausedAt)}</span> : null}
+              </>
+            ) : (
+              "正常"
+            )}
+          </dd>
+        </div>
+        <div>
+          <dt>本月照片讀取</dt>
+          <dd className="num">
+            {site.reads.toLocaleString("en-US")} / {site.readLimit.toLocaleString("en-US")}（{pct(site.reads, site.readLimit)}）
+          </dd>
+        </div>
+        <div>
+          <dt>照片容量</dt>
+          <dd className="num">
+            {gb(site.storageUsed)} / {gb(site.storageLimit)}（{pct(site.storageUsed, site.storageLimit)}）
+          </dd>
+        </div>
+      </dl>
+      <div className="report-acts">
+        {site.paused ? (
+          <button type="button" className="btn btn-line" onClick={() => run("/api/admin/pause", { paused: false })}>
+            解除暫停
+          </button>
+        ) : (
+          <button type="button" className="btn-text" onClick={() => run("/api/admin/pause", { paused: true })}>
+            手動暫停
+          </button>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/** 下架：隱藏／恢復、永久刪除空頁面、藝人頁顯示 */
+function Takedown({ data, run }: { data: Overview; run: (path: string, body: unknown) => Promise<void> }) {
+  const [type, setType] = useState<HideType>("share");
+  const [key, setKey] = useState("");
+  const [mode, setMode] = useState<keyof typeof DISPLAY_WORD>("on");
+  const k = key.trim();
+  return (
+    <section className="block">
+      <h2 className="block-title">
+        下架<span className="count">{data.hidden.length}</span>
+      </h2>
+      <form className="takedown" onSubmit={(e) => e.preventDefault()} noValidate>
+        <label className="sr-only" htmlFor="td-type">
+          類型
+        </label>
+        <select id="td-type" className="select" value={type} onChange={(e) => setType(e.target.value as HideType)}>
+          {(Object.keys(HIDE_WORD) as HideType[]).map((t) => (
+            <option key={t} value={t}>
+              {HIDE_WORD[t]}
+            </option>
+          ))}
+        </select>
+        <label className="sr-only" htmlFor="td-key">
+          {HIDE_HINT[type]}
+        </label>
+        <input id="td-key" className="input" value={key} placeholder={HIDE_HINT[type]} onChange={(e) => setKey(e.target.value)} />
+        <span className="report-acts">
+          <button type="button" className="btn btn-line" disabled={!k} onClick={() => run("/api/admin/hide", { type, key: k, hidden: true })}>
+            隱藏
+          </button>
+          <button type="button" className="btn-text" disabled={!k} onClick={() => run("/api/admin/hide", { type, key: k, hidden: false })}>
+            恢復
+          </button>
+          {type !== "share" ? (
+            <button type="button" className="btn-text" disabled={!k} data-testid="purge" onClick={() => run("/api/admin/purge", { type, key: k })}>
+              永久刪除
+            </button>
+          ) : null}
+        </span>
+        {type === "artist" ? (
+          <span className="report-acts">
+            <label className="sr-only" htmlFor="td-display">
+              藝人頁顯示
+            </label>
+            <select id="td-display" className="select" value={mode} onChange={(e) => setMode(e.target.value as keyof typeof DISPLAY_WORD)}>
+              {(Object.keys(DISPLAY_WORD) as (keyof typeof DISPLAY_WORD)[]).map((m) => (
+                <option key={m} value={m}>
+                  藝人頁{DISPLAY_WORD[m]}
+                </option>
+              ))}
+            </select>
+            <button type="button" className="btn btn-line" disabled={!k} onClick={() => run("/api/admin/display", { slug: k, mode })}>
+              套用
+            </button>
+          </span>
+        ) : null}
+      </form>
+      {data.hidden.length ? (
+        <ul className="rows" data-testid="hidden-list">
+          {data.hidden.map((h) => (
+            <li key={`${h.type}:${h.key}`} className="hidden-row" data-hidden={`${h.type}:${h.key}`}>
+              <span className="row-main">
+                {HIDE_WORD[h.type]}　{h.title} <span className="mono sub">{h.key}</span>
+              </span>
+              <span className="sub">{day(h.at)}</span>
+              <button type="button" className="btn-text" onClick={() => run("/api/admin/hide", { type: h.type, key: h.key, hidden: false })}>
+                恢復
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {data.display.length ? (
+        <ul className="rows" data-testid="display-list">
+          {data.display.map((d) => (
+            <li key={d.slug} className="hidden-row">
+              <span className="row-main">
+                藝人頁{DISPLAY_WORD[d.display]}　{d.name} <span className="mono sub">{d.slug}</span>
+              </span>
+              <button type="button" className="btn-text" onClick={() => run("/api/admin/display", { slug: d.slug, mode: "auto" })}>
+                改回自動
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </section>
+  );
+}
 
 /** 管理後台：只有管理員（ADMIN_EMAILS）看得到，頁面與 API 兩邊都擋 */
 export function Admin() {
@@ -72,10 +228,12 @@ export function Admin() {
   return (
     <div className="admin">
       {error ? (
-        <p className="field-error" role="alert">
+        <p className="field-error" role="alert" data-testid="admin-error">
           {error}
         </p>
       ) : null}
+      <SiteStatus site={data.site} run={run} />
+      <Takedown data={data} run={run} />
       <section className="block">
         <h2 className="block-title">檢舉門檻</h2>
         <form className="threshold" onSubmit={save} noValidate>

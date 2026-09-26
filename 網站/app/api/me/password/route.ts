@@ -1,3 +1,4 @@
+import { passwordIterations } from "@/lib/server/services";
 import { and, eq, ne } from "drizzle-orm";
 import { getDb } from "@/db";
 import { sessions, users } from "@/db/schema";
@@ -18,7 +19,7 @@ export async function POST(req: Request) {
   const db = getDb();
   await db
     .update(users)
-    .set({ passwordHash: await hashPassword(next), updatedAt: new Date().toISOString() })
+    .set({ passwordHash: await hashPassword(next, passwordIterations()), updatedAt: new Date().toISOString() })
     .where(eq(users.id, s.user.id));
   await db.delete(sessions).where(and(eq(sessions.userId, s.user.id), ne(sessions.id, s.sessionId)));
   return json({ ok: true });

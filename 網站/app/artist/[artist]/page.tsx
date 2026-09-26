@@ -1,24 +1,32 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { seriesHref, tagHref } from "@/lib/data";
+import { artistHref, seriesHref, tagHref } from "@/lib/data";
+import { latestRevisionId } from "@/lib/server/wiki";
 import { pageData } from "@/lib/server/viewer";
 import { FollowButton } from "@/components/follow-button";
-import { NextPhase } from "@/components/next-phase";
+import { WikiEditor } from "@/components/wiki-editor";
+import { isLocked, lastEdit, loadPage } from "@/lib/server/wiki";
 import { ShareWall } from "@/components/share-wall";
 import { SeriesTile } from "@/components/work-cover";
 
-type Props = { params: Promise<{ artist: string }> };
+type Props = { params: Promise<{ artist: string }>; searchParams: Promise<{ edit?: string }> };
 
 export async function generateMetadata({ params }: Props) {
   const { c } = await pageData();
-  const a = c.getArtist((await params).artist);
+  const a = c.visibleArtist((await params).artist);
   return { title: a ? a.name : "找不到藝人", description: a?.tagline };
 }
 
-export default async function ArtistPage({ params }: Props) {
+export default async function ArtistPage({ params, searchParams }: Props) {
   const { c } = await pageData();
-  const artist = c.getArtist((await params).artist);
+  // 沒有任何系列也沒有任何收藏的藝人頁不對外顯示（管理員可強制開關），直接打網址回 404
+  const artist = c.visibleArtist((await params).artist);
   if (!artist) notFound();
+  const editing = (await searchParams).edit === "1";
+  const wt = { kind: "artist" as const, slug: artist.slug };
+  const [page, locked, edited] = await Promise.all([loadPage(wt), isLocked(wt), lastEdit(wt)]);
+  const self = artistHref(artist.slug);
+  const lastBy = edited ?? artist.lastEdit;
 
   const main = c.mainSeriesOf(artist.slug);
   const guests = c.guestSeriesOf(artist.slug);
@@ -41,8 +49,12 @@ export default async function ArtistPage({ params }: Props) {
         </div>
         <div className="head-actions">
           <FollowButton slug={artist.slug} name={artist.name} />
-          <NextPhase label="編輯" />
-          <NextPhase label="歷史" />
+          <Link className="btn btn-line" href={`${self}?edit=1#intro`} data-testid="edit-link">
+            編輯
+          </Link>
+          <Link className="btn btn-line" href={`${self}/history`}>
+            歷史
+          </Link>
         </div>
       </header>
 
@@ -57,11 +69,20 @@ export default async function ArtistPage({ params }: Props) {
         </section>
       ) : null}
 
-      {artist.intro.length ? (
-        <section className="block prose">
-          {artist.intro.map((p) => (
-            <p key={p.slice(0, 12)}>{p}</p>
-          ))}
+      {artist.intro.length || editing ? (
+        <section id="intro" className="block prose">
+          {editing ? (
+            <WikiEditor
+              target={`artist:${artist.slug}`}
+              paras={page?.content ?? artist.intro}
+              baseId={page ? await latestRevisionId(`artist:${artist.slug}`) : 0}
+              locked={locked}
+              closeHref={self}
+              label="簡介"
+            />
+          ) : (
+            artist.intro.map((p, i) => <p key={i}>{p}</p>)
+          )}
           {artist.wiki ? (
             <p className="edit-line" data-testid="wiki-credit">
               來源：
@@ -72,13 +93,16 @@ export default async function ArtistPage({ params }: Props) {
               <a className="link" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh-hant" rel="license noopener" target="_blank">
                 {artist.wiki.license}
               </a>{" "}
-              授權
+              授權{edited ? "；音藏使用者改寫的版本同樣以此授權" : ""}
             </p>
-          ) : (
-            <p className="edit-line">
-              最後修改：{artist.lastEdit.by}，{artist.lastEdit.date}
-            </p>
-          )}
+          ) : null}
+          <p className="edit-line" data-testid="last-edit">
+            最後修改：{lastBy.by}，{lastBy.date}
+            <span className="dot" aria-hidden="true">·</span>
+            <Link className="link" href={`${self}/history`}>
+              歷史
+            </Link>
+          </p>
         </section>
       ) : null}
 

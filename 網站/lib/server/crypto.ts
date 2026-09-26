@@ -50,11 +50,15 @@ async function pbkdf2(password: string, salt: Uint8Array, iterations: number) {
   return new Uint8Array(bits);
 }
 
-export async function hashPassword(password: string) {
+/** iterations 由呼叫端給（正式環境可用環境變數 PBKDF2_ITERATIONS 調低，見 services.ts passwordIterations） */
+export async function hashPassword(password: string, iterations = PBKDF2_ITERATIONS) {
   const salt = randomBytes(16);
-  const hash = await pbkdf2(password, salt, PBKDF2_ITERATIONS);
-  return `pbkdf2-sha256$${PBKDF2_ITERATIONS}$${b64url(salt)}$${b64url(hash)}`;
+  const hash = await pbkdf2(password, salt, iterations);
+  return `pbkdf2-sha256$${iterations}$${b64url(salt)}$${b64url(hash)}`;
 }
+
+/** 雜湊用的次數（登入成功時若跟設定不同就重新雜湊） */
+export const hashIterations = (stored: string) => Number(stored.split("$")[1]) || 0;
 
 function equalBytes(a: Uint8Array, b: Uint8Array) {
   if (a.length !== b.length) return false;
@@ -71,6 +75,6 @@ export async function verifyPassword(password: string, stored: string) {
 }
 
 /** 帳號不存在時也跑一次雜湊，讓回應時間看不出帳號在不在 */
-export async function burnPasswordTime(password: string) {
-  await pbkdf2(password, randomBytes(16), PBKDF2_ITERATIONS);
+export async function burnPasswordTime(password: string, iterations = PBKDF2_ITERATIONS) {
+  await pbkdf2(password, randomBytes(16), iterations);
 }

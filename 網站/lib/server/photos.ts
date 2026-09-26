@@ -116,8 +116,10 @@ export async function acceptUpload(
   const id = randomToken(12);
   const ext = type === "image/webp" ? "webp" : "jpg";
   const tExt = tType === "image/webp" ? "webp" : "jpg";
-  const key = `p/${id}.${ext}`;
-  const thumbKey = `p/${id}_t.${tExt}`;
+  // 申訴證據放 a/（只給本人與管理員看，/img/ 會檢查身分）；公開照片放 p/
+  const dir = purpose === "appeal" ? "a" : "p";
+  const key = `${dir}/${id}.${ext}`;
+  const thumbKey = `${dir}/${id}_t.${tExt}`;
   const bucket = env.PHOTOS;
   if (!bucket) {
     await releaseBytes(bytes);

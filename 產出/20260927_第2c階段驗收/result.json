@@ -1,0 +1,533 @@
+{
+  "checks": [
+    {
+      "name": "0 六個真帳號（已驗證 Email）＋管理員登入",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1a 修改說明空白被擋（400 SUMMARY_REQUIRED）",
+      "ok": true,
+      "detail": "{'error': {'code': 'SUMMARY_REQUIRED', 'message': '寫一句修改說明'}}"
+    },
+    {
+      "name": "1b 未驗證帳號編輯被擋（403 NOT_VERIFIED）",
+      "ok": true,
+      "detail": "{'error': {'code': 'NOT_VERIFIED', 'message': '認證後才能編輯'}}"
+    },
+    {
+      "name": "1c 網頁：沒寫修改說明送不出（顯示「寫一句修改說明」）",
+      "ok": true,
+      "detail": "寫一句修改說明"
+    },
+    {
+      "name": "1d 網頁編輯成功：正文更新、顯示「最後修改：A · 歷史」",
+      "ok": true,
+      "detail": "最後修改：WA575，2026-09-26·歷史"
+    },
+    {
+      "name": "1e 用舊版本 id 編輯 → 409 EDIT_CONFLICT",
+      "ok": true,
+      "detail": "{'error': {'code': 'EDIT_CONFLICT', 'message': '你編輯的時候有人先改了，重新整理看最新內容再改'}}"
+    },
+    {
+      "name": "1f B 用最新版本 id 編輯 → 201",
+      "ok": true,
+      "detail": "{'id': 27}"
+    },
+    {
+      "name": "1g 歷史：初始版本＋A＋B 共 3 版，作者、時間、說明都有",
+      "ok": true,
+      "detail": "[{'no': 3, 'author': 'WB575', 'summary': '月份來源不明先拿掉', 'at': '2026-09-26T18:49:58.411Z'}, {'no': 2, 'author': 'WA575', 'summary': '補上發行月份', 'at': '2026-09-26T18:49:57.920Z'}, {'no': 1, 'author': '阿澤', 'summary': '初始版本', 'at': '2026-09-26T15:47:24.038Z'}]"
+    },
+    {
+      "name": "1h 歷史頁預設比對最新兩版，差異有 <ins>／<del>",
+      "ok": true,
+      "detail": "<p class=\"diff-change\"><span>第一段：</span><del>A</del><ins>B</ins><span> </span><del>在網頁上</del><ins>又</ins><span>改</span><del>寫的正文</del><ins>了一次</ins><span>，</spa"
+    },
+    {
+      "name": "1i 還原：新增第 4 版「還原到第 2 版」、作者 A、正文回到 A 的版本",
+      "ok": true,
+      "detail": "{'id': 28, 'no': 4, 'content': ['第一段：A 在網頁上改寫的正文，補上發行月份。', '第二段：保留下來的段落。'], 'summary': '還原到第 2 版', 'author': {'handle': 'wa448575', 'name': 'WA575'}, 'revertedFrom': 26, 'license': None, 'at': '2026-09-26T18:49:59.886Z'}"
+    },
+    {
+      "name": "1j 歷史頁指定兩版比對（第 1 版 → 第 4 版）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1k 未驗證帳號網頁：「認證後才能編輯」且沒有表單",
+      "ok": true,
+      "detail": "認證後才能編輯"
+    },
+    {
+      "name": "1l 管理員在歷史頁按「鎖定頁面」→ 已鎖定",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1m 鎖定後一般帳號編輯、還原都被擋（423 PAGE_LOCKED）",
+      "ok": true,
+      "detail": "(423, 423)"
+    },
+    {
+      "name": "1n 鎖定後一般帳號網頁顯示「已被管理員鎖定」",
+      "ok": true,
+      "detail": "這個頁面已被管理員鎖定，暫時不能編輯"
+    },
+    {
+      "name": "1o 鎖定中管理員仍可編輯",
+      "ok": true,
+      "detail": "{'id': 29}"
+    },
+    {
+      "name": "1p 解除鎖定後一般帳號又能編輯",
+      "ok": true,
+      "detail": "{'id': 30}"
+    },
+    {
+      "name": "1q 沒有系列也沒有收藏的藝人頁回 404（匯入的 eason-chan）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1r 管理員強制顯示後 200，簡介標「來源：維基百科＋條目連結＋CC BY-SA 4.0」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1s 改寫後仍標維基來源，並註明改寫版本同樣以 CC BY-SA 4.0 授權；每一版都記授權",
+      "ok": true,
+      "detail": "['CC BY-SA 4.0', 'CC BY-SA 4.0']"
+    },
+    {
+      "name": "1t 藝人歷史頁有授權說明",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "2a 首頁熱門藝人 5 位＋最後一格「看全部藝人」連到 /artists",
+      "ok": true,
+      "detail": "['mountain-radio', 'tide-highway', 'empty-room', 'before-rain-stops', 'faint-signal']"
+    },
+    {
+      "name": "2b 按「不感興趣」：那位消失、下一位補上（仍 5 位或名單用完）",
+      "ok": true,
+      "detail": "['tide-highway', 'empty-room', 'before-rain-stops', 'faint-signal', 'lin-hsia']"
+    },
+    {
+      "name": "2c 重新整理後仍不推薦（存在 D1）",
+      "ok": true,
+      "detail": "[{'artist_slug': 'mountain-radio'}]"
+    },
+    {
+      "name": "2d 點熱門藝人名字進藝人頁",
+      "ok": true,
+      "detail": "http://localhost:5173/artist/tide-highway"
+    },
+    {
+      "name": "2e 熱門藝人按「追蹤」寫進 D1",
+      "ok": true,
+      "detail": "[{'artist_slug': 'tide-highway'}]"
+    },
+    {
+      "name": "2f 藝人目錄 5 種篩選組合：列出的都符合類型×地區、只列藝人、網頁與 API 一致",
+      "ok": true,
+      "detail": "{'全部': 9, 'g=female': 2, 'r=overseas': 2, 'g=group&r=domestic': 4, 'g=male&r=overseas': 2}"
+    },
+    {
+      "name": "2g 目錄不列沒有內容的藝人（全部藝人數 < 資料庫藝人數）",
+      "ok": true,
+      "detail": "9 位顯示；無系列的 35 位"
+    },
+    {
+      "name": "3a 成交 2 筆：價格區塊不顯示",
+      "ok": true,
+      "detail": "None"
+    },
+    {
+      "name": "3b 成交 3 筆：價格區塊出現，3 筆、中間值 NT$ 1,200、不顯示買賣雙方",
+      "ok": true,
+      "detail": "{'n': 3, 'median': 'NT$ 1,200', 'names_leak': False}"
+    },
+    {
+      "name": "3c 加一筆離群值 NT$ 99,000：被排除，仍是 3 筆、中間值不變",
+      "ok": true,
+      "detail": "{'n': 3, 'median': 'NT$ 1,200', 'names_leak': False}"
+    },
+    {
+      "name": "3d 同一對買賣家（S→A）再成交一次：只算一次（取最新），仍 3 筆、中間值變 NT$ 1,250",
+      "ok": true,
+      "detail": "{'n': 3, 'median': 'NT$ 1,250', 'names_leak': False}"
+    },
+    {
+      "name": "3e 賣家改回出售中：那筆成交作廢（紀錄留著），有效筆數不足 3 → 整塊不顯示",
+      "ok": true,
+      "detail": "(200, None)"
+    },
+    {
+      "name": "3f 目前開價與出價區間顯示（開價 NT$ 1,500、出價 NT$ 1,000）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "3g 買家不是認證帳號時那筆不算（剩 2 筆 → 不顯示）",
+      "ok": true,
+      "detail": "None"
+    },
+    {
+      "name": "3h API /api/prices 同一份行情（3 筆、排除 1 筆離群值），沒有買賣雙方欄位",
+      "ok": true,
+      "detail": "{'n': 3, 'min': 1100, 'max': 1350, 'median': 1250, 'points': [{'date': '2026-09-26', 'price': 1100}, {'date': '2026-09-26', 'price': 1250}, {'date': '2026-09-26', 'price': 1350}], 'excluded': 1, 'asks': [800, 1500], 'bids': [1000, 1000]}"
+    },
+    {
+      "name": "4a 隱藏炫收藏：單則頁 404、首頁牆沒有、API 當不存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "4b 恢復後單則頁 200、首頁牆又出現",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "4c 隱藏版本：系列頁沒有那個版本；恢復後又出現",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "4d 隱藏系列：系列頁 404；恢復後 200",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "4e 隱藏品項：系列頁沒有那個品項；恢復後又出現",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "4f 隱藏藝人：藝人頁 404；恢復後 200",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "4g 每次隱藏／恢復都留操作紀錄",
+      "ok": true,
+      "detail": "[{'action': '恢復', 'target': 'artist:lin-hsia'}, {'action': '隱藏', 'target': 'artist:lin-hsia'}, {'action': '恢復', 'target': 'item:before-rain-stops/1#bluray'}, {'action': '隱藏', 'target': 'item:before-rain-stops/1#bluray'}]"
+    },
+    {
+      "name": "4h 有收藏的系列／藝人／版本永久刪除被擋（409 HAS_CONTENT），炫收藏本身不能永久刪除",
+      "ok": true,
+      "detail": "('底下還有東西（12 則炫收藏、7 筆我有／想要、3 筆檢舉紀錄），不能永久刪除，只能隱藏', 400)"
+    },
+    {
+      "name": "4i 空系列可永久刪除；刪了之後藝人沒有系列 → 藝人頁 404；系列號不重用（新系列是 2 號）；空藝人可永久刪除",
+      "ok": true,
+      "detail": "(200, 200, 404, 2, 200)"
+    },
+    {
+      "name": "4j 永久刪除留操作紀錄，含整列內容快照",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "4k 管理員強制不顯示有內容的藝人 → 404；改回自動 → 200",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "4l 後台畫面：隱藏後出現在下架清單、按恢復後移出",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "4m 後台畫面：有收藏的系列按「永久刪除」顯示擋下原因",
+      "ok": true,
+      "detail": "底下還有東西（12 則炫收藏、7 筆我有／想要、3 筆檢舉紀錄），不能永久刪除，只能隱藏"
+    },
+    {
+      "name": "5a /img/ 回應帶 X-Content-Type-Options: nosniff",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "5b webhook 錯誤密鑰、沒帶密鑰都被擋（401），不會進暫停",
+      "ok": true,
+      "detail": "(401, 401)"
+    },
+    {
+      "name": "5c 正確密鑰 → 暫停模式：照片回佔位圖、上傳停止（GET 回 paused、POST 503）、文字頁照常",
+      "ok": true,
+      "detail": "(200, 'paused', (200, {'paused': True}), 503)"
+    },
+    {
+      "name": "5d 後台顯示暫停中，管理員按「解除暫停」→ 照片恢復",
+      "ok": true,
+      "detail": "暫停模式\n暫停中 預算通知 webhook\n· 2026-09-27 02:51\n本月照片讀取\n29 / 8,000,000（0%）\n照片容量\n0.00 GB "
+    },
+    {
+      "name": "5e 照片讀取計數：25 次 R2 讀取 → D1 累計 +20（每 20 次寫一次）",
+      "ok": true,
+      "detail": "(0, 20)"
+    },
+    {
+      "name": "5f 本月讀取達 800 萬（免費 1,000 萬的 80%）→ 佔位圖；歸零後恢復",
+      "ok": true,
+      "detail": "('limit', '暫停模式\\n正常\\n本月照片讀取\\n8,000,014 / 8,000,000（100%）\\n照片容量\\n0.00 GB / 8.00 GB（0%）')"
+    },
+    {
+      "name": "5g 申訴證據照片放 a/，訪客與其他人 404、本人與管理員 200（private, no-store、nosniff）",
+      "ok": true,
+      "detail": "('a/rDw5luJP2MnA-oym.webp', 404, 404, 200, 200)"
+    },
+    {
+      "name": "6a noindex：每頁 <meta name=robots content=noindex>",
+      "ok": true,
+      "detail": "[True, True, True, True, True]"
+    },
+    {
+      "name": "6b noindex：回應表頭 X-Robots-Tag: noindex（頁面、API、robots.txt）",
+      "ok": true,
+      "detail": "['noindex', 'noindex', 'noindex', 'noindex', 'noindex', 'noindex', 'noindex']"
+    },
+    {
+      "name": "6c robots.txt 允許爬取（沒有 Disallow: / 全站），只擋 /admin 與 /api/",
+      "ok": true,
+      "detail": "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\n"
+    },
+    {
+      "name": "6d 單則炫收藏 OG：og:title、og:description、og:image（那則主圖、絕對網址、打得開）、og:url",
+      "ok": true,
+      "detail": "{'title': '南方現場 藍光／DVD 首批盒裝版', 'description': 'WS575 的藍光／DVD', 'url': 'http://localhost:5173/share/124', 'image': 'http://localhost:5173/img/p/VkeyhyqTfTj37mrz.webp'}"
+    },
+    {
+      "name": "7a 22 個畫面（11 頁 × 1440／390）無橫向溢出",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "7b 畫面巡檢 console error 0",
+      "ok": true,
+      "detail": "[]"
+    }
+  ],
+  "pages": {
+    "home_1440": {
+      "url": "/",
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "overflow": false
+    },
+    "artists_1440": {
+      "url": "/artists",
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "overflow": false
+    },
+    "artists_f_1440": {
+      "url": "/artists?g=female&r=domestic",
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "overflow": false
+    },
+    "artist_1440": {
+      "url": "/artist/mountain-radio",
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "overflow": false
+    },
+    "artist_wiki_1440": {
+      "url": "/artist/eason-chan",
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "overflow": false
+    },
+    "series_edit_1440": {
+      "url": "/artist/tide-highway/2?edit=1",
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "overflow": false
+    },
+    "series_hist_1440": {
+      "url": "/artist/tide-highway/2/history",
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "overflow": false
+    },
+    "artist_hist_1440": {
+      "url": "/artist/eason-chan/history",
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "overflow": false
+    },
+    "price_1440": {
+      "url": "/artist/before-rain-stops/1",
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "overflow": false
+    },
+    "share_1440": {
+      "url": "/share/124",
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "overflow": false
+    },
+    "admin_1440": {
+      "url": "/admin",
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "overflow": false
+    },
+    "home_390": {
+      "url": "/",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflow": false
+    },
+    "artists_390": {
+      "url": "/artists",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflow": false
+    },
+    "artists_f_390": {
+      "url": "/artists?g=female&r=domestic",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflow": false
+    },
+    "artist_390": {
+      "url": "/artist/mountain-radio",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflow": false
+    },
+    "artist_wiki_390": {
+      "url": "/artist/eason-chan",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflow": false
+    },
+    "series_edit_390": {
+      "url": "/artist/tide-highway/2?edit=1",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflow": false
+    },
+    "series_hist_390": {
+      "url": "/artist/tide-highway/2/history",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflow": false
+    },
+    "artist_hist_390": {
+      "url": "/artist/eason-chan/history",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflow": false
+    },
+    "price_390": {
+      "url": "/artist/before-rain-stops/1",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflow": false
+    },
+    "share_390": {
+      "url": "/share/124",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflow": false
+    },
+    "admin_390": {
+      "url": "/admin",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflow": false
+    }
+  },
+  "stamp": "448575",
+  "targets": {
+    "series": "tide-highway/2",
+    "price": "before-rain-stops/1#bluray-v1",
+    "wiki": "eason-chan"
+  },
+  "wiki_before": 1,
+  "wiki_revisions": [
+    {
+      "no": 3,
+      "author": "WB575",
+      "summary": "月份來源不明先拿掉",
+      "at": "2026-09-26T18:49:58.411Z"
+    },
+    {
+      "no": 2,
+      "author": "WA575",
+      "summary": "補上發行月份",
+      "at": "2026-09-26T18:49:57.920Z"
+    },
+    {
+      "no": 1,
+      "author": "阿澤",
+      "summary": "初始版本",
+      "at": "2026-09-26T15:47:24.038Z"
+    }
+  ],
+  "hot_before": [
+    "mountain-radio",
+    "tide-highway",
+    "empty-room",
+    "before-rain-stops",
+    "faint-signal"
+  ],
+  "hot_after": [
+    "tide-highway",
+    "empty-room",
+    "before-rain-stops",
+    "faint-signal",
+    "lin-hsia"
+  ],
+  "artist_dir": {
+    "全部": 9,
+    "g=female": 2,
+    "r=overseas": 2,
+    "g=group&r=domestic": 4,
+    "g=male&r=overseas": 2
+  },
+  "price": {
+    "n": 3,
+    "min": 1100,
+    "max": 1350,
+    "median": 1250,
+    "points": [
+      {
+        "date": "2026-09-26",
+        "price": 1100
+      },
+      {
+        "date": "2026-09-26",
+        "price": 1250
+      },
+      {
+        "date": "2026-09-26",
+        "price": 1350
+      }
+    ],
+    "excluded": 1,
+    "asks": [
+      800,
+      1500
+    ],
+    "bids": [
+      1000,
+      1000
+    ]
+  },
+  "og": {
+    "title": "南方現場 藍光／DVD 首批盒裝版",
+    "description": "WS575 的藍光／DVD",
+    "url": "http://localhost:5173/share/124",
+    "image": "http://localhost:5173/img/p/VkeyhyqTfTj37mrz.webp"
+  },
+  "console_errors": [],
+  "summary": "62/62"
+}

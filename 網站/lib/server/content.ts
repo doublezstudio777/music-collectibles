@@ -101,13 +101,13 @@ export async function lockForShare(s: Pick<ShareRow, "no" | "seriesKey" | "itemI
 async function build(viewerId: string | null): Promise<Catalog> {
   const db = getDb();
   const [aRows, sRows, iRows, vRows, mRows, fRows, shRows, uRows, pRows, likeRows, holdRows] = await db.batch([
-    db.select().from(tArtists).where(and(eq(tArtists.status, "approved"), isNull(tArtists.deletedAt))),
-    db.select().from(tSeries).where(and(eq(tSeries.status, "approved"), isNull(tSeries.deletedAt))),
-    db.select().from(tItems).where(and(eq(tItems.status, "approved"), isNull(tItems.deletedAt))),
-    db.select().from(tVersions).where(and(eq(tVersions.status, "approved"), isNull(tVersions.deletedAt))),
+    db.select().from(tArtists).where(and(eq(tArtists.status, "approved"), isNull(tArtists.deletedAt), isNull(tArtists.hiddenAt))),
+    db.select().from(tSeries).where(and(eq(tSeries.status, "approved"), isNull(tSeries.deletedAt), isNull(tSeries.hiddenAt))),
+    db.select().from(tItems).where(and(eq(tItems.status, "approved"), isNull(tItems.deletedAt), isNull(tItems.hiddenAt))),
+    db.select().from(tVersions).where(and(eq(tVersions.status, "approved"), isNull(tVersions.deletedAt), isNull(tVersions.hiddenAt))),
     db.select().from(versionMarks).where(isNull(versionMarks.deletedAt)),
     db.select().from(versionFakes).where(isNull(versionFakes.deletedAt)),
-    db.select().from(tShares).where(isNull(tShares.deletedAt)),
+    db.select().from(tShares).where(and(isNull(tShares.deletedAt), isNull(tShares.hiddenAt))),
     db.select({ id: users.id, handle: users.handle, name: users.name }).from(users),
     db.select().from(photos).where(and(eq(photos.purpose, "share"), isNull(photos.deletedAt))),
     db.select({ n: likes.shareNo, c: count() }).from(likes).groupBy(likes.shareNo),
@@ -143,6 +143,7 @@ async function build(viewerId: string | null): Promise<Catalog> {
       awards: parseJson<Artist["awards"]>(a.awards, []),
       lastEdit: { by: nameOf(a.lastEditBy ?? a.createdBy) || "音藏", date: day(a.updatedAt) },
       ...(a.wikiUrl ? { wiki: { url: a.wikiUrl, license: a.wikiLicense ?? "CC BY-SA 4.0" } } : {}),
+      display: (a.display === "on" || a.display === "off" ? a.display : "auto") as Artist["display"],
     }))
     .sort((a, b) => a.name.localeCompare(b.name, "zh-Hant"));
 

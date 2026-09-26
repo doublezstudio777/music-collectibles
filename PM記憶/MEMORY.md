@@ -14,3 +14,6 @@
 - PM 在 repo 施工期間，主對話只 `git add` 指定檔案，禁 `git add -A`（2026-09-26 主對話兩筆 commit 誤夾 PM 未完成的網站程式碼）
 - 驗證碼、寄信內容本機印在 dev server 輸出：dev server 一律導到 scratchpad 的 log 檔，驗收腳本從 log 用 regex 抓碼；有 Turnstile 小框的頁面 networkidle 等不到，settle 加 8 秒上限（2026-09-27）
 - D1 遷移產生後先看 SQL，出現 `__new_` 暫存表＝drizzle 要重建表，違反資料永久保存，退回改設計；「從空資料庫跑」用 `--persist-to` 指到暫存資料夾，不用刪本機 .wrangler/state（2026-09-27）
+- `wrangler d1 export` 的 SQL 不能直接還原（子表排在 users 前面，撞 `no such table: main.users`），一律用 `網站/scripts/restore.mjs` 重排後還原到新的空資料庫；`d1 export --local` 只讀 `.wrangler/state`，沒有 `--persist-to`（2026-09-27）
+- 驗收腳本要能重跑：本機資料不清空，每次自動挑「還沒被用過」的系列／版本／藝人當測試對象，不寫死（2026-09-27）
+- 重啟 dev server 用 scratchpad 的小腳本（awk 比對 PID），不要在同一行指令裡 `pgrep -f`／`pkill -f` 帶關鍵字，會比對到自己的 shell 把自己砍掉（2026-09-27 踩兩次）

@@ -650,7 +650,10 @@ a.pg:hover { border-color: var(--line); }
 .hot-list { display: grid; gap: 0 24px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .hot-item { align-items: center; border-top: 1px solid var(--line); display: grid; gap: 2px 12px; grid-template-columns: minmax(0, 1fr) auto; padding: 10px 0; }
 .hot-item .sub { grid-column: 1; }
-.hot-item .follow { grid-column: 2; grid-row: 1 / span 2; }
+.hot-item .hot-acts { align-items: center; display: flex; gap: 10px; grid-column: 2; grid-row: 1 / span 2; }
+.hot-dismiss { color: var(--muted); font-size: var(--text-xs); font-weight: 500; min-height: 36px; }
+.hot-dismiss:hover { color: var(--text); }
+.hot-all .hot-name { text-decoration: underline; text-underline-offset: 3px; }
 .hot-name { font-weight: 600; }
 .hot-name:hover { text-decoration: underline; text-underline-offset: 3px; }
 
@@ -837,3 +840,59 @@ body.has-modal { overflow: hidden; }
 .upload-paused { border: 1px solid var(--line); font-size: var(--text-sm); padding: 12px; }
 .submit-new { border: 1px solid var(--line); display: grid; flex-basis: 100%; gap: 8px; padding: 12px; }
 .submit-field { display: grid; font-size: 13px; gap: 4px; }
+
+/* ============================================================
+   第 2c 階段：維基式編輯、歷史、藝人目錄、成交行情、下架
+   ============================================================ */
+
+.wiki-form { display: grid; gap: 8px; max-width: 760px; }
+.wiki-form .field-label { margin: 8px 0 0; }
+.wiki-text { font-size: var(--text-base); line-height: 1.65; min-height: 220px; padding: 10px 12px; resize: vertical; }
+.wiki-acts { align-items: center; display: flex; gap: 16px; margin-top: 8px; }
+.wiki-gate { align-items: center; background: var(--surface); display: flex; flex-wrap: wrap; font-size: var(--text-sm); font-weight: 600; gap: 12px; padding: 12px 16px; }
+.license-note { margin: -16px 0 24px; }
+
+.compare-form { align-items: center; display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+.diff-head { margin-bottom: 8px; }
+.diff { border-top: 1px solid var(--line); max-width: 760px; }
+.diff p { border-bottom: 1px solid var(--line); line-height: 1.65; margin: 0; padding: 10px 0; overflow-wrap: anywhere; }
+.diff-same { color: var(--muted); }
+.diff ins { background: var(--surface2); font-weight: 700; text-decoration: none; }
+.diff del { color: var(--muted); text-decoration: line-through; }
+.rev-list li { align-items: baseline; display: grid; gap: 4px 16px; grid-template-columns: minmax(0, 1fr) auto; }
+.rev-list .row-main { display: flex; flex-wrap: wrap; gap: 4px 12px; min-width: 0; }
+.rev-summary { font-weight: 400; overflow-wrap: anywhere; }
+.rev-list .sub { grid-column: 1; }
+.rev-acts { align-items: center; display: flex; flex-wrap: wrap; gap: 4px 16px; grid-column: 2; grid-row: 1 / span 2; justify-content: flex-end; }
+.revert { align-items: center; display: inline-flex; flex-wrap: wrap; gap: 8px; }
+
+.dir-filters { display: grid; gap: 10px; margin-bottom: 24px; }
+.dir-list li { align-items: center; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) auto; }
+.dir-list .row-main { display: grid; gap: 2px; min-width: 0; }
+.dir-list .sub { font-weight: 400; }
+
+.price-hist { border: 1px solid var(--line); margin: 16px 0 4px; padding: 0 16px 14px; }
+.price-grid { align-items: end; display: grid; gap: 12px 24px; grid-template-columns: minmax(0, 1fr) auto; }
+.price-stats { display: grid; gap: 0 24px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.price-stats > div { border-bottom: 1px solid var(--line); display: grid; gap: 12px; grid-template-columns: 80px minmax(0, 1fr); padding: 8px 0; }
+.price-stats dt { color: var(--muted); font-size: var(--text-xs); }
+.price-stats dd { font-size: var(--text-sm); font-weight: 600; font-variant-numeric: tabular-nums; }
+.price-trend { margin: 0; }
+.price-trend .trend { display: block; height: auto; max-width: 100%; }
+.price-trend figcaption { margin-top: 4px; }
+
+.takedown { align-items: center; display: flex; flex-wrap: wrap; gap: 10px 12px; margin-bottom: 16px; }
+.takedown .input { flex: 1; min-width: 220px; width: auto; }
+.hidden-row { align-items: center; display: grid; gap: 4px 16px; grid-template-columns: minmax(0, 1fr) auto auto; }
+.hidden-row .row-main { overflow-wrap: anywhere; }
+.site-status { margin-bottom: 12px; }
+
+@media (max-width: 700px) {
+  .price-grid { grid-template-columns: minmax(0, 1fr); }
+  .price-stats { grid-template-columns: minmax(0, 1fr); }
+  .rev-list li { grid-template-columns: minmax(0, 1fr); }
+  .rev-acts { grid-column: 1; grid-row: auto; justify-content: flex-start; }
+  .hidden-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .hidden-row > .sub { grid-column: 1; }
+  .hot-item .hot-acts { gap: 6px; }
+}
