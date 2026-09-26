@@ -22,7 +22,7 @@ function Table({ rows }: { rows: HoldingView[] }) {
         {rows.map((r) => (
           <tr key={r.key}>
             <td className="col-cover">
-              <span className="cover cover-sm" style={{ background: r.color }} />
+              <span className="cover cover-sm" />
             </td>
             <td>
               <Link className="link" href={r.href}>

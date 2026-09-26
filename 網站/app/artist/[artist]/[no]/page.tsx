@@ -53,7 +53,7 @@ export default async function WorkPage({ params }: Props) {
   return (
     <main className="wrap page">
       <header className="work-head">
-        <span className="cover cover-lg" style={{ background: work.versions[0]?.color }} aria-hidden="true" />
+        <span className="cover cover-lg" aria-hidden="true" />
         <div className="work-head-text">
           <p className="credits">
             {credits.map((a, i) => (

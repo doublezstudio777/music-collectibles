@@ -65,7 +65,7 @@ export default async function SearchPage({ searchParams }: Props) {
           <ul className="rows">
             {r.works.map((w) => (
               <li key={`${w.artistSlug}/${w.no}`} className="row-cover">
-                <span className="cover cover-sm" style={{ background: w.versions[0]?.color }} aria-hidden="true" />
+                <span className="cover cover-sm" aria-hidden="true" />
                 <span>
                   <Link className="link row-main" href={workHref(w)}>
                     {w.title}

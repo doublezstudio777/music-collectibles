@@ -7,7 +7,7 @@ export function WorkTile({ work, except }: { work: Work; except?: string }) {
   return (
     <li className="tile">
       <Link href={workHref(work)} className="tile-link">
-        <span className="cover" style={{ background: work.versions[0]?.color }} aria-hidden="true" />
+        <span className="cover" aria-hidden="true" />
         <span className="tile-title">{work.title}</span>
       </Link>
       <span className="sub">
