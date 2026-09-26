@@ -9,6 +9,7 @@
 |---|---|
 | 自動驗收 | **62/62**（最後一次跑的對象：系列 `tide-highway/2`、價格版本 `before-rain-stops/1#bluray-v1`、維基藝人 `eason-chan`） |
 | 畫面 | 11 頁 × 1440／390 = 22 個畫面，橫向溢出 0、console error 0 |
+| 第一道防線仍生效 | 把 `counters.r2_bytes` 暫時設成 8GB−1,000 bytes：`GET /api/uploads` 回 `paused: true`、上傳回 507 `STORAGE_FULL`「上傳暫停」；測完改回原值 432,307（手動測，不在腳本裡） |
 | 真實寄信 | 1 封，收件人 zukawork0312@gmail.com，Resend id `01a0df06-f09d-712e-8061-0042c2ee5568`（本機 dev server 暫時帶 `RESEND_API_KEY`＋`MAIL_ALLOWLIST=zukawork0312@gmail.com`，寄完立刻重啟回 console 模式） |
 | 收錄開關 | `ALLOW_INDEXING=1` 重啟後：`X-Robots-Tag` 0 個、`<meta name="robots">` 0 個；改回預設後三種方式都在（6a～6c） |
 | 遷移 | 空資料庫套用 0000＋0001＋0002 成功（15＋41＋16 條指令），再套一次「No migrations to apply」；空庫 users／artists／shares 皆 0 列；`drizzle/` 無 `__new_`、DROP、RENAME |
