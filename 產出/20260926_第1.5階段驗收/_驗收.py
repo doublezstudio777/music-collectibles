@@ -216,7 +216,7 @@ with sync_playwright() as p:
     check("7 爭議版本底下的收藏不能出價或我要買", pg.get_by_role("button", name="我要買").count() == 0
           and pg.get_by_role("button", name="出價").count() == 0 and pg.locator("[data-testid=frozen]").count() == 1)
     pg.goto(B + "/artist/faint-signal/1"); settle(pg)
-    check("7 系列頁版本區塊有爭議標示，底下兩則收藏都標交易暫停",
+    check("7 系列頁版本區塊有爭議標示，底下所有收藏都標交易暫停",
           pg.locator("#cd-v1 .lock-banner").count() == 1 and pg.locator("#cd-v1 .card[data-locked=true]").count() >= 3)
     pg.goto(B + "/?sort=new"); settle(pg)
     check("7 商品卡被鎖的標「疑似盜版」＋交易暫停", pg.locator(".card[data-locked=true] .flag-lock").count() >= 1
