@@ -1,17 +1,313 @@
+"use client";
+
 import Link from "next/link";
-import { CURRENT_USER, userHref, type ShareView } from "@/lib/data";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import {
+  CURRENT_USER,
+  getUser,
+  priceText,
+  userHref,
+  type Message,
+  type Sale,
+  type SaleState,
+  type ShareView,
+  type Thread,
+} from "@/lib/data";
+import { closeDeal, openThread, respondOffer, sendOffer, setSale, useAppState } from "@/lib/state";
 import { LikeButton } from "@/components/like-button";
 import { NextPhase } from "@/components/next-phase";
 import { Photo, TagList } from "@/components/share-card";
 
-export function ShareDetail({ share }: { share: ShareView }) {
-  const mine = share.author.handle === CURRENT_USER;
+const nameOf = (handle: string) => getUser(handle)?.name ?? handle;
+const initialsOf = (handle: string) => getUser(handle)?.initials ?? handle.slice(0, 1);
+
+/** 金額輸入：只收正整數 */
+export function parsePrice(raw: string) {
+  const n = Number(raw.replace(/[,\s]/g, ""));
+  return Number.isInteger(n) && n > 0 ? n : null;
+}
+
+export function MoneyInput({
+  id,
+  value,
+  onChange,
+  label,
+}: {
+  id: string;
+  value: string;
+  onChange: (v: string) => void;
+  label: string;
+}) {
   return (
-    <div className="detail">
+    <label className="money" htmlFor={id}>
+      <span aria-hidden="true">NT$</span>
+      <input
+        id={id}
+        inputMode="numeric"
+        value={value}
+        onChange={(e) => onChange(e.target.value.replace(/[^\d]/g, ""))}
+        aria-label={label}
+      />
+    </label>
+  );
+}
+
+type OfferEntry = { thread: Thread; msg: Message };
+
+const STATUS_TEXT = {
+  open: "等回覆",
+  accepted: "賣家已接受",
+  rejected: "已拒絕",
+  sold: "成交",
+} as const;
+
+/** 賣家自己看：出售狀態三段切換＋定價 */
+function SellerBar({ share, sale }: { share: ShareView; sale: Sale }) {
+  const [draft, setDraft] = useState<SaleState | null>(null);
+  const [price, setPrice] = useState(sale.price ? String(sale.price) : "");
+  const [error, setError] = useState("");
+  const shown = draft ?? sale.state;
+
+  if (sale.state === "sold") {
+    return (
+      <div className="seller-bar">
+        <p className="seller-row">
+          <b>已售出</b>
+          {sale.soldTo ? <span>成交給{nameOf(sale.soldTo)}</span> : null}
+          {sale.soldAt ? <span className="deal-note">{sale.soldAt}</span> : null}
+        </p>
+      </div>
+    );
+  }
+
+  const pick = (s: SaleState) => {
+    setError("");
+    if (s === "sale") {
+      setDraft("sale");
+      return;
+    }
+    setDraft(null);
+    setSale(share.n, { state: s }, sale);
+  };
+
+  const applyPrice = () => {
+    const p = parsePrice(price);
+    if (!p) {
+      setError("填一個整數金額");
+      return;
+    }
+    setError("");
+    setDraft(null);
+    setSale(share.n, { state: "sale", price: p }, sale);
+  };
+
+  return (
+    <div className="seller-bar" data-testid="seller-bar">
+      <div className="seg" role="group" aria-label="要不要賣">
+        {(
+          [
+            ["share", "純分享"],
+            ["offer", "開放出價"],
+            ["sale", "定價出售"],
+          ] as const
+        ).map(([k, label]) => (
+          <button key={k} type="button" aria-pressed={shown === k} onClick={() => pick(k)}>
+            {label}
+          </button>
+        ))}
+      </div>
+      {shown === "sale" ? (
+        <div className="seller-row">
+          <MoneyInput id="seller-price" value={price} onChange={setPrice} label="定價" />
+          <button type="button" className="btn btn-line btn-lg" onClick={applyPrice}>
+            {sale.state === "sale" ? "改價格" : "開始出售"}
+          </button>
+          {error ? <p className="field-error">{error}</p> : null}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/** 買家看：依狀態顯示出價或我要買 */
+function BuyBox({ share, sale, offers }: { share: ShareView; sale: Sale; offers: OfferEntry[] }) {
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [amount, setAmount] = useState("");
+  const [error, setError] = useState("");
+
+  if (sale.state === "offer") {
+    const submit = (e: React.FormEvent) => {
+      e.preventDefault();
+      const p = parsePrice(amount);
+      if (!p) {
+        setError("填一個整數金額");
+        return;
+      }
+      router.push(`/messages/${sendOffer(share.n, "offer", p)}`);
+    };
+    return (
+      <div className="deal">
+        <div className="deal-top">
+          <b>開放出價</b>
+          {offers.length ? <span className="deal-note">{offers.length} 筆出價</span> : null}
+        </div>
+        {open ? (
+          <form className="offer-form" onSubmit={submit} noValidate>
+            <MoneyInput id="offer-amount" value={amount} onChange={setAmount} label="出價金額" />
+            <button type="submit" className="btn btn-p btn-lg">
+              送出出價
+            </button>
+            {error ? <p className="field-error">{error}</p> : null}
+          </form>
+        ) : (
+          <div className="deal-actions one">
+            <button type="button" className="btn btn-p btn-lg" onClick={() => setOpen(true)}>
+              出價
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (sale.state === "sale") {
+    const mineOpen = offers.find(
+      (o) => o.thread.buyer === CURRENT_USER && o.msg.offer?.kind === "buy" && o.msg.offer.status !== "rejected",
+    );
+    const buy = () => {
+      const tid = mineOpen ? mineOpen.thread.id : sendOffer(share.n, "buy", sale.price ?? 0);
+      router.push(`/messages/${tid}`);
+    };
+    return (
+      <div className="deal">
+        <div className="deal-top">
+          <span className="deal-state">定價出售</span>
+          <strong className="deal-price">{priceText(sale.price ?? 0)}</strong>
+        </div>
+        <div className="deal-actions">
+          <button type="button" className="btn btn-p btn-lg" onClick={buy}>
+            我要買
+          </button>
+          <button type="button" className="btn btn-line btn-lg" onClick={() => router.push(`/messages/${openThread(share.n)}`)}>
+            問賣家
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+function SoldBox({ sale }: { sale: Sale }) {
+  const shown = sale.soldPrice ?? sale.price;
+  return (
+    <div className="deal">
+      <div className="deal-top">
+        <b>已售出</b>
+        {shown ? <span className="deal-strike">{priceText(shown)}</span> : null}
+        {sale.soldAt ? <span className="deal-note">{sale.soldAt}</span> : null}
+      </div>
+    </div>
+  );
+}
+
+/** 賣家自己看的交易區：價格＋幾筆出價，沒有買的按鈕 */
+function OwnerBox({ sale, offers }: { sale: Sale; offers: OfferEntry[] }) {
+  if (sale.state === "share") return null;
+  if (sale.state === "sold") return <SoldBox sale={sale} />;
+  return (
+    <div className="deal">
+      <div className="deal-top">
+        {sale.state === "sale" ? (
+          <strong className="deal-price">{priceText(sale.price ?? 0)}</strong>
+        ) : (
+          <b>開放出價</b>
+        )}
+        <span className="deal-note">
+          {offers.length} 筆出價 · <Link href="/messages">看私訊</Link>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/** 出價公開列表：金額公開、誰出的公開；賣家多了接受／拒絕／成交給這位 */
+function OfferList({ share, sale, offers, mine }: { share: ShareView; sale: Sale; offers: OfferEntry[]; mine: boolean }) {
+  if (offers.length === 0) return null;
+  const closed = sale.state === "sold";
+  return (
+    <section className="offers" aria-labelledby="offers-title">
+      <h2 id="offers-title">
+        出價<span className="count">{offers.length}</span>
+      </h2>
+      <ul>
+        {offers.map(({ thread, msg }) => {
+          const o = msg.offer!;
+          const lost = closed && o.status !== "sold";
+          const status = lost && o.status !== "rejected" ? "未成交" : STATUS_TEXT[o.status];
+          const cls = o.status === "sold" ? " is-deal" : o.status === "accepted" ? " is-ok" : "";
+          return (
+            <li key={msg.id} className={`offer-row${o.status === "rejected" || lost ? " is-off" : ""}`} data-status={o.status}>
+              <div className="offer-who">
+                <Link className="who" href={userHref(thread.buyer)}>
+                  <span className="ava ava-sm" aria-hidden="true">
+                    {initialsOf(thread.buyer)}
+                  </span>
+                  <span>{nameOf(thread.buyer)}</span>
+                </Link>
+                <span className="offer-kind">{o.kind === "buy" ? "我要買" : "出價"}</span>
+                <span className="offer-amt">{priceText(o.price)}</span>
+                <span className="offer-when">{msg.time}</span>
+              </div>
+              <div className="offer-acts">
+                <span className={`offer-status${cls}`}>{status}</span>
+                {mine && !closed && o.status === "open" ? (
+                  <>
+                    <button type="button" className="btn btn-line" onClick={() => respondOffer(thread.id, msg.id, "accepted")}>
+                      接受
+                    </button>
+                    <button type="button" className="btn btn-line" onClick={() => respondOffer(thread.id, msg.id, "rejected")}>
+                      拒絕
+                    </button>
+                  </>
+                ) : null}
+                {mine && !closed && o.status === "accepted" ? (
+                  <button type="button" className="btn btn-line" onClick={() => closeDeal(share.n, thread.buyer, o.price, sale)}>
+                    成交給這位
+                  </button>
+                ) : null}
+                {mine ? (
+                  <Link className="btn btn-text" href={`/messages/${thread.id}`}>
+                    私訊
+                  </Link>
+                ) : null}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
+export function ShareDetail({ share }: { share: ShareView }) {
+  const { state, saleOf, ready } = useAppState();
+  const mine = share.author.handle === CURRENT_USER;
+  const sale = saleOf(share);
+  const offers: OfferEntry[] = state.threads
+    .filter((t) => t.n === share.n)
+    .flatMap((thread) => thread.messages.filter((m) => m.offer).map((msg) => ({ thread, msg })));
+
+  return (
+    <div className="detail" data-sale={sale.state}>
       <div className={share.image ? "detail-photo has-image" : "detail-photo"}>
-        <Photo share={share} sizes="(max-width: 1000px) 100vw, 640px" />
+        <Photo share={share} sale={sale} sizes="(max-width: 1000px) 100vw, 640px" />
       </div>
       <div className="detail-info">
+        {mine && ready ? <SellerBar key={sale.state + (sale.price ?? "")} share={share} sale={sale} /> : null}
         <h1 className="page-title">{share.what}</h1>
         <div className="detail-by">
           <Link className="who" href={userHref(share.author.handle)}>
@@ -23,6 +319,13 @@ export function ShareDetail({ share }: { share: ShareView }) {
           <span className="when">{share.time}</span>
           <LikeButton n={share.n} base={share.likes} large />
         </div>
+        {mine ? (
+          <OwnerBox sale={sale} offers={offers} />
+        ) : sale.state === "sold" ? (
+          <SoldBox sale={sale} />
+        ) : (
+          <BuyBox share={share} sale={sale} offers={offers} />
+        )}
         {share.story ? <p className="prose">{share.story}</p> : null}
         <TagList about={share.about} tags={share.tags} />
         {share.link ? (
@@ -36,6 +339,7 @@ export function ShareDetail({ share }: { share: ShareView }) {
             <NextPhase label="補上作品或版本" className="btn btn-line" />
           </p>
         ) : null}
+        <OfferList share={share} sale={sale} offers={offers} mine={mine} />
       </div>
     </div>
   );

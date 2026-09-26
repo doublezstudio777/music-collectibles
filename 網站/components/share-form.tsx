@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { artists, CURRENT_USER, getUser, resolveTagArtist } from "@/lib/data";
+import { artists, CURRENT_USER, getUser, resolveTagArtist, type Sale, type SaleState } from "@/lib/data";
 import { addMyShare } from "@/lib/state";
+import { MoneyInput, parsePrice } from "@/components/share-detail";
 
 /** 縮到長邊 1000px、JPEG 0.8，才塞得進 localStorage */
 async function shrink(file: File): Promise<string> {
@@ -42,6 +43,8 @@ export function ShareForm() {
   const [aboutDraft, setAboutDraft] = useState("");
   const [story, setStory] = useState("");
   const [tags, setTags] = useState("");
+  const [saleState, setSaleState] = useState<SaleState>("share");
+  const [price, setPrice] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
 
@@ -79,6 +82,8 @@ export function ShareForm() {
     if (!photo) next.photo = "放一張照片";
     if (!what.trim()) next.what = "寫這是什麼東西";
     if (pending.length === 0) next.about = "至少一個";
+    const p = parsePrice(price);
+    if (saleState === "sale" && !p) next.price = "填一個整數金額";
     setErrors(next);
     if (Object.keys(next).length) return;
 
@@ -92,7 +97,8 @@ export function ShareForm() {
       about: Array.from(new Set(pending)),
       tags: splitTags(tags),
       likes: 0,
-      color: "#E9EDF2",
+      color: "",
+      sale: (saleState === "sale" ? { state: "sale", price: p ?? 0 } : { state: saleState }) as Sale,
       image: photo ?? undefined,
       author: { handle: CURRENT_USER, name: me?.name ?? CURRENT_USER, initials: me?.initials ?? "我" },
     });
@@ -194,6 +200,31 @@ export function ShareForm() {
           其他標籤 <span className="opt">選填</span>
         </label>
         <input id={`${id}-tags`} className="input" value={tags} onChange={(e) => setTags(e.target.value)} />
+      </div>
+
+      <div className="field">
+        <span className="field-label" id={`${id}-sale`}>
+          要不要賣
+        </span>
+        <div className="seg" role="group" aria-labelledby={`${id}-sale`}>
+          {(
+            [
+              ["share", "純分享"],
+              ["offer", "開放出價"],
+              ["sale", "定價出售"],
+            ] as const
+          ).map(([k, label]) => (
+            <button key={k} type="button" aria-pressed={saleState === k} onClick={() => setSaleState(k)}>
+              {label}
+            </button>
+          ))}
+        </div>
+        {saleState === "sale" ? (
+          <div className="field-sub">
+            <MoneyInput id={`${id}-price`} value={price} onChange={setPrice} label="定價" />
+            {errors.price ? <p className="field-error">{errors.price}</p> : null}
+          </div>
+        ) : null}
       </div>
 
       <div className="form-foot">

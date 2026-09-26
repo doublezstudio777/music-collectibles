@@ -69,6 +69,19 @@ export type Work = {
   lastEdit: { by: string; date: string };
 };
 
+/** 出售狀態：純分享（預設）／開放出價／定價出售／已售出。錢貨不經過平台，成交後雙方自己約 */
+export type SaleState = "share" | "offer" | "sale" | "sold";
+
+export type Sale = {
+  state: SaleState;
+  /** 定價出售的價格；已售出時是原本的標價 */
+  price?: number;
+  /** 已售出：成交價、成交對象、成交時間 */
+  soldPrice?: number;
+  soldTo?: string;
+  soldAt?: string;
+};
+
 export type Share = {
   n: number;
   author: string;
@@ -88,6 +101,7 @@ export type Share = {
   color: string;
   image?: string;
   link?: { work: string; version?: string };
+  sale?: Sale;
 };
 
 export type User = {
@@ -422,6 +436,7 @@ export const shares: Share[] = [
     about: ["山線電台"], tags: ["首刷"], likes: 12, color: "#22334D",
     image: "/images/fictional-music-collection.jpg",
     link: { work: "mountain-radio/1", version: "v1" },
+    sale: { state: "sale", price: 1200 },
   },
   {
     n: 2, author: "aze", time: "昨天", order: 110,
@@ -436,6 +451,7 @@ export const shares: Share[] = [
     story: "",
     about: ["山線電台", "海港音樂祭"], tags: ["場刊"], likes: 30, color: "#4B3B2A",
     link: { work: "harbor-fest/2", version: "v1" },
+    sale: { state: "offer" },
   },
   {
     n: 4, author: "angie", time: "4 天前", order: 95,
@@ -457,6 +473,7 @@ export const shares: Share[] = [
     story: "",
     about: ["微光訊號"], tags: ["宣傳片"], likes: 2, color: "#5A4634",
     link: { work: "faint-signal/1", version: "v1" },
+    sale: { state: "sale", price: 2400 },
   },
   {
     n: 7, author: "rin", time: "上週", order: 76,
@@ -464,6 +481,7 @@ export const shares: Share[] = [
     story: "",
     about: ["Mountain Radio"], tags: ["日版", "簽名"], likes: 5, color: "#4A2C3D",
     link: { work: "mountain-radio/1", version: "v2" },
+    sale: { state: "sold", price: 900, soldPrice: 900, soldTo: "aze", soldAt: "9 月 20 日" },
   },
   {
     n: 8, author: "xiaomeng", time: "上個月", order: 60,
@@ -471,12 +489,14 @@ export const shares: Share[] = [
     story: "在書店收銀台旁邊的紙箱裡找到，老闆說只進過一箱。",
     about: ["山線電台"], tags: ["卡帶", "自製"], likes: 19, color: "#3E3F4A",
     link: { work: "mountain-radio/2", version: "v1" },
+    sale: { state: "offer" },
   },
   {
     n: 9, author: "azhe", time: "上個月", order: 58,
     what: "海港音樂祭 2019 演出海報，三人簽名", kind: "海報",
     story: "",
     about: ["山線電台", "海港音樂祭"], tags: ["簽名", "海報"], likes: 8, color: "#5C3A3A",
+    sale: { state: "sale", price: 1800 },
   },
   {
     n: 10, author: "xiaomeng", time: "上個月", order: 55,
@@ -491,6 +511,7 @@ export const shares: Share[] = [
     story: "",
     about: ["海港音樂祭"], tags: ["合輯"], likes: 6, color: "#1E3A5F",
     link: { work: "harbor-fest/1", version: "v1" },
+    sale: { state: "sale", price: 450 },
   },
   {
     n: 12, author: "azhe", time: "兩個月前", order: 38,
@@ -498,8 +519,125 @@ export const shares: Share[] = [
     story: "同一批買了兩張，只有一張偏移，應該是個別印刷誤差，不算另一個版本。",
     about: ["山線電台"], tags: ["首刷", "印刷差異"], likes: 3, color: "#22334D",
     link: { work: "mountain-radio/1", version: "v1" },
+    sale: { state: "sold", soldPrice: 600, soldTo: "xiaomeng", soldAt: "9 月 18 日" },
   },
 ];
+/*
+ * 分頁示範用的補充資料：每頁 24 則，12 則只有一頁，這裡補到三頁。
+ * 內容一樣是虛構，每位藝人八則，出售狀態輪流分配。
+ */
+type Seed = [what: string, kind: string, tags: string[], link?: string];
+const MORE: Record<string, { about: string; items: Seed[] }> = {
+  "mountain-radio": {
+    about: "山線電台",
+    items: [
+      ["夜行採集 2023 再版，腰帶換成白色", "CD", ["再版"], "mountain-radio/1#v3"],
+      ["台中場巡演手環，布料那款", "手環", ["演唱會戰利品"]],
+      ["山線 書店寄賣卡帶的手寫編號 012", "卡帶", ["卡帶", "自製"], "mountain-radio/2#v1"],
+      ["2018 發片場的貼紙三張組", "貼紙", ["周邊"]],
+      ["夜行採集 日版解說書單本", "解說書", ["日版"], "mountain-radio/1#v2"],
+      ["主唱手寫的歌詞明信片，發片場抽的", "明信片", ["簽名"]],
+      ["第一次售票場的紙本票根", "票根", ["票根"]],
+      ["夜行採集 首批紙套，塑膠套沒拆", "CD", ["首刷", "未拆"], "mountain-radio/1#v1"],
+    ],
+  },
+  "tide-highway": {
+    about: "潮汐公路",
+    items: [
+      ["島嶼低鳴 黑膠一般版，側邊有磨痕", "黑膠", ["黑膠"], "tide-highway/1#v2"],
+      ["台南工作室開放日送的試聽卡帶", "卡帶", ["宣傳片"]],
+      ["海線對話 EP 首批，紙盒四角完整", "CD", ["首刷"], "tide-highway/2#v1"],
+      ["島嶼低鳴 內附小海報，單張", "海報", ["海報"]],
+      ["2023 巡演 T 恤，黑色 M 號", "T 恤", ["周邊"]],
+      ["潮汐公路第一張自製 CD-R", "CD-R", ["自製"]],
+      ["島嶼低鳴 透明海藍膠，海報還在", "黑膠", ["黑膠", "首刷"], "tide-highway/1#v1"],
+      ["鼓手簽在鼓棒上的那支", "鼓棒", ["簽名"]],
+    ],
+  },
+  "empty-room": {
+    about: "空房間",
+    items: [
+      ["留聲便條 巡演限定卡帶，編號 102", "卡帶", ["卡帶"], "empty-room/1#v1"],
+      ["2017 巡演的場次海報，台北場", "海報", ["海報"]],
+      ["空房間的手作歌詞本，騎馬釘", "歌詞本", ["自製"]],
+      ["留聲便條 封面原畫的縮小版印刷", "版畫", ["周邊"]],
+      ["小型演出的入場蓋章卡", "票根", ["票根"]],
+      ["留聲便條 卡帶，外盒貼紙缺角", "卡帶", ["卡帶"], "empty-room/1#v1"],
+      ["2019 聖誕場限定毛巾", "毛巾", ["周邊"]],
+      ["錄音室外流的混音參考 CD-R", "CD-R", ["宣傳片"]],
+    ],
+  },
+  "before-rain-stops": {
+    about: "雨停以前",
+    items: [
+      ["南方現場 再版標準盒，封膜還在", "藍光", ["再版", "未拆"], "before-rain-stops/1#v2"],
+      ["高雄場的簽名海報，三人全簽", "海報", ["簽名", "海報"]],
+      ["南方現場 首批盒裝，場刊完整", "藍光", ["首刷"], "before-rain-stops/1#v1"],
+      ["雨停以前 2020 巡演毛巾", "毛巾", ["周邊"]],
+      ["台南場的紙本票根，連號兩張", "票根", ["票根"]],
+      ["南方現場 首批盒裝的外紙盒單獨", "外盒", ["首刷"]],
+      ["主唱簽名的撥片", "撥片", ["簽名"]],
+      ["第一張 EP 的宣傳明信片", "明信片", ["宣傳片"]],
+    ],
+  },
+  "faint-signal": {
+    about: "微光訊號",
+    items: [
+      ["凌晨四點 電台宣傳片，封套有電台章", "CD-R", ["宣傳片"], "faint-signal/1#v1"],
+      ["微光訊號 2019 小巡演的貼紙", "貼紙", ["周邊"]],
+      ["凌晨四點 試聽會的邀請卡", "邀請卡", ["宣傳片"]],
+      ["微光訊號手寫歌單，台北場", "歌單", ["簽名"]],
+      ["凌晨四點 宣傳片，無電台章版", "CD-R", ["宣傳片"], "faint-signal/1#v1"],
+      ["2021 線上演出的紀念徽章", "徽章", ["周邊"]],
+      ["第一場售票演出的票根", "票根", ["票根"]],
+      ["錄音筆記影印本，樂手自己釘的", "筆記", ["自製"]],
+    ],
+  },
+  "harbor-fest": {
+    about: "海港音樂祭",
+    items: [
+      ["海港音樂祭 2019 現場精選，側標完整", "CD", ["合輯"], "harbor-fest/1#v1"],
+      ["2019 場刊，第 14 頁有摺痕", "場刊", ["場刊"], "harbor-fest/2#v1"],
+      ["2018 海港音樂祭工作人員證", "工作證", ["周邊"]],
+      ["2019 兩日票，手環還沒剪", "手環", ["票根", "未拆"]],
+      ["2017 海港音樂祭場刊，第一屆", "場刊", ["場刊"]],
+      ["2019 志工 T 恤，白色 L 號", "T 恤", ["周邊"]],
+      ["海港音樂祭現場精選，會場販售版", "CD", ["合輯"], "harbor-fest/1#v1"],
+      ["2019 攤位地圖，折三折那張", "地圖", ["周邊"]],
+    ],
+  },
+};
+
+const AUTHORS = ["aze", "angie", "azhe", "rin", "xiaomeng"];
+const TIMES = ["兩個月前", "三個月前", "四個月前", "半年前"];
+const SALES: (Sale | undefined)[] = [
+  undefined, { state: "sale", price: 350 }, undefined, { state: "offer" }, undefined,
+  { state: "sale", price: 800 }, { state: "sold", price: 500, soldPrice: 500, soldTo: "angie", soldAt: "8 月 2 日" }, undefined,
+];
+
+const extraShares: Share[] = Object.values(MORE).flatMap(({ about, items }, ai) =>
+  items.map(([what, kind, tags, link], i) => {
+    const idx = ai * 8 + i;
+    const [work, version] = link ? link.split("#") : [];
+    return {
+      n: 13 + idx,
+      author: AUTHORS[(idx * 3 + ai) % AUTHORS.length],
+      time: TIMES[Math.floor(idx / 12)],
+      order: 36 - idx * 0.5,
+      what,
+      kind,
+      story: "",
+      about: [about],
+      tags,
+      likes: (idx * 7) % 23,
+      color: "",
+      link: work ? { work, version } : undefined,
+      sale: SALES[(i + ai) % SALES.length],
+    };
+  }),
+);
+
+shares.push(...extraShares.sort((a, b) => b.order - a.order));
 
 export const users: User[] = [
   {
@@ -534,6 +672,80 @@ export const users: User[] = [
     wanted: ["faint-signal/1#v1"], liked: [],
   },
 ];
+
+/* ---------- 出價與私訊（示範） ----------
+ * 私訊只能從一則炫收藏發起：一位買家對一則收藏只有一條對話，id＝`{則}-{買家}`。
+ * 出價與「我要買」是對話裡的結構化訊息，單則頁的公開出價列表從這裡整理出來，
+ * 資料只有一份。
+ */
+
+export type OfferKind = "offer" | "buy";
+/** open 等賣家回；accepted 賣家接受、還沒成交；rejected 賣家拒絕；sold 成交的那一筆 */
+export type OfferStatus = "open" | "accepted" | "rejected" | "sold";
+
+export type Message = {
+  id: string;
+  /** 使用者帳號；"system" 是狀態變化的灰字 */
+  from: string;
+  time: string;
+  text?: string;
+  offer?: { kind: OfferKind; price: number; status: OfferStatus };
+};
+
+export type Thread = { id: string; n: number; buyer: string; messages: Message[] };
+
+const T = (n: number, buyer: string, msgs: Omit<Message, "id">[]): Thread => ({
+  id: `${n}-${buyer}`,
+  n,
+  buyer,
+  messages: msgs.map((m, i) => ({ ...m, id: `${n}-${buyer}-${i}` })),
+});
+
+export const threads: Thread[] = [
+  // 小孟是賣家
+  T(1, "aze", [
+    { from: "aze", time: "昨天 18:02", text: "紙套邊角有沒有壓痕？" },
+    { from: "xiaomeng", time: "昨天 19:30", text: "右下角有一點點，照片第一張看得到。" },
+    { from: "aze", time: "10 分鐘前", offer: { kind: "buy", price: 1200, status: "open" } },
+    { from: "aze", time: "10 分鐘前", text: "週末台中可以面交嗎？" },
+  ]),
+  T(1, "rin", [{ from: "rin", time: "上週", text: "日版那張也會賣嗎？" }]),
+  T(8, "azhe", [{ from: "azhe", time: "2 天前", offer: { kind: "offer", price: 500, status: "open" } }]),
+  T(8, "angie", [
+    { from: "angie", time: "昨天", offer: { kind: "offer", price: 800, status: "open" } },
+    { from: "angie", time: "昨天", text: "手繪歌詞那張也在盒子裡嗎？" },
+  ]),
+  T(8, "rin", [
+    { from: "rin", time: "上週", offer: { kind: "offer", price: 300, status: "rejected" } },
+    { from: "system", time: "上週", text: "賣家拒絕了 NT$ 300" },
+  ]),
+  // 小孟是買家
+  T(3, "xiaomeng", [
+    { from: "xiaomeng", time: "昨天", offer: { kind: "offer", price: 600, status: "open" } },
+    { from: "xiaomeng", time: "昨天", text: "第 14 頁的專訪那頁有沒有摺痕？" },
+    { from: "angie", time: "今天", text: "沒有，全新沒翻過。" },
+  ]),
+  T(3, "aze", [{ from: "aze", time: "今天", offer: { kind: "offer", price: 700, status: "open" } }]),
+  T(9, "xiaomeng", [
+    { from: "xiaomeng", time: "3 天前", text: "簽名是現場簽的嗎？" },
+    { from: "azhe", time: "3 天前", text: "對，2019 那場結束後排隊簽的。" },
+  ]),
+  T(6, "angie", [{ from: "angie", time: "上週", offer: { kind: "buy", price: 2400, status: "open" } }]),
+  T(7, "aze", [
+    { from: "aze", time: "9 月 19 日", offer: { kind: "buy", price: 900, status: "sold" } },
+    { from: "system", time: "9 月 20 日", text: "已成交 NT$ 900" },
+  ]),
+  T(12, "xiaomeng", [
+    { from: "xiaomeng", time: "9 月 16 日", offer: { kind: "offer", price: 600, status: "sold" } },
+    { from: "system", time: "9 月 17 日", text: "賣家接受了 NT$ 600" },
+    { from: "system", time: "9 月 18 日", text: "已成交 NT$ 600" },
+  ]),
+];
+
+/** 示範的未讀：小孟的收藏有新的「我要買」 */
+export const UNREAD_SEED = ["1-aze"];
+
+export const priceText = (p: number) => `NT$ ${p.toLocaleString("en-US")}`;
 
 /* ---------- 查詢 ---------- */
 
@@ -618,6 +830,8 @@ export type ShareView = {
   image?: string;
   author: { handle: string; name: string; initials: string };
   link?: { href: string; label: string; workKey: string; versionId?: string };
+  /** 資料裡的出售狀態；本機改過的由 lib/state.tsx 疊上去 */
+  sale: Sale;
   local?: boolean;
 };
 
@@ -646,6 +860,7 @@ export const toShareView = (s: Share): ShareView => {
           versionId: v?.id,
         }
       : undefined,
+    sale: s.sale ?? { state: "share" },
   };
 };
 
@@ -700,4 +915,47 @@ export const search = (query: string) => {
     ),
     shares: shares.filter((s) => hit(s.what, s.story, ...s.about, ...s.tags)),
   };
+};
+
+/* ---------- 單則頁底部的相關收藏 ----------
+ * 2026-09-26 定案：有連到作品時作品優先，其次同藝人，自由標籤補位。
+ * 不放「同一位會員的其他收藏」；會員本人的其他則不排除也不優先。
+ * 最多兩塊、每塊三張；來源不足三則的整塊不出現，不拿別的來源湊數。
+ */
+export type RelatedBlock = { title: string; href: string; total: number; items: Share[] };
+
+export const relatedFor = (share: Share): RelatedBlock[] => {
+  const others = shares.filter((s) => s.n !== share.n).sort((a, b) => b.order - a.order);
+  const sources: { title: string; href: string; match: (s: Share) => boolean }[] = [];
+
+  const work = share.link ? getWorkByKey(share.link.work) : undefined;
+  if (work) {
+    sources.push({ title: `${work.title}的其他收藏`, href: workHref(work), match: (s) => s.link?.work === share.link?.work });
+  }
+  const labels = [...share.about, ...share.tags];
+  const artistsFirst = [
+    ...labels.filter((t) => resolveTagArtist(t)),
+    ...labels.filter((t) => !resolveTagArtist(t)),
+  ];
+  const seen = new Set<string>();
+  for (const t of artistsFirst) {
+    const key = tagKey(t);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const name = resolveTagArtist(t)?.name ?? t;
+    sources.push({ title: `跟${name}有關的其他收藏`, href: tagHref(name), match: (s) => shareHasTag(s, t) });
+  }
+
+  const used = new Set<number>();
+  const blocks: RelatedBlock[] = [];
+  for (const src of sources) {
+    if (blocks.length === 2) break;
+    const all = others.filter(src.match);
+    const fresh = all.filter((s) => !used.has(s.n));
+    if (fresh.length < 3) continue;
+    const items = fresh.slice(0, 3);
+    items.forEach((s) => used.add(s.n));
+    blocks.push({ title: src.title, href: src.href, total: all.length, items });
+  }
+  return blocks;
 };

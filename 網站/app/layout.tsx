@@ -22,6 +22,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <SiteHeader />
         {children}
+        <footer className="foot">
+          <div className="wrap foot-row">
+            <span>音藏</span>
+            <a href="#">贊助</a>
+          </div>
+        </footer>
       </body>
     </html>
   );
