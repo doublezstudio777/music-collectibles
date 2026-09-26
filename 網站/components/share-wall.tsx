@@ -8,18 +8,22 @@ import { ShareCard } from "@/components/share-card";
 
 type Scope = { all: true } | { tag: string } | { author: string } | { none: true };
 
-export type WallFilter = "all" | "sale" | "offer";
+/** 首頁以炫收藏為主：排序在前，「只看在賣」是次要開關 */
+export type WallFilter = "all" | "selling";
+export type WallSort = "new" | "likes";
 
-const FILTERS: { key: WallFilter; label: string }[] = [
-  { key: "all", label: "全部" },
-  { key: "sale", label: "定價出售" },
-  { key: "offer", label: "開放出價" },
+const SORTS: { key: WallSort; label: string }[] = [
+  { key: "new", label: "最新" },
+  { key: "likes", label: "最多讚" },
 ];
 
 export const PAGE_SIZE = 24;
 
-const wallHref = (filter: WallFilter, page: number) => {
+type WallQuery = { sort: WallSort; filter: WallFilter };
+
+const wallHref = ({ sort, filter }: WallQuery, page: number) => {
   const q = new URLSearchParams();
+  if (sort !== "new") q.set("sort", sort);
   if (filter !== "all") q.set("state", filter);
   if (page > 1) q.set("page", String(page));
   const s = q.toString();
@@ -39,11 +43,11 @@ function pageList(current: number, total: number): (number | "gap")[] {
   return out;
 }
 
-function Pager({ page, total, filter }: { page: number; total: number; filter: WallFilter }) {
+function Pager({ page, total, query }: { page: number; total: number; query: WallQuery }) {
   if (total <= 1) return null;
   const prev =
     page > 1 ? (
-      <Link className="pg pg-arrow" href={wallHref(filter, page - 1)} aria-label="上一頁">
+      <Link className="pg pg-arrow" href={wallHref(query, page - 1)} aria-label="上一頁">
         ‹
       </Link>
     ) : (
@@ -53,7 +57,7 @@ function Pager({ page, total, filter }: { page: number; total: number; filter: W
     );
   const next =
     page < total ? (
-      <Link className="pg pg-arrow" href={wallHref(filter, page + 1)} aria-label="下一頁">
+      <Link className="pg pg-arrow" href={wallHref(query, page + 1)} aria-label="下一頁">
         ›
       </Link>
     ) : (
@@ -73,7 +77,7 @@ function Pager({ page, total, filter }: { page: number; total: number; filter: W
           <Link
             key={p}
             className="pg pg-full"
-            href={wallHref(filter, p)}
+            href={wallHref(query, p)}
             aria-current={p === page ? "page" : undefined}
           >
             {p}
@@ -95,6 +99,7 @@ export function ShareWall({
   sortable = false,
   paged = false,
   filter = "all",
+  initialSort = "new",
   page = 1,
   limit,
   empty,
@@ -102,15 +107,17 @@ export function ShareWall({
   shares: ShareView[];
   scope?: Scope;
   sortable?: boolean;
-  /** 首頁：篩選列＋每頁 24 則 */
+  /** 首頁：排序分頁籤＋只看在賣＋每頁 24 則 */
   paged?: boolean;
   filter?: WallFilter;
+  initialSort?: WallSort;
   page?: number;
   limit?: number;
   empty?: React.ReactNode;
 }) {
   const { state, liked, saleOf } = useAppState();
-  const [sort, setSort] = useState<"new" | "likes">("new");
+  const [localSort, setSort] = useState<WallSort>("new");
+  const sort = paged ? initialSort : localSort;
 
   const mine = state.myShares.filter((s) => {
     if ("all" in scope) return true;
@@ -120,7 +127,11 @@ export function ShareWall({
   });
 
   const list = [...mine, ...shares]
-    .filter((s) => filter === "all" || saleOf(s).state === filter)
+    .filter((s) => {
+      if (filter === "all") return true;
+      const st = saleOf(s).state;
+      return st === "sale" || st === "offer";
+    })
     .sort((a, b) =>
       sort === "likes"
         ? b.likes + (liked(b.n) ? 1 : 0) - (a.likes + (liked(a.n) ? 1 : 0))
@@ -139,22 +150,32 @@ export function ShareWall({
       {paged || sortable ? (
         <div className="wall-bar">
           {paged ? (
-            <nav className="filters" aria-label="篩選">
-              {FILTERS.map((f) => (
-                <Link
-                  key={f.key}
-                  className="filter"
-                  href={wallHref(f.key, 1)}
-                  aria-current={f.key === filter ? "page" : undefined}
-                >
-                  {f.label}
-                </Link>
-              ))}
-            </nav>
+            <>
+              <nav className="filters" aria-label="排序">
+                {SORTS.map((o) => (
+                  <Link
+                    key={o.key}
+                    className="filter"
+                    href={wallHref({ sort: o.key, filter }, 1)}
+                    aria-current={o.key === sort ? "page" : undefined}
+                  >
+                    {o.label}
+                  </Link>
+                ))}
+              </nav>
+              <Link
+                className="sell-toggle"
+                href={wallHref({ sort, filter: filter === "all" ? "selling" : "all" }, 1)}
+                data-on={filter === "selling"}
+                aria-current={filter === "selling" ? "true" : undefined}
+              >
+                只看在賣
+              </Link>
+            </>
           ) : (
             <span />
           )}
-          {sortable ? (
+          {sortable && !paged ? (
             <>
               <label className="sr-only" htmlFor="wall-sort">
                 排序
@@ -181,7 +202,7 @@ export function ShareWall({
           ))}
         </div>
       )}
-      {paged ? <Pager page={current} total={totalPages} filter={filter} /> : null}
+      {paged ? <Pager page={current} total={totalPages} query={{ sort, filter }} /> : null}
     </div>
   );
 }

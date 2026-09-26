@@ -425,7 +425,7 @@ ul { list-style: none; margin: 0; padding: 0; }
 .card.is-sold .ph-3 { background: color-mix(in srgb, var(--ph3) 45%, #fff); }
 .card.is-sold .card-title { color: var(--muted); }
 
-/* 首頁工具列：篩選（當前項橘底線）＋排序 */
+/* 首頁工具列：排序分頁籤（當前項橘底線）＋只看在賣開關 */
 .wall-bar { align-items: center; border-bottom: 1px solid var(--line); display: flex; gap: 16px; justify-content: space-between; margin-bottom: 28px; }
 .filters { display: flex; gap: 4px; overflow-x: auto; }
 .filter {
@@ -434,6 +434,14 @@ ul { list-style: none; margin: 0; padding: 0; }
 }
 .filter:hover { color: var(--text); }
 .filter[aria-current="page"] { border-bottom-color: var(--orange); color: var(--text); }
+.sell-toggle {
+  align-items: center; color: var(--muted); display: inline-flex; flex: none; font-size: var(--text-sm);
+  font-weight: 600; gap: 8px; padding: 10px 0; white-space: nowrap;
+}
+.sell-toggle::before { background: var(--bg); border: 1px solid var(--muted); content: ""; height: 14px; width: 14px; }
+.sell-toggle:hover { color: var(--text); }
+.sell-toggle[data-on="true"] { color: var(--text); }
+.sell-toggle[data-on="true"]::before { background: var(--text); border-color: var(--text); }
 
 /* 分頁：44px 方格，當前頁黑底白字；手機收成 ‹ 2 / 12 › */
 .pager { align-items: center; display: flex; gap: 4px; justify-content: center; padding: 48px 0 0; }
