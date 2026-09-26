@@ -40,11 +40,6 @@ export default async function UserPage({ params }: Props) {
       </header>
 
       <section className="block">
-        <h2 className="block-title">出售中</h2>
-        <SaleWall shares={own} scopeAuthor={user.handle} />
-      </section>
-
-      <section className="block">
         <h2 className="block-title">炫收藏</h2>
         <ShareWall
           shares={own}
@@ -61,6 +56,8 @@ export default async function UserPage({ params }: Props) {
           }
         />
       </section>
+
+      <SaleWall shares={own} scopeAuthor={user.handle} />
 
       <HoldingsList isSelf={isSelf} owned={user.owned} wanted={user.wanted} catalog={allHoldingViews()} />
     </main>
