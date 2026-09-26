@@ -680,8 +680,8 @@ export const users: User[] = [
  */
 
 export type OfferKind = "offer" | "buy";
-/** open 等賣家回；accepted 賣家接受、還沒成交；rejected 賣家拒絕；sold 成交的那一筆 */
-export type OfferStatus = "open" | "accepted" | "rejected" | "sold";
+/** open 等賣家回；accepted 賣家接受、還沒成交；rejected 賣家拒絕；withdrawn 買家自己撤回；sold 成交的那一筆 */
+export type OfferStatus = "open" | "accepted" | "rejected" | "withdrawn" | "sold";
 
 export type Message = {
   id: string;

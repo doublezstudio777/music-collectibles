@@ -14,7 +14,7 @@ import {
   type ShareView,
   type Thread,
 } from "@/lib/data";
-import { closeDeal, openThread, respondOffer, sendOffer, setSale, useAppState } from "@/lib/state";
+import { closeDeal, openThread, reopenSale, respondOffer, sendOffer, setSale, useAppState, withdrawOffer } from "@/lib/state";
 import { LikeButton } from "@/components/like-button";
 import { NextPhase } from "@/components/next-phase";
 import { Photo, TagList } from "@/components/share-card";
@@ -59,6 +59,7 @@ const STATUS_TEXT = {
   open: "等回覆",
   accepted: "賣家已接受",
   rejected: "已拒絕",
+  withdrawn: "已撤回",
   sold: "成交",
 } as const;
 
@@ -76,6 +77,9 @@ function SellerBar({ share, sale }: { share: ShareView; sale: Sale }) {
           <b>已售出</b>
           {sale.soldTo ? <span>成交給{nameOf(sale.soldTo)}</span> : null}
           {sale.soldAt ? <span className="deal-note">{sale.soldAt}</span> : null}
+          <button type="button" className="btn btn-line" onClick={() => reopenSale(share.n, sale)}>
+            改回出售中
+          </button>
         </p>
       </div>
     );
@@ -174,7 +178,11 @@ function BuyBox({ share, sale, offers }: { share: ShareView; sale: Sale; offers:
 
   if (sale.state === "sale") {
     const mineOpen = offers.find(
-      (o) => o.thread.buyer === CURRENT_USER && o.msg.offer?.kind === "buy" && o.msg.offer.status !== "rejected",
+      (o) =>
+        o.thread.buyer === CURRENT_USER &&
+        o.msg.offer?.kind === "buy" &&
+        o.msg.offer.status !== "rejected" &&
+        o.msg.offer.status !== "withdrawn",
     );
     const buy = () => {
       const tid = mineOpen ? mineOpen.thread.id : sendOffer(share.n, "buy", sale.price ?? 0);
@@ -247,10 +255,11 @@ function OfferList({ share, sale, offers, mine }: { share: ShareView; sale: Sale
         {offers.map(({ thread, msg }) => {
           const o = msg.offer!;
           const lost = closed && o.status !== "sold";
-          const status = lost && o.status !== "rejected" ? "未成交" : STATUS_TEXT[o.status];
+          const status = lost && o.status !== "rejected" && o.status !== "withdrawn" ? "未成交" : STATUS_TEXT[o.status];
           const cls = o.status === "sold" ? " is-deal" : o.status === "accepted" ? " is-ok" : "";
+          const off = o.status === "rejected" || o.status === "withdrawn" || lost;
           return (
-            <li key={msg.id} className={`offer-row${o.status === "rejected" || lost ? " is-off" : ""}`} data-status={o.status}>
+            <li key={msg.id} className={`offer-row${off ? " is-off" : ""}`} data-status={o.status}>
               <div className="offer-who">
                 <Link className="who" href={userHref(thread.buyer)}>
                   <span className="ava ava-sm" aria-hidden="true">
@@ -279,6 +288,11 @@ function OfferList({ share, sale, offers, mine }: { share: ShareView; sale: Sale
                     成交給這位
                   </button>
                 ) : null}
+                {!mine && thread.buyer === CURRENT_USER && !closed && o.status === "open" ? (
+                  <button type="button" className="btn btn-line" onClick={() => withdrawOffer(thread.id, msg.id)}>
+                    撤回
+                  </button>
+                ) : null}
                 {mine ? (
                   <Link className="btn btn-text" href={`/messages/${thread.id}`}>
                     私訊
@@ -297,9 +311,13 @@ export function ShareDetail({ share }: { share: ShareView }) {
   const { state, saleOf, ready } = useAppState();
   const mine = share.author.handle === CURRENT_USER;
   const sale = saleOf(share);
+  /** 公開列表同一買家只留最新一筆：再出價視為取代舊的 */
   const offers: OfferEntry[] = state.threads
     .filter((t) => t.n === share.n)
-    .flatMap((thread) => thread.messages.filter((m) => m.offer).map((msg) => ({ thread, msg })));
+    .flatMap((thread) => {
+      const latest = [...thread.messages].reverse().find((m) => m.offer);
+      return latest ? [{ thread, msg: latest }] : [];
+    });
 
   return (
     <div className="detail" data-sale={sale.state}>

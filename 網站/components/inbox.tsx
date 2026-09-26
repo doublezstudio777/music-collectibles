@@ -14,7 +14,7 @@ import {
   type ShareView,
   type Thread,
 } from "@/lib/data";
-import { closeDeal, markRead, respondOffer, sendOffer, sendText, useAppState } from "@/lib/state";
+import { markRead, respondOffer, sendOffer, sendText, useAppState, withdrawOffer } from "@/lib/state";
 import { Photo } from "@/components/share-card";
 import { MoneyInput, parsePrice } from "@/components/share-detail";
 
@@ -54,11 +54,13 @@ function OfferBubble({
       ? "成交"
       : o.status === "rejected"
         ? "已拒絕"
-        : closed
-          ? "未成交"
-          : o.status === "accepted"
-            ? "賣家已接受"
-            : "等回覆";
+        : o.status === "withdrawn"
+          ? "已撤回"
+          : closed
+            ? "未成交"
+            : o.status === "accepted"
+              ? "賣家已接受"
+              : "等回覆";
   return (
     <div className={`msg msg-offer${mine ? " mine" : ""}`} data-status={o.status}>
       <span className="offer-kind">{o.kind === "buy" ? "我要買" : "出價"}</span>
@@ -66,26 +68,26 @@ function OfferBubble({
       <span className={`offer-status${o.status === "sold" ? " is-deal" : o.status === "accepted" ? " is-ok" : ""}`}>
         {status}
       </span>
-      {row.iAmSeller && !closed && (o.status === "open" || o.status === "accepted") ? (
+      {row.iAmSeller && !closed && o.status === "open" ? (
         <div className="offer-acts">
-          {o.status === "open" ? (
-            <>
-              <button type="button" className="btn btn-line" onClick={() => respondOffer(row.thread.id, msg.id, "accepted")}>
-                接受
-              </button>
-              <button type="button" className="btn btn-line" onClick={() => respondOffer(row.thread.id, msg.id, "rejected")}>
-                拒絕
-              </button>
-            </>
-          ) : (
-            <button
-              type="button"
-              className="btn btn-line"
-              onClick={() => closeDeal(row.share.n, row.thread.buyer, o.price, sale)}
-            >
-              成交給這位
-            </button>
-          )}
+          <button type="button" className="btn btn-line" onClick={() => respondOffer(row.thread.id, msg.id, "accepted")}>
+            接受
+          </button>
+          <button type="button" className="btn btn-line" onClick={() => respondOffer(row.thread.id, msg.id, "rejected")}>
+            拒絕
+          </button>
+        </div>
+      ) : null}
+      {row.iAmSeller && !closed && o.status === "accepted" ? (
+        <Link className="btn btn-text" href={shareHref(row.share.n)}>
+          去單則頁成交
+        </Link>
+      ) : null}
+      {!row.iAmSeller && mine && !closed && o.status === "open" ? (
+        <div className="offer-acts">
+          <button type="button" className="btn btn-line" onClick={() => withdrawOffer(row.thread.id, msg.id)}>
+            撤回
+          </button>
         </div>
       ) : null}
       <time>{msg.time}</time>
@@ -106,9 +108,9 @@ function Conversation({ row }: { row: Row }) {
     markRead(thread.id);
   }, [thread.id, thread.messages.length]);
 
-  const liveOffer = [...thread.messages].reverse().find((m) => m.offer && m.offer.status !== "rejected");
-  const canClose = iAmSeller && sale.state !== "sold" && (liveOffer || sale.state === "sale");
-  const hasBuy = thread.messages.some((m) => m.offer?.kind === "buy" && m.offer.status !== "rejected");
+  const hasBuy = thread.messages.some(
+    (m) => m.offer?.kind === "buy" && m.offer.status !== "rejected" && m.offer.status !== "withdrawn",
+  );
 
   const send = (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,15 +148,6 @@ function Conversation({ row }: { row: Row }) {
           </span>
         </div>
         <div className="pin-acts">
-          {canClose ? (
-            <button
-              type="button"
-              className="btn btn-line"
-              onClick={() => closeDeal(share.n, thread.buyer, liveOffer?.offer?.price ?? sale.price, sale)}
-            >
-              成交給{nameOf(thread.buyer)}
-            </button>
-          ) : null}
           <Link className="btn btn-text" href={shareHref(share.n)}>
             看這則
           </Link>

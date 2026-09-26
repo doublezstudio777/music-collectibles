@@ -175,6 +175,17 @@ const stateWord: Record<Sale["state"], string> = {
   sold: "這件已售出",
 };
 
+/** 賣家把已售出改回出售中：沿用原本的定價／開放出價設定，成交紀錄不保留 */
+export function reopenSale(n: number, before: Sale) {
+  if (before.state !== "sold") return;
+  const next: Sale = before.price ? { state: "sale", price: before.price } : { state: "offer" };
+  commit({
+    ...snapshot,
+    sales: { ...snapshot.sales, [n]: next },
+    threads: broadcast(snapshot.threads, n, () => "賣家改回出售中"),
+  });
+}
+
 /** 賣家改出售狀態：每條進行中的對話插一行 */
 export function setSale(n: number, next: Sale, before: Sale) {
   const changed = next.state !== before.state || next.price !== before.price;
@@ -233,6 +244,17 @@ export function respondOffer(tid: string, msgId: string, answer: "accepted" | "r
   if (!t || !m?.offer) return;
   const line = `賣家${answer === "accepted" ? "接受" : "拒絕"}了 ${priceText(m.offer.price)}`;
   let list = setOfferStatus(snapshot.threads, msgId, answer);
+  list = list.map((x) => (x.id === tid ? { ...x, messages: [...x.messages, sys(tid, line)] } : x));
+  commit({ ...snapshot, threads: list });
+}
+
+/** 買家撤回自己還在等回覆的出價；公開列表標「已撤回」，不移除紀錄 */
+export function withdrawOffer(tid: string, msgId: string) {
+  const t = snapshot.threads.find((x) => x.id === tid);
+  const m = t?.messages.find((x) => x.id === msgId);
+  if (!t || !m?.offer || m.from !== CURRENT_USER || m.offer.status !== "open") return;
+  const line = `買家撤回了 ${priceText(m.offer.price)}`;
+  let list = setOfferStatus(snapshot.threads, msgId, "withdrawn");
   list = list.map((x) => (x.id === tid ? { ...x, messages: [...x.messages, sys(tid, line)] } : x));
   commit({ ...snapshot, threads: list });
 }

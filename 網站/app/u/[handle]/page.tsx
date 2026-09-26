@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { allHoldingViews, CURRENT_USER, getUser, shares, toShareView } from "@/lib/data";
 import { HoldingsList } from "@/components/holdings-list";
 import { NextPhase } from "@/components/next-phase";
+import { SaleWall } from "@/components/sale-wall";
 import { ShareWall } from "@/components/share-wall";
 
 type Props = { params: Promise<{ handle: string }> };
@@ -37,6 +38,11 @@ export default async function UserPage({ params }: Props) {
           </div>
         ) : null}
       </header>
+
+      <section className="block">
+        <h2 className="block-title">出售中</h2>
+        <SaleWall shares={own} scopeAuthor={user.handle} />
+      </section>
 
       <section className="block">
         <h2 className="block-title">炫收藏</h2>

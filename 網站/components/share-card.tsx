@@ -12,7 +12,7 @@ export function SaleSlots({ sale }: { sale: Sale }) {
   if (sale.state === "offer") {
     return (
       <span className="slots">
-        <span className="slot slot-offer">可出價</span>
+        <span className="slot slot-offer">開放出價</span>
       </span>
     );
   }
