@@ -466,7 +466,7 @@ restore("l1")
 suspend("l1", "sockpuppet", "驗收分身")
 recompute(8)
 ev_p3 = events(U["p3"]["id"])
-check("9h 按讚者因「分身刷分」停權：他給的讚不計，P3 11 → 10（peer_sockpuppet）", total(U["p3"]["id"])[0] == 10 and count(ev_p3, "like_recv", reason="peer_sockpuppet") == 1, total(U["p3"]["id"]))
+check("9h 按讚者因「分身刷分」停權：不再有特例，他給的讚照算，P3 仍 11、沒有 peer_sockpuppet 這個 reason", total(U["p3"]["id"])[0] == 11 and count(ev_p3, "like_recv", reason="peer_sockpuppet") == 0, total(U["p3"]["id"]))
 lg = sql(f"SELECT detail FROM admin_log WHERE target = 'user:{U['l1']['handle']}' AND action = '停權會員' ORDER BY id DESC LIMIT 1")
 check("9i admin_log 記下原因代碼與說明", lg and json.loads(lg[0]["detail"]) == {"reason": "分身刷分：驗收分身", "code": "sockpuppet", "note": "驗收分身"}, lg)
 ml = requests.get(B + "/api/admin/members", params={"q": U["l1"]["handle"]}, headers=AH).json()["members"]

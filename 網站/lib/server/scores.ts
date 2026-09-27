@@ -28,9 +28,11 @@
 // - 內容被檢舉成立、被隱藏、被刪除，那筆分數作廢（已入帳的也扣回）；取消讚、刪留言同樣作廢
 // - 同兩個帳號之間：互讚合計最多 20 次、互留言合計最多 10 則（留言者的「留言」與作者的「收到留言」都算這 10 則，
 //   超過之後兩邊都不給）、成交各自最多 2 筆有分，超過的不給分
-// 停權（2026-09-28 定案）：分數保留不歸零、照常顯示；停權期間凍結，事件發生時間落在停權期間（suspensions 表）的一律不計，恢復後照常。
+// 停權（2026-09-28 定案，9/28 再定案拿掉分身刷分特例）：分數保留不歸零、照常顯示；停權期間凍結，事件發生時間落在停權期間
+// （suspensions 表）的一律不計，恢復後照常。
 // - 對方被停權不影響自己已經拿到的分數（舊規則「按讚者被停權就扣回收到讚」取消）；
-//   例外：對方停權原因是「分身刷分」，他給的讚、留言與跟他的成交全部不計（分身灌的分要拿掉）
+//   分身刷分不特別處理（使用者 9/28：「我是覺得他真的要刷就給他刷吧」）：對方停權原因不管是什麼，
+//   他給的讚、留言、跟他的成交都照算，跟其他停權原因一視同仁。下拉選單仍保留「分身刷分」這個選項，只是不再影響計分
 // 時間一律以台灣日期（UTC+8）切「每日」。
 
 import { env } from "cloudflare:workers";
@@ -347,13 +349,11 @@ const BASE_REASON = `CASE e.kind
     END
   WHEN 'like_give' THEN CASE WHEN NOT EXISTS (SELECT 1 FROM likes l WHERE l.user_id = ${J("liker")} AND l.share_no = ${J("share")}) THEN 'removed' END
   WHEN 'like_recv' THEN CASE WHEN NOT EXISTS (SELECT 1 FROM likes l WHERE l.user_id = ${J("liker")} AND l.share_no = ${J("share")}) THEN 'removed'
-      WHEN EXISTS (SELECT 1 FROM suspensions su WHERE su.user_id = ${J("peer")} AND su.reason = 'sockpuppet') THEN 'peer_sockpuppet'
       ELSE (SELECT CASE WHEN s.deleted_at IS NOT NULL THEN 'deleted' WHEN s.hidden_at IS NOT NULL THEN 'hidden' WHEN ${LOCKED("'share:' || s.no")} THEN 'reported' END
             FROM shares s WHERE s.no = ${J("share")}) END
   WHEN 'comment' THEN (SELECT CASE WHEN c.deleted_at IS NOT NULL THEN 'deleted' WHEN c.hidden_at IS NOT NULL THEN 'hidden' END FROM comments c WHERE c.id = ${J("comment")})
-  WHEN 'comment_recv' THEN (SELECT CASE WHEN c.deleted_at IS NOT NULL THEN 'deleted' WHEN c.hidden_at IS NOT NULL THEN 'hidden'
-      WHEN EXISTS (SELECT 1 FROM suspensions su WHERE su.user_id = ${J("peer")} AND su.reason = 'sockpuppet') THEN 'peer_sockpuppet' END FROM comments c WHERE c.id = ${J("comment")})
-  WHEN 'deal' THEN (SELECT CASE WHEN d.voided_at IS NOT NULL THEN 'voided' WHEN EXISTS (SELECT 1 FROM suspensions su WHERE su.user_id = ${J("peer")} AND su.reason = 'sockpuppet') THEN 'peer_sockpuppet' END FROM deals d WHERE d.id = ${J("deal")})
+  WHEN 'comment_recv' THEN (SELECT CASE WHEN c.deleted_at IS NOT NULL THEN 'deleted' WHEN c.hidden_at IS NOT NULL THEN 'hidden' END FROM comments c WHERE c.id = ${J("comment")})
+  WHEN 'deal' THEN (SELECT CASE WHEN d.voided_at IS NOT NULL THEN 'voided' END FROM deals d WHERE d.id = ${J("deal")})
   WHEN 'report_ok' THEN CASE WHEN ${J("report")} IS NOT NULL
       THEN CASE WHEN (SELECT decision FROM target_decisions WHERE target = ${J("target")}) = 'unlocked' THEN 'overturned' END
       ELSE (SELECT CASE WHEN c.decision = 'kept' OR (c.deleted_at IS NULL AND c.hidden_at IS NULL) THEN 'overturned' END FROM comments c WHERE c.id = ${J("comment")}) END

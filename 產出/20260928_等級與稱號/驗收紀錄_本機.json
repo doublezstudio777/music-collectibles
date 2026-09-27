@@ -1,10 +1,10 @@
 {
- "stamp": "504335",
+ "stamp": "505894",
  "results": [
   {
    "name": "1a 編輯 API 成功",
    "ok": true,
-   "detail": "(201, 201, '{\"id\":1746}')"
+   "detail": "(201, 201, '{\"id\":1802}')"
   },
   {
    "name": "1b A 在系列四連續 12 次編輯都成功",
@@ -14,12 +14,12 @@
   {
    "name": "1c C 還原系列三 API 成功",
    "ok": true,
-   "detail": "{\"id\":1770}"
+   "detail": "{\"id\":1826}"
   },
   {
    "name": "1d 重算不讓 content_version 增加",
    "ok": true,
-   "detail": "(6628, 6628)"
+   "detail": "(7421, 7421)"
   },
   {
    "name": "1e A 在系列一連續兩次編輯合併成一筆",
@@ -29,7 +29,7 @@
   {
    "name": "1f 合併後改動 200 字以上＝30 分",
    "ok": true,
-   "detail": "{'target': 'series:lvart504335/1', 'base': 1745, 'first': 1746, 'last': 1747, 'lastAt': '2026-09-27T10:19:27.381Z', 'chars': 259}"
+   "detail": "{'target': 'series:lvart505894/1', 'base': 1801, 'first': 1802, 'last': 1803, 'lastAt': '2026-09-27T10:45:25.322Z', 'chars': 259}"
   },
   {
    "name": "1g 編輯 7 天內是待入帳（pending），總分 0",
@@ -64,42 +64,42 @@
   {
    "name": "2a 會員送審：待審（approved=false）",
    "ok": true,
-   "detail": "('{\"type\":\"series\",\"key\":\"lvart504335/5\",\"approved\":false}', '{\"type\":\"item\",\"key\":\"lvart504335/1#towel\",\"approved\":false}')"
+   "detail": "('{\"type\":\"series\",\"key\":\"lvart505894/5\",\"approved\":false}', '{\"type\":\"item\",\"key\":\"lvart505894/1#towel\",\"approved\":false}')"
   },
   {
    "name": "2b 送審時選「不記得」＝年份空白、名稱沒有年份",
    "ok": true,
-   "detail": "{'id': 265, 'year': '', 'name': '《D送審504335》專輯發行', 'status': 'pending'}"
+   "detail": "{'id': 297, 'year': '', 'name': '《D送審505894》專輯發行', 'status': 'pending'}"
   },
   {
    "name": "2c 待審的新增不給分（not_approved）",
    "ok": true,
-   "detail": "[('series:265', 'not_approved'), ('item:92', 'not_approved')]"
+   "detail": "[('series:297', 'not_approved'), ('item:98', 'not_approved')]"
   },
   {
    "name": "2d 核准後系列、品項各 +15",
    "ok": true,
-   "detail": "{'series:265': ('credited', None, 15), 'item:92': ('credited', None, 15), 'version:135': ('void', 'not_approved', 15)}"
+   "detail": "{'series:297': ('credited', None, 15), 'item:98': ('credited', None, 15), 'version:149': ('void', 'not_approved', 15)}"
   },
   {
    "name": "2e 品項連帶的第一個版本不另外算",
    "ok": true,
-   "detail": "{'series:265': ('credited', None, 15), 'item:92': ('credited', None, 15), 'version:135': ('void', 'not_approved', 15)}"
+   "detail": "{'series:297': ('credited', None, 15), 'item:98': ('credited', None, 15), 'version:149': ('void', 'not_approved', 15)}"
   },
   {
    "name": "2f 被退回的版本不給分",
    "ok": true,
-   "detail": "(201, [{'id': 135}], {'series:265': ('credited', None, 15), 'item:92': ('credited', None, 15), 'version:135': ('void', 'not_approved', 15)})"
+   "detail": "(201, [{'id': 149}], {'series:297': ('credited', None, 15), 'item:98': ('credited', None, 15), 'version:149': ('void', 'not_approved', 15)})"
   },
   {
    "name": "2g 管理員新增系列直接生效（approved=true、status=approved）",
    "ok": true,
-   "detail": "('{\"type\":\"series\",\"key\":\"lvart504335/6\",\"approved\":true}', {'id': 266, 'no': 6, 'status': 'approved'})"
+   "detail": "('{\"type\":\"series\",\"key\":\"lvart505894/6\",\"approved\":true}', {'id': 298, 'no': 6, 'status': 'approved'})"
   },
   {
    "name": "2h 不在審核佇列",
    "ok": true,
-   "detail": "10"
+   "detail": "12"
   },
   {
    "name": "2i 前台看得到（系列頁 200）",
@@ -124,7 +124,7 @@
   {
    "name": "3b 第 1 則勾辨識參考 +5；第 7 則收藏超過上限，辨識參考也不給",
    "ok": true,
-   "detail": "{'ref:859': ('credited', None), 'ref:865': ('void', 'daily_cap')}"
+   "detail": "{'ref:978': ('credited', None), 'ref:984': ('void', 'daily_cap')}"
   },
   {
    "name": "3c 管理員下架一則有分的收藏：扣回 10 分，超過上限的那則不遞補",
@@ -134,7 +134,7 @@
   {
    "name": "4a 按讚、取消讚不讓 content_version 增加",
    "ok": true,
-   "detail": "(6646, 6646)"
+   "detail": "(7439, 7439)"
   },
   {
    "name": "4b E 今天讚 12 則：10 則有分、2 則超過每日上限、取消的那則作廢",
@@ -189,7 +189,7 @@
   {
    "name": "5d 留言、刪留言不讓 content_version 增加",
    "ok": true,
-   "detail": "(200, 201, 6646, 6646)"
+   "detail": "(200, 201, 7439, 7439)"
   },
   {
    "name": "5e 刪掉一則有分的留言：扣回 2 分，超過上限的不遞補（今天第 13 則也不給）",
@@ -229,17 +229,17 @@
   {
    "name": "7e 被檢舉成立的收藏扣回（Y 5 則 reported）",
    "ok": true,
-   "detail": "[('share:904', 'reported'), ('share:905', 'reported'), ('share:906', 'reported'), ('share:907', 'reported'), ('share:908', 'reported'), ('share:909', 'daily_cap')]"
+   "detail": "[('share:1023', 'reported'), ('share:1024', 'reported'), ('share:1025', 'reported'), ('share:1026', 'reported'), ('share:1027', 'reported'), ('share:1028', 'daily_cap')]"
   },
   {
    "name": "7f 達門檻被鎖的收藏扣回",
    "ok": true,
-   "detail": "[('share:910', 'reported')]"
+   "detail": "[('share:1029', 'reported')]"
   },
   {
    "name": "7g 留言被 3 人檢舉自動隱藏＝檢舉成立（待入帳）；留言者那則作廢",
    "ok": true,
-   "detail": "([201, 201, 201], [('rok:254', 'pending'), ('crok:60', 'pending')])"
+   "detail": "([201, 201, 201], [('rok:288', 'pending'), ('crok:66', 'pending')])"
   },
   {
    "name": "7h 7 天後檢舉成立入帳：H 50 分",
@@ -284,7 +284,7 @@
   {
    "name": "8e K 補 6 則別人的：5 則待入帳、1 則超過每日上限；補自己新增的沒有事件",
    "ok": true,
-   "detail": "[('series:262', 'credited', None), ('fill:series:256:year', 'pending', None), ('fill:series:257:year', 'pending', None), ('fill:series:258:year', 'pending', None), ('fill:series:259:year', 'pending', None), ('fill:series:260:year', 'pending', None), ('fill:series:261:year', 'void', 'daily_cap')]"
+   "detail": "[('series:294', 'credited', None), ('fill:series:288:year', 'pending', None), ('fill:series:289:year', 'pending', None), ('fill:series:290:year', 'pending', None), ('fill:series:291:year', 'pending', None), ('fill:series:292:year', 'pending', None), ('fill:series:293:year', 'void', 'daily_cap')]"
   },
   {
    "name": "8f 7 天內被改掉的不給分（changed）",
@@ -324,7 +324,7 @@
   {
    "name": "9f 停權紀錄一筆、恢復時填上結束時間",
    "ok": true,
-   "detail": "[{'reason': 'other', 'note': '等級驗收', 'ended_at': '2026-09-27T10:20:43.985Z'}]"
+   "detail": "[{'reason': 'other', 'note': '等級驗收', 'ended_at': '2026-09-27T10:46:41.303Z'}]"
   },
   {
    "name": "9g 停權必填原因：沒選 400、選「其他」沒寫說明 400、不在選單內 400",
@@ -332,9 +332,9 @@
    "detail": "('{\"error\":{\"code\":\"INVALID\",\"message\":\"選一個停權原因\"}}', '{\"error\":{\"code\":\"INVALID\",\"message\":\"原因選「其他」要寫說明\"}}', '{\"error\":{\"code\":\"INVALID\",\"message\":\"選一個停權原因\"}}')"
   },
   {
-   "name": "9h 按讚者因「分身刷分」停權：他給的讚不計，P3 11 → 10（peer_sockpuppet）",
+   "name": "9h 按讚者因「分身刷分」停權：不再有特例，他給的讚照算，P3 仍 11、沒有 peer_sockpuppet 這個 reason",
    "ok": true,
-   "detail": "(10, 0)"
+   "detail": "(11, 0)"
   },
   {
    "name": "9i admin_log 記下原因代碼與說明",
@@ -389,12 +389,12 @@
   {
    "name": "11c 頭號樂迷：A 是等級藝人的頭號樂迷（14 次有效編輯）",
    "ok": true,
-   "detail": "[('topfan', 'lvart504335'), ('topfan', 'lvartc504335')]"
+   "detail": "[('topfan', 'lvart505894'), ('topfan', 'lvartc505894')]"
   },
   {
    "name": "11d 同分（A、C 各 1 次）取先達到的 A",
    "ok": true,
-   "detail": "([('topfan', 'lvart504335'), ('topfan', 'lvartc504335')], [])"
+   "detail": "([('topfan', 'lvart505894'), ('topfan', 'lvartc505894')], [])"
   },
   {
    "name": "11e 每位藝人只有一位頭號樂迷",
@@ -404,7 +404,7 @@
   {
    "name": "11f C 超過 A：頭號樂迷換人",
    "ok": true,
-   "detail": "([('topfan', 'lvart504335')], [('topfan', 'lvartc504335')])"
+   "detail": "([('topfan', 'lvart505894')], [('topfan', 'lvartc505894')])"
   },
   {
    "name": "11g 打假先鋒被翻案剩 4 次：稱號拿掉",
@@ -434,7 +434,7 @@
   {
    "name": "12d 個人頁：顯示「分數統計於」時間",
    "ok": true,
-   "detail": "分數統計於 2026-10-05 18:23（每天統計一次）"
+   "detail": "分數統計於 2026-10-05 18:49（每天統計一次）"
   },
   {
    "name": "12e 個人頁：稱號「等級藝人頭號樂迷」，連到藝人頁",
@@ -454,7 +454,7 @@
   {
    "name": "12h 留言帶等級：F＝新晉樂迷 Lv.2（28 分，門檻 20）、管理員＝館長",
    "ok": true,
-   "detail": "{'lv504335f': '新晉樂迷 Lv.2', 'yzadmin': '館長'}"
+   "detail": "{'lv505894f': '新晉樂迷 Lv.2', 'yzadmin': '館長'}"
   },
   {
    "name": "12i 出價列表：每位出價者旁有等級",
@@ -464,7 +464,7 @@
   {
    "name": "12j 資料貢獻者名單：每人旁有等級（A＝專業樂迷 Lv.2）",
    "ok": true,
-   "detail": "[('lv504335a', '專業樂迷 Lv.2'), ('lv504335b', '新晉樂迷 Lv.1'), ('lv504335d', '新晉樂迷 Lv.4')]"
+   "detail": "[('lv505894a', '專業樂迷 Lv.2'), ('lv505894b', '新晉樂迷 Lv.1'), ('lv505894d', '新晉樂迷 Lv.4')]"
   },
   {
    "name": "17a 同一則收藏收到 52 則留言，只計 50（share_cap 2）",
@@ -494,7 +494,7 @@
   {
    "name": "17f 留言被隱藏：作者的收到留言扣回（hidden）",
    "ok": true,
-   "detail": "([{'id': 715}], [{'state': 'void', 'reason': 'hidden'}])"
+   "detail": "([{'id': 879}], [{'state': 'void', 'reason': 'hidden'}])"
   },
   {
    "name": "17g 60 分＝新晉樂迷 Lv.3（門檻 50），離新晉樂迷 Lv.4（90）還差 30",
@@ -524,12 +524,12 @@
   {
    "name": "18e G 補別人的 6 筆：5 筆待入帳、1 筆超過每日上限；補自己新增的版本沒有事件",
    "ok": true,
-   "detail": "[('fill:version:138:year', 'pending', None), ('fill:version:138:region', 'pending', None), ('fill:version:138:label', 'pending', None), ('fill:version:138:catalog', 'pending', None), ('fill:version:138:identifyBy', 'pending', None), ('fill:version:139:packaging', 'void', 'daily_cap'), ('version:140', 'credited', None)]"
+   "detail": "[('fill:version:152:year', 'pending', None), ('fill:version:152:region', 'pending', None), ('fill:version:152:label', 'pending', None), ('fill:version:152:catalog', 'pending', None), ('fill:version:152:identifyBy', 'pending', None), ('fill:version:153:packaging', 'void', 'daily_cap'), ('version:154', 'credited', None)]"
   },
   {
    "name": "18f 7 天內被改掉的不給分（changed）",
    "ok": true,
-   "detail": "[('fill:version:138:year', None), ('fill:version:138:region', 'changed'), ('fill:version:138:label', None), ('fill:version:138:catalog', None), ('fill:version:138:identifyBy', None), ('fill:version:139:packaging', 'daily_cap'), ('version:140', None)]"
+   "detail": "[('fill:version:152:year', None), ('fill:version:152:region', 'changed'), ('fill:version:152:label', None), ('fill:version:152:catalog', None), ('fill:version:152:identifyBy', None), ('fill:version:153:packaging', 'daily_cap'), ('version:154', None)]"
   },
   {
    "name": "18g 7 天後入帳：G 補資料 40 分（5 筆有分、1 筆被改掉）",
@@ -589,7 +589,7 @@
   {
    "name": "19j 指定、取消指定不讓 content_version 增加",
    "ok": true,
-   "detail": "(6703, 6703)"
+   "detail": "(7496, 7496)"
   },
   {
    "name": "19k 兩張新表沒有內容版本觸發器",
@@ -604,7 +604,7 @@
   {
    "name": "13a 按讚、留言、重算分數、看個人頁：content_version 不變",
    "ok": true,
-   "detail": "(6703, 6703)"
+   "detail": "(7496, 7496)"
   },
   {
    "name": "13b 單則頁整頁快取前後都是 HIT",
@@ -619,7 +619,7 @@
   {
    "name": "14a 藝人頁系列：新的在前、年份不明排最後（2024、2021、2019、待補）",
    "ok": true,
-   "detail": "['2025《館長新增504335》專輯發行', '2024《系列三504335》專輯發行', '2021《系列四504335》專輯發行', '2019《系列一504335》專輯發行', '《D送審504335》專輯發行', '《系列二504335》專輯發行']"
+   "detail": "['2025《館長新增505894》專輯發行', '2024《系列三505894》專輯發行', '2021《系列四505894》專輯發行', '2019《系列一505894》專輯發行', '《D送審505894》專輯發行', '《系列二505894》專輯發行']"
   },
   {
    "name": "14b 全部系列（含送審、館長新增）也照同一規則",
@@ -639,12 +639,12 @@
   {
    "name": "15a 成交總金額 1440：Range 量每個字都在框內、沒有省略號",
    "ok": true,
-   "detail": "{'ok': True, 'text': 'NT$554,350', 'lines': 2, 'rightMax': 1258.328125, 'innerRight': 1271.5, 'font': '22px', 'overflow': 'visible', 'textOverflow': 'clip', 'bad': 0}"
+   "detail": "{'ok': True, 'text': 'NT$560,350', 'lines': 2, 'rightMax': 1258.328125, 'innerRight': 1271.5, 'font': '22px', 'overflow': 'visible', 'textOverflow': 'clip', 'bad': 0}"
   },
   {
-   "name": "15b 成交總金額 1440：顯示完整金額 NT$554,350",
+   "name": "15b 成交總金額 1440：顯示完整金額 NT$560,350",
    "ok": true,
-   "detail": "('NT$554,350', 554350)"
+   "detail": "('NT$560,350', 560350)"
   },
   {
    "name": "15c 金額九位數 1440：仍不截斷（放不下時換行，行數 4）",
@@ -659,12 +659,12 @@
   {
    "name": "15a 成交總金額 390：Range 量每個字都在框內、沒有省略號",
    "ok": true,
-   "detail": "{'ok': True, 'text': 'NT$554,350', 'lines': 2, 'rightMax': 171, 'innerRight': 355.5, 'font': '22px', 'overflow': 'visible', 'textOverflow': 'clip', 'bad': 0}"
+   "detail": "{'ok': True, 'text': 'NT$560,350', 'lines': 2, 'rightMax': 171, 'innerRight': 355.5, 'font': '22px', 'overflow': 'visible', 'textOverflow': 'clip', 'bad': 0}"
   },
   {
-   "name": "15b 成交總金額 390：顯示完整金額 NT$554,350",
+   "name": "15b 成交總金額 390：顯示完整金額 NT$560,350",
    "ok": true,
-   "detail": "('NT$554,350', 554350)"
+   "detail": "('NT$560,350', 560350)"
   },
   {
    "name": "15c 金額九位數 390：仍不截斷（放不下時換行，行數 2）",
@@ -684,12 +684,12 @@
   {
    "name": "15f 補上 2017 後系列二排到 2019 之後",
    "ok": true,
-   "detail": "['2025《館長新增504335》專輯發行', '2024《系列三504335》專輯發行', '2021《系列四504335》專輯發行', '2019《系列一504335》專輯發行', '2017《系列二504335》專輯發行', '《D送審504335》專輯發行']"
+   "detail": "['2025《館長新增505894》專輯發行', '2024《系列三505894》專輯發行', '2021《系列四505894》專輯發行', '2019《系列一505894》專輯發行', '2017《系列二505894》專輯發行', '《D送審505894》專輯發行']"
   },
   {
    "name": "15g K2 畫面補的那筆算「補上缺漏資料」（待入帳）",
    "ok": true,
-   "detail": "[('fill:series:263:year', 'void'), ('fill:series:253:year', 'pending')]"
+   "detail": "[('fill:series:295:year', 'void'), ('fill:series:285:year', 'pending')]"
   },
   {
    "name": "15h 新增系列：沒填年份也沒勾不記得 → 提示",
