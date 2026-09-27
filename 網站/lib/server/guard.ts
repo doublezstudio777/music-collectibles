@@ -11,6 +11,7 @@
 import { env } from "cloudflare:workers";
 import { getDb } from "@/db";
 import { adminLog, settings } from "@/db/schema";
+import { DEFAULT_QUOTA } from "@/lib/server/quota";
 
 export const DEFAULT_READ_LIMIT = 8_000_000;
 export const FLUSH_EVERY = 20;
@@ -19,13 +20,13 @@ export const monthKey = (d = new Date()) => `r2_reads:${d.toISOString().slice(0,
 
 let pendingReads = 0;
 
-export type SiteStatus = { paused: boolean; pausedAt: string | null; pausedReason: string; reads: number; readLimit: number };
+export type SiteStatus = { paused: boolean; pausedAt: string | null; pausedReason: string; reads: number; readLimit: number; photoDaily: number };
 
 /** 一次讀出暫停狀態、本月讀取數、門檻；photoKey 有給就順便查那張照片是誰的、什麼用途 */
 export async function siteStatus(photoKey?: string) {
   const db = env.DB!;
   const stmts = [
-    db.prepare(`SELECT key, value, updated_at AS at FROM settings WHERE key IN ('paused', 'paused_reason', 'photo_read_limit')`),
+    db.prepare(`SELECT key, value, updated_at AS at FROM settings WHERE key IN ('paused', 'paused_reason', 'photo_read_limit', 'daily_photo_limit')`),
     db.prepare(`SELECT value FROM counters WHERE key = ?1`).bind(monthKey()),
     // 照片連同它掛的炫收藏一起查：照片刪了、收藏被隱藏或刪除，/img/ 都回 404（2026-09-28）
     ...(photoKey
@@ -33,8 +34,9 @@ export async function siteStatus(photoKey?: string) {
           db
             .prepare(
               `SELECT p.owner_id AS ownerId, p.purpose, p.share_no AS shareNo, p.deleted_at AS photoDeleted,
+                      (p.r2_key = ?1 AND p.thumb_key != ?1) AS isMain, u.handle AS handle,
                       s.no AS shareFound, s.hidden_at AS shareHidden, s.deleted_at AS shareDeleted
-               FROM photos p LEFT JOIN shares s ON s.no = p.share_no
+               FROM photos p LEFT JOIN shares s ON s.no = p.share_no LEFT JOIN users u ON u.id = p.owner_id
                WHERE p.r2_key = ?1 OR p.thumb_key = ?1 LIMIT 1`,
             )
             .bind(photoKey),
@@ -50,11 +52,18 @@ export async function siteStatus(photoKey?: string) {
     pausedReason: map.get("paused_reason")?.value ?? "",
     reads: ((c.results[0] as { value: number } | undefined)?.value ?? 0) + pendingReads,
     readLimit: Number.isInteger(limit) && limit > 0 ? limit : DEFAULT_READ_LIMIT,
+    photoDaily: (() => {
+      const n = Number(map.get("daily_photo_limit")?.value);
+      return Number.isInteger(n) && n > 0 ? n : DEFAULT_QUOTA.photo;
+    })(),
   };
   const row = p?.results[0] as
-    | { ownerId: string; purpose: string; shareNo: number | null; photoDeleted: string | null; shareFound: number | null; shareHidden: string | null; shareDeleted: string | null }
+    | {
+        ownerId: string; purpose: string; shareNo: number | null; photoDeleted: string | null; isMain: number; handle: string | null;
+        shareFound: number | null; shareHidden: string | null; shareDeleted: string | null;
+      }
     | undefined;
-  const photo = row ? { ownerId: row.ownerId, purpose: row.purpose, shareNo: row.shareNo } : null;
+  const photo = row ? { ownerId: row.ownerId, purpose: row.purpose, shareNo: row.shareNo, isMain: row.isMain === 1, handle: row.handle ?? "" } : null;
   /** 這張照片還能不能公開給人看：資料庫沒有這張、照片已刪、掛的收藏不見／被隱藏／被刪 → 不行 */
   const gone =
     !row || !!row.photoDeleted || (row.shareNo !== null && (row.shareFound === null || !!row.shareHidden || !!row.shareDeleted));

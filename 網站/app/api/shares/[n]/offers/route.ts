@@ -1,6 +1,7 @@
 import { json, readBody, requireUser } from "@/lib/server/auth";
 import { handle, HttpError } from "@/lib/server/trade";
 import { placeOffer } from "@/lib/server/trade";
+import { tradeBlocked } from "@/lib/server/geo";
 
 const num = async (p: Promise<Record<string, string>>, k: string) => {
   const v = Number((await p)[k]);
@@ -12,7 +13,10 @@ const num = async (p: Promise<Record<string, string>>, k: string) => {
 export async function POST(req: Request, ctx: { params: Promise<{ n: string }> }) {
   const s = await requireUser(req);
   if (s instanceof Response) return s;
+  // 先把 body 讀完再回應（沒讀完就回 403，本機 Miniflare 同一條連線的下一個請求會 503）
   const body = await readBody(req);
+  const blocked = tradeBlocked(req);
+  if (blocked) return blocked;
   void body;
   return handle(async () => {
     const id = await num(ctx.params, "n");

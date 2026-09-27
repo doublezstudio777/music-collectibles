@@ -13,6 +13,7 @@ import { isAdmin, type User } from "@/lib/server/auth";
 import { parseJson, userNames } from "@/lib/server/content";
 import { hit } from "@/lib/server/services";
 import { HttpError } from "@/lib/server/trade";
+import { SITE_NAME } from "@/lib/data";
 
 export const WIKI_LICENSE = "CC BY-SA 4.0";
 const MAX_CHARS = 20_000;
@@ -126,7 +127,7 @@ export async function lastEdit(t: WikiTarget) {
     .limit(1);
   if (!r) return null;
   const names = await userNames(r.authorId ? [r.authorId] : []);
-  return { by: r.authorId ? (names.get(r.authorId)?.name ?? "（已刪除）") : "音藏", date: r.at.slice(0, 10) };
+  return { by: r.authorId ? (names.get(r.authorId)?.name ?? "（已刪除）") : SITE_NAME, date: r.at.slice(0, 10) };
 }
 
 async function ensureBaseline(t: WikiTarget, page: Page) {

@@ -2,6 +2,7 @@ import { json, readBody, requireUser } from "@/lib/server/auth";
 import { handle, HttpError } from "@/lib/server/trade";
 import { getCatalog } from "@/lib/server/content";
 import { publicOffers, setSale } from "@/lib/server/trade";
+import { tradeBlocked } from "@/lib/server/geo";
 
 const num = async (p: Promise<Record<string, string>>, k: string) => {
   const v = Number((await p)[k]);
@@ -25,6 +26,11 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ n: string }> 
   const s = await requireUser(req);
   if (s instanceof Response) return s;
   const body = await readBody(req);
+  // 開放出價、定價出售、改價都算交易，要在台灣；改回純分享（下架）海外也可以
+  if (body.state !== "share") {
+    const blocked = tradeBlocked(req);
+    if (blocked) return blocked;
+  }
   return handle(async () => {
     await setSale(s.user, await num(ctx.params, "n"), body.state, body.price);
     return json({ ok: true });

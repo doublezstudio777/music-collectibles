@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { lockLabel, reasonsFor, targetLevel, type ReportReason, type TargetKey } from "@/lib/data";
 import { api, openPanel, refreshAccount, useAccount } from "@/lib/account";
 import { uploadImage } from "@/lib/image";
+import { SITE_NAME } from "@/lib/data";
 
 const domId = (t: TargetKey) => t.replace(/[^a-z0-9]/gi, "-");
 
@@ -142,7 +143,7 @@ export function AppealBox({ target }: { target: TargetKey }) {
   if (!open) {
     return (
       <button type="button" className="btn btn-line appeal-btn" onClick={() => setOpen(true)}>
-        向音藏申訴
+        向{SITE_NAME}申訴
       </button>
     );
   }
@@ -182,7 +183,7 @@ export function AppealBox({ target }: { target: TargetKey }) {
 
   return (
     <form className="appeal-form" onSubmit={submit} noValidate>
-      <p className="report-title">向音藏申訴</p>
+      <p className="report-title">向{SITE_NAME}申訴</p>
       <div className="field">
         <span className="field-label" id={`${id}-p`}>
           證據照片

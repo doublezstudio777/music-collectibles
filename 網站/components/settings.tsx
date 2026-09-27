@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { api, openPanel, refreshAccount, setMe, useAccount, type Me } from "@/lib/account";
+import { SITE_NAME } from "@/lib/data";
 
 function Msg({ ok, text }: { ok: boolean; text: string }) {
   if (!text) return null;
@@ -124,7 +125,7 @@ function DeleteBox({ me }: { me: Me }) {
       {me.deletionRequested ? (
         <>
           <p className="page-meta" data-testid="delete-requested">
-            已收到刪除申請。音藏會人工處理，處理前帳號照常可用。
+            已收到刪除申請。{SITE_NAME}會人工處理，處理前帳號照常可用。
           </p>
           <div className="settings-row">
             <button type="button" className="btn-text" onClick={cancel}>

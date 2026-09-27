@@ -241,8 +241,8 @@ export class Catalog {
 
   /** 連結預覽用的照片：清單裡第一則有照片、而且沒被鎖的（被隱藏的本來就不在 shares 裡） */
   ogPhotoOf = (list: Share[]) => {
-    const s = list.find((x) => x.image && !this.toShareView(x).lock);
-    return s?.image ? { url: s.image, size: s.imageSize } : null;
+    const s = list.find((x) => (x.thumb ?? x.image) && !this.toShareView(x).lock);
+    return s ? ogPhoto(s) : null;
   };
 
   toHoldingView = (key: string): HoldingView | null => {
@@ -255,7 +255,7 @@ export class Catalog {
       edition: r.version.edition,
       year: r.version.year,
       format: r.item.kind,
-      catalog: r.version.catalog,
+      catalog: "",
       href: versionHref(r.series, r.item, r.version),
       color: r.version.color,
     };
@@ -369,3 +369,16 @@ export class Catalog {
 }
 
 export type FormOptions = ReturnType<Catalog["formOptions"]>;
+
+/**
+ * 連結預覽用縮圖（長邊 480px）：大圖要登入才看得到（防盜版批次 2026-09-28），FB／LINE 的爬蟲沒有登入。
+ * 尺寸由主圖尺寸等比例換算（縮圖上傳時就是長邊 480px）。
+ */
+export function ogPhoto(s: Pick<Share, "thumb" | "image" | "imageSize">) {
+  const url = s.thumb ?? s.image;
+  if (!url) return null;
+  const size = s.imageSize;
+  if (!size || !s.thumb) return { url };
+  const k = Math.min(1, 480 / Math.max(size.w, size.h));
+  return { url, size: { w: Math.round(size.w * k), h: Math.round(size.h * k) } };
+}

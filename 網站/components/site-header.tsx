@@ -8,6 +8,7 @@ import { userHref } from "@/lib/data";
 import { clearFollows } from "@/lib/state";
 import { logout, openPanel, useAccount } from "@/lib/account";
 import { avatarLabel } from "@/lib/avatar-label";
+import { SITE_NAME } from "@/lib/data";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -24,7 +25,7 @@ export function SiteHeader() {
     <header className="nav">
       <div className="wrap nav-row">
         <Link className="logo" href="/">
-          音藏
+          {SITE_NAME}
         </Link>
         {isForm ? (
           <Link className="nav-cancel" href="/">

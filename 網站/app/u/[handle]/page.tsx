@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { userByHandle } from "@/lib/server/auth";
 import { publicHoldings } from "@/lib/server/me";
+import { regionNames } from "@/lib/server/geo";
 import { pageData } from "@/lib/server/viewer";
 import { SelfOnly } from "@/components/self-only";
 import { FollowList } from "@/components/follow-list";
@@ -22,6 +23,7 @@ async function loadUser(handle: string) {
       initials: Array.from(u.name)[0] ?? "?",
       bio: u.bio,
       verified: Boolean(u.emailVerifiedAt),
+      region: (await regionNames([u.id])).get(u.id) ?? "",
       ...(await publicHoldings(u.id)),
     };
   }
@@ -52,6 +54,11 @@ export default async function UserPage({ params }: Props) {
             {user.name}
             {user.verified ? <span className="verified">已認證</span> : null}
           </h1>
+          {user.region ? (
+            <p className="page-meta" data-testid="profile-region">
+              所在地區 {user.region}
+            </p>
+          ) : null}
           {user.bio ? <p className="page-meta">{user.bio}</p> : null}
         </div>
         <SelfOnly handle={user.handle}>

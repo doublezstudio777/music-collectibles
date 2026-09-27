@@ -10,6 +10,7 @@ import {
   versionAnchor,
   versionKey,
   versionTarget,
+  seriesKey,
   type Item,
   type LockData,
   type Series,
@@ -28,16 +29,16 @@ import { isLocked, lastEdit, latestRevisionId, loadPage } from "@/lib/server/wik
 import type { PriceSummary } from "@/lib/prices";
 import { LockBanner, ReportBox } from "@/components/report";
 import { ItemLooseWall, VersionWall } from "@/components/share-wall";
+import { IdentifyDetails } from "@/components/identify-details";
 
 type Props = { params: Promise<{ artist: string; no: string }>; searchParams?: Promise<{ edit?: string }> };
 
+// 辨識特徵、目錄號、條碼屬於辨識細節（2026-09-28 防盜版批次）：登入會員才看得到，
+// 不放進公開頁面（整頁快取訪客與會員同一份），改由 IdentifyDetails 從 /api/details 取
 const ROWS: { label: string; get: (v: Version) => string; mono?: boolean }[] = [
-  { label: "辨識特徵", get: (v) => v.identifyBy },
   { label: "發行年", get: (v) => v.year, mono: true },
   { label: "地區", get: (v) => v.region },
   { label: "發行", get: (v) => v.label },
-  { label: "目錄號", get: (v) => v.catalog, mono: true },
-  { label: "條碼", get: (v) => v.barcode, mono: true },
   { label: "包裝", get: (v) => v.packaging },
   { label: "內容物", get: (v) => v.contents },
   { label: "曲目", get: (v) => v.tracks },
@@ -113,7 +114,7 @@ function Compare({ series, item }: { series: Series; item: Item }) {
 }
 
 function Spec({ series, item, v }: { series: Series; item: Item; v: Version }) {
-  const rows = ROWS.filter((r) => r.label !== "辨識特徵" && hasValue(r.get(v)));
+  const rows = ROWS.filter((r) => hasValue(r.get(v)));
   return (
     <div className="spec">
       <HoldingButtons vkey={versionKey(series, item, v)} owners={v.owners} wanted={v.wanted} />
@@ -156,16 +157,11 @@ function VersionBlock({
 }) {
   const list = related.filter((s) => s.link?.version === v.id);
   const refs = list.filter((s) => s.refPhoto);
-  const marks = [
-    ...(hasValue(v.barcode) ? [{ label: "條碼", text: v.barcode, photo: undefined }] : []),
-    ...(hasValue(v.catalog) ? [{ label: "目錄號", text: v.catalog, photo: undefined }] : []),
-    ...(v.marks ?? []),
-  ];
   const vkey = versionKey(series, item, v);
   return (
     <section id={versionAnchor(item, v)} className="ver-block">
       <h3 className="ver-title">
-        {v.edition} {hasValue(v.catalog) ? <span className="mono sub-inline">{v.catalog}</span> : null}
+        {v.edition}
         {v.fakes?.length ? <span className="flag flag-fake">有已知仿冒</span> : null}
         <OwnersCount vkey={vkey} owners={v.owners} />
       </h3>
@@ -173,18 +169,7 @@ function VersionBlock({
 
       {price ? <PriceHistory summary={price} /> : null}
 
-      <h4 className="sub-title">正版辨識</h4>
-      <ul className="marks">
-        {marks.map((m) => (
-          <li key={m.label + m.text} className={m.photo ? "mark has-photo" : "mark"}>
-            {m.photo ? <PhotoBlock caption={m.photo} /> : null}
-            <span className="mark-text">
-              <b>{m.label}</b>
-              <span className={m.label === "條碼" || m.label === "目錄號" ? "mono" : undefined}>{m.text}</span>
-            </span>
-          </li>
-        ))}
-      </ul>
+      <IdentifyDetails skey={seriesKey(series)} vkey={vkey} anchor={versionAnchor(item, v)} hasFakes={Boolean(v.fakes?.length)} />
       {refs.length ? (
         <div className="refs">
           <span className="refs-label">收藏者的參考照片</span>
@@ -202,50 +187,6 @@ function VersionBlock({
             ))}
           </ul>
         </div>
-      ) : null}
-
-      {v.fakes?.length ? (
-        <>
-          <h4 className="sub-title" id={`${versionAnchor(item, v)}-fakes`}>
-            已知仿冒
-          </h4>
-          {v.fakes.map((f) => (
-            <div key={f.name} className="fake">
-              <p className="fake-head">
-                <b>{f.name}</b>
-                <span className="sub">{f.seen}</span>
-              </p>
-              <div className="fake-photos">
-                <figure>
-                  <PhotoBlock caption="正版" />
-                  <figcaption>正版</figcaption>
-                </figure>
-                <figure>
-                  <PhotoBlock caption="仿冒" />
-                  <figcaption>仿冒</figcaption>
-                </figure>
-              </div>
-              <table className="tbl fake-tbl">
-                <thead>
-                  <tr>
-                    <th>特徵</th>
-                    <th>正版</th>
-                    <th>仿冒</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {f.rows.map((r) => (
-                    <tr key={r.label}>
-                      <td>{r.label}</td>
-                      <td>{r.genuine}</td>
-                      <td>{r.fake}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ))}
-        </>
       ) : null}
 
       <h4 className="sub-title">

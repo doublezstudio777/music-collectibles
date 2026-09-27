@@ -6,7 +6,10 @@ import { priceText, shareHref, type Sale, type ShareView } from "@/lib/data";
 import { api, openPanel, refreshAccount, useAccount } from "@/lib/account";
 import type { PublicOffer, ThreadMessage } from "@/lib/server/trade";
 import { Photo } from "@/components/share-card";
-import { MoneyInput, parsePrice } from "@/components/share-detail";
+import { MoneyInput, RegionNote, parsePrice } from "@/components/share-detail";
+
+/** 所在地區（國家層級）；沒有紀錄就不顯示 */
+const regionText = (r?: string) => (r ? ` · 所在地區 ${r}` : "");
 
 const saleLine = (sale: Sale) =>
   sale.state === "sale"
@@ -24,6 +27,7 @@ type Row = {
   thumb: string | null;
   iAmSeller: boolean;
   other: { handle: string; name: string };
+  otherRegion?: string;
   lastFrom: string;
   preview: string;
   time: string;
@@ -37,6 +41,8 @@ type Detail = {
     iAmSeller: boolean;
     buyer: { handle: string; name: string };
     seller: { handle: string; name: string };
+    buyerRegion?: string;
+    sellerRegion?: string;
     messages: ThreadMessage[];
   };
   share: ShareView;
@@ -45,7 +51,7 @@ type Detail = {
 
 function OfferBubble({ msg, d, frozen, run }: { msg: ThreadMessage; d: Detail; frozen: boolean; run: (p: string, b: unknown) => void }) {
   const o = msg.offer!;
-  const { me } = useAccount();
+  const { me, geo } = useAccount();
   const mine = msg.from === me?.handle;
   const closed = d.share.sale.state === "sold";
   const status =
@@ -66,7 +72,8 @@ function OfferBubble({ msg, d, frozen, run }: { msg: ThreadMessage; d: Detail; f
       <span className="offer-kind">{o.kind === "buy" ? "我要買" : "出價"}</span>
       <b className="offer-amt">{priceText(o.price)}</b>
       <span className={`offer-status${o.status === "sold" ? " is-deal" : o.status === "accepted" ? " is-ok" : ""}`}>{status}</span>
-      {seller && !closed && !frozen && o.status === "open" ? (
+      {seller && !closed && !frozen && !geo.canTrade && o.status === "open" ? <RegionNote /> : null}
+      {seller && !closed && !frozen && geo.canTrade && o.status === "open" ? (
         <div className="offer-acts">
           <button type="button" className="btn btn-line" onClick={() => run(`/api/offers/${o.id}/respond`, { answer: "accepted" })}>
             接受
@@ -95,7 +102,7 @@ function OfferBubble({ msg, d, frozen, run }: { msg: ThreadMessage; d: Detail; f
 }
 
 function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
-  const { me } = useAccount();
+  const { me, geo } = useAccount();
   const [d, setD] = useState<Detail | null>(null);
   const [missing, setMissing] = useState(false);
   const [text, setText] = useState("");
@@ -176,7 +183,10 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
             {share.what}
           </Link>
           <span className="pin-sub">
-            {iAmSeller ? `你的收藏 · 買家 ${thread.buyer.name}` : `賣家 ${thread.seller.name}`} · {saleLine(sale)}
+            {iAmSeller
+              ? `你的收藏 · 買家 ${thread.buyer.name}${regionText(thread.buyerRegion)}`
+              : `賣家 ${thread.seller.name}${regionText(thread.sellerRegion)}`}{" "}
+            · {saleLine(sale)}
           </span>
         </div>
         <div className="pin-acts">
@@ -203,7 +213,8 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
       </div>
       <div className="composer">
         {frozen ? <p className="msg-sys">交易暫停</p> : null}
-        {!frozen && !iAmSeller && sale.state === "offer" ? (
+        {!frozen && !iAmSeller && !geo.canTrade && (sale.state === "offer" || (sale.state === "sale" && !hasBuy)) ? <RegionNote /> : null}
+        {!frozen && !iAmSeller && geo.canTrade && sale.state === "offer" ? (
           offering ? (
             <div className="composer-offer">
               <MoneyInput id="convo-offer" value={amount} onChange={setAmount} label="出價金額" />
@@ -222,7 +233,7 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
             </div>
           )
         ) : null}
-        {!frozen && !iAmSeller && sale.state === "sale" && !hasBuy ? (
+        {!frozen && !iAmSeller && geo.canTrade && sale.state === "sale" && !hasBuy ? (
           <div>
             <button type="button" className="btn btn-line" onClick={() => run(`/api/shares/${share.n}/offers`, { kind: "buy" })}>
               我要買 {priceText(sale.price ?? 0)}
@@ -291,7 +302,8 @@ export function Inbox({ id }: { id?: string }) {
                 </span>
                 <span className="thread-main">
                   <b>
-                    {r.other.name} · {r.what}
+                    {r.other.name}
+                    {r.otherRegion ? <span className="region-tag">{r.otherRegion}</span> : null} · {r.what}
                   </b>
                   <span>{r.lastFrom ? `${r.lastFrom}：${r.preview}` : ""}</span>
                 </span>

@@ -4,6 +4,7 @@
 // 被隱藏的內容：Catalog 讀不到，頁面直接 404，走不到這裡。
 
 import type { Metadata } from "next";
+import { SITE_NAME } from "@/lib/data";
 
 export const OG_DEFAULT = { url: "/og-default.png", size: { w: 1200, h: 630 } };
 
@@ -29,13 +30,13 @@ export function ogMeta({
   const image = {
     url: `${origin}${img.url}`,
     ...(img.size ? { width: img.size.w, height: img.size.h } : {}),
-    alt: photo ? title : "音藏",
+    alt: photo ? title : SITE_NAME,
   };
   return {
     title,
     description,
     alternates: { canonical: url },
-    openGraph: { type, siteName: "音藏", locale: "zh_TW", title, description, url, images: [image] },
+    openGraph: { type, siteName: SITE_NAME, locale: "zh_TW", title, description, url, images: [image] },
     twitter: { card: "summary_large_image", title, description, images: [image.url] },
   };
 }

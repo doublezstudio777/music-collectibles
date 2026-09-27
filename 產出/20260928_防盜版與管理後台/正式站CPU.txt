@@ -1,0 +1,17 @@
+[browse] n=100 cpu p50=1 p90=4 max=102 >10ms=9 {'ok': 100}
+   /                            n=  9 p50=1 p90=2 max=4
+   /artist/gordon               n= 14 p50=1 p90=4 max=42
+   /artist/gordon/1             n= 10 p50=1 p90=2 max=92
+   /artist/mc-hotdog            n=  7 p50=1 p90=2 max=33
+   /artist/mc-hotdog/1          n=  8 p50=1 p90=2 max=53
+   /artist/wan-zhi-xuan         n= 10 p50=1 p90=3 max=25
+   /artist/zhang-zhen-yue       n= 12 p50=1 p90=2 max=102
+   /artists                     n=  7 p50=2 p90=2 max=90
+   /login                       n= 13 p50=1 p90=3 max=100
+   /share/2                     n= 10 p50=1 p90=4 max=26
+[miss] n=40 cpu p50=22 p90=55 max=169 >10ms=38 {'ok': 40}
+   /                            n=  8 p50=18 p90=26 max=26
+   /artist/mc-hotdog            n=  8 p50=36 p90=55 max=65
+   /artist/mc-hotdog/1          n=  8 p50=24 p90=43 max=55
+   /artists                     n=  8 p50=24 p90=96 max=169
+   /login                       n=  8 p50=19 p90=20 max=26

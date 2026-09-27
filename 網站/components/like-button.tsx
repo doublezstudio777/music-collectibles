@@ -1,6 +1,6 @@
 "use client";
 
-import { useLiveCount } from "@/lib/counts";
+import { useShownCount } from "@/lib/counts";
 import { toggleLike, useAppState } from "@/lib/state";
 
 export function Heart() {
@@ -11,11 +11,11 @@ export function Heart() {
   );
 }
 
-/** 讚數公開；誰點的不公開。base 是資料庫總讚數（含自己），顯示由 useLiveCount 換算 */
+/** 讚數公開；誰點的不公開。base 是頁面 HTML 裡的總讚數（可能較舊），顯示以 /api/counts 的新數字為準（lib/counts.ts） */
 export function LikeButton({ n, base, large = false }: { n: number; base: number; large?: boolean }) {
   const { liked, ready } = useAppState();
   const on = liked(n);
-  const count = useLiveCount(base, on);
+  const count = useShownCount("likes", n, base, on);
   return (
     <button
       type="button"

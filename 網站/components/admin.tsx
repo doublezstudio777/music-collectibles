@@ -101,7 +101,7 @@ function Takedown({ data, run }: { data: Overview; run: (path: string, body: unk
   const [slugTo, setSlugTo] = useState("");
   const k = key.trim();
   return (
-    <section className="block">
+    <section className="block" id="hidden">
       <h2 className="block-title">
         下架<span className="count">{data.hidden.length}</span>
       </h2>
@@ -276,7 +276,7 @@ export function Admin() {
         </form>
       </section>
 
-      <section className="block">
+      <section className="block" id="pending">
         <h2 className="block-title">
           待審核新增<span className="count">{data.pending.length}</span>
         </h2>
@@ -322,7 +322,7 @@ export function Admin() {
         ) : null}
       </section>
 
-      <section className="block">
+      <section className="block" id="reports">
         <h2 className="block-title">
           檢舉<span className="count">{rows.length}</span>
         </h2>
@@ -372,7 +372,7 @@ export function Admin() {
         ) : null}
       </section>
 
-      <section className="block">
+      <section className="block" id="appeals">
         <h2 className="block-title">
           申訴<span className="count">{data.appeals.length}</span>
         </h2>
@@ -415,7 +415,7 @@ export function Admin() {
         </ul>
       </section>
 
-      <section className="block">
+      <section className="block" id="log">
         <h2 className="block-title">
           操作紀錄<span className="count">{data.log.length}</span>
         </h2>

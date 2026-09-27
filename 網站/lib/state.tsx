@@ -34,6 +34,9 @@ export function useAppState() {
     follows,
     reported,
     verified: Boolean(acc.me?.verified),
+    /** 交易只限台灣：false 時交易按鈕改顯示「交易僅限台灣地區」 */
+    canTrade: acc.geo.canTrade,
+    country: acc.geo.country,
     ready,
   };
 }

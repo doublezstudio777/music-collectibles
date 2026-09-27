@@ -41,11 +41,13 @@ type Account = {
   panel: { mode: PanelMode; reason?: string; email?: string } | null;
   /** 最近一次寫入失敗的訊息 */
   error: string | null;
+  /** 當下連線國家與能不能交易（交易只限台灣）；讀到之前當作可以，避免台灣使用者閃一下提示 */
+  geo: { country: string; canTrade: boolean };
 };
 
 const EMPTY: Account = {
   status: "loading", me: null, liked: [], owned: [], wanted: [], follows: [], reported: [], appeals: [], unread: 0, dismissed: [],
-  panel: null, error: null,
+  panel: null, error: null, geo: { country: "", canTrade: true },
 };
 const SIGNED_OUT = { status: "anon" as const, me: null, liked: [], owned: [], wanted: [], follows: [], reported: [], appeals: [], unread: 0, dismissed: [] };
 
@@ -81,17 +83,19 @@ export async function api<T>(path: string, init?: { method?: string; body?: unkn
 }
 
 type MeResponse = {
+  geo?: Account["geo"];
   user: Me | null;
   state: Pick<Account, "liked" | "owned" | "wanted" | "follows" | "reported" | "appeals" | "unread" | "dismissed"> | null;
 };
 
 export async function refreshAccount() {
   const r = await api<MeResponse>("/api/me");
+  const geo = r.ok && r.data.geo ? r.data.geo : acc.geo;
   if (!r.ok || !r.data.user || !r.data.state) {
-    set(SIGNED_OUT);
+    set({ ...SIGNED_OUT, geo });
     return;
   }
-  set({ status: "user", me: r.data.user, ...r.data.state });
+  set({ status: "user", me: r.data.user, ...r.data.state, geo });
 }
 
 function subscribe(l: () => void) {

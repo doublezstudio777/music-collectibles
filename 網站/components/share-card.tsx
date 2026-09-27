@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { priceText, shareHref, tagHref, userHref, type Lock, type Sale, type ShareView } from "@/lib/data";
+import { priceText, shareHref, tagHref, userHref, watermarkText, type Lock, type Sale, type ShareView } from "@/lib/data";
 import { LikeButton } from "@/components/like-button";
 
 /** 封面左下的狀態槽位：四種狀態同一個位子；被鎖時改成「交易暫停」 */
@@ -49,12 +49,35 @@ export function Flags({ lock, fake }: { lock: Lock | null; fake: boolean }) {
   );
 }
 
+/**
+ * 浮水印：顯示時用 CSS 疊在照片上，不燒進檔案（檔案原樣，改站名全站一起變）。
+ * 角落一個；large 另外在中間疊一個斜的淡字（單則頁、大圖），裁掉角落也還在。
+ */
+export function Watermark({ handle, large = false }: { handle: string; large?: boolean }) {
+  if (!handle) return null;
+  const text = watermarkText(handle);
+  return (
+    <>
+      <span className="wm" aria-hidden="true" data-testid="watermark">
+        {text}
+      </span>
+      {large ? (
+        <span className="wm-center" aria-hidden="true">
+          {text}
+        </span>
+      ) : null}
+    </>
+  );
+}
+
 export function Photo({
   share,
   sizes,
   sale,
   lock = null,
   small = false,
+  src: override,
+  large = false,
 }: {
   share: ShareView;
   sizes: string;
@@ -62,13 +85,19 @@ export function Photo({
   lock?: Lock | null;
   /** 卡片、私訊小圖用縮圖 */
   small?: boolean;
+  /** 指定圖檔（單則頁：沒登入給縮圖、登入換大圖） */
+  src?: string;
+  /** 浮水印多疊一個中間的 */
+  large?: boolean;
 }) {
-  const src = small ? (share.thumb ?? share.image) : share.image;
+  // 公開頁面一律先給縮圖（大圖要登入，/img/ 伺服器端檢查）
+  const src = override ?? (small ? (share.thumb ?? share.image) : (share.thumb ?? share.image));
   return (
     <span className="photo">
       <span className={`photo-fill ph-${share.n % 4}`}>
         {src ? <Image src={src} alt={share.what} fill sizes={sizes} unoptimized={src.startsWith("/img/")} /> : null}
         {!src && share.kind ? <b className="photo-kind">{share.kind}</b> : null}
+        {src ? <Watermark handle={share.author.handle} large={large} /> : null}
       </span>
       <Flags lock={lock} fake={share.hasFakes} />
       {sale ? <SaleSlots sale={sale} locked={Boolean(lock)} /> : null}

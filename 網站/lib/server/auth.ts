@@ -6,6 +6,8 @@ import { getDb } from "@/db";
 import { emailCodes, sessions, users } from "@/db/schema";
 import { randomToken, sha256hex, sixDigitCode } from "@/lib/server/crypto";
 import { codeMail, getMailer } from "@/lib/server/services";
+import { recordLogin } from "@/lib/server/geo";
+import { SITE_NAME } from "@/lib/data";
 
 export const SESSION_COOKIE = "yz_session";
 const SESSION_DAYS = 30;
@@ -106,6 +108,8 @@ export async function createSession(userId: string, req: Request, client: "web" 
  */
 export async function loginResponse(user: User, req: Request, client: "web" | "app", status = 200) {
   const token = await createSession(user.id, req, client);
+  // 最近一次登入的國家（所在地區的備援；防盜版批次 2026-09-28）
+  await recordLogin(user.id, req);
   if (client === "app") return json({ user: publicMe(user), token }, status);
   return json({ user: publicMe(user) }, status, { "Set-Cookie": sessionCookie(req, token) });
 }
@@ -152,7 +156,7 @@ export async function requireUser(req: Request): Promise<{ user: User; sessionId
   const t = tokenFrom(req);
   if (!t) return fail(401, "UNAUTHENTICATED", "請先登入");
   if (t.via === "cookie" && req.method !== "GET" && !sameOrigin(req)) {
-    return fail(403, "BAD_ORIGIN", "請從音藏網站操作");
+    return fail(403, "BAD_ORIGIN", `請從${SITE_NAME}網站操作`);
   }
   const s = await userByToken(t.token);
   if (!s) return fail(401, "UNAUTHENTICATED", "登入已過期，請重新登入");

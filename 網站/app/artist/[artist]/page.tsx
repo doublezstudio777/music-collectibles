@@ -10,6 +10,7 @@ import { WikiEditor } from "@/components/wiki-editor";
 import { isLocked, lastEdit, loadPage } from "@/lib/server/wiki";
 import { ShareWall } from "@/components/share-wall";
 import { SeriesTile } from "@/components/work-cover";
+import { SITE_NAME } from "@/lib/data";
 
 type Props = { params: Promise<{ artist: string }>; searchParams: Promise<{ edit?: string }> };
 
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: Props) {
     origin: await siteOrigin(),
     path: artistHref(a.slug),
     title: a.name,
-    description: [a.tagline, related.length ? `${related.length} 則炫收藏` : ""].filter(Boolean).join("・") || `${a.name} 在音藏`,
+    description: [a.tagline, related.length ? `${related.length} 則炫收藏` : ""].filter(Boolean).join("・") || `${a.name} 在${SITE_NAME}`,
     photo: c.ogPhotoOf(related),
   });
 }
@@ -104,7 +105,7 @@ export default async function ArtistPage({ params, searchParams }: Props) {
               <a className="link" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh-hant" rel="license noopener" target="_blank">
                 {artist.wiki.license}
               </a>{" "}
-              授權{edited ? "；音藏使用者改寫的版本同樣以此授權" : ""}
+              授權{edited ? "；{SITE_NAME}使用者改寫的版本同樣以此授權" : ""}
             </p>
           ) : null}
           <p className="edit-line" data-testid="last-edit">

@@ -1,6 +1,7 @@
 import { json, readBody, requireUser } from "@/lib/server/auth";
 import { getCatalog } from "@/lib/server/content";
 import { createShare, handle } from "@/lib/server/trade";
+import { tradeBlocked } from "@/lib/server/geo";
 
 /** 炫收藏列表（新的在前），App 用；?page=1，每頁 24 則 */
 export async function GET(req: Request) {
@@ -14,5 +15,11 @@ export async function POST(req: Request) {
   const s = await requireUser(req);
   if (s instanceof Response) return s;
   const body = await readBody(req);
+  // 海外可以發炫收藏，但發文時就設「開放出價／定價出售」要在台灣
+  const sale = (body.sale ?? {}) as { state?: unknown };
+  if (sale.state === "offer" || sale.state === "sale") {
+    const blocked = tradeBlocked(req);
+    if (blocked) return blocked;
+  }
   return handle(async () => json({ n: await createShare(s.user, body) }, 201));
 }

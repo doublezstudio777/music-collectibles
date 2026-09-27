@@ -3,6 +3,22 @@
 import { useEffect, useRef, useState } from "react";
 import type { ShareParts } from "@/lib/data";
 import { SHARE_IMAGE_SIZE, drawShareImage, type ShareImageKind } from "@/lib/share-image";
+import { useAppState } from "@/lib/state";
+
+/** 登入會員：取大圖來畫分享圖（同源 blob，不汙染 canvas）；401／429 或失敗回 null，改用縮圖 */
+async function loadBig(src: string): Promise<HTMLImageElement | null> {
+  try {
+    const r = await fetch(src, { credentials: "same-origin" });
+    if (!r.ok) return null;
+    const url = URL.createObjectURL(await r.blob());
+    const el = new window.Image();
+    el.src = url;
+    await el.decode();
+    return el;
+  } catch {
+    return null;
+  }
+}
 
 export type ShareInfo = { url: string; title: string; text: string; parts: ShareParts };
 
@@ -80,13 +96,20 @@ export function ShareActions({
   what,
   kind,
   kindNote,
+  handle,
+  mainImage,
 }: {
   info: ShareInfo;
   author: string;
+  /** 發文者帳號（分享圖的浮水印） */
+  handle: string;
+  /** 大圖網址：登入會員下載分享圖時用大圖畫，沒登入或拿不到就用頁面上的縮圖 */
+  mainImage?: string;
   what: string;
   kind: string;
   kindNote?: string;
 }) {
+  const { me } = useAppState();
   const [menu, setMenu] = useState<"" | "share" | "image">("");
   const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState<ShareImageKind | "">("");
@@ -120,10 +143,14 @@ export function ShareActions({
     setBusy(k);
     setError("");
     try {
-      const img = document.querySelector<HTMLImageElement>(".detail-photo img");
+      let img = document.querySelector<HTMLImageElement>(".detail-photo img");
       if (img && !img.complete) await img.decode().catch(() => undefined);
+      if (mainImage && me) {
+        const big = await loadBig(mainImage);
+        if (big) img = big;
+      }
       const blob = await drawShareImage(
-        { parts: info.parts, what, kind, kindNote, author, url: info.url, photo: img && img.naturalWidth ? img : null },
+        { parts: info.parts, what, kind, kindNote, author, handle, url: info.url, photo: img && img.naturalWidth ? img : null },
         k,
       );
       const name = `yinzang-${info.url.split("/").pop()}-${k}.jpg`;

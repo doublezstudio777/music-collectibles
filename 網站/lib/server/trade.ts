@@ -16,6 +16,7 @@ import { unattachedPhotos } from "@/lib/server/photos";
 import { hit } from "@/lib/server/services";
 import { fail, type User } from "@/lib/server/auth";
 import { recordDeal, voidDeals } from "@/lib/server/prices";
+import { regionNames } from "@/lib/server/geo";
 
 export class HttpError extends Error {
   constructor(
@@ -315,6 +316,8 @@ export type PublicOffer = {
   id: number;
   threadId: number;
   buyer: { handle: string; name: string };
+  /** 出價者所在地區（國家層級，例：台灣）；沒有紀錄是空字串 */
+  region: string;
   kind: "offer" | "buy";
   price: number;
   status: "open" | "accepted" | "rejected" | "withdrawn" | "sold";
@@ -328,7 +331,7 @@ export async function publicOffers(no: number): Promise<PublicOffer[]> {
   rows.forEach((r) => {
     if (!latest.has(r.buyerId)) latest.set(r.buyerId, r);
   });
-  const names = await userNames([...latest.keys()]);
+  const [names, regions] = await Promise.all([userNames([...latest.keys()]), regionNames([...latest.keys()])]);
   const now = Date.now();
   return [...latest.values()]
     .sort((a, b) => a.id - b.id)
@@ -336,6 +339,7 @@ export async function publicOffers(no: number): Promise<PublicOffer[]> {
       id: r.id,
       threadId: r.threadId,
       buyer: names.get(r.buyerId) ?? { handle: "", name: "（已刪除）" },
+      region: regions.get(r.buyerId) ?? "",
       kind: r.kind as PublicOffer["kind"],
       price: r.price,
       status: r.status as PublicOffer["status"],
@@ -405,7 +409,11 @@ export async function myThreads(u: User) {
   ]);
   const offerIds = msgs.map((m) => m.offerId).filter((x): x is number => x !== null);
   const offerRows = offerIds.length ? await db.select().from(offers).where(inArray(offers.id, offerIds)) : [];
-  const names = await userNames([...list.map((x) => x.t.buyerId), ...list.map((x) => x.authorId)]);
+  const others = list.map((x) => (x.authorId === u.id ? x.t.buyerId : x.authorId));
+  const [names, regions] = await Promise.all([
+    userNames([...list.map((x) => x.t.buyerId), ...list.map((x) => x.authorId)]),
+    regionNames(others),
+  ]);
   const nos = Array.from(new Set(list.map((x) => x.t.shareNo)));
   const pics = await db
     .select({ n: photos.shareNo, key: photos.thumbKey, sort: photos.sort })
@@ -429,6 +437,7 @@ export async function myThreads(u: User) {
         thumb: pics.find((p) => p.n === t.shareNo)?.key ? `/img/${pics.find((p) => p.n === t.shareNo)?.key}` : null,
         iAmSeller,
         other,
+        otherRegion: regions.get(iAmSeller ? t.buyerId : authorId) ?? "",
         lastFrom: last?.fromId ? (names.get(last.fromId)?.name ?? "") : "",
         preview: lo ? `${lo.kind === "buy" ? "我要買" : "出價"} ${priceText(lo.price)}` : (last?.text ?? ""),
         time: last ? relTime(last.createdAt, now) : "",
@@ -446,7 +455,7 @@ export async function threadDetail(u: User, id: number) {
   const msgs = await db.select().from(messages).where(eq(messages.threadId, id)).orderBy(asc(messages.id));
   const offerIds = msgs.map((m) => m.offerId).filter((x): x is number => x !== null);
   const offerRows = offerIds.length ? await db.select().from(offers).where(inArray(offers.id, offerIds)) : [];
-  const names = await userNames([t.buyerId, t.sellerId]);
+  const [names, regions] = await Promise.all([userNames([t.buyerId, t.sellerId]), regionNames([t.buyerId, t.sellerId])]);
   const now = Date.now();
   if (msgs.length) await markRead(u.id, id, msgs[msgs.length - 1].id);
   const out: ThreadMessage[] = msgs.map((m) => {
@@ -465,6 +474,8 @@ export async function threadDetail(u: User, id: number) {
     iAmSeller: t.sellerId === u.id,
     buyer: names.get(t.buyerId) ?? { handle: "", name: "（已刪除）" },
     seller: names.get(t.sellerId) ?? { handle: "", name: "（已刪除）" },
+    buyerRegion: regions.get(t.buyerId) ?? "",
+    sellerRegion: regions.get(t.sellerId) ?? "",
     messages: out,
   };
 }

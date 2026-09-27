@@ -28,6 +28,7 @@ import {
 } from "@/db/schema";
 import { Catalog } from "@/lib/catalog";
 import {
+  SITE_NAME,
   DEFAULT_THRESHOLD,
   lockFor,
   normKind,
@@ -135,7 +136,7 @@ async function build(): Promise<Catalog> {
       tagline: a.tagline,
       intro: parseJson<string[]>(a.intro, []),
       awards: parseJson<Artist["awards"]>(a.awards, []),
-      lastEdit: { by: nameOf(a.lastEditBy ?? a.createdBy) || "音藏", date: day(a.updatedAt) },
+      lastEdit: { by: nameOf(a.lastEditBy ?? a.createdBy) || SITE_NAME, date: day(a.updatedAt) },
       ...(a.wikiUrl ? { wiki: { url: a.wikiUrl, license: a.wikiLicense ?? "CC BY-SA 4.0" } } : {}),
       display: (a.display === "on" || a.display === "off" ? a.display : "auto") as Artist["display"],
     }))
@@ -170,7 +171,7 @@ async function build(): Promise<Catalog> {
         guests: parseJson(w.guests, []),
         compilation: parseJson(w.compilation, []),
         items: [],
-        lastEdit: { by: nameOf(w.lastEditBy ?? w.createdBy) || "音藏", date: day(w.updatedAt) },
+        lastEdit: { by: nameOf(w.lastEditBy ?? w.createdBy) || SITE_NAME, date: day(w.updatedAt) },
       };
       seriesById.set(w.id, s);
       return s;
@@ -264,7 +265,7 @@ export async function readContentVersion(): Promise<number> {
   }
 }
 
-// isolate 記憶體快取：同一個版本號只組一次。版本號變了（有人改內容、按讚、隱藏）下一個請求就重組。
+// isolate 記憶體快取：同一個版本號只組一次。版本號變了（有人改內容、隱藏；按讚、我有、想要 2026-09-28 起不算）下一個請求就重組。
 let memo: { v: number; at: number; catalog: Promise<Catalog> } | null = null;
 const MEMO_MS = 5 * 60 * 1000; // 相對時間（「3 小時前」）最多舊 5 分鐘
 

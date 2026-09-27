@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SITE_DESC, shareDesc, shareHref } from "@/lib/data";
 import { ogMeta } from "@/lib/server/og";
+import { ogPhoto } from "@/lib/catalog";
 import { pageData, siteOrigin } from "@/lib/server/viewer";
 import { publicOffers } from "@/lib/server/trade";
 import { ShareDetail } from "@/components/share-detail";
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: Props) {
     path,
     title: s.what,
     description: shareDesc(c.shareParts(s), s.authorName ?? s.author),
-    photo: s.image ? { url: s.image, size: s.imageSize } : null,
+    photo: ogPhoto(s),
     type: "article",
   });
 }

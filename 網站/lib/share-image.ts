@@ -4,7 +4,7 @@
 //   載完再用 document.fonts.check 確認，確認不過就不畫，避免畫出系統預設字
 // - 色彩照 DESIGN.md：白底黑字、灰字 #5C5C5C，橘只出現在網址前那一小塊
 
-import type { ShareParts } from "@/lib/data";
+import { SITE_NAME, SITE_TITLE, watermarkText, type ShareParts } from "@/lib/data";
 
 export type ShareImageKind = "story" | "post";
 export const SHARE_IMAGE_SIZE: Record<ShareImageKind, { w: number; h: number; label: string }> = {
@@ -20,6 +20,8 @@ export type ShareImageInput = {
   /** 其他周邊的補充（沒連到系列時當第二行） */
   kindNote?: string;
   author: string;
+  /** 發文者帳號：照片上畫浮水印 @帳號 · 站名（檔案本身沒有浮水印，分享圖是另外畫的一張） */
+  handle?: string;
   url: string;
   photo: HTMLImageElement | null;
 };
@@ -97,6 +99,25 @@ function drawCover(ctx: CanvasRenderingContext2D, img: HTMLImageElement, x: numb
   ctx.drawImage(img, (iw - sw) / 2, (ih - sh) / 2, sw, sh, x, y, w, h);
 }
 
+/** 浮水印：右下角白字加深色陰影，中間再疊一個斜的淡字（跟網頁上的 CSS 浮水印同一個樣子） */
+function drawWatermark(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, w: number, h: number) {
+  ctx.save();
+  ctx.font = `500 34px ${SANS}`;
+  ctx.textAlign = "right";
+  ctx.shadowColor = "rgba(0,0,0,.55)";
+  ctx.shadowBlur = 6;
+  ctx.fillStyle = "rgba(255,255,255,.9)";
+  ctx.fillText(text, x + w - 24, y + h - 24);
+  ctx.translate(x + w / 2, y + h / 2);
+  ctx.rotate(-Math.PI / 9);
+  ctx.textAlign = "center";
+  ctx.font = `700 64px ${SANS}`;
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = "rgba(255,255,255,.28)";
+  ctx.fillText(text, 0, 20);
+  ctx.restore();
+}
+
 export function lines(input: ShareImageInput) {
   const { parts } = input;
   const artist = parts.artist || input.author;
@@ -111,10 +132,11 @@ export async function drawShareImage(input: ShareImageInput, kind: ShareImageKin
   const story = kind === "story";
   const { artist, second, third } = lines(input);
   const byline = `${input.author} 的收藏`;
-  const brand = "音藏｜樂迷的收藏分享";
+  const brand = SITE_TITLE;
+  const mark = input.handle ? watermarkText(input.handle) : "";
   const urlText = input.url.replace(/^https?:\/\//, "");
 
-  const ok = await ensureFonts([artist, second, third, byline, brand, "音藏", input.kind].join(""), urlText + "…");
+  const ok = await ensureFonts([artist, second, third, byline, brand, SITE_NAME, mark, input.kind].join(""), urlText + "…");
   if (!ok) throw new Error("fonts");
 
   const cv = document.createElement("canvas");
@@ -132,13 +154,14 @@ export async function drawShareImage(input: ShareImageInput, kind: ShareImageKin
   // 字標
   ctx.fillStyle = C.text;
   ctx.font = `700 ${story ? 44 : 40}px ${SANS}`;
-  ctx.fillText("音藏", pad, pad + (story ? 44 : 38));
+  ctx.fillText(SITE_NAME, pad, pad + (story ? 44 : 38));
 
   // 照片
   const py = story ? 180 : 144;
   const ph = story ? inner : Math.round((inner * 3) / 4);
   if (input.photo && input.photo.naturalWidth) {
     drawCover(ctx, input.photo, pad, py, inner, ph);
+    if (mark) drawWatermark(ctx, mark, pad, py, inner, ph);
   } else {
     ctx.fillStyle = C.ph;
     ctx.fillRect(pad, py, inner, ph);

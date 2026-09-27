@@ -26,3 +26,6 @@
 
 - 本機量 Worker CPU：`wrangler dev --inspector-port 9230` 後用 `ws` 套件連 `ws://127.0.0.1:9230/ws` 跑 Profiler（Node 內建 WebSocket 連不上）；dist 若是 `YINZANG_DEPLOY=production` 建的，本機會連錯 D1 全站 500，先重建；curl 打正式站一律加 `-m`，不然 503 時會卡死整個背景迴圈（2026-09-27）
 - 驗收腳本會覆寫舊輪 `img/` 截圖：跑前先確認輸出路徑，別事後 `git restore`（2026-09-27 丟過一次新截圖）
+- 本機 Miniflare：POST 沒把 body 讀完就回應（例如提早回 403），同一條 keep-alive 連線的下一個請求會 503「worker restarted mid-request」；API 一律先 readBody 再判斷（2026-09-27）
+- `deploy.sh` 會用正式設定重建 `dist/`，還開著的本機 8791 建置版會變成 HTML 指到不存在的 chunk（全部 404、元件不 hydrate）；部署後要再驗本機，先重建重啟（2026-09-27）
+- 表格包 `overflow-x:auto` 仍整頁溢出：`th` 裡的 `.sr-only` 是 absolute，會逃出沒定位的捲動容器；捲動容器加 `position: relative`（2026-09-27）

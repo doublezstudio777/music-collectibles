@@ -16,7 +16,6 @@ function Table({ rows }: { rows: HoldingView[] }) {
           <th>系列</th>
           <th>版本</th>
           <th className="hide-md">格式</th>
-          <th className="hide-md">目錄號</th>
         </tr>
       </thead>
       <tbody>
@@ -36,7 +35,6 @@ function Table({ rows }: { rows: HoldingView[] }) {
               <span className="sub">{r.year}</span>
             </td>
             <td className="hide-md">{r.format}</td>
-            <td className="hide-md mono">{r.catalog}</td>
           </tr>
         ))}
       </tbody>

@@ -5,11 +5,12 @@ import { AuthPanel } from "@/components/auth-panel";
 import { turnstileSiteKey } from "@/lib/server/services";
 import { indexingAllowed } from "@/lib/server/guard";
 import { SITE_DESC } from "@/lib/data";
+import { SITE_NAME, SITE_TITLE } from "@/lib/data";
 
 // 不給搜尋引擎收錄（2026-09-26 定案，名稱定案後用 ALLOW_INDEXING=1 一次打開）
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: { default: "音藏｜樂迷的收藏分享", template: "%s｜音藏" },
+    title: { default: SITE_TITLE, template: `%s｜${SITE_NAME}` },
     description: SITE_DESC,
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
     ...(indexingAllowed() ? {} : { robots: { index: false } }),
@@ -33,7 +34,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <AuthPanel siteKey={turnstileSiteKey()} />
         <footer className="foot">
           <div className="wrap foot-row">
-            <span>音藏</span>
+            <span>{SITE_NAME}</span>
             <a href="#">贊助</a>
           </div>
         </footer>

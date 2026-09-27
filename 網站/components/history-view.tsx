@@ -2,6 +2,7 @@ import Link from "next/link";
 import { charCount, diffParas, type ParaDiff } from "@/lib/diff";
 import { PageLockButton, RevertButton } from "@/components/wiki-editor";
 import type { RevisionView } from "@/lib/server/wiki";
+import { SITE_NAME } from "@/lib/data";
 
 /** 台灣時間（資料庫存 UTC） */
 const day = (iso: string) => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 16).replace("T", " ");
@@ -157,7 +158,7 @@ export function HistoryView({
                   <span className="rev-summary">{r.summary}</span>
                 </span>
                 <span className="sub">
-                  {r.author ? r.author.name : "音藏"} · {day(r.at)}
+                  {r.author ? r.author.name : SITE_NAME} · {day(r.at)}
                   {delta !== null ? <span className="num"> · {delta >= 0 ? `+${delta}` : `−${-delta}`} 字</span> : null}
                   {r.license ? " · CC BY-SA 4.0" : null}
                 </span>

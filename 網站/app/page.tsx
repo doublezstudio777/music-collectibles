@@ -1,5 +1,6 @@
 import { pageData } from "@/lib/server/viewer";
 import { ShareWall, type WallFilter, type WallSort } from "@/components/share-wall";
+import { SITE_TITLE } from "@/lib/data";
 
 type Props = { searchParams: Promise<{ state?: string; sort?: string; page?: string }> };
 
@@ -11,7 +12,7 @@ export default async function Home({ searchParams }: Props) {
   const { c } = await pageData();
   return (
     <main className="wrap page page-wall">
-      <h1 className="sr-only">音藏｜樂迷的收藏分享</h1>
+      <h1 className="sr-only">{SITE_TITLE}</h1>
       <ShareWall shares={c.allShareViews()} hot={c.hotArtists()} sortable paged filter={filter} initialSort={sort} page={page} />
     </main>
   );

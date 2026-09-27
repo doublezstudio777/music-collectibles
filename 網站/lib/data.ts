@@ -34,6 +34,13 @@ export const normKind = (raw: string): { kind: Kind; note?: string } => {
 export const KIND_LABEL_FALLBACK = "收藏";
 
 /** 站方描述：首頁、被鎖定內容的連結預覽共用 */
+/** 站名只在這裡設定一處：標題、頁首、浮水印、分享圖、連結預覽、寄信都讀這個，改名時全站一起變 */
+export const SITE_NAME = "音藏";
+export const SITE_TAGLINE = "樂迷的收藏分享";
+export const SITE_TITLE = `${SITE_NAME}｜${SITE_TAGLINE}`;
+/** 照片浮水印（顯示時疊上去，不燒進檔案）：@帳號 · 站名 */
+export const watermarkText = (handle: string) => `@${handle} · ${SITE_NAME}`;
+
 export const SITE_DESC = "看樂迷收了什麼、炫自己的收藏，沿著藝人、系列、版本與標籤找下去。";
 
 /** 分享用的四段字（Catalog.shareParts 算出來） */
@@ -271,6 +278,7 @@ export type HoldingView = {
   edition: string;
   year: string;
   format: string;
+  /** 不再公開（目錄號屬辨識細節，登入才看得到，2026-09-28）；留欄位給 App 相容，一律空字串 */
   catalog: string;
   href: string;
   color: string;

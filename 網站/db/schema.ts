@@ -564,3 +564,32 @@ export const contentVersion = sqliteTable("content_version", {
   id: integer("id").primaryKey(),
   v: integer("v").notNull().default(0),
 });
+
+/* =====================================================================
+ * 防盜版＋管理後台（2026-09-28，drizzle/0005）：只新增表與索引，並拿掉 likes／holdings 的內容版本觸發器
+ * （按讚、我有、想要不再讓整頁快取作廢，數字改由 /api/counts 小請求取得）。
+ * 這兩張表都不掛內容版本觸發器：寫入不會讓公開頁面快取失效。
+ * ===================================================================== */
+
+/** 帳號的連線國家：註冊時與最近一次登入時（Cloudflare 判定的 ISO 國碼，例：TW） */
+export const userGeo = sqliteTable("user_geo", {
+  userId: text("user_id").primaryKey(),
+  registerCountry: text("register_country"),
+  lastLoginCountry: text("last_login_country"),
+  lastLoginAt: text("last_login_at"),
+});
+
+/**
+ * 每日活動：登入者一天在某個國家出現過就一列（同一天同一國只寫一次，isolate 記憶體先擋重複）。
+ * 用途：所在地區（最近 30 天出現天數最多的國家）、儀表板 7／30 天活躍人數。
+ */
+export const userActivity = sqliteTable(
+  "user_activity",
+  {
+    userId: text("user_id").notNull(),
+    /** UTC 日期 YYYY-MM-DD */
+    day: text("day").notNull(),
+    country: text("country").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.day, t.country] }), index("user_activity_day_idx").on(t.day)],
+);

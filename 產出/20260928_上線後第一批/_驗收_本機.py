@@ -1,4 +1,5 @@
 # 上線後第一批 本機驗收：照片快取、精選排序、識別碼轉址、匯入結果、受影響頁面 1440／390 溢出與 console error。
+# 2026-09-28 防盜版批次：下架與審核移到 /admin/moderation（/admin 改成儀表板），第 85、125 行跟著改
 # 用法：python3 _驗收_本機.py <網址，例 http://127.0.0.1:8791> <網站資料夾>
 # 本機 D1 會被改到的地方都會還原（隱藏的收藏恢復、改過的識別碼改回來；轉址紀錄只增不刪，保留）。
 import json, subprocess, sys, requests
@@ -21,21 +22,22 @@ H = {"Authorization": f"Bearer {tok}"}
 def admin(path, body): return requests.post(B + path, json=body, headers=H)
 
 # ---------- 1. 照片快取 ----------
+# 2026-09-28 起大圖要登入：照片請求一律帶管理員的 Bearer（H）
 row = sql("SELECT p.share_no n, p.r2_key a, p.thumb_key b FROM photos p JOIN shares s ON s.no=p.share_no WHERE s.hidden_at IS NULL AND s.deleted_at IS NULL AND p.deleted_at IS NULL AND p.r2_key != p.thumb_key ORDER BY p.share_no DESC LIMIT 1")[0]
 urls = [f"{B}/img/{row['a']}", f"{B}/img/{row['b']}"]
-first = [requests.get(u) for u in urls]; second = [requests.get(u) for u in urls]
+first = [requests.get(u, headers=H) for u in urls]; second = [requests.get(u, headers=H) for u in urls]
 check("照片：隱藏前主圖、縮圖 200", all(r.status_code == 200 for r in first + second), [r.status_code for r in first + second])
 check("照片：第二次讀取來自快取（cf-cache-status HIT）", all(r.headers.get("cf-cache-status") == "HIT" for r in second), [r.headers.get("cf-cache-status") for r in second])
 h = admin("/api/admin/hide", {"type": "share", "key": str(row["n"]), "hidden": True}).json()
 check("照片：隱藏 API 清掉主圖＋縮圖快取", h.get("purgedPhotos") == 2, h)
-after = [requests.get(u) for u in urls] + [requests.get(urls[0] + "?x=1")]
+after = [requests.get(u, headers=H) for u in urls] + [requests.get(urls[0] + "?x=1", headers=H)]
 check("照片：隱藏後主圖、縮圖、帶查詢字串都 404", all(r.status_code == 404 for r in after), [r.status_code for r in after])
 check("照片：隱藏後單則頁 404", requests.get(f"{B}/share/{row['n']}").status_code == 404)
 admin("/api/admin/hide", {"type": "share", "key": str(row["n"]), "hidden": False})
-check("照片：恢復後 200", all(requests.get(u).status_code == 200 for u in urls))
+check("照片：恢復後 200", all(requests.get(u, headers=H).status_code == 200 for u in urls))
 # 照片本身在資料庫標刪除
 sql(f"UPDATE photos SET deleted_at = '2026-09-28T00:00:00Z' WHERE share_no = {row['n']}")
-check("照片：照片列標刪除後 404", all(requests.get(u).status_code == 404 for u in urls))
+check("照片：照片列標刪除後 404", all(requests.get(u, headers=H).status_code == 404 for u in urls))
 sql(f"UPDATE photos SET deleted_at = NULL WHERE share_no = {row['n']}")
 check("照片：資料庫沒有這張的檔名 404", requests.get(f"{B}/img/p/bME6O68hJ9GxBmf2.webp").status_code == 404)
 
@@ -82,7 +84,7 @@ requests.post(B + "/api/me/follows", json={"artist": OLD, "on": True}, headers=H
 with sync_playwright() as p:
     br = p.chromium.launch(); ctx = br.new_context(viewport={"width": 1440, "height": 900})
     ctx.add_cookies([{"name": "yz_session", "value": tok, "domain": "127.0.0.1", "path": "/", "httpOnly": True}])
-    pg = ctx.new_page(); pg.goto(f"{B}/admin", wait_until="networkidle")
+    pg = ctx.new_page(); pg.goto(f"{B}/admin/moderation", wait_until="networkidle")
     pg.select_option("#td-type", "artist"); pg.fill("#td-key", OLD); pg.fill("#td-slug-to", NEW)
     pg.locator("[data-testid=rename-artist]").click(); pg.wait_for_timeout(1500)
     err = pg.locator("[data-testid=admin-error]")
@@ -122,7 +124,7 @@ check("匯入：沒內容但強制顯示的顏社藝人顯示（wan-zhi-xuan 200
 
 # ---------- 5. 抽 5 位藝人頁看維基出處＋受影響頁面 1440／390 ----------
 PICK = ["gordon", "mc-hotdog", "soft-lipa", "zhang-zhen-yue", "mj116"]
-PAGES = [f"/artist/{s}" for s in PICK] + ["/artist/mountain-radio/1", "/artist/gordon/10", "/artist/mc-hotdog/2", "/artist/wan-zhi-xuan", "/artists", "/", "/admin"]
+PAGES = [f"/artist/{s}" for s in PICK] + ["/artist/mountain-radio/1", "/artist/gordon/10", "/artist/mc-hotdog/2", "/artist/wan-zhi-xuan", "/artists", "/", "/admin", "/admin/moderation"]
 with sync_playwright() as p:
     br = p.chromium.launch()
     for mobile in (False, True):

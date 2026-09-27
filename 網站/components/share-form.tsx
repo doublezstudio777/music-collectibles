@@ -263,7 +263,7 @@ export function ShareForm({ options }: { options: FormOptions }) {
           story: story.trim(),
           tags: splitTags(tags),
           refPhoto: refOk,
-          sale: saleState === "sale" ? { state: "sale", price: p } : { state: saleState },
+          sale: !acc.geo.canTrade ? { state: "share" } : saleState === "sale" ? { state: "sale", price: p } : { state: saleState },
         },
       });
       if (!r.ok) {
@@ -498,6 +498,11 @@ export function ShareForm({ options }: { options: FormOptions }) {
         <span className="field-label" id={`${id}-sale`}>
           要不要賣
         </span>
+        {!acc.geo.canTrade ? (
+          <p className="region-note" data-testid="region-note">
+            交易僅限台灣地區
+          </p>
+        ) : (
         <div className="seg" role="group" aria-labelledby={`${id}-sale`}>
           {(
             [
@@ -511,7 +516,8 @@ export function ShareForm({ options }: { options: FormOptions }) {
             </button>
           ))}
         </div>
-        {saleState === "sale" ? (
+        )}
+        {acc.geo.canTrade && saleState === "sale" ? (
           <div className="field-sub">
             <MoneyInput id={`${id}-price`} value={price} onChange={setPrice} label="定價" />
             {errors.price ? <p className="field-error">{errors.price}</p> : null}

@@ -23,5 +23,12 @@ declare namespace Cloudflare {
     ALLOW_INDEXING?: string;
     /** 密碼雜湊次數（10,000～100,000，預設 100,000） */
     PBKDF2_ITERATIONS?: string;
+    /** 本機測試模式（只在 vite.config.ts 的本機設定裡）："1" 時連線國家可用表頭／cookie 模擬、IP 限流只算帶測試表頭的請求。正式環境絕不設 */
+    LOCAL_TEST?: string;
+    /** 本機沒帶模擬國家時的預設國家（預設 TW） */
+    GEO_DEFAULT?: string;
+    /** 管理後台用量：Cloudflare GraphQL Analytics 唯讀金鑰（secret，權限只要 Account Analytics: Read）。沒設顯示「未設定」 */
+    CF_ANALYTICS_TOKEN?: string;
+    CF_ACCOUNT_ID?: string;
   }
 }

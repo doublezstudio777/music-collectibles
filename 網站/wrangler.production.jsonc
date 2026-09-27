@@ -25,7 +25,9 @@
     "TURNSTILE_SITE_KEY": "0x4AAAAAAFEx6pj-sHlnKx92",
     "ADMIN_EMAILS": "zukawork0312@gmail.com",
     "ALLOW_INDEXING": "0",
-    "PBKDF2_ITERATIONS": "50000"
+    "PBKDF2_ITERATIONS": "50000",
+    // 管理後台用量頁查 Cloudflare GraphQL 用（不是密鑰）；金鑰另外用 secret CF_ANALYTICS_TOKEN，沒設顯示「未設定」
+    "CF_ACCOUNT_ID": "48743ee150caa3577d8abd6e99196709"
   },
   "observability": { "enabled": true }
 }

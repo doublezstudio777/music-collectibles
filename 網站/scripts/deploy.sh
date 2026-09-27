@@ -20,6 +20,7 @@ step "0. 設定檢查"
 if grep -q "__填入_" "$CFG"; then
   echo "wrangler.production.jsonc 還有沒填的欄位："; grep -n "__填入_" "$CFG"; exit 1
 fi
+if grep -q "LOCAL_TEST" "$CFG"; then echo "正式設定不能有 LOCAL_TEST（本機測試模式，會讓國家與限流可以被偽造）"; exit 1; fi
 "${W[@]}" whoami >/dev/null
 for s in TURNSTILE_SECRET RESEND_API_KEY BUDGET_WEBHOOK_SECRET; do
   SECRETS=$("${W[@]}" secret list --config "$CFG" 2>/dev/null || true)
@@ -34,6 +35,7 @@ if grep -lE "__new_|DROP TABLE|DROP COLUMN|RENAME" drizzle/*.sql; then echo "遷
 step "2. 建置（正式設定）"
 rm -rf dist
 YINZANG_DEPLOY=production npm run build
+if grep -q "LOCAL_TEST" dist/server/wrangler.json; then echo "建置結果帶了 LOCAL_TEST，停止"; exit 1; fi
 
 if [[ $FIRST -eq 0 ]]; then
   step "3. 遷移前站外備份"

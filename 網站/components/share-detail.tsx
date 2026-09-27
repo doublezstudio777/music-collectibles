@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { priceText, shareTarget, userHref, type Sale, type SaleState, type ShareView } from "@/lib/data";
 import { api, whenLoggedIn } from "@/lib/account";
 import { useAction, useAppState } from "@/lib/state";
@@ -10,7 +10,7 @@ import type { PublicOffer } from "@/lib/server/trade";
 import { AppealBox, ReportBox } from "@/components/report";
 import { LikeButton } from "@/components/like-button";
 import { NextPhase } from "@/components/next-phase";
-import { Photo, TagList } from "@/components/share-card";
+import { Photo, TagList, Watermark } from "@/components/share-card";
 import { ShareActions, type ShareInfo } from "@/components/share-actions";
 
 /** 金額輸入：只收正整數 */
@@ -45,6 +45,87 @@ export function MoneyInput({
 }
 
 
+/**
+ * 大圖（長邊 1600px）：登入會員點照片才打開。/img/ 伺服器端會再檢查登入與每日上限，
+ * 用 fetch 取檔才看得到 401／429 的說明；浮水印用 CSS 疊在上面，檔案本身沒有。
+ */
+function Lightbox({ src, handle, alt, onClose }: { src: string; handle: string; alt: string; onClose: () => void }) {
+  const [url, setUrl] = useState("");
+  const [error, setError] = useState("");
+  useEffect(() => {
+    let alive = true;
+    let made = "";
+    fetch(src, { credentials: "same-origin" })
+      .then(async (r) => {
+        if (!alive) return;
+        if (!r.ok) {
+          setError((await r.text()).trim() || "大圖打不開，稍後再試");
+          return;
+        }
+        made = URL.createObjectURL(await r.blob());
+        if (alive) setUrl(made);
+      })
+      .catch(() => alive && setError("連不上網站，檢查網路再試"));
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => {
+      alive = false;
+      window.removeEventListener("keydown", onKey);
+      if (made) URL.revokeObjectURL(made);
+    };
+  }, [src, onClose]);
+  return (
+    <div className="lightbox" role="dialog" aria-modal="true" aria-label="大圖" onClick={onClose} data-testid="lightbox">
+      <button type="button" className="lightbox-close" onClick={onClose} aria-label="關閉">
+        ×
+      </button>
+      {url ? (
+        <span className="lightbox-frame" onClick={(e) => e.stopPropagation()}>
+          {/* eslint-disable-next-line @next/next/no-img-element -- blob 網址，next/image 用不上 */}
+          <img src={url} alt={alt} data-testid="lightbox-img" />
+          <Watermark handle={handle} large />
+        </span>
+      ) : (
+        <p className="lightbox-msg" role="status">
+          {error || "讀取中"}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/** 單則頁照片：大家先看縮圖；登入會員點開看大圖，沒登入點了跳登入 */
+function DetailPhoto({ share, sale, lock }: { share: ShareView; sale: Sale; lock: ShareView["lock"] }) {
+  const [big, setBig] = useState(false);
+  const { me } = useAppState();
+  const main = share.image && share.image !== share.thumb ? share.image : null;
+  const photo = <Photo share={share} sale={sale} lock={lock} large sizes="(max-width: 1000px) 100vw, 640px" />;
+  if (!main) return photo;
+  return (
+    <>
+      <button
+        type="button"
+        className="photo-open"
+        aria-label={me ? "點開大圖" : "登入後可以點開大圖"}
+        data-testid="photo-open"
+        onClick={() => whenLoggedIn("登入後可以點開大圖", () => setBig(true))}
+      >
+        {photo}
+      </button>
+      {big ? <Lightbox src={main} handle={share.author.handle} alt={share.what} onClose={() => setBig(false)} /> : null}
+    </>
+  );
+}
+
+/** 海外連線：交易按鈕的位置改顯示這一行（真正的擋在 API） */
+export function RegionNote() {
+  return (
+    <p className="region-note" data-testid="region-note">
+      交易僅限台灣地區
+    </p>
+  );
+}
+
 const STATUS_TEXT = {
   open: "等回覆",
   accepted: "賣家已接受",
@@ -56,6 +137,7 @@ const STATUS_TEXT = {
 /** 賣家自己看：出售狀態三段切換＋定價 */
 function SellerBar({ share, sale }: { share: ShareView; sale: Sale }) {
   const act = useAction();
+  const { canTrade } = useAppState();
   const [draft, setDraft] = useState<SaleState | null>(null);
   const [price, setPrice] = useState(sale.price ? String(sale.price) : "");
   const [error, setError] = useState("");
@@ -68,17 +150,20 @@ function SellerBar({ share, sale }: { share: ShareView; sale: Sale }) {
           <b>已售出</b>
           {sale.soldTo ? <span>成交給 {sale.soldTo}</span> : null}
           {sale.soldAt ? <span className="deal-note">{sale.soldAt}</span> : null}
-          <button
-            type="button"
-            className="btn btn-line"
-            onClick={async () => {
-              const r = await act(`/api/shares/${share.n}/reopen`, { body: {} });
-              if (!r.ok) setError(r.error.message);
-            }}
-          >
-            改回出售中
-          </button>
+          {canTrade ? (
+            <button
+              type="button"
+              className="btn btn-line"
+              onClick={async () => {
+                const r = await act(`/api/shares/${share.n}/reopen`, { body: {} });
+                if (!r.ok) setError(r.error.message);
+              }}
+            >
+              改回出售中
+            </button>
+          ) : null}
         </p>
+        {!canTrade ? <RegionNote /> : null}
         {error ? <p className="field-error">{error}</p> : null}
       </div>
     );
@@ -109,6 +194,22 @@ function SellerBar({ share, sale }: { share: ShareView; sale: Sale }) {
     setDraft(null);
     void save("sale", p);
   };
+
+  if (!canTrade) {
+    return (
+      <div className="seller-bar" data-testid="seller-bar">
+        <RegionNote />
+        {sale.state !== "share" ? (
+          <p className="seller-row">
+            <button type="button" className="btn btn-line" onClick={() => void save("share")}>
+              改回純分享
+            </button>
+          </p>
+        ) : null}
+        {error ? <p className="field-error">{error}</p> : null}
+      </div>
+    );
+  }
 
   return (
     <div className="seller-bar" data-testid="seller-bar">
@@ -142,7 +243,7 @@ function SellerBar({ share, sale }: { share: ShareView; sale: Sale }) {
 /** 買家看：依狀態顯示出價或我要買 */
 function BuyBox({ share, sale, offers }: { share: ShareView; sale: Sale; offers: PublicOffer[] }) {
   const router = useRouter();
-  const { me } = useAppState();
+  const { me, canTrade } = useAppState();
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
@@ -167,7 +268,9 @@ function BuyBox({ share, sale, offers }: { share: ShareView; sale: Sale; offers:
           <b>開放出價</b>
           {offers.length ? <span className="deal-note">{offers.length} 筆出價</span> : null}
         </div>
-        {open ? (
+        {!canTrade ? (
+          <RegionNote />
+        ) : open ? (
           <form className="offer-form" onSubmit={submit} noValidate>
             <MoneyInput id="offer-amount" value={amount} onChange={setAmount} label="出價金額" />
             <button type="submit" className="btn btn-p btn-lg">
@@ -206,10 +309,13 @@ function BuyBox({ share, sale, offers }: { share: ShareView; sale: Sale; offers:
           <span className="deal-state">定價出售</span>
           <strong className="deal-price">{priceText(sale.price ?? 0)}</strong>
         </div>
-        <div className="deal-actions">
-          <button type="button" className="btn btn-p btn-lg" onClick={buy}>
-            我要買
-          </button>
+        {!canTrade ? <RegionNote /> : null}
+        <div className={canTrade ? "deal-actions" : "deal-actions one"}>
+          {canTrade ? (
+            <button type="button" className="btn btn-p btn-lg" onClick={buy}>
+              我要買
+            </button>
+          ) : null}
           <button type="button" className="btn btn-line btn-lg" onClick={() => go(`/api/shares/${share.n}/threads`, {}, "登入後才能私訊")}>
             問賣家
           </button>
@@ -283,7 +389,7 @@ function OfferList({
   frozen: boolean;
 }) {
   const act = useAction();
-  const { me } = useAppState();
+  const { me, canTrade } = useAppState();
   const [error, setError] = useState("");
   if (offers.length === 0) return null;
   const closed = sale.state === "sold" || frozen;
@@ -318,13 +424,15 @@ function OfferList({
                   </span>
                   <span>{o.buyer.name}</span>
                 </Link>
+                {o.region ? <span className="region-tag" title="所在地區">{o.region}</span> : null}
                 <span className="offer-kind">{o.kind === "buy" ? "我要買" : "出價"}</span>
                 <span className="offer-amt">{priceText(o.price)}</span>
                 <span className="offer-when">{o.time}</span>
               </div>
               <div className="offer-acts">
                 <span className={`offer-status${cls}`}>{status}</span>
-                {mine && !closed && o.status === "open" ? (
+                {mine && !closed && !canTrade && (o.status === "open" || o.status === "accepted") ? <RegionNote /> : null}
+                {mine && !closed && canTrade && o.status === "open" ? (
                   <>
                     <button type="button" className="btn btn-line" onClick={() => run(`/api/offers/${o.id}/respond`, { answer: "accepted" })}>
                       接受
@@ -334,7 +442,7 @@ function OfferList({
                     </button>
                   </>
                 ) : null}
-                {mine && !closed && o.status === "accepted" ? (
+                {mine && !closed && canTrade && o.status === "accepted" ? (
                   <button type="button" className="btn btn-line" onClick={() => run(`/api/shares/${share.n}/close`, { offerId: o.id })}>
                     成交給這位
                   </button>
@@ -379,7 +487,7 @@ export function ShareDetail({
   return (
     <div className="detail" data-sale={sale.state}>
       <div className={share.image ? "detail-photo has-image" : "detail-photo"}>
-        <Photo share={share} sale={sale} lock={lock} sizes="(max-width: 1000px) 100vw, 640px" />
+        <DetailPhoto share={share} sale={sale} lock={lock} />
       </div>
       <div className="detail-info">
         {lock ? (
@@ -401,7 +509,7 @@ export function ShareDetail({
           <span className="when">{share.time}</span>
           <LikeButton n={share.n} base={share.likes} large />
         </div>
-        {shareInfo && !lock ? <ShareActions info={shareInfo} author={share.author.name} what={share.what} kind={share.kind} kindNote={share.kindNote} /> : null}
+        {shareInfo && !lock ? <ShareActions info={shareInfo} author={share.author.name} handle={share.author.handle} mainImage={share.image && share.image !== share.thumb ? share.image : undefined} what={share.what} kind={share.kind} kindNote={share.kindNote} /> : null}
         {frozen && sale.state !== "share" ? (
           <FrozenBox sale={sale} offers={offers} />
         ) : mine ? (

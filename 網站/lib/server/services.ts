@@ -5,6 +5,7 @@ import { env } from "cloudflare:workers";
 import { eq, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { rateLimits } from "@/db/schema";
+import { SITE_NAME } from "@/lib/data";
 
 /* ---------- 寄信 ---------- */
 // 2c：環境變數有 RESEND_API_KEY 就走 Resend，沒有就印在 console（本機開發、驗收都走 console）。
@@ -24,7 +25,7 @@ const consoleMailer: Mailer = {
 };
 
 const RESEND_URL = "https://api.resend.com/emails";
-export const MAIL_FROM = "音藏 <noreply@notify.dblzm.com>";
+export const MAIL_FROM = `${SITE_NAME} <noreply@notify.dblzm.com>`;
 export const MAIL_REPLY_TO = "zukawork0312@gmail.com";
 
 function resendMailer(key: string): Mailer {
@@ -69,8 +70,8 @@ export const mailerMode = () => (env.RESEND_API_KEY ? (env.MAIL_ALLOWLIST ? "res
 /** 信件只放驗證碼與一句說明 */
 export const codeMail = (to: string, purpose: "verify" | "reset", code: string): Mail =>
   purpose === "verify"
-    ? { to, subject: `音藏驗證碼 ${code}`, text: `音藏驗證碼：${code}\n15 分鐘內有效，不是你本人註冊的話，不用理會這封信。` }
-    : { to, subject: `音藏重設密碼驗證碼 ${code}`, text: `音藏重設密碼驗證碼：${code}\n15 分鐘內有效，不是你本人要重設的話，不用理會這封信，密碼不會變。` };
+    ? { to, subject: `${SITE_NAME}驗證碼 ${code}`, text: `${SITE_NAME}驗證碼：${code}\n15 分鐘內有效，不是你本人註冊的話，不用理會這封信。` }
+    : { to, subject: `${SITE_NAME}重設密碼驗證碼 ${code}`, text: `${SITE_NAME}重設密碼驗證碼：${code}\n15 分鐘內有效，不是你本人要重設的話，不用理會這封信，密碼不會變。` };
 
 /* ---------- 密碼雜湊次數 ---------- */
 

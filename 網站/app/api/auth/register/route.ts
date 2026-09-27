@@ -7,6 +7,7 @@ import {
 } from "@/lib/server/auth";
 import { hashPassword, randomToken } from "@/lib/server/crypto";
 import { hit, verifyTurnstile } from "@/lib/server/services";
+import { recordRegister } from "@/lib/server/geo";
 
 /** 註冊：Email＋密碼＋帳號名＋顯示名稱。成功後寄 6 位數驗證碼，驗證完才算登入 */
 export async function POST(req: Request) {
@@ -33,6 +34,7 @@ export async function POST(req: Request) {
     .insert(users)
     .values({ id: randomToken(12), email, passwordHash: await hashPassword(password, passwordIterations()), handle, name })
     .returning();
+  await recordRegister(user.id, req);
   await sendCode(user, "verify");
   return json({ pending: "verify", email }, 201);
 }
