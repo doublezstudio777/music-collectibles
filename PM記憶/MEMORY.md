@@ -21,4 +21,6 @@
 - 正式站 Turnstile 是受管理模式，無頭瀏覽器過不了：WSL 用 CDP 開 Windows Chrome（暫存 profile）只拿 token，再用 API 打註冊／登入；CDP 轉接程式每次連線前要重起，不然第二次會卡住。驗證碼用 Resend API 取信件內文，不用碰 Gmail（2026-09-27）
 - Windows 排程叫 WSL 腳本：cmd 傳中文路徑給 wsl.exe 會亂碼，路徑用 `*` 代替中文段；`bash -lc` 不讀 .bashrc，nvm 的 node 要在腳本裡自己載（2026-09-27）
 - 正式站行為要用 `npm run build`＋`npm start -- --port 8791` 的建置版驗，dev 不打包，chunk 合併類 bug（如 Link 點不動）只在建置版出現；正式站測登入後畫面、又不能動真帳號時，用 Playwright 攔 `/api/me` 回假帳號（2026-09-27）
+- 分辨 `cf-cache-status: HIT` 是哪層：開 `wrangler tail` 打那個網址，有 Worker 執行紀錄＝Worker 自己的 Cache API，沒有＝CDN 層；Cache API 的 `delete` 只清單一資料中心，要擋就擋在 D1（2026-09-28）
+- 正式站大量匯入前後都要看 CPU：用 GraphQL `workersInvocationsAdaptive` 看 cpuTime p50／p90 與 errors，免費方案 10ms，內容目錄整張讀，資料一多就 exceededCpu 503；驗收腳本狂重試會讓節流更嚴，打一輪就停（2026-09-28）
 
