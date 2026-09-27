@@ -5,7 +5,16 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/account";
 import type { DayPoint, Stats } from "@/lib/server/stats";
 
-type Queue = { pending: number; reports: number; appeals: number; locked: number; hidden: number; comments?: number; commentsHidden?: number };
+type Queue = {
+  pending: number;
+  reports: number;
+  appeals: number;
+  locked: number;
+  hidden: number;
+  comments?: number;
+  commentsHidden?: number;
+  duplicates?: number;
+};
 type StatsRes = { stats: Stats; cached: boolean; queue: Queue };
 type Usage = {
   r2: { used: number; limit: number; free: number };
@@ -272,6 +281,10 @@ export function AdminDashboard() {
           <Link href="/admin/moderation#comments" className="queue-item" data-testid="queue-comments">
             <b className="num">{q.comments ?? 0}</b>
             <span>被檢舉的留言{q.commentsHidden ? `（${q.commentsHidden} 則已自動隱藏）` : ""}</span>
+          </Link>
+          <Link href="/admin/duplicates" className="queue-item" data-testid="queue-duplicates">
+            <b className="num">{q.duplicates ?? 0}</b>
+            <span>疑似重複藝人</span>
           </Link>
         </div>
       </section>

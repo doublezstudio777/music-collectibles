@@ -30,6 +30,7 @@ import {
   type TargetKey,
   type TargetLevel,
 } from "@/lib/data";
+import { LABEL_FORCE_SLUGS } from "@/lib/label-artists";
 
 export type RelatedScope = { series: string } | { tag: string };
 export type RelatedBlock = { title: string; href: string; total: number; items: Share[]; scope: RelatedScope };
@@ -344,28 +345,110 @@ export class Catalog {
       : { level, levelName: "版本", title: key, href: "/" };
   };
 
-  /** 表單用：每位藝人的系列＞品項＞版本（平面、可序列化） */
-  formOptions = () => ({
-    artists: this.artists.map((a) => ({
-      slug: a.slug,
-      name: a.name,
-      aliases: a.aliases,
-      kind: a.kind,
-      gender: a.gender ?? null,
-      region: a.region ?? null,
-    })),
-    series: this.seriesList.map((w) => ({
-      key: seriesKey(w),
-      name: w.name,
-      title: w.title,
-      credits: w.credits,
-      items: w.items.map((it) => ({
-        id: it.id,
-        kind: it.kind,
-        versions: it.versions.map((v) => ({ id: v.id, edition: v.edition, key: versionKey(w, it, v) })),
-      })),
-    })),
+  /**
+   * 表單用藝人：只留挑選要用的欄位（不含簡介、獎項），送到前端的量小很多。
+   */
+  #formArtist = (a: Artist) => ({
+    slug: a.slug,
+    name: a.name,
+    aliases: a.aliases,
+    kind: a.kind,
+    gender: a.gender ?? null,
+    region: a.region ?? null,
   });
+
+  /**
+   * 全站最近有人發過收藏的藝人 slug：新的在前（沿用 shares「新的在前」的順序），一位藝人只算一次。
+   * 藝人一有人分享，之後就會自然留在這份清單裡，不用手動維護。
+   */
+  recentSharedArtistSlugs = () =>
+    this.#lazy("recentSharedArtistSlugs", () => {
+      const seen = new Set<string>();
+      const out: string[] = [];
+      for (const s of this.shares) for (const slug of this.aboutSlugs(s)) if (!seen.has(slug)) {
+          seen.add(slug);
+          out.push(slug);
+        }
+      return out;
+    });
+
+  /**
+   * 炫收藏表單「跟誰有關」的預設清單完整池（2026-09-28 表單藝人預設）：
+   * 全站最近分享過的藝人（新到舊）→ 顏社／本色音樂旗下藝人（現任在前、前藝人在後），去重。
+   * 不在這個池裡的藝人（其餘 200 多位）表單不會列出按鈕，只能靠打字搜尋（走 /api/artists/search）找到。
+   */
+  formArtistPool = () =>
+    this.#lazy("formArtistPool", () => {
+      const seen = new Set<string>();
+      const slugs: string[] = [];
+      for (const slug of this.recentSharedArtistSlugs()) if (!seen.has(slug)) {
+          seen.add(slug);
+          slugs.push(slug);
+        }
+      for (const slug of LABEL_FORCE_SLUGS) if (!seen.has(slug)) {
+          seen.add(slug);
+          slugs.push(slug);
+        }
+      return slugs.map((slug) => this.getArtist(slug)).filter((a): a is Artist => Boolean(a));
+    });
+
+  /**
+   * 這位會員自己過去分享時「跟誰有關」點過的藝人 slug：新的在前，去重，最多 `limit` 位。
+   * 這些藝人本來就會出現在 recentSharedArtistSlugs（自己分享過，全站也算），這裡只是把順序往前提。
+   */
+  memberRecentArtistSlugs = (handle: string, limit = 5) => {
+    const out: string[] = [];
+    const seen = new Set<string>();
+    for (const s of this.shares) {
+      if (s.author !== handle) continue;
+      for (const slug of this.aboutSlugs(s)) {
+        if (seen.has(slug)) continue;
+        seen.add(slug);
+        out.push(slug);
+        if (out.length >= limit) return out;
+      }
+    }
+    return out;
+  };
+
+  /**
+   * 表單用：預設清單（最多 10 位，會員自己最近選過的排最前面）＋「更多」按鈕展開的其餘藝人，
+   * 加上每位藝人的系列＞品項＞版本（平面、可序列化）。
+   * `viewerHandle` 沒登入就不傳，預設清單只靠全站近況與廠牌名單排序。
+   */
+  formOptions = (viewerHandle?: string, defaultCap = 10) => {
+    const pool = this.formArtistPool();
+    const memberRecent = viewerHandle ? this.memberRecentArtistSlugs(viewerHandle) : [];
+    const bySlug = new Map(pool.map((a) => [a.slug, a]));
+    const ordered: Artist[] = [];
+    const seen = new Set<string>();
+    for (const slug of memberRecent) {
+      const a = bySlug.get(slug);
+      if (a && !seen.has(slug)) {
+        ordered.push(a);
+        seen.add(slug);
+      }
+    }
+    for (const a of pool) if (!seen.has(a.slug)) {
+        ordered.push(a);
+        seen.add(a.slug);
+      }
+    return {
+      defaultArtists: ordered.slice(0, defaultCap).map(this.#formArtist),
+      moreArtists: ordered.slice(defaultCap).map(this.#formArtist),
+      series: this.seriesList.map((w) => ({
+        key: seriesKey(w),
+        name: w.name,
+        title: w.title,
+        credits: w.credits,
+        items: w.items.map((it) => ({
+          id: it.id,
+          kind: it.kind,
+          versions: it.versions.map((v) => ({ id: v.id, edition: v.edition, key: versionKey(w, it, v) })),
+        })),
+      })),
+    };
+  };
 }
 
 export type FormOptions = ReturnType<Catalog["formOptions"]>;

@@ -71,6 +71,13 @@
       "when": 1790502151962,
       "tag": "0009_levels",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1790513527683,
+      "tag": "0010_artist_duplicates",
+      "breakpoints": true
     }
   ]
 }

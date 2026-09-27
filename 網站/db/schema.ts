@@ -557,6 +557,20 @@ export const artistRedirects = sqliteTable(
   (t) => [index("artist_redirects_new_idx").on(t.newSlug)],
 );
 
+/* =====================================================================
+ * 表單藝人預設（2026-09-28）：疑似重複藝人。只新增這一張表。
+ * 兩個 slug 排序後用 `|` 接成 pair_key，管理員標「不是重複」才寫一筆，之後偵測到這組就跳過。
+ * 合併不寫在這張表：合併完其中一個 slug 就不在 artists 裡了（會透過 artist_redirects 轉址），
+ * 偵測時本來就找不到那組，不用另外記錄。
+ * ===================================================================== */
+export const artistDuplicateMarks = sqliteTable("artist_duplicate_marks", {
+  pairKey: text("pair_key").primaryKey(),
+  /** not_duplicate（目前只有這一種，稍後處理不用存檔） */
+  decision: text("decision").notNull().default("not_duplicate"),
+  decidedBy: text("decided_by").notNull(),
+  decidedAt: text("decided_at").notNull().default(now),
+});
+
 /**
  * 公開內容版本號（2026-09-28 CPU 修正）。只有一列 id=1。
  * 公開頁面讀到的表一有寫入，資料庫觸發器就把 v 加 1（觸發器在 drizzle/0004_content_version.sql，

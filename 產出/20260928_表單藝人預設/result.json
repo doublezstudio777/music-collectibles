@@ -1,0 +1,130 @@
+{
+  "stamp": "515653",
+  "checks": [
+    {
+      "name": "1 隱藏藝人（沒收藏也不是廠牌）不在頁面原始回應裡（含 RSC payload）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1 隱藏藝人打字搜尋找得到",
+      "ok": true,
+      "detail": "{'artists': [{'slug': 'fap-hidden-515653', 'name': '表單隱藏藝人515653', 'aliases': [], 'kind': '藝人', 'gender': None, 'region': None}]}"
+    },
+    {
+      "name": "1 頁面有「更多」按鈕（池子超過 10 位）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1 頁面帶「找不到？打字搜尋全部藝人」提示",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1 沒按「更多」前，畫面上實際渲染剛好 10 個藝人按鈕",
+      "ok": true,
+      "detail": "10"
+    },
+    {
+      "name": "1 按「更多」後展開出其餘池子藝人（這次跑的 12 位都看得到）",
+      "ok": true,
+      "detail": "89"
+    },
+    {
+      "name": "2 會員自己分享過的藝人排在池子藝人前面",
+      "ok": true,
+      "detail": "([94], -1)"
+    },
+    {
+      "name": "3 疑似重複清單抓到這組（名稱前綴／後綴包含關係）",
+      "ok": true,
+      "detail": "{'pairKey': 'dupbase515653|dupext515653', 'reason': '名稱前綴／後綴包含關係', 'a': {'slug': 'dupbase515653', 'name': '疊字測試515653', 'aliases': [], 'kind': '藝人', 'gender': None, 'region': None, 'hasWiki': False, 'seriesCount': 0, 'shareCount': 0}, 'b': {'slug': 'dupext515653', 'name': '疊字測試515653加場版', 'aliases': [], 'kind': '藝人', 'gender': None, 'region': None, 'hasWiki': False, 'seriesCount': 1, 'shareCount':"
+    },
+    {
+      "name": "3 預覽合併算出會搬 1 個系列、1 則收藏",
+      "ok": true,
+      "detail": "{'keep': 'dupbase515653', 'lose': 'dupext515653', 'series': 1, 'shares': 1, 'holdings': 0, 'deals': 0, 'follows': 0, 'dismissals': 0, 'revisions': 0, 'decisions': 0, 'locks': 0}"
+    },
+    {
+      "name": "3 合併成功回傳搬動筆數",
+      "ok": true,
+      "detail": "{'keep': 'dupbase515653', 'lose': 'dupext515653', 'series': 1, 'shares': 1, 'holdings': 0, 'deals': 0, 'follows': 0, 'dismissals': 0, 'revisions': 0, 'decisions': 0, 'locks': 0}"
+    },
+    {
+      "name": "3 合併只搬動不增減：系列、收藏總數合併前後一致",
+      "ok": true,
+      "detail": "(344, 344, 1244, 1244)"
+    },
+    {
+      "name": "3 系列搬到保留者底下、換了新流水號",
+      "ok": true,
+      "detail": "[{'artist_slug': 'dupbase515653', 'no': 1}]"
+    },
+    {
+      "name": "3 收藏的 series_key 換成新鍵",
+      "ok": true,
+      "detail": "dupbase515653/1"
+    },
+    {
+      "name": "3 lose 的識別碼寫進轉址表",
+      "ok": true,
+      "detail": "[{'new_slug': 'dupbase515653'}]"
+    },
+    {
+      "name": "3 lose 那位藝人軟刪除",
+      "ok": true,
+      "detail": "[{'deleted_at': '2026-09-27T13:28:12.743Z'}]"
+    },
+    {
+      "name": "3 lose 的名稱併進 keep 的別名",
+      "ok": true,
+      "detail": "['疊字測試515653加場版']"
+    },
+    {
+      "name": "3 舊網址 301 轉址到保留者",
+      "ok": true,
+      "detail": "(301, '/artist/dupbase515653/1')"
+    },
+    {
+      "name": "3 標記前這組會出現",
+      "ok": true,
+      "detail": "{'pairKey': 'disa515653|disb515653', 'reason': '名稱前綴／後綴包含關係', 'a': {'slug': 'disa515653', 'name': '不重複測試515653', 'aliases': [], 'kind': '藝人', 'gender': None, 'region': None, 'hasWiki': False, 'seriesCount': 0, 'shareCount': 0}, 'b': {'slug': 'disb515653', 'name': '不重複測試515653延伸版', 'aliases': [], 'kind': '藝人', 'gender': None, 'region': None, 'hasWiki': False, 'seriesCount': 0, 'shareCount': 0}}"
+    },
+    {
+      "name": "3 標記「不是重複」後不再出現",
+      "ok": true,
+      "detail": "None"
+    },
+    {
+      "name": "4 新藝人不在預設按鈕裡",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "4 打字搜尋選到後變成 chip",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "4 發布成功、跳到單則頁",
+      "ok": true,
+      "detail": "http://127.0.0.1:8787/share/1274"
+    },
+    {
+      "name": "4 藝人頁出現剛剛那則收藏",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "4 這位藝人現在自然出現在預設清單裡",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "4 全程 console error 0",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

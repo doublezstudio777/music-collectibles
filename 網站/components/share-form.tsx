@@ -52,9 +52,7 @@ function PickRow<T extends string>({
 const GENDERS = (Object.keys(GENDER_LABEL) as ArtistGender[]).map((k) => ({ key: k, label: GENDER_LABEL[k] }));
 const REGIONS = (Object.keys(REGION_LABEL) as ArtistRegion[]).map((k) => ({ key: k, label: REGION_LABEL[k] }));
 
-type FormArtist = FormOptions["artists"][number];
-/** 藝人一多（金曲金音名單三百多位）全部攤開太長：一次最多列這麼多，其餘靠分類與打字搜尋 */
-const ARTIST_CAP = 30;
+type FormArtist = FormOptions["defaultArtists"][number];
 type FormSeries = FormOptions["series"][number];
 
 /**
@@ -168,7 +166,6 @@ function SubmitNew({ type, parent, label }: { type: "artist" | "series" | "item"
 export function ShareForm({ options }: { options: FormOptions }) {
   const router = useRouter();
   const acc = useAccount();
-  const artists = options.artists;
   const id = "share-form";
   const [photo, setPhoto] = useState<{ id: string; preview: string } | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -177,6 +174,10 @@ export function ShareForm({ options }: { options: FormOptions }) {
   const [region, setRegion] = useState<ArtistRegion | null>(null);
   const [about, setAbout] = useState<string[]>([]);
   const [aboutDraft, setAboutDraft] = useState("");
+  /** 「更多」按鈕：預設只列 options.defaultArtists（最多 10 位），按下去才加進 options.moreArtists */
+  const [expanded, setExpanded] = useState(false);
+  /** 打字搜尋結果（/api/artists/search），累積起來讓選過的藝人之後也查得到 slug（拼系列用） */
+  const [found, setFound] = useState<FormArtist[]>([]);
   const [seriesPick, setSeriesPick] = useState<string | null>(null);
   const [itemPick, setItemPick] = useState<string | null>(null);
   const [versionPick, setVersionPick] = useState<string>("unsure");
@@ -194,28 +195,69 @@ export function ShareForm({ options }: { options: FormOptions }) {
     void api<{ paused: boolean }>("/api/uploads").then((r) => r.ok && setPaused(r.data.paused));
   }, []);
 
+  /** 表單目前列出的藝人：預設清單，按過「更多」才加上其餘強制顯示的 */
+  const visibleArtists = expanded ? [...options.defaultArtists, ...options.moreArtists] : options.defaultArtists;
+  /** 已知的藝人（拼系列、解析打字輸入用）：目前列出的＋打字搜尋查到過的，不限於預設清單 */
+  const known = [...options.defaultArtists, ...options.moreArtists, ...found];
+
   const resolveTagArtist = (t: string): FormArtist | undefined => {
     const q = norm(t);
-    return artists.find((a) => norm(a.name) === q || a.aliases.some((x) => norm(x) === q));
+    return known.find((a) => norm(a.name) === q || a.aliases.some((x) => norm(x) === q));
   };
 
-  const shownArtists = artists.filter((a) => {
+  const shownArtists = visibleArtists.filter((a) => {
     if (!gender && !region) return true;
     if (a.kind !== "藝人") return false;
     return (!gender || a.gender === gender) && (!region || a.region === region);
   });
 
+  /**
+   * 打字搜尋：debounce 300ms 打 /api/artists/search，查全部藝人（含還沒出現在預設清單的）。
+   * `searchedQuery` 記下「最後一次查完的字」：搜尋還沒回來前不顯示「這是新標籤」的回退選項，
+   * 避免打完整名字後立刻點到「當標籤」而不是真的那位藝人（兩顆按鈕文字這時候看起來一樣）。
+   */
+  const [searchedQuery, setSearchedQuery] = useState("");
+  useEffect(() => {
+    const draft = aboutDraft.trim();
+    if (!draft) return;
+    const t = setTimeout(() => {
+      void api<{ artists: FormArtist[] }>(`/api/artists/search?q=${encodeURIComponent(draft)}`).then((r) => {
+        setSearchedQuery(draft.toLowerCase());
+        if (!r.ok) return;
+        setFound((prev) => {
+          const seen = new Set(prev.map((a) => a.slug));
+          const next = [...prev];
+          for (const a of r.data.artists) if (!seen.has(a.slug)) {
+              seen.add(a.slug);
+              next.push(a);
+            }
+          return next;
+        });
+      });
+    }, 300);
+    return () => clearTimeout(t);
+  }, [aboutDraft]);
+
   const q = aboutDraft.trim().toLowerCase();
   const suggestions = q
-    ? artists.filter(
+    ? found.filter(
         (a) =>
           !about.includes(a.name) &&
           (a.name.toLowerCase().includes(q) || a.aliases.some((x) => x.toLowerCase().includes(q))),
       )
     : [];
+  /** 搜尋還沒查完這個字之前，不能斷定「這裡沒有」 */
+  const searchSettled = searchedQuery === q;
 
   const toggleAbout = (name: string) => {
     setAbout(about.includes(name) ? about.filter((x) => x !== name) : [...about, name]);
+  };
+
+  /** 點打字搜尋出來的建議：直接把整個藝人物件併進 known，不用等下一輪搜尋回來才解析得到 */
+  const pickSuggestion = (a: FormArtist) => {
+    setFound((prev) => (prev.some((x) => x.slug === a.slug) ? prev : [...prev, a]));
+    if (!about.includes(a.name)) setAbout([...about, a.name]);
+    setAboutDraft("");
   };
 
   const addAbout = (raw: string) => {
@@ -342,7 +384,7 @@ export function ShareForm({ options }: { options: FormOptions }) {
           />
         </div>
         <div className="picks picks-artist" role="group" aria-labelledby={`${id}-about-l`} data-testid="pick-artist">
-          {shownArtists.slice(0, ARTIST_CAP).map((a) => (
+          {shownArtists.map((a) => (
             <button
               key={a.slug}
               type="button"
@@ -354,13 +396,20 @@ export function ShareForm({ options }: { options: FormOptions }) {
             </button>
           ))}
           {shownArtists.length === 0 ? <span className="sub">這個分類還沒有藝人</span> : null}
-          {shownArtists.length > ARTIST_CAP ? <span className="sub">還有 {shownArtists.length - ARTIST_CAP} 位，用分類縮小或打字搜尋</span> : null}
+          {!expanded && options.moreArtists.length ? (
+            <button type="button" className="pick pick-more" onClick={() => setExpanded(true)} data-testid="pick-more">
+              更多
+            </button>
+          ) : null}
           <SubmitNew type="artist" label="找不到藝人，我要新增" />
         </div>
-        {about.filter((t) => !shownArtists.slice(0, ARTIST_CAP).some((a) => a.name === t)).length ? (
+        <p className="sub" data-testid="about-search-hint">
+          找不到？打字搜尋全部藝人
+        </p>
+        {about.filter((t) => !visibleArtists.some((a) => a.name === t)).length ? (
           <div className="chip-row">
             {about
-              .filter((t) => !shownArtists.slice(0, ARTIST_CAP).some((a) => a.name === t))
+              .filter((t) => !visibleArtists.some((a) => a.name === t))
               .map((t) => (
                 <span className="chip" key={t}>
                   {t}
@@ -393,13 +442,13 @@ export function ShareForm({ options }: { options: FormOptions }) {
           <ul className="suggest">
             {suggestions.map((a) => (
               <li key={a.slug}>
-                <button type="button" onClick={() => addAbout(a.name)}>
+                <button type="button" onClick={() => pickSuggestion(a)}>
                   <b>{a.name}</b>
                   <span>{a.kind}</span>
                 </button>
               </li>
             ))}
-            {q && !resolveTagArtist(aboutDraft) ? (
+            {q && searchSettled && !resolveTagArtist(aboutDraft) ? (
               <li>
                 <button type="button" onClick={() => addAbout(aboutDraft)}>
                   <b>「{aboutDraft.trim()}」</b>
