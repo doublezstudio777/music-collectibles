@@ -36,4 +36,5 @@
 - D1 一句最多 100 個綁定參數：`inArray` 帶 id 清單（留言、會員）超過就 500，改 JOIN／子查詢或每 90 個分批；驗收腳本裡 `recompute()` 不帶天數會把 7 天等待期的事件打回待入帳，後面要驗已入帳分數就用 `recompute(8)`（2026-09-28）
 - 驗收連續打 `/api/auth/register` 會撞「每 IP 每小時 10 次」，每次註冊前用 SQL 清 `register:%`；舊腳本借同一張照片檔名建了上千則收藏，`/img/` 依檔名只查第一筆，要驗照片隱藏就另建一則有獨立照片的收藏；`_私人/cloudflare.txt` 是 `KEY=值` 格式，用 `set -a; . <(tr -d "\r" < 檔)` 載入，不要印出（2026-09-28）
 - 手機長按拖曳用 Playwright CDP `Input.dispatchTouchEvent`（touchStart→等 600ms→分段 touchMove→touchEnd）驗得到，頁面捲動要在元件上掛非 passive 的 touchmove 擋；上傳單張失敗用 `page.route` 對第 N 個 POST `abort()` 模擬。別對既有檔跑 `prettier --write`，會整檔重排出幾百行假 diff（2026-09-28）
+- 維基 `pageimages` 預設只回自由授權的圖，要數「因授權排除」得用 `pilicense=any`；台灣政府機關上傳的照片授權是「Attribution」（GWOIA），不是 CC。驗 R2 檔真的刪了用 `wrangler r2 object get … --local --persist-to .wrangler/state --pipe`，看 /img/ 404 只證明 D1 擋住；正式站容量對帳用 Cloudflare API 列 bucket 物件加總（2026-09-28）
 - 同一天反覆跑驗收會用完本機「辨識細節每日 100 次」，系列頁 `/api/details` 429 讓 console error 斷言假失敗：清 `counters` 的 `quota:detail:%` 並重啟 8791（額度另有記憶體快取）；設定類表單別把會變的值放進 `key`（暱稱改了整塊重掛，「已儲存」會被清掉）（2026-09-28）
