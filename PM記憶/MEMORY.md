@@ -18,3 +18,5 @@
 - 驗收腳本要能重跑：本機資料不清空，每次自動挑「還沒被用過」的系列／版本／藝人當測試對象，不寫死（2026-09-27）
 - 重啟 dev server 用 scratchpad 的小腳本（awk 比對 PID），不要在同一行指令裡 `pgrep -f`／`pkill -f` 帶關鍵字，會比對到自己的 shell 把自己砍掉（2026-09-27 踩兩次）
 - canvas 畫中文要等 `document.fonts.load(字型, 實際要畫的字)`，Google Fonts 中文是分段載入，只等 fonts.ready 不夠；等寬字型鏈要接 Noto Sans TC，不然中文掉到系統等寬字（2026-09-27）
+- 正式站 Turnstile 是受管理模式，無頭瀏覽器過不了：WSL 用 CDP 開 Windows Chrome（暫存 profile）只拿 token，再用 API 打註冊／登入；CDP 轉接程式每次連線前要重起，不然第二次會卡住。驗證碼用 Resend API 取信件內文，不用碰 Gmail（2026-09-27）
+- Windows 排程叫 WSL 腳本：cmd 傳中文路徑給 wsl.exe 會亂碼，路徑用 `*` 代替中文段；`bash -lc` 不讀 .bashrc，nvm 的 node 要在腳本裡自己載（2026-09-27）
