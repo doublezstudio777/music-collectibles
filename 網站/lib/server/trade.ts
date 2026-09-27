@@ -12,7 +12,7 @@ import { items, messages, offers, series, shares, threadReads, threads, versions
 import { KINDS, priceText, relTime, type Kind, type SaleState } from "@/lib/data";
 import { lockForShare, userNames, type ShareRow } from "@/lib/server/content";
 import { contentKeyExists, parseContentKey } from "@/lib/server/me";
-import { unattachedPhotos } from "@/lib/server/photos";
+import { dropOgImage, MAX_SHARE_PHOTOS, removePhotoFiles, unattachedPhotos } from "@/lib/server/photos";
 import { hit } from "@/lib/server/services";
 import { fail, type User } from "@/lib/server/auth";
 import { recordDeal, voidDeals } from "@/lib/server/prices";
@@ -72,7 +72,10 @@ const strList = (v: unknown, max: number, len: number) =>
 
 export async function createShare(u: User, body: Record<string, unknown>) {
   const errors: Record<string, string> = {};
-  const photoIds = strList(body.photoIds, 6, 40);
+  if (Array.isArray(body.photoIds) && body.photoIds.length > MAX_SHARE_PHOTOS) {
+    throw new HttpError(400, "TOO_MANY_PHOTOS", `一則最多 ${MAX_SHARE_PHOTOS} 張照片`);
+  }
+  const photoIds = strList(body.photoIds, MAX_SHARE_PHOTOS, 40);
   const about = strList(body.about, 10, 40);
   const tags = strList(body.tags, 10, 30);
   const story = typeof body.story === "string" ? body.story.trim().slice(0, 2000) : "";
@@ -82,7 +85,7 @@ export async function createShare(u: User, body: Record<string, unknown>) {
   if (saleState === "sale" && !validPrice(sale.price)) errors.price = "填一個整數金額";
 
   const pics = await unattachedPhotos(u.id, photoIds, "share");
-  if (pics.length === 0) errors.photo = "放一張照片";
+  if (pics.length === 0) errors.photo = "至少放一張照片";
   if (about.length === 0) errors.about = "至少點一位";
 
   // 系列＞品項＞版本（可以不選系列；選了系列就要選品項）
@@ -153,6 +156,65 @@ export async function createShare(u: User, body: Record<string, unknown>) {
     ) as never,
   );
   return created.no;
+}
+
+/* ---------- 編輯照片（2026-09-28：一則最多 10 張，第一張是封面） ---------- */
+
+/** 作者編輯用：這則目前的照片，依順序 */
+export async function sharePhotoList(u: User, no: number) {
+  const s = await shareRow(no);
+  assertAuthor(s, u);
+  const rows = await getDb()
+    .select()
+    .from(photos)
+    .where(and(eq(photos.shareNo, no), isNull(photos.deletedAt)))
+    .orderBy(asc(photos.sort), asc(photos.createdAt));
+  return rows.map((r) => ({ id: r.id, url: `/img/${r.r2Key}`, thumbUrl: `/img/${r.thumbKey}`, og: Boolean(r.ogKey) }));
+}
+
+/**
+ * 作者重排／補／刪照片：photoIds＝整份新順序（這則原有的＋自己剛上傳還沒掛的），至少 1 張、最多 10 張。
+ * 不在清單裡的原有照片：R2 刪檔、容量扣回、清快取。封面換了：舊封面的預覽圖拿掉，
+ * 回傳 needOg＝新封面還沒有預覽圖（前端畫好再 POST /api/uploads/og）。
+ * 被鎖定（檢舉達門檻等）時不能動照片，照片可能是檢舉證據。
+ */
+export async function setSharePhotos(u: User, no: number, raw: unknown, origin: string) {
+  const s = await shareRow(no);
+  assertAuthor(s, u);
+  const lock = await lockForShare(s);
+  if (lock) throw new HttpError(423, "LOCKED", `${lock.label}，照片暫時不能改`);
+  if (!Array.isArray(raw) || raw.some((x) => typeof x !== "string")) throw new HttpError(400, "INVALID", "照片清單格式不對");
+  const ids = raw as string[];
+  if (new Set(ids).size !== ids.length) throw new HttpError(400, "INVALID", "照片重複了");
+  if (ids.length === 0) throw new HttpError(400, "INVALID", "至少放一張照片");
+  if (ids.length > MAX_SHARE_PHOTOS) throw new HttpError(400, "TOO_MANY_PHOTOS", `一則最多 ${MAX_SHARE_PHOTOS} 張照片`);
+  const db = getDb();
+  const current = await db
+    .select()
+    .from(photos)
+    .where(and(eq(photos.shareNo, no), isNull(photos.deletedAt)))
+    .orderBy(asc(photos.sort), asc(photos.createdAt));
+  const fresh = await unattachedPhotos(u.id, ids.filter((id) => !current.some((c) => c.id === id)), "share");
+  const known = new Map([...current, ...fresh].map((r) => [r.id, r]));
+  if (ids.some((id) => !known.has(id))) throw new HttpError(400, "INVALID", "有照片找不到，重新整理再試");
+
+  const removed = current.filter((c) => !ids.includes(c.id));
+  await db.batch(
+    ids.map((id, i) =>
+      db
+        .update(photos)
+        .set({ shareNo: no, sort: i })
+        .where(and(eq(photos.id, id), eq(photos.ownerId, u.id), isNull(photos.deletedAt))),
+    ) as never,
+  );
+  const released = await removePhotoFiles(origin, removed);
+  const oldCover = current[0]?.id ?? null;
+  const coverChanged = oldCover !== ids[0];
+  if (coverChanged) {
+    // 預覽圖只留給封面：其他張身上還有的一律拿掉
+    for (const r of [...current, ...fresh]) if (r.id !== ids[0] && r.ogKey && !removed.includes(r)) await dropOgImage(origin, r);
+  }
+  return { removed: removed.length, released, coverChanged, needOg: !known.get(ids[0])?.ogKey };
 }
 
 /* ---------- 對話與系統訊息 ---------- */

@@ -3,7 +3,8 @@
 import { Ava } from "@/components/ava";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { priceText, shareTarget, userHref, type Sale, type SaleState, type ShareView } from "@/lib/data";
 import { api, whenLoggedIn } from "@/lib/account";
 import { useAction, useAppState } from "@/lib/state";
@@ -14,6 +15,8 @@ import { NextPhase } from "@/components/next-phase";
 import { Photo, TagList, Watermark } from "@/components/share-card";
 import { ShareActions, type ShareInfo } from "@/components/share-actions";
 import { LevelTag } from "@/components/level-tag";
+import { PhotoPicker, usePhotoPicker, type PickedPhoto } from "@/components/photo-picker";
+import { uploadCoverOg } from "@/lib/image";
 
 /** 金額輸入：只收正整數 */
 export function parsePrice(raw: string) {
@@ -50,10 +53,36 @@ export function MoneyInput({
 /**
  * 大圖（長邊 1600px）：登入會員點照片才打開。/img/ 伺服器端會再檢查登入與每日上限，
  * 用 fetch 取檔才看得到 401／429 的說明；浮水印用 CSS 疊在上面，檔案本身沒有。
+ * 多張時可以左右切換（按鈕、方向鍵、手機左右滑）。
  */
-function Lightbox({ src, handle, alt, onClose }: { src: string; handle: string; alt: string; onClose: () => void }) {
-  const [url, setUrl] = useState("");
-  const [error, setError] = useState("");
+function Lightbox({
+  list,
+  start,
+  handle,
+  alt,
+  onClose,
+}: {
+  list: string[];
+  start: number;
+  handle: string;
+  alt: string;
+  onClose: () => void;
+}) {
+  const [idx, setIdx] = useState(start);
+  const [got, setGot] = useState<{ src: string; url: string; error: string }>({
+    src: "",
+    url: "",
+    error: "",
+  });
+  const touch = useRef<number | null>(null);
+  const src = list[idx];
+  const url = got.src === src ? got.url : "";
+  const error = got.src === src ? got.error : "";
+  const many = list.length > 1;
+  const go = useCallback(
+    (d: number) => setIdx((i) => (i + d + list.length) % list.length),
+    [list.length],
+  );
   useEffect(() => {
     let alive = true;
     let made = "";
@@ -61,30 +90,60 @@ function Lightbox({ src, handle, alt, onClose }: { src: string; handle: string; 
       .then(async (r) => {
         if (!alive) return;
         if (!r.ok) {
-          setError((await r.text()).trim() || "大圖打不開，稍後再試");
+          const msg = (await r.text()).trim() || "大圖打不開，稍後再試";
+          if (alive) setGot({ src, url: "", error: msg });
           return;
         }
         made = URL.createObjectURL(await r.blob());
-        if (alive) setUrl(made);
+        if (alive) setGot({ src, url: made, error: "" });
       })
-      .catch(() => alive && setError("連不上網站，檢查網路再試"));
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
+      .catch(
+        () =>
+          alive && setGot({ src, url: "", error: "連不上網站，檢查網路再試" }),
+      );
     return () => {
       alive = false;
-      window.removeEventListener("keydown", onKey);
       if (made) URL.revokeObjectURL(made);
     };
-  }, [src, onClose]);
+  }, [src]);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      else if (many && e.key === "ArrowRight") go(1);
+      else if (many && e.key === "ArrowLeft") go(-1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose, go, many]);
   return (
-    <div className="lightbox" role="dialog" aria-modal="true" aria-label="大圖" onClick={onClose} data-testid="lightbox">
-      <button type="button" className="lightbox-close" onClick={onClose} aria-label="關閉">
+    <div
+      className="lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label="大圖"
+      onClick={onClose}
+      data-testid="lightbox"
+      onTouchStart={(e) => (touch.current = e.touches[0]?.clientX ?? null)}
+      onTouchEnd={(e) => {
+        const x0 = touch.current;
+        const x1 = e.changedTouches[0]?.clientX;
+        touch.current = null;
+        if (many && x0 !== null && x1 !== undefined && Math.abs(x1 - x0) > 40)
+          go(x1 < x0 ? 1 : -1);
+      }}
+    >
+      <button
+        type="button"
+        className="lightbox-close"
+        onClick={onClose}
+        aria-label="關閉"
+      >
         ×
       </button>
       {url ? (
         <span className="lightbox-frame" onClick={(e) => e.stopPropagation()}>
           {/* eslint-disable-next-line @next/next/no-img-element -- blob 網址，next/image 用不上 */}
-          <img src={url} alt={alt} data-testid="lightbox-img" />
+          <img src={url} alt={alt} data-testid="lightbox-img" data-src={src} />
           <Watermark handle={handle} large />
         </span>
       ) : (
@@ -92,30 +151,299 @@ function Lightbox({ src, handle, alt, onClose }: { src: string; handle: string; 
           {error || "讀取中"}
         </p>
       )}
+      {many ? (
+        <>
+          <button
+            type="button"
+            className="lightbox-nav prev"
+            aria-label="上一張"
+            data-testid="lightbox-prev"
+            onClick={(e) => (e.stopPropagation(), go(-1))}
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            className="lightbox-nav next"
+            aria-label="下一張"
+            data-testid="lightbox-next"
+            onClick={(e) => (e.stopPropagation(), go(1))}
+          >
+            ›
+          </button>
+          <span className="lightbox-count">
+            {idx + 1}／{list.length}
+          </span>
+        </>
+      ) : null}
     </div>
   );
 }
 
-/** 單則頁照片：大家先看縮圖；登入會員點開看大圖，沒登入點了跳登入 */
-function DetailPhoto({ share, sale, lock }: { share: ShareView; sale: Sale; lock: ShareView["lock"] }) {
-  const [big, setBig] = useState(false);
+/**
+ * 單則頁照片：大家先看縮圖；登入會員點開看大圖，沒登入點了跳登入。
+ * 多張時：大圖區可以左右滑（scroll-snap），下面一排縮圖點了切換。
+ */
+function DetailPhoto({
+  share,
+  sale,
+  lock,
+}: {
+  share: ShareView;
+  sale: Sale;
+  lock: ShareView["lock"];
+}) {
+  const [big, setBig] = useState<number | null>(null);
+  const [cur, setCur] = useState(0);
+  const track = useRef<HTMLDivElement>(null);
   const { me } = useAppState();
-  const main = share.image && share.image !== share.thumb ? share.image : null;
-  const photo = <Photo share={share} sale={sale} lock={lock} large sizes="(max-width: 1000px) 100vw, 640px" />;
-  if (!main) return photo;
+  const close = useCallback(() => setBig(null), []);
+  const list = share.photos ?? [];
+  if (list.length < 2) {
+    const main =
+      share.image && share.image !== share.thumb ? share.image : null;
+    const photo = (
+      <Photo
+        share={share}
+        sale={sale}
+        lock={lock}
+        large
+        sizes="(max-width: 1000px) 100vw, 640px"
+      />
+    );
+    if (!main) return photo;
+    return (
+      <>
+        <button
+          type="button"
+          className="photo-open"
+          aria-label={me ? "點開大圖" : "登入後可以點開大圖"}
+          data-testid="photo-open"
+          onClick={() => whenLoggedIn("登入後可以點開大圖", () => setBig(0))}
+        >
+          {photo}
+        </button>
+        {big !== null ? (
+          <Lightbox
+            list={[main]}
+            start={0}
+            handle={share.author.handle}
+            alt={share.what}
+            onClose={close}
+          />
+        ) : null}
+      </>
+    );
+  }
+  const goTo = (i: number) => {
+    const el = track.current;
+    if (el) el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
+    setCur(i);
+  };
   return (
-    <>
-      <button
-        type="button"
-        className="photo-open"
-        aria-label={me ? "點開大圖" : "登入後可以點開大圖"}
-        data-testid="photo-open"
-        onClick={() => whenLoggedIn("登入後可以點開大圖", () => setBig(true))}
-      >
-        {photo}
-      </button>
-      {big ? <Lightbox src={main} handle={share.author.handle} alt={share.what} onClose={() => setBig(false)} /> : null}
-    </>
+    <div className="gallery" data-testid="gallery" data-current={cur}>
+      <div className="gallery-main">
+        <div
+          className="gallery-track"
+          ref={track}
+          data-testid="gallery-track"
+          onScroll={(e) => {
+            const el = e.currentTarget;
+            const i = Math.round(el.scrollLeft / Math.max(1, el.clientWidth));
+            if (i !== cur && i >= 0 && i < list.length) setCur(i);
+          }}
+        >
+          {list.map((p, i) => (
+            <div
+              className="gallery-slide"
+              key={p.thumb}
+              aria-hidden={i !== cur}
+            >
+              <button
+                type="button"
+                className="photo-open"
+                tabIndex={i === cur ? 0 : -1}
+                aria-label={
+                  me ? `點開第 ${i + 1} 張大圖` : "登入後可以點開大圖"
+                }
+                data-testid="photo-open"
+                onClick={() =>
+                  whenLoggedIn("登入後可以點開大圖", () => setBig(i))
+                }
+              >
+                <Photo
+                  share={share}
+                  sale={sale}
+                  lock={lock}
+                  large
+                  src={p.thumb}
+                  sizes="(max-width: 1000px) 100vw, 640px"
+                />
+              </button>
+            </div>
+          ))}
+        </div>
+        <span className="gallery-count" aria-hidden="true">
+          {cur + 1}／{list.length}
+        </span>
+      </div>
+      <ul className="gallery-strip" data-testid="gallery-strip">
+        {list.map((p, i) => (
+          <li key={p.thumb}>
+            <button
+              type="button"
+              aria-label={`看第 ${i + 1} 張`}
+              aria-current={i === cur}
+              onClick={() => goTo(i)}
+            >
+              <Image src={p.thumb} alt="" fill sizes="64px" unoptimized />
+            </button>
+          </li>
+        ))}
+      </ul>
+      {big !== null ? (
+        <Lightbox
+          list={list.map((p) => p.image)}
+          start={big}
+          handle={share.author.handle}
+          alt={share.what}
+          onClose={close}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+/** 作者編輯照片：補、刪、換封面、調順序。存檔後封面換了才重畫預覽圖 */
+function PhotoEditor({
+  share,
+  onClose,
+}: {
+  share: ShareView;
+  onClose: () => void;
+}) {
+  const router = useRouter();
+  const { me } = useAppState();
+  const [loaded, setLoaded] = useState<PickedPhoto[] | null>(null);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    void api<{ photos: { id: string; url: string; thumbUrl: string }[] }>(
+      `/api/shares/${share.n}/photos`,
+    ).then((r) => {
+      if (!r.ok) return setError(r.error.message);
+      setLoaded(
+        r.data.photos.map((p) => ({
+          key: p.id,
+          id: p.id,
+          preview: p.thumbUrl,
+          url: p.url,
+          status: "done",
+          attached: true,
+        })),
+      );
+    });
+  }, [share.n]);
+  if (!loaded)
+    return (
+      <div className="photo-edit">
+        {error ? (
+          <p className="field-error">{error}</p>
+        ) : (
+          <p role="status">讀取中</p>
+        )}
+      </div>
+    );
+  return (
+    <PhotoEditorForm
+      share={share}
+      initial={loaded}
+      handle={me?.handle ?? share.author.handle}
+      onClose={onClose}
+      onSaved={() => router.refresh()}
+    />
+  );
+}
+
+function PhotoEditorForm({
+  share,
+  initial,
+  handle,
+  onClose,
+  onSaved,
+}: {
+  share: ShareView;
+  initial: PickedPhoto[];
+  handle: string;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const [paused, setPaused] = useState(false);
+  const picker = usePhotoPicker(initial, () => setPaused(true));
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const save = async () => {
+    if (!picker.items.length) return setError("至少放一張照片");
+    if (picker.pending) return setError("照片還在上傳，等一下");
+    if (picker.failed) return setError("有照片沒傳上去，按重試或刪掉那張");
+    setBusy(true);
+    setError("");
+    const r = await api<{ coverChanged: boolean; needOg: boolean }>(
+      `/api/shares/${share.n}/photos`,
+      {
+        method: "PUT",
+        body: { photoIds: picker.items.map((x) => x.id) },
+      },
+    );
+    if (!r.ok) {
+      setBusy(false);
+      return setError(r.error.message);
+    }
+    const cover = picker.items[0];
+    if (r.data.needOg && cover?.id)
+      await uploadCoverOg(
+        cover.id,
+        cover.file ?? cover.url ?? "",
+        handle,
+      ).catch(() => null);
+    setBusy(false);
+    onSaved();
+    onClose();
+  };
+  return (
+    <div className="photo-edit" data-testid="photo-edit">
+      <p className="photo-edit-title" id={`pe-${share.n}`}>
+        編輯照片
+      </p>
+      <PhotoPicker
+        picker={picker}
+        labelId={`pe-${share.n}`}
+        paused={paused}
+        disabled={busy}
+      />
+      {error ? <p className="field-error">{error}</p> : null}
+      <div className="pp-actions">
+        <button
+          type="button"
+          className="btn btn-p"
+          onClick={save}
+          disabled={busy || picker.pending > 0}
+          data-testid="pe-save"
+        >
+          {busy ? "存檔中…" : "存檔"}
+        </button>
+        <button
+          type="button"
+          className="btn btn-line"
+          disabled={busy}
+          onClick={() => {
+            picker.discardNew();
+            onClose();
+          }}
+        >
+          取消
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -484,6 +812,7 @@ export function ShareDetail({
   const lock = share.lock;
   const frozen = Boolean(lock) && sale.state !== "sold";
   const fake = share.hasFakes;
+  const [editing, setEditing] = useState(false);
 
   return (
     <div className="detail" data-sale={sale.state}>
@@ -510,6 +839,22 @@ export function ShareDetail({
           <span className="when">{share.time}</span>
           <LikeButton n={share.n} base={share.likes} large />
         </div>
+        {mine && ready && !lock ? (
+          editing ? (
+            <PhotoEditor share={share} onClose={() => setEditing(false)} />
+          ) : (
+            <p className="pp-actions">
+              <button
+                type="button"
+                className="btn btn-line"
+                onClick={() => setEditing(true)}
+                data-testid="photo-edit-open"
+              >
+                編輯照片
+              </button>
+            </p>
+          )
+        ) : null}
         {shareInfo && !lock ? <ShareActions info={shareInfo} author={share.author.name} handle={share.author.handle} mainImage={share.image && share.image !== share.thumb ? share.image : undefined} what={share.what} kind={share.kind} kindNote={share.kindNote} /> : null}
         {frozen && sale.state !== "share" ? (
           <FrozenBox sale={sale} offers={offers} />

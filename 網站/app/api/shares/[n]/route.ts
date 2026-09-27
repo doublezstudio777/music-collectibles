@@ -17,7 +17,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ n: string }> }
     const c = await getCatalog();
     const s = c.getShare(n);
     if (!s) throw new HttpError(404, "NOT_FOUND", "找不到這則收藏");
-    return json({ share: c.toShareView(s), offers: await publicOffers(n) });
+    return json({ share: c.toDetailView(s), offers: await publicOffers(n) });
   });
 }
 

@@ -1,0 +1,372 @@
+{
+ "at": "2026-09-27T15:49:34.068Z",
+ "pass": 73,
+ "total": 73,
+ "results": [
+  {
+   "name": "1a 開始前 R2 容量計數＝實際檔案大小加總",
+   "ok": true,
+   "detail": "counter=1664532 r2=1664532 檔數=813"
+  },
+  {
+   "name": "1b 上傳 11 張都成功（每張各一個 id）",
+   "ok": true,
+   "detail": "[201, 201, 201, 201, 201, 201, 201, 201, 201, 201, 201]"
+  },
+  {
+   "name": "1c 11 張發文被擋 400 TOO_MANY_PHOTOS",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"TOO_MANY_PHOTOS\",\"message\":\"一則最多 10 張照片\"}}"
+  },
+  {
+   "name": "1d 0 張發文被擋，訊息「至少放一張照片」",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"INVALID\",\"message\":\"至少放一張照片\"}}"
+  },
+  {
+   "name": "1e 10 張發文 201",
+   "ok": true,
+   "detail": "{\"n\":1541}"
+  },
+  {
+   "name": "1f D1 掛上 10 張，sort 0～9 照送出順序",
+   "ok": true,
+   "detail": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
+  },
+  {
+   "name": "1g 預覽圖只有封面有",
+   "ok": true,
+   "detail": "[True, False, False, False, False, False, False, False, False, False]"
+  },
+  {
+   "name": "1h 第 11 張（沒掛上）可以刪，R2 檔一起刪",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "1i 已掛上收藏的照片不能用這支刪（404）",
+   "ok": true,
+   "detail": "404"
+  },
+  {
+   "name": "1j 發文後 R2 容量計數＝實際檔案大小加總",
+   "ok": true,
+   "detail": "counter=1701363 r2=1701363 檔數=834"
+  },
+  {
+   "name": "1k 每張 photos.bytes＝R2 上主圖＋縮圖＋預覽圖大小",
+   "ok": true,
+   "detail": "缺檔 [] 不一致 []"
+  },
+  {
+   "name": "2a 同一人一天第 1～30 張 201、第 31 張 429",
+   "ok": true,
+   "detail": "[201, 201, 429]"
+  },
+  {
+   "name": "2b 預覽圖不算張數：額度用完仍可替封面補預覽圖",
+   "ok": true,
+   "detail": "201"
+  },
+  {
+   "name": "2c 30 張後 R2 容量計數＝實際檔案大小加總",
+   "ok": true,
+   "detail": "counter=1786082 r2=1786082 檔數=895"
+  },
+  {
+   "name": "3a 單則頁 HTML 帶這則的 10 張縮圖",
+   "ok": true,
+   "detail": "10"
+  },
+  {
+   "name": "3b 未登入：10 張主圖全 401",
+   "ok": true,
+   "detail": "[401, 401, 401, 401, 401, 401, 401, 401, 401, 401]"
+  },
+  {
+   "name": "3c 未登入：10 張縮圖全 200",
+   "ok": true,
+   "detail": "[200, 200, 200, 200, 200, 200, 200, 200, 200, 200]"
+  },
+  {
+   "name": "3d 登入：10 張主圖全 200",
+   "ok": true,
+   "detail": "[200, 200, 200, 200, 200, 200, 200, 200, 200, 200]"
+  },
+  {
+   "name": "3e og:image 用封面預覽圖",
+   "ok": true,
+   "detail": "http://127.0.0.1:8791/img/p/Eog3uqF2NTNv7PrM_og.jpg"
+  },
+  {
+   "name": "3f 首頁卡片只用封面縮圖（其他 9 張連網址都不在 HTML）",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "name": "4a 別人不能改照片 403",
+   "ok": true,
+   "detail": "403"
+  },
+  {
+   "name": "4b 超過 10 張 400",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"TOO_MANY_PHOTOS\",\"message\":\"一則最多 10 張照片\"}}"
+  },
+  {
+   "name": "4c 不認識的照片 id 400",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"INVALID\",\"message\":\"有照片找不到，重新整理再試\"}}"
+  },
+  {
+   "name": "4d 作者存檔 200，回報封面換了、要補預覽圖",
+   "ok": true,
+   "detail": "{'removed': 2, 'released': 4844, 'coverChanged': True, 'needOg': True}"
+  },
+  {
+   "name": "4e 新順序寫進 sort",
+   "ok": true,
+   "detail": "['MDZm', 'Eog3', 't72u', '4r9T', 'nY1S', 'FkjI', 'WEzj', '91QO', 'ix7B']"
+  },
+  {
+   "name": "4f 刪掉的 2 張 R2 主圖、縮圖都不在了",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4g 刪掉的照片 /img/ 回 404（登入）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4h 舊封面的預覽圖拿掉了（D1 與 R2）",
+   "ok": true,
+   "detail": "[False, False, False, False, False, False, False, False, False]"
+  },
+  {
+   "name": "4i 替新封面補預覽圖 201",
+   "ok": true,
+   "detail": "{\"ogUrl\":\"/img/p/MDZmAA8JjTQZcT67_og.jpg\"}"
+  },
+  {
+   "name": "4j og:image 換成新封面的預覽圖",
+   "ok": true,
+   "detail": "http://127.0.0.1:8791/img/p/MDZmAA8JjTQZcT67_og.jpg"
+  },
+  {
+   "name": "4k 單則頁帶 9 張縮圖、第一張是新封面",
+   "ok": true,
+   "detail": "9"
+  },
+  {
+   "name": "4l 只調順序、封面沒換：不重畫預覽圖、預覽圖保留",
+   "ok": true,
+   "detail": "{\"removed\":0,\"released\":0,\"coverChanged\":false,\"needOg\":false}"
+  },
+  {
+   "name": "4m 編輯後 R2 容量計數＝實際檔案大小加總",
+   "ok": true,
+   "detail": "counter=1783670 r2=1783670 檔數=893"
+  },
+  {
+   "name": "4n 每張 photos.bytes＝R2 上主圖＋縮圖＋預覽圖大小",
+   "ok": true,
+   "detail": "缺檔 [] 不一致 []"
+  },
+  {
+   "name": "5a 管理員隱藏 200，清掉快取的檔數 > 0",
+   "ok": true,
+   "detail": "{\"target\":\"share:1541\",\"hidden\":true,\"purgedPhotos\":19}"
+  },
+  {
+   "name": "5b 隱藏後 19 個檔（主圖／縮圖／預覽圖）全 404",
+   "ok": true,
+   "detail": "[404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404]"
+  },
+  {
+   "name": "5c 未登入也全 404",
+   "ok": true,
+   "detail": "[404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 404]"
+  },
+  {
+   "name": "5d 隱藏的收藏不能編輯照片 404",
+   "ok": true,
+   "detail": "404"
+  },
+  {
+   "name": "6a 一次選 8 張：7 張完成、斷線那 1 張顯示失敗",
+   "ok": true,
+   "detail": "['done', 'done', 'error', 'done', 'done', 'done', 'done', 'done']"
+  },
+  {
+   "name": "6b 失敗那張按重試就成功，其他張沒重傳",
+   "ok": true,
+   "detail": "POST 次數 9"
+  },
+  {
+   "name": "6c 分次再加 3 張：只收到 10 張，第 11 張被擋並說明",
+   "ok": true,
+   "detail": "一則最多 10 張，有 1 張沒加進來"
+  },
+  {
+   "name": "6d 滿 10 張後選檔按鈕收起來",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6e 滑鼠拖第 4 張到第 1 格，順序變了、封面標在它身上",
+   "ok": true,
+   "detail": "['T9TgtDFYdgdhJtBH', 'KLNvt0vitlX_95Jp', '-I9zE-2Vhr9EzYrr', 'teWmcFfrrvVVGTFw'] → ['teWmcFfrrvVVGTFw', 'T9TgtDFYdgdhJtBH', 'KLNvt0vitlX_95Jp', '-I9zE-2Vhr9EzYrr']"
+  },
+  {
+   "name": "6f 上移按鈕：第 2 張往前變封面",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6g 設為封面按鈕",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6h 刪掉單張：剩 9 張，那張的 R2 檔一起刪",
+   "ok": true,
+   "detail": "Ib7bxQApLWbI8KoK"
+  },
+  {
+   "name": "6i 送出後 D1 順序＝畫面順序，封面正確",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6j 預覽圖只替封面畫（1200×630 JPEG）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6k 預覽圖 1200×630 JPEG",
+   "ok": true,
+   "detail": "((1200, 630), 'JPEG')"
+  },
+  {
+   "name": "6l 每張都在瀏覽器壓縮：主圖長邊 1600、縮圖長邊 480",
+   "ok": true,
+   "detail": "([(1600, 1200), (1600, 1200)], [(480, 360), (480, 360)])"
+  },
+  {
+   "name": "6m 每張 photos.bytes＝R2 上主圖＋縮圖＋預覽圖大小",
+   "ok": true,
+   "detail": "缺檔 [] 不一致 []"
+  },
+  {
+   "name": "6n UI 發文後 R2 容量計數＝實際檔案大小加總",
+   "ok": true,
+   "detail": "counter=1843886 r2=1843886 檔數=912"
+  },
+  {
+   "name": "6o 單則頁：大圖區 9 張、縮圖列 9 張",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6p 點縮圖列第 5 張，大圖區切到第 5 張",
+   "ok": true,
+   "detail": "4"
+  },
+  {
+   "name": "6q 登入：大圖檢視器開 1600px 主圖，下一張切到第 6 張",
+   "ok": true,
+   "detail": "('/img/p/-I9zE-2Vhr9EzYrr.webp', '/img/p/g4KWIUF-D62-TK1H.webp')"
+  },
+  {
+   "name": "6r 畫面編輯存檔：補 1 刪 1 換封面，D1 順序＝畫面",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6s 換封面：新封面有預覽圖、舊封面預覽圖從 R2 刪掉",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6t 刪掉那張的主圖 404",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6u 重新整理後單則頁封面＝新封面",
+   "ok": true,
+   "detail": "/img/p/5K9jpNcbcfq-H5bR_t.webp"
+  },
+  {
+   "name": "6v 每張 photos.bytes＝R2 上主圖＋縮圖＋預覽圖大小",
+   "ok": true,
+   "detail": "缺檔 [] 不一致 []"
+  },
+  {
+   "name": "6w 畫面編輯後 R2 容量計數＝實際檔案大小加總",
+   "ok": true,
+   "detail": "counter=1843131 r2=1843131 檔數=912"
+  },
+  {
+   "name": "6x 未登入點照片跳登入框、沒有開大圖",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6y 未登入整頁只載入縮圖，沒有任何主圖請求成功",
+   "ok": true,
+   "detail": "[('p/5K9jpNcbcfq-H5bR_t.webp', 200), ('p/-I9zE-2Vhr9EzYrr_t.webp', 200), ('p/g4KWIUF-D62-TK1H_t.webp', 200), ('p/6SSNgGnQVQ3JDHEG_t.webp', 200)]"
+  },
+  {
+   "name": "6z 手機手指左滑，換到第 2 張",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6za 手機單則頁不水平溢出",
+   "ok": true,
+   "detail": "390"
+  },
+  {
+   "name": "6zb 手機長按拖曳：第 5 張拖到第 1 格變封面，頁面沒跟著捲",
+   "ok": true,
+   "detail": "['5K9jpNcbcfq-H5bR', '6SSNgGnQVQ3JDHEG', 'T9TgtDFYdgdhJtBH', 'KLNvt0vitlX_95Jp', '-I9zE-2Vhr9EzYrr'] → ['-I9zE-2Vhr9EzYrr', '5K9jpNcbcfq-H5bR', '6SSNgGnQVQ3JDHEG', 'T9TgtDFYdgdhJtBH', 'KLNvt0vitlX_95Jp']"
+  },
+  {
+   "name": "6zc 手機沒長按直接滑：順序不變（當成捲動）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6zd 手機下移按鈕可以點",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6ze 手機編輯區不溢出、按鈕高度 ≥ 32px",
+   "ok": true,
+   "detail": "(390, 32)"
+  },
+  {
+   "name": "6zf 手機存檔後 D1 順序＝畫面",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6zg 手機發文表單 4 張不溢出",
+   "ok": true,
+   "detail": "390"
+  },
+  {
+   "name": "7a 瀏覽器 console error 0",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "7b 全部結束 R2 容量計數＝實際檔案大小加總",
+   "ok": true,
+   "detail": "counter=1845082 r2=1845082 檔數=912"
+  }
+ ]
+}

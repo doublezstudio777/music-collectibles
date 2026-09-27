@@ -1,5 +1,5 @@
 import { fail, json, requireUser } from "@/lib/server/auth";
-import { acceptUpload, isPaused, MAX_MAIN_BYTES, MAX_OG_BYTES, MAX_THUMB_BYTES, STORAGE_LIMIT, storageUsed } from "@/lib/server/photos";
+import { acceptUpload, removeUnattached, isPaused, MAX_MAIN_BYTES, MAX_OG_BYTES, MAX_THUMB_BYTES, STORAGE_LIMIT, storageUsed } from "@/lib/server/photos";
 
 /** 表單開啟時問一次：上傳是不是暫停（暫停模式，或剩下的容量放不下一張最大的照片＋預覽圖） */
 export async function GET() {
@@ -28,4 +28,13 @@ export async function POST(req: Request) {
   const r = await acceptUpload(s.user.id, purpose, pick("image"), pick("thumb"), pick("og"));
   if (!r.ok) return fail(r.error.status, r.error.code, r.error.message);
   return json({ id: r.id, url: r.url, thumbUrl: r.thumbUrl, ...(r.ogUrl ? { ogUrl: r.ogUrl } : {}) }, 201);
+}
+
+/** 表單裡刪掉還沒發布的照片：?id=照片 id（只能刪自己的、還沒掛到收藏的），R2 一起刪、容量扣回 */
+export async function DELETE(req: Request) {
+  const s = await requireUser(req);
+  if (s instanceof Response) return s;
+  const id = new URL(req.url).searchParams.get("id") ?? "";
+  const ok = await removeUnattached(new URL(req.url).origin, s.user.id, id);
+  return ok ? json({ ok: true }) : fail(404, "NOT_FOUND", "找不到這張照片");
 }

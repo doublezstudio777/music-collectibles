@@ -77,6 +77,24 @@ export async function uploadImage(file: File, purpose: "share" | "appeal", handl
   return api<Uploaded>("/api/uploads", { body: form });
 }
 
+/**
+ * 多張照片（2026-09-28）：每張照片只壓主圖＋縮圖上傳；分享預覽圖只替封面畫。
+ * 封面是新選的照片就用本機檔案畫，是已經上傳過的就抓主圖（作者本人有登入，拿得到 1600px）。
+ */
+export async function uploadSharePhoto(file: File) {
+  return uploadImage(file, "share");
+}
+
+export async function uploadCoverOg(photoId: string, source: File | string, handle: string) {
+  const blob = typeof source === "string" ? await fetch(source, { credentials: "same-origin" }).then((r) => (r.ok ? r.blob() : Promise.reject(new Error("fetch")))) : source;
+  const img = await loadImage(blob);
+  const og = await drawOgImage(img, handle, watermarkText(handle));
+  const form = new FormData();
+  form.append("photoId", photoId);
+  form.append("og", og, "og.jpg");
+  return api<{ ogUrl: string }>("/api/uploads/og", { body: form });
+}
+
 /** 大頭貼（2026-09-28）：從中間裁成正方形、縮成 256×256，轉 WebP（不支援時 JPEG）。伺服器只檢查格式與寬高 */
 export const AVATAR_EDGE = 256;
 export async function prepareAvatar(file: Blob): Promise<Blob> {

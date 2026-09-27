@@ -14,7 +14,8 @@ import {
 } from "@/lib/data";
 import type { FormOptions } from "@/lib/catalog";
 import { api, useAccount, whenLoggedIn } from "@/lib/account";
-import { uploadImage } from "@/lib/image";
+import { uploadCoverOg } from "@/lib/image";
+import { PhotoPicker, usePhotoPicker } from "@/components/photo-picker";
 import { MoneyInput, parsePrice } from "@/components/share-detail";
 
 function splitTags(s: string) {
@@ -167,9 +168,8 @@ export function ShareForm({ options }: { options: FormOptions }) {
   const router = useRouter();
   const acc = useAccount();
   const id = "share-form";
-  const [photo, setPhoto] = useState<{ id: string; preview: string } | null>(null);
-  const [uploading, setUploading] = useState(false);
   const [paused, setPaused] = useState(false);
+  const picker = usePhotoPicker([], () => setPaused(true));
   const [gender, setGender] = useState<ArtistGender | null>(null);
   const [region, setRegion] = useState<ArtistRegion | null>(null);
   const [about, setAbout] = useState<string[]>([]);
@@ -289,31 +289,13 @@ export function ShareForm({ options }: { options: FormOptions }) {
     setVersionPick("unsure");
   };
 
-  /** 選照片就壓縮上傳（要登入）；容量滿或暫停時顯示「上傳暫停」 */
-  const onPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    e.target.value = "";
-    if (!file) return;
-    whenLoggedIn("登入後才能炫收藏", async () => {
-      setUploading(true);
-      setErrors((x) => ({ ...x, photo: "" }));
-      try {
-        const r = await uploadImage(file, "share", acc.me?.handle);
-        if (r.ok) setPhoto({ id: r.data.id, preview: r.data.thumbUrl });
-        else if (r.error.code === "STORAGE_FULL" || r.error.code === "UPLOAD_PAUSED") setPaused(true);
-        else setErrors((x) => ({ ...x, photo: r.error.message }));
-      } catch {
-        setErrors((x) => ({ ...x, photo: "這個檔案讀不出來，換一張" }));
-      }
-      setUploading(false);
-    });
-  };
-
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const pending = aboutDraft.trim() ? [...about, resolveTagArtist(aboutDraft)?.name ?? aboutDraft.trim()] : about;
     const next: Record<string, string> = {};
-    if (!photo) next.photo = "放一張照片";
+    if (picker.items.length === 0) next.photo = "至少放一張照片";
+    else if (picker.pending) next.photo = "照片還在上傳，等一下";
+    else if (picker.failed) next.photo = "有照片沒傳上去，按重試或刪掉那張";
     if (pending.length === 0) next.about = "至少點一位";
     if (!effectiveKind) next.kind = series ? "點一個品項" : "點一個類型";
     if (!series && kind === "其他周邊" && !kindNote.trim()) next.kind = "寫一下是什麼周邊";
@@ -324,9 +306,12 @@ export function ShareForm({ options }: { options: FormOptions }) {
 
     whenLoggedIn("登入後才能炫收藏", async () => {
       setBusy(true);
+      // 分享預覽圖只替封面（第一張）畫；畫不出來不擋發文，og:image 會退回縮圖
+      const cover = picker.items[0];
+      if (cover?.id && acc.me?.handle) await uploadCoverOg(cover.id, cover.file ?? cover.url ?? "", acc.me.handle).catch(() => null);
       const r = await api<{ n: number }>("/api/shares", {
         body: {
-          photoIds: photo ? [photo.id] : [],
+          photoIds: picker.items.map((x) => x.id).filter(Boolean),
           about: Array.from(new Set(pending)),
           ...(series ? { seriesKey: series.key, itemId: item?.id, versionId: version?.id } : { kind, kindNote: kindNote.trim() }),
           story: story.trim(),
@@ -350,16 +335,15 @@ export function ShareForm({ options }: { options: FormOptions }) {
         <span className="field-label" id={`${id}-photo`}>
           照片
         </span>
-        {paused ? (
-          <p className="upload-paused" role="status" data-testid="upload-paused">
-            上傳暫停
-          </p>
-        ) : (
-          <label className={photo ? "drop has-photo" : "drop"} style={photo ? { backgroundImage: `url(${photo.preview})` } : undefined}>
-            <input type="file" accept="image/*" className="sr-only" aria-labelledby={`${id}-photo`} onChange={onPhoto} disabled={uploading} />
-            <span className="drop-text">{uploading ? "上傳中…" : photo ? "換一張" : "＋ 加照片"}</span>
-          </label>
-        )}
+        <div onClickCapture={(e) => {
+            // 選照片要登入：沒登入先跳登入，不打開檔案選擇
+            if (!acc.me && (e.target as HTMLElement).closest("label.drop")) {
+              e.preventDefault();
+              whenLoggedIn("登入後才能炫收藏", () => undefined);
+            }
+          }}>
+          <PhotoPicker picker={picker} labelId={`${id}-photo`} paused={paused} disabled={busy} />
+        </div>
         {errors.photo ? <p className="field-error">{errors.photo}</p> : null}
       </div>
 
@@ -608,7 +592,7 @@ export function ShareForm({ options }: { options: FormOptions }) {
       ) : null}
       <div className="form-foot">
         {acc.status === "anon" ? <span className="sub">發布前會請你登入</span> : null}
-        <button type="submit" className="btn btn-p" disabled={busy || uploading}>
+        <button type="submit" className="btn btn-p" disabled={busy || picker.pending > 0}>
           發布
         </button>
       </div>

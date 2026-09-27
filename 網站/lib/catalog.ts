@@ -221,6 +221,9 @@ export class Catalog {
     };
   };
 
+  /** 單則頁用：加上全部照片（卡片、列表只用封面，不帶這串，省 HTML 大小） */
+  toDetailView = (s: Share): ShareView => ({ ...this.toShareView(s), ...(s.photos ? { photos: s.photos } : {}) });
+
   allShareViews = () => this.shares.map(this.toShareView);
 
   /**

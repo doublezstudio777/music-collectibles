@@ -173,6 +173,8 @@ export type Share = {
   thumb?: string;
   /** 分享預覽圖網址（1200×630 JPEG，浮水印已燒進去；og:image 用）；沒有就退回縮圖，舊收藏都沒有這欄 */
   og?: string;
+  /** 兩張以上才有：全部照片依順序（第一張＝封面，跟 image／thumb 同一張） */
+  photos?: SharePhoto[];
   /** 作者顯示名稱；D1 讀出來的才有 */
   authorName?: string;
   link?: { series: string; item?: string; version?: string };
@@ -242,6 +244,9 @@ export const norm = (s: string) => s.trim().toLowerCase();
 
 export type Lock = { target: TargetKey; level: TargetLevel; label: string };
 
+/** 一張照片：主圖（1600px，要登入）＋縮圖（公開） */
+export type SharePhoto = { image: string; thumb: string };
+
 export type ShareView = {
   n: number;
   what: string;
@@ -261,6 +266,8 @@ export type ShareView = {
   /** 主圖、縮圖網址（/img/...） */
   image?: string;
   thumb?: string;
+  /** 兩張以上才有：全部照片依順序，第一張是封面 */
+  photos?: SharePhoto[];
   author: { handle: string; name: string; initials: string };
   link?: { href: string; label: string; seriesKey: string; itemId?: string; versionId?: string };
   sale: Sale;

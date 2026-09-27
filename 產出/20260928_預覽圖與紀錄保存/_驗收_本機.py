@@ -47,7 +47,8 @@ with sync_playwright() as p:
     photo = SITE / ".wrangler" / "verify-og-photo.jpg"
     Image.new("RGB", (2400, 1600), (40, 90, 150)).save(photo, "JPEG", quality=92)
     pg.locator("input[type=file]").first.set_input_files(str(photo))
-    pg.wait_for_function("() => document.querySelector('.drop.has-photo')", timeout=30000)
+    # 2026-09-28 多張照片改版：上傳完成的標記從 .drop.has-photo 換成 [data-testid=pp-tile][data-status=done]
+    pg.wait_for_function("() => document.querySelector('[data-testid=pp-tile][data-status=done]')", timeout=30000)
     pg.locator("#share-form-about").fill("山線")
     pg.locator(".suggest button", has_text="山線電台").click()
     pg.locator("[data-testid=pick-series] button", has_text="夜行採集").click()

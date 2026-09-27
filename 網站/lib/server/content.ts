@@ -212,9 +212,13 @@ async function build(): Promise<Catalog> {
   // 沒有任何版本的品項不出現（待審的版本不算）
   seriesList.forEach((s) => (s.items = s.items.filter((i) => i.versions.length > 0)));
 
+  // 一則最多 10 張，依 sort 排，第一張是封面（卡片、og:image 只用封面）
   const photoBy = new Map<number, (typeof pRows)[number]>();
-  for (const p of [...pRows].sort((a, b) => a.sort - b.sort)) {
-    if (p.shareNo !== null && !photoBy.has(p.shareNo)) photoBy.set(p.shareNo, p);
+  const galleryBy = new Map<number, (typeof pRows)[number][]>();
+  for (const p of [...pRows].sort((a, b) => a.sort - b.sort || a.createdAt.localeCompare(b.createdAt))) {
+    if (p.shareNo === null) continue;
+    if (!photoBy.has(p.shareNo)) photoBy.set(p.shareNo, p);
+    galleryBy.set(p.shareNo, [...(galleryBy.get(p.shareNo) ?? []), p]);
   }
 
   const now = Date.now();
@@ -239,6 +243,9 @@ async function build(): Promise<Catalog> {
         ...(p ? { image: photoUrl(p.r2Key), thumb: photoUrl(p.thumbKey) } : {}),
         ...(p && p.width > 0 && p.height > 0 ? { imageSize: { w: p.width, h: p.height } } : {}),
         ...(p?.ogKey ? { og: photoUrl(p.ogKey) } : {}),
+        ...((galleryBy.get(s.no)?.length ?? 0) > 1
+          ? { photos: galleryBy.get(s.no)!.map((g) => ({ image: photoUrl(g.r2Key), thumb: photoUrl(g.thumbKey) })) }
+          : {}),
         ...(s.seriesKey
           ? { link: { series: s.seriesKey, ...(s.itemId ? { item: s.itemId } : {}), ...(s.versionId ? { version: s.versionId } : {}) } }
           : {}),

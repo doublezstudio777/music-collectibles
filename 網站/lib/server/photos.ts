@@ -19,7 +19,7 @@ export const MAX_MAIN_BYTES = 1_500_000;
 export const MAX_THUMB_BYTES = 200_000;
 /** 分享預覽圖（1200×630 JPEG，og:image 用）單檔上限 */
 export const MAX_OG_BYTES = 400_000;
-/** 每人每天最多上傳幾張（主圖＋縮圖算一張） */
+/** 每人每天最多上傳幾張（主圖＋縮圖算一張；一則多張時每張各算一張，分享預覽圖不算） */
 export const DAILY_UPLOADS = 30;
 
 export type ImageType = "image/webp" | "image/jpeg";
@@ -190,3 +190,90 @@ export async function purgeSharePhotos(origin: string, shareNo: number) {
 }
 
 export { defaultCache as photoCache };
+
+/* ---------- 多張照片（2026-09-28） ---------- */
+
+/** 每則炫收藏最多幾張 */
+export const MAX_SHARE_PHOTOS = 10;
+
+type PhotoRow = typeof photos.$inferSelect;
+
+/**
+ * 從 R2 移除照片檔（主圖、縮圖、預覽圖），D1 標 deleted_at，容量計數扣回 photos.bytes（已含預覽圖），
+ * 並把這幾個網址的快取清掉。回傳扣回多少位元組。
+ */
+export async function removePhotoFiles(origin: string, rows: PhotoRow[]) {
+  if (!rows.length) return 0;
+  const at = new Date().toISOString();
+  const keys = rows.flatMap((r) => [r.r2Key, r.thumbKey, ...(r.ogKey ? [r.ogKey] : [])]);
+  await env.PHOTOS?.delete(keys).catch(() => undefined);
+  const db = env.DB!;
+  await db.batch(rows.map((r) => db.prepare("UPDATE photos SET deleted_at = ?1 WHERE id = ?2 AND deleted_at IS NULL").bind(at, r.id)));
+  const bytes = rows.reduce((a, r) => a + r.bytes, 0);
+  await releaseBytes(bytes);
+  await purgePhotoCache(origin, keys);
+  return bytes;
+}
+
+/** 拿掉一張照片的分享預覽圖（封面換掉時舊封面用）：刪 R2 檔、扣回容量、清快取 */
+export async function dropOgImage(origin: string, row: PhotoRow) {
+  if (!row.ogKey) return;
+  const head = await env.PHOTOS?.head(row.ogKey).catch(() => null);
+  const size = head?.size ?? 0;
+  await env.PHOTOS?.delete(row.ogKey).catch(() => undefined);
+  await getDb()
+    .update(photos)
+    .set({ ogKey: null, bytes: Math.max(0, row.bytes - size) })
+    .where(eq(photos.id, row.id));
+  await releaseBytes(size);
+  await purgePhotoCache(origin, [row.ogKey]);
+}
+
+/**
+ * 替一張自己的分享照片補上（或換掉）分享預覽圖。只有封面會呼叫：新發的收藏在送出前、
+ * 或編輯時換了封面。預覽圖不算每日張數，但算容量。
+ */
+export async function attachOgImage(origin: string, ownerId: string, photoId: string, og: File | null) {
+  const bad = (status: number, code: string, message: string) => ({ ok: false as const, error: { status, code, message } });
+  if (!og || og.size === 0 || og.size > MAX_OG_BYTES) return bad(413, "TOO_LARGE", "預覽圖太大");
+  const b = new Uint8Array(await og.arrayBuffer());
+  if (!sniffJpeg(b)) return bad(415, "BAD_FORMAT", "預覽圖只收 JPEG");
+  const [row] = await getDb()
+    .select()
+    .from(photos)
+    .where(and(eq(photos.id, photoId), eq(photos.ownerId, ownerId), eq(photos.purpose, "share"), isNull(photos.deletedAt)));
+  if (!row) return bad(404, "NOT_FOUND", "找不到這張照片");
+  if (await isPaused()) return bad(503, "UPLOAD_PAUSED", "上傳暫停");
+  if (!(await reserveBytes(b.length))) return bad(507, "STORAGE_FULL", "上傳暫停");
+  const bucket = env.PHOTOS;
+  if (!bucket) {
+    await releaseBytes(b.length);
+    return bad(503, "NO_STORAGE", "照片儲存還沒設定");
+  }
+  // 舊的先拿掉（容量扣回），再放新的；檔名換新，避免別的資料中心還留著舊預覽圖的快取
+  if (row.ogKey) await dropOgImage(origin, row);
+  const dir = row.r2Key.split("/")[0];
+  const ogKey = `${dir}/${row.id}_og${row.ogKey ? `_${randomToken(4)}` : ""}.jpg`;
+  try {
+    await bucket.put(ogKey, b, { httpMetadata: { contentType: "image/jpeg" } });
+  } catch {
+    await releaseBytes(b.length);
+    return bad(502, "STORAGE_ERROR", "預覽圖存不進去");
+  }
+  const [fresh] = await getDb().select({ bytes: photos.bytes }).from(photos).where(eq(photos.id, row.id));
+  await getDb()
+    .update(photos)
+    .set({ ogKey, bytes: (fresh?.bytes ?? row.bytes) + b.length })
+    .where(eq(photos.id, row.id));
+  return { ok: true as const, ogUrl: `/img/${ogKey}` };
+}
+
+/** 刪掉自己還沒掛到收藏的分享照片（表單裡按刪除） */
+export async function removeUnattached(origin: string, ownerId: string, photoId: string) {
+  const rows = await getDb()
+    .select()
+    .from(photos)
+    .where(and(eq(photos.id, photoId), eq(photos.ownerId, ownerId), eq(photos.purpose, "share"), isNull(photos.shareNo), isNull(photos.deletedAt)));
+  await removePhotoFiles(origin, rows);
+  return rows.length > 0;
+}

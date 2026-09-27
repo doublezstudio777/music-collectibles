@@ -190,7 +190,8 @@ with sync_playwright() as p:
     pg.locator(".suggest button", has_text=NEW_ARTIST_NAME).click()
     check("4 打字搜尋選到後變成 chip", pg.locator(".chip", has_text=NEW_ARTIST_NAME).count() == 1)
     pg.locator("input[type=file]").first.set_input_files(str(photo))
-    pg.wait_for_function("() => document.querySelector('.drop.has-photo')", timeout=30000)
+    # 2026-09-28 多張照片改版：上傳完成的標記從 .drop.has-photo 換成 [data-testid=pp-tile][data-status=done]
+    pg.wait_for_function("() => document.querySelector('[data-testid=pp-tile][data-status=done]')", timeout=30000)
     pg.locator("[data-testid=pick-kind] .pick", has_text="其他周邊").click()
     pg.locator("#share-form-kind-note").fill(f"驗收{STAMP}")
     pg.locator(".form-foot button[type=submit]").click()

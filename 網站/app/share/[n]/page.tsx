@@ -39,7 +39,7 @@ export default async function SharePage({ params }: Props) {
   const share = Number.isInteger(n) ? c.getShare(n) : undefined;
 
   if (!share) notFound();
-  const view = c.toShareView(share);
+  const view = c.toDetailView(share);
   const origin = await siteOrigin();
   const parts = c.shareParts(share);
   // 被鎖定的不給分享（按鈕與分享圖都不出現）
