@@ -34,8 +34,8 @@ export const normKind = (raw: string): { kind: Kind; note?: string } => {
 export const KIND_LABEL_FALLBACK = "收藏";
 
 /** 站方描述：首頁、被鎖定內容的連結預覽共用 */
-/** 站名只在這裡設定一處：標題、頁首、浮水印、分享圖、連結預覽、寄信都讀這個，改名時全站一起變 */
-export const SITE_NAME = "音藏";
+/** 站名只在這裡設定一處：標題、頁首、浮水印、連結預覽圖、寄信都讀這個，改名時全站一起變 */
+export const SITE_NAME = "樂迷藏";
 export const SITE_TAGLINE = "樂迷的收藏分享";
 export const SITE_TITLE = `${SITE_NAME}｜${SITE_TAGLINE}`;
 /** 照片浮水印（顯示時疊上去，不燒進檔案）：@帳號 · 站名 */
@@ -46,9 +46,38 @@ export const SITE_DESC = "看樂迷收了什麼、炫自己的收藏，沿著藝
 /** 分享用的四段字（Catalog.shareParts 算出來） */
 export type ShareParts = { artist: string; series: string; item: string; version: string };
 
-/** 藝人・系列・品項・版本；四段都空時退回「某某的收藏」 */
+/**
+ * 版本名稱已經包含品項名（「2016 CD」含「CD」）就不再加品項，避免「… CD 2016 CD」。
+ * 英數品項要整個字對到（「CD」不算在「SACD」裡），中文品項（黑膠、寫真書）直接找子字串。
+ */
+export function itemInVersion(item: string, version: string) {
+  const i = item.trim().toLowerCase();
+  const v = version.trim().toLowerCase();
+  if (!i || !v) return false;
+  if (/^[a-z0-9]/.test(i)) {
+    const esc = i.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`(^|[^a-z0-9])${esc}($|[^a-z0-9])`).test(v);
+  }
+  return v.includes(i);
+}
+
+/** 標題與分享文字共用的分段：系列・品項・版本，品項已在版本名稱裡就省略 */
+export const titleSegments = (series: string, item: string, version: string) =>
+  [series, itemInVersion(item, version) ? "" : item, version].map((x) => x.trim()).filter(Boolean);
+
+/**
+ * 炫收藏的標題（存進 shares.what）：
+ * - 連到系列：「系列・品項・版本」，例「Dr. Paper Vol.3 Sunday Night Slow Jams・2016 CD」
+ * - 沒連系列：「跟誰有關・類型」，例「國蛋、Dr. Paper・T 恤」
+ */
+export const composeWhat = (p: { series?: string; item?: string; version?: string; about?: string[]; kind?: string }) =>
+  p.series
+    ? titleSegments(p.series, p.item ?? "", p.version ?? "").join("・")
+    : [(p.about ?? []).join("、"), p.kind ?? ""].filter(Boolean).join("・");
+
+/** 藝人・系列・品項・版本（品項已在版本名稱裡就省略）；四段都空時退回「某某的收藏」 */
 export const shareDesc = (p: ShareParts, author: string) =>
-  [p.artist, p.series, p.item, p.version].filter(Boolean).join("・") || `${author} 的${KIND_LABEL_FALLBACK}`;
+  [p.artist, ...titleSegments(p.series, p.item, p.version)].filter(Boolean).join("・") || `${author} 的${KIND_LABEL_FALLBACK}`;
 
 export type Artist = {
   /** 網址識別碼：英文名或音譯，小寫、連字號 */
@@ -179,8 +208,12 @@ export type Share = {
   authorName?: string;
   link?: { series: string; item?: string; version?: string };
   sale?: Sale;
-  /** 發文者同意照片當辨識參考 */
-  refPhoto?: boolean;
+  /** 管理員標為「辨識參考」的照片（2026-09-28 起改由管理員標記；shares.ref_photo 舊值不再使用） */
+  refPhotos?: SharePhoto[];
+  /** 照片依順序：哪幾張被管理員標為辨識參考（index，單則頁管理員操作用） */
+  refIdx?: number[];
+  /** 發文者最後一次編輯內容或照片的時間（ISO）；沒編輯過就沒有 */
+  editedAt?: string;
 };
 
 /** 示範資料用的使用者形狀（scripts/demo-data.ts）；網站本身的帳號在 D1 users 表 */
@@ -254,7 +287,6 @@ export type ShareView = {
   kind: Kind;
   /** 其他周邊的補充，或 CD-R 這類細分 */
   kindNote?: string;
-  refPhoto?: boolean;
   story: string;
   time: string;
   order: number;
@@ -277,6 +309,12 @@ export type ShareView = {
   hasFakes: boolean;
   /** 伺服器算好的鎖定（跟 API 擋交易同一個判斷） */
   lock: Lock | null;
+  /** 對應到公開藝人頁的標籤 → 藝人頁網址（其餘標籤連 /tag/） */
+  tagLinks?: Record<string, string>;
+  /** 單則頁才有：哪幾張照片被管理員標為辨識參考（照片順序的 index） */
+  refIdx?: number[];
+  /** 單則頁才有：發文者最後編輯時間（ISO） */
+  editedAt?: string;
 };
 
 /** 我有／想要清單列（個人頁用） */

@@ -142,14 +142,6 @@ function Spec({ series, item, v }: { series: Series; item: Item; v: Version }) {
   );
 }
 
-function PhotoBlock({ caption }: { caption: string }) {
-  return (
-    <span className="ph-block" role="img" aria-label={`${caption}（示意）`}>
-      <b>{caption}</b>
-    </span>
-  );
-}
-
 function VersionBlock({
   series,
   item,
@@ -168,7 +160,8 @@ function VersionBlock({
   price?: PriceSummary;
 }) {
   const list = related.filter((s) => s.link?.version === v.id);
-  const refs = list.filter((s) => s.refPhoto);
+  // 正版辨識照片：只列管理員標為「辨識參考」的（2026-09-28 起會員不能自己勾）
+  const refs = list.flatMap((s) => (s.refPhotos ?? []).map((p, i) => ({ s, p, i })));
   const vkey = versionKey(series, item, v);
   return (
     <section id={versionAnchor(item, v)} className="ver-block">
@@ -185,16 +178,12 @@ function VersionBlock({
       <IdentifyDetails skey={seriesKey(series)} vkey={vkey} anchor={versionAnchor(item, v)} hasFakes={Boolean(v.fakes?.length)} />
       {refs.length ? (
         <div className="refs">
-          <span className="refs-label">收藏者的參考照片</span>
+          <span className="refs-label">辨識參考照片</span>
           <ul className="refs-list">
-            {refs.map((s) => (
-              <li key={s.n}>
-                <Link href={shareHref(s.n)} className="ref-thumb" aria-label={s.what}>
-                  {s.thumb || s.image ? (
-                    <span className="ref-img" style={{ backgroundImage: `url(${s.thumb ?? s.image})` }} />
-                  ) : (
-                    <PhotoBlock caption={s.kind} />
-                  )}
+            {refs.map(({ s, p, i }) => (
+              <li key={`${s.n}-${i}`}>
+                <Link href={shareHref(s.n)} className="ref-thumb" aria-label={s.what} data-testid="ref-photo">
+                  <span className="ref-img" style={{ backgroundImage: `url(${p.thumb})` }} />
                 </Link>
               </li>
             ))}

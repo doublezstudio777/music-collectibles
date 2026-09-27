@@ -429,6 +429,8 @@ with sync_playwright() as p:
     check("5d 頭像選單換成大頭貼圖片", pg.locator("[data-testid=me-avatar] img").get_attribute("src") == f"/img/{sk}")
     pg.fill("#set-name", f"設定頁改名{ST}")
     pg.click("[data-testid=name-box] button[type=submit]")
+    # 2026-09-28 改：送出時輸入框會先停用（儲存中），改等「已儲存」出現再看鎖定
+    pg.wait_for_selector("[data-testid=name-msg]", timeout=10000)
     pg.wait_for_selector("[data-testid=name-box] #set-name[disabled]", timeout=10000)
     check("5e 設定頁改名後輸入框鎖住、顯示下次可改日期", "以後可以再改" in pg.locator("[data-testid=name-rule]").inner_text())
     pg.click("[data-testid=delete-link]")

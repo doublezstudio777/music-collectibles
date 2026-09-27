@@ -152,7 +152,6 @@ for (const s of demo.shares) {
       series_key: s.link?.series ?? null,
       item_id: s.link?.item ?? null,
       version_id: s.link?.version ?? null,
-      ref_photo: s.refPhoto ? 1 : 0,
       color: s.color,
       sale_state: sale.state,
       price: sale.price ?? null,

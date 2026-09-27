@@ -53,7 +53,8 @@ owners = sql(f"SELECT count(*) n FROM holdings WHERE kind='owned' AND target_key
 conf = status == "已確認"
 new = [x["no"] for x in sorted(rows, key=lambda x: x["c"], reverse=True)]
 likes = [x["no"] for x in sorted(sorted(rows, key=lambda x: x["c"], reverse=True), key=lambda x: -x["k"])]
-feat = [x["no"] for x in sorted(sorted(sorted(rows, key=lambda x: x["c"], reverse=True), key=lambda x: -x["k"]), key=lambda x: -(1 if conf and x["r"] else 0))]
+# 2026-09-28 改：精選＝已確認版本 → 讚數 → 時間，不再看會員自勾的 ref_photo（同一版本區塊裡「已確認」對每則都一樣）
+feat = [x["no"] for x in sorted(sorted(sorted(rows, key=lambda x: x["c"], reverse=True), key=lambda x: -x["k"]), key=lambda x: -(1 if conf else 0))]
 selling = [x["no"] for x in sorted(rows, key=lambda x: x["c"], reverse=True) if x["st"] in ("sale", "offer")]
 print("預期 精選", feat, "最新", new, "最多讚", likes, "在賣", selling)
 

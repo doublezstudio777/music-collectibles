@@ -6,33 +6,28 @@ import { useState } from "react";
 import { api, openPanel, refreshAccount, setMe, useAccount, type Me } from "@/lib/account";
 import { Ava } from "@/components/ava";
 import { prepareAvatar } from "@/lib/image";
-
-function Msg({ ok, text }: { ok: boolean; text: string }) {
-  if (!text) return null;
-  return (
-    <p className={ok ? "field-ok" : "field-error"} role="status">
-      {text}
-    </p>
-  );
-}
+import { SaveMsg, useSave } from "@/components/save-status";
 
 /** 台灣日期 2026-10-28 */
 const twDate = (iso: string) => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 10);
 
 function NameBox({ me }: { me: Me }) {
   const [name, setName] = useState(me.name);
-  const [msg, setMsg] = useState({ ok: true, text: "" });
+  const { busy, msg, run } = useSave();
   const router = useRouter();
   const locked = Boolean(me.nameNextAt);
-  const save = async (e: React.FormEvent) => {
+  const save = (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim() === me.name) return setMsg({ ok: true, text: "暱稱沒有變" });
-    const r = await api<{ user: Me }>("/api/me/profile", { method: "PATCH", body: { name } });
-    if (r.ok) {
+    void run(async () => {
+      if (name.trim() === me.name) return { ok: true, text: "暱稱沒有變" };
+      const r = await api<{ user: Me }>("/api/me/profile", { method: "PATCH", body: { name } });
+      if (!r.ok) return { ok: false, text: r.error.message };
+      // 頁首頭像的暱稱跟著換（帳號狀態共用），伺服器畫的部分再 refresh 一次，不整頁重載
       setMe(r.data.user);
-      setMsg({ ok: true, text: "已儲存" });
+      setName(r.data.user.name);
       router.refresh();
-    } else setMsg({ ok: false, text: r.error.message });
+      return { ok: true, text: "已儲存" };
+    });
   };
   return (
     <form className="block settings-block" onSubmit={save} noValidate data-testid="name-box">
@@ -44,58 +39,54 @@ function NameBox({ me }: { me: Me }) {
         暱稱
       </label>
       <div className="settings-row">
-        <input id="set-name" className="input" value={name} maxLength={30} disabled={locked} onChange={(e) => setName(e.target.value)} />
-        <button type="submit" className="btn btn-line" disabled={locked}>
-          儲存
+        <input id="set-name" className="input" value={name} maxLength={30} disabled={locked || busy} onChange={(e) => setName(e.target.value)} />
+        <button type="submit" className="btn btn-line" disabled={locked || busy} data-testid="name-save">
+          {busy ? "儲存中…" : "儲存"}
         </button>
       </div>
-      <Msg {...msg} />
+      <SaveMsg {...msg} testid="name-msg" />
     </form>
   );
 }
 
 function AvatarBox({ me }: { me: Me }) {
-  const [msg, setMsg] = useState({ ok: true, text: "" });
-  const [busy, setBusy] = useState(false);
+  const { busy, msg, run } = useSave();
   const router = useRouter();
   const done = async (text: string) => {
     await refreshAccount();
-    setMsg({ ok: true, text });
     router.refresh();
+    return { ok: true, text };
   };
-  const pick = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const pick = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
-    setBusy(true);
-    setMsg({ ok: true, text: "" });
-    try {
-      const blob = await prepareAvatar(file);
+    void run(async () => {
+      let blob: Blob;
+      try {
+        blob = await prepareAvatar(file);
+      } catch {
+        return { ok: false, text: "這張照片讀不到，換一張再試" };
+      }
       const form = new FormData();
       form.append("image", blob, blob.type === "image/webp" ? "avatar.webp" : "avatar.jpg");
       const r = await api("/api/me/avatar", { body: form });
-      if (r.ok) await done("已換上新的大頭貼");
-      else setMsg({ ok: false, text: r.error.message });
-    } catch {
-      setMsg({ ok: false, text: "這張照片讀不到，換一張再試" });
-    }
-    setBusy(false);
+      return r.ok ? done("已換上新的大頭貼") : { ok: false, text: r.error.message };
+    });
   };
-  const remove = async () => {
-    setBusy(true);
-    const r = await api("/api/me/avatar", { method: "DELETE" });
-    if (r.ok) await done("已移除大頭貼");
-    else setMsg({ ok: false, text: r.error.message });
-    setBusy(false);
-  };
+  const remove = () =>
+    void run(async () => {
+      const r = await api("/api/me/avatar", { method: "DELETE" });
+      return r.ok ? done("已移除大頭貼") : { ok: false, text: r.error.message };
+    });
   return (
     <section className="block settings-block" data-testid="avatar-box">
       <h2 className="block-title">大頭貼</h2>
       <div className="avatar-row">
         <Ava name={me.name} src={me.avatar} size="lg" />
         <div className="avatar-acts">
-          <label className="btn btn-line file-btn">
-            {me.avatar ? "換一張" : "上傳大頭貼"}
+          <label className="btn btn-line file-btn" aria-disabled={busy}>
+            {busy ? "儲存中…" : me.avatar ? "換一張" : "上傳大頭貼"}
             <input type="file" accept="image/*" className="sr-only" onChange={pick} disabled={busy} data-testid="avatar-input" />
           </label>
           {me.avatar ? (
@@ -106,7 +97,7 @@ function AvatarBox({ me }: { me: Me }) {
           <p className="page-meta">照片會從中間裁成正方形。一天最多換 5 次。</p>
         </div>
       </div>
-      <Msg {...msg} />
+      <SaveMsg {...msg} testid="avatar-msg" />
     </section>
   );
 }
@@ -114,15 +105,16 @@ function AvatarBox({ me }: { me: Me }) {
 function PasswordBox() {
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
-  const [msg, setMsg] = useState({ ok: true, text: "" });
-  const save = async (e: React.FormEvent) => {
+  const { busy, msg, run } = useSave(5000);
+  const save = (e: React.FormEvent) => {
     e.preventDefault();
-    const r = await api("/api/me/password", { body: { current, password: next } });
-    if (r.ok) {
+    void run(async () => {
+      const r = await api("/api/me/password", { body: { current, password: next } });
+      if (!r.ok) return { ok: false, text: r.error.message };
       setCurrent("");
       setNext("");
-      setMsg({ ok: true, text: "密碼已更新，其他裝置已登出" });
-    } else setMsg({ ok: false, text: r.error.message });
+      return { ok: true, text: "已儲存：密碼已更新，其他裝置已登出" };
+    });
   };
   return (
     <form className="block settings-block" onSubmit={save} noValidate>
@@ -136,34 +128,36 @@ function PasswordBox() {
       </label>
       <input id="set-new" className="input" type="password" autoComplete="new-password" value={next} onChange={(e) => setNext(e.target.value)} />
       <div className="settings-row">
-        <button type="submit" className="btn btn-line">
-          更新密碼
+        <button type="submit" className="btn btn-line" disabled={busy} data-testid="password-save">
+          {busy ? "儲存中…" : "更新密碼"}
         </button>
       </div>
-      <Msg {...msg} />
+      <SaveMsg {...msg} testid="password-msg" />
     </form>
   );
 }
 
 function SessionsBox() {
-  const [msg, setMsg] = useState({ ok: true, text: "" });
+  const { busy, msg, run: save } = useSave();
   const router = useRouter();
-  const run = async () => {
-    const r = await api("/api/auth/logout-all", { body: {} });
-    if (!r.ok) return setMsg({ ok: false, text: r.error.message });
-    await refreshAccount();
-    router.push("/");
-  };
+  const run = () =>
+    void save(async () => {
+      const r = await api("/api/auth/logout-all", { body: {} });
+      if (!r.ok) return { ok: false, text: r.error.message };
+      // 這台也登出了：先顯示訊息，再更新帳號狀態回首頁（先更新的話這塊會被換成「登入後才能改設定」，訊息看不到）
+      setTimeout(() => void refreshAccount().then(() => router.push("/")), 1200);
+      return { ok: true, text: "已登出所有裝置" };
+    });
   return (
     <section className="block settings-block">
       <h2 className="block-title">登出所有裝置</h2>
       <p className="page-meta">手機、別台電腦、這台都會登出。</p>
       <div className="settings-row">
-        <button type="button" className="btn btn-line" onClick={run}>
-          登出所有裝置
+        <button type="button" className="btn btn-line" onClick={run} disabled={busy} data-testid="logout-all">
+          {busy ? "處理中…" : "登出所有裝置"}
         </button>
       </div>
-      <Msg {...msg} />
+      <SaveMsg {...msg} testid="sessions-msg" />
     </section>
   );
 }
@@ -185,7 +179,8 @@ export function SettingsForm() {
     <div className="settings">
       <p className="page-meta">{me.email}</p>
       <AvatarBox me={me} />
-      <NameBox key={`${me.id}-${me.name}`} me={me} />
+      {/* key 只用 id：暱稱改了不能讓這塊重掛，不然「已儲存」會跟著消失（2026-09-28 使用者回報改了沒反應） */}
+      <NameBox key={me.id} me={me} />
       <PasswordBox />
       <SessionsBox />
       <p className="settings-delete">

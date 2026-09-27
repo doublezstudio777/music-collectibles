@@ -164,7 +164,23 @@ function SubmitNew({ type, parent, label }: { type: "artist" | "series" | "item"
   );
 }
 
-export function ShareForm({ options }: { options: FormOptions }) {
+/** 編輯已發布的炫收藏（2026-09-28）：照片另外在單則頁「編輯照片」改，這裡只改內容與出售狀態 */
+export type ShareEdit = {
+  n: number;
+  about: string[];
+  seriesKey?: string;
+  itemId?: string;
+  versionId?: string;
+  kind: Kind;
+  kindNote: string;
+  story: string;
+  tags: string[];
+  sale: { state: SaleState; price?: number };
+  /** 這則「跟誰有關」對得到的藝人（不在預設清單裡也要能拼出系列選項） */
+  artists: FormArtist[];
+};
+
+export function ShareForm({ options, edit }: { options: FormOptions; edit?: ShareEdit }) {
   const router = useRouter();
   const acc = useAccount();
   const id = "share-form";
@@ -172,28 +188,31 @@ export function ShareForm({ options }: { options: FormOptions }) {
   const picker = usePhotoPicker([], () => setPaused(true));
   const [gender, setGender] = useState<ArtistGender | null>(null);
   const [region, setRegion] = useState<ArtistRegion | null>(null);
-  const [about, setAbout] = useState<string[]>([]);
+  const [about, setAbout] = useState<string[]>(edit?.about ?? []);
   const [aboutDraft, setAboutDraft] = useState("");
   /** 「更多」按鈕：預設只列 options.defaultArtists（最多 10 位），按下去才加進 options.moreArtists */
   const [expanded, setExpanded] = useState(false);
   /** 打字搜尋結果（/api/artists/search），累積起來讓選過的藝人之後也查得到 slug（拼系列用） */
-  const [found, setFound] = useState<FormArtist[]>([]);
-  const [seriesPick, setSeriesPick] = useState<string | null>(null);
-  const [itemPick, setItemPick] = useState<string | null>(null);
-  const [versionPick, setVersionPick] = useState<string>("unsure");
-  const [kind, setKind] = useState<Kind | null>(null);
-  const [kindNote, setKindNote] = useState("");
-  const [story, setStory] = useState("");
-  const [tags, setTags] = useState("");
-  const [refOk, setRefOk] = useState(false);
-  const [saleState, setSaleState] = useState<SaleState>("share");
-  const [price, setPrice] = useState("");
+  const [found, setFound] = useState<FormArtist[]>(edit?.artists ?? []);
+  const [seriesPick, setSeriesPick] = useState<string | null>(edit?.seriesKey ?? null);
+  const [itemPick, setItemPick] = useState<string | null>(edit?.itemId ?? null);
+  const [versionPick, setVersionPick] = useState<string>(edit?.versionId ?? "unsure");
+  const [kind, setKind] = useState<Kind | null>(edit && !edit.seriesKey ? edit.kind : null);
+  const [kindNote, setKindNote] = useState(edit?.kindNote ?? "");
+  const [story, setStory] = useState(edit?.story ?? "");
+  const [tags, setTags] = useState(edit?.tags.join("、") ?? "");
+  const initialSale: SaleState = edit?.sale.state ?? "share";
+  const [saleState, setSaleState] = useState<SaleState>(initialSale === "sold" ? "share" : initialSale);
+  const [price, setPrice] = useState(edit?.sale.price ? String(edit.sale.price) : "");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
+  /** 編輯時：出售狀態與價格只有發文者能改，已成交的不能改 */
+  const sold = initialSale === "sold";
 
   useEffect(() => {
+    if (edit) return;
     void api<{ paused: boolean }>("/api/uploads").then((r) => r.ok && setPaused(r.data.paused));
-  }, []);
+  }, [edit]);
 
   /** 表單目前列出的藝人：預設清單，按過「更多」才加上其餘強制顯示的 */
   const visibleArtists = expanded ? [...options.defaultArtists, ...options.moreArtists] : options.defaultArtists;
@@ -293,16 +312,43 @@ export function ShareForm({ options }: { options: FormOptions }) {
     e.preventDefault();
     const pending = aboutDraft.trim() ? [...about, resolveTagArtist(aboutDraft)?.name ?? aboutDraft.trim()] : about;
     const next: Record<string, string> = {};
-    if (picker.items.length === 0) next.photo = "至少放一張照片";
+    if (edit) {
+      /* 編輯不動照片 */
+    } else if (picker.items.length === 0) next.photo = "至少放一張照片";
     else if (picker.pending) next.photo = "照片還在上傳，等一下";
     else if (picker.failed) next.photo = "有照片沒傳上去，按重試或刪掉那張";
     if (pending.length === 0) next.about = "至少點一位";
     if (!effectiveKind) next.kind = series ? "點一個品項" : "點一個類型";
     if (!series && kind === "其他周邊" && !kindNote.trim()) next.kind = "寫一下是什麼周邊";
     const p = parsePrice(price);
-    if (saleState === "sale" && !p) next.price = "填一個整數金額";
+    if (saleState === "sale" && !p && !sold) next.price = "填一個整數金額";
     setErrors(next);
     if (Object.keys(next).length || !effectiveKind) return;
+
+    if (edit) {
+      setBusy(true);
+      const content = {
+        about: Array.from(new Set(pending)),
+        ...(series ? { seriesKey: series.key, itemId: item?.id, versionId: version?.id } : { kind, kindNote: kindNote.trim() }),
+        story: story.trim(),
+        tags: splitTags(tags),
+      };
+      // 出售狀態沒變就不送（海外會員改說明不會被「交易僅限台灣」擋下）
+      const saleNext = saleState === "sale" ? { state: "sale" as const, price: p ?? undefined } : { state: saleState };
+      const saleChanged = !sold && (saleNext.state !== edit.sale.state || (saleNext.state === "sale" && saleNext.price !== edit.sale.price));
+      const r = await api<{ what: string }>(`/api/shares/${edit.n}`, {
+        method: "PUT",
+        body: { ...content, ...(saleChanged ? { sale: saleNext } : {}) },
+      });
+      if (!r.ok) {
+        setBusy(false);
+        setErrors({ form: r.error.message });
+        return;
+      }
+      router.push(`/share/${edit.n}`);
+      router.refresh();
+      return;
+    }
 
     whenLoggedIn("登入後才能炫收藏", async () => {
       setBusy(true);
@@ -316,7 +362,6 @@ export function ShareForm({ options }: { options: FormOptions }) {
           ...(series ? { seriesKey: series.key, itemId: item?.id, versionId: version?.id } : { kind, kindNote: kindNote.trim() }),
           story: story.trim(),
           tags: splitTags(tags),
-          refPhoto: refOk,
           sale: !acc.geo.canTrade ? { state: "share" } : saleState === "sale" ? { state: "sale", price: p } : { state: saleState },
         },
       });
@@ -330,7 +375,8 @@ export function ShareForm({ options }: { options: FormOptions }) {
   };
 
   return (
-    <form className="form" onSubmit={submit} noValidate>
+    <form className="form" onSubmit={submit} noValidate data-testid={edit ? "share-edit-form" : undefined}>
+      {edit ? null : (
       <div className="field">
         <span className="field-label" id={`${id}-photo`}>
           照片
@@ -346,6 +392,7 @@ export function ShareForm({ options }: { options: FormOptions }) {
         </div>
         {errors.photo ? <p className="field-error">{errors.photo}</p> : null}
       </div>
+      )}
 
       <div className="field">
         <span className="field-label" id={`${id}-about-l`}>
@@ -550,15 +597,15 @@ export function ShareForm({ options }: { options: FormOptions }) {
         <input id={`${id}-tags`} className="input" value={tags} onChange={(e) => setTags(e.target.value)} />
       </div>
 
-      <label className="check" htmlFor={`${id}-ref`}>
-        <input id={`${id}-ref`} type="checkbox" checked={refOk} onChange={(e) => setRefOk(e.target.checked)} />
-        <span>照片可當辨識參考</span>
-      </label>
       <div className="field">
         <span className="field-label" id={`${id}-sale`}>
           要不要賣
         </span>
-        {!acc.geo.canTrade ? (
+        {sold ? (
+          <p className="sub" data-testid="sale-sold-note">
+            已成交，出售狀態與價格不能改
+          </p>
+        ) : !acc.geo.canTrade ? (
           <p className="region-note" data-testid="region-note">
             交易僅限台灣地區
           </p>
@@ -577,7 +624,7 @@ export function ShareForm({ options }: { options: FormOptions }) {
           ))}
         </div>
         )}
-        {acc.geo.canTrade && saleState === "sale" ? (
+        {!sold && acc.geo.canTrade && saleState === "sale" ? (
           <div className="field-sub">
             <MoneyInput id={`${id}-price`} value={price} onChange={setPrice} label="定價" />
             {errors.price ? <p className="field-error">{errors.price}</p> : null}
@@ -592,8 +639,13 @@ export function ShareForm({ options }: { options: FormOptions }) {
       ) : null}
       <div className="form-foot">
         {acc.status === "anon" ? <span className="sub">發布前會請你登入</span> : null}
-        <button type="submit" className="btn btn-p" disabled={busy || picker.pending > 0}>
-          發布
+        {edit ? (
+          <button type="button" className="btn btn-line" onClick={() => router.push(`/share/${edit.n}`)} disabled={busy}>
+            取消
+          </button>
+        ) : null}
+        <button type="submit" className="btn btn-p" disabled={busy || picker.pending > 0} data-testid="share-submit">
+          {busy ? (edit ? "儲存中…" : "發布中…") : edit ? "儲存" : "發布"}
         </button>
       </div>
     </form>

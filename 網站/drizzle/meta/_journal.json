@@ -85,6 +85,13 @@
       "when": 1790516376646,
       "tag": "0011_account_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1790528101464,
+      "tag": "0012_ref_photo_admin_edit",
+      "breakpoints": true
     }
   ]
 }

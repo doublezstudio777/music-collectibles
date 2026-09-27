@@ -13,7 +13,7 @@
 //   同一人在同一頁連續編輯（中間沒有別人改、間隔 60 分鐘內）合併成一次，依合併後的總改動算分
 //   「還原」本身不給分
 // - 新增系列、品項、版本並經核准：+15（管理員新增的直接生效）。品項連帶送出的第一個版本不另外算
-// - 發炫收藏（含照片）：+10，每日上限 5 則；勾選「可當辨識參考」再 +5（那則收藏有算分才算）
+// - 發炫收藏（含照片）：+10，每日上限 5 則（2026-09-28 拿掉「勾辨識參考 +5」，改管理員標記、不給分）
 // - 補上缺漏資料：+10，每日上限 5 次，7 天後入帳，7 天內被改掉不給分；補自己新增的不算。
 //   可補的欄位（原本空白才能補）：系列發行年；版本的發行年、地區、發行、包裝、內容物、曲目、目錄號、辨識特徵（FILL_FIELDS）
 // - 收到讚：+1，每則收藏最多計 50；自己讚自己不算
@@ -53,7 +53,6 @@ export const POINTS = {
   editBig: 30,
   create: 15,
   share: 10,
-  ref: 5,
   fill: 10,
   likeRecv: 1,
   likeGive: 1,
@@ -258,11 +257,9 @@ const J = (k: string) => `json_extract(e.detail, '$.${k}')`;
 
 // ?1＝現在時間（ISO）、?2＝檢舉門檻、?3＝管理員 Email（JSON 陣列）
 const INSERTS = [
-  // 發炫收藏、辨識參考
+  // 發炫收藏（2026-09-28 拿掉「勾辨識參考 +5」：不再產生 ref 事件，已產生的由 BASE_REASON 作廢扣回）
   `INSERT OR IGNORE INTO score_events (user_id, kind, source, points, occurred_at, available_at, detail)
    SELECT author_id, 'share', 'share:' || no, ${POINTS.share}, created_at, created_at, json_object('share', no) FROM shares`,
-  `INSERT OR IGNORE INTO score_events (user_id, kind, source, points, occurred_at, available_at, detail)
-   SELECT author_id, 'ref', 'ref:' || no, ${POINTS.ref}, created_at, created_at, json_object('share', no) FROM shares WHERE ref_photo = 1`,
   // 新增系列、品項、版本
   `INSERT OR IGNORE INTO score_events (user_id, kind, source, points, occurred_at, available_at, detail)
    SELECT created_by, 'create', 'series:' || id, ${POINTS.create}, created_at, created_at, json_object('type', 'series', 'id', id) FROM series WHERE created_by IS NOT NULL`,
@@ -334,7 +331,7 @@ const BASE_REASON = `CASE e.kind
   WHEN 'share' THEN (SELECT CASE WHEN s.deleted_at IS NOT NULL THEN 'deleted' WHEN s.hidden_at IS NOT NULL THEN 'hidden'
       WHEN NOT EXISTS (SELECT 1 FROM photos p WHERE p.share_no = s.no AND p.deleted_at IS NULL) THEN 'no_photo'
       WHEN ${LOCKED("'share:' || s.no")} THEN 'reported' END FROM shares s WHERE s.no = ${J("share")})
-  WHEN 'ref' THEN (SELECT CASE WHEN s.ref_photo = 0 THEN 'unchecked' END FROM shares s WHERE s.no = ${J("share")})
+  WHEN 'ref' THEN 'rule_removed'
   WHEN 'create' THEN CASE ${J("type")}
     WHEN 'series' THEN (SELECT CASE WHEN w.deleted_at IS NOT NULL THEN 'deleted' WHEN w.hidden_at IS NOT NULL THEN 'hidden'
         WHEN w.status != 'approved' THEN 'not_approved' END FROM series w WHERE w.id = ${J("id")})

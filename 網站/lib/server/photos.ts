@@ -5,9 +5,9 @@
 // 刪照片時（之後）要把 bytes 扣回來。
 
 import { env } from "cloudflare:workers";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNull, or } from "drizzle-orm";
 import { getDb } from "@/db";
-import { photos, settings } from "@/db/schema";
+import { adminLog, photos, settings } from "@/db/schema";
 import { randomToken } from "@/lib/server/crypto";
 import { hit } from "@/lib/server/services";
 
@@ -276,4 +276,34 @@ export async function removeUnattached(origin: string, ownerId: string, photoId:
     .where(and(eq(photos.id, photoId), eq(photos.ownerId, ownerId), eq(photos.purpose, "share"), isNull(photos.shareNo), isNull(photos.deletedAt)));
   await removePhotoFiles(origin, rows);
   return rows.length > 0;
+}
+
+/**
+ * 管理員把炫收藏的某張照片標為／取消「辨識參考」（2026-09-28，取代會員自勾）。
+ * key＝照片的主圖或縮圖檔名（/img/ 後面那段，頁面上本來就公開）。寫一筆操作紀錄。
+ * photos 表有 content_version 觸發器，標記後整頁快取自動換版本。
+ */
+export async function setRefPhoto(adminId: string, rawShare: unknown, rawKey: unknown, on: unknown) {
+  const shareNo = Number(rawShare);
+  const key = typeof rawKey === "string" ? rawKey.replace(/^.*\/img\//, "") : "";
+  if (!Number.isInteger(shareNo) || shareNo <= 0 || !key || typeof on !== "boolean") {
+    return { ok: false as const, status: 400, message: "參數不對" };
+  }
+  const db = getDb();
+  const [row] = await db
+    .select()
+    .from(photos)
+    .where(and(eq(photos.shareNo, shareNo), eq(photos.purpose, "share"), isNull(photos.deletedAt), or(eq(photos.r2Key, key), eq(photos.thumbKey, key))));
+  if (!row) return { ok: false as const, status: 404, message: "找不到這張照片" };
+  const at = new Date().toISOString();
+  if (Boolean(row.refAt) !== on) {
+    await db.update(photos).set(on ? { refAt: at, refBy: adminId } : { refAt: null, refBy: null }).where(eq(photos.id, row.id));
+  }
+  await db.insert(adminLog).values({
+    adminId,
+    action: on ? "照片標為辨識參考" : "取消照片辨識參考",
+    target: `share:${shareNo}`,
+    detail: JSON.stringify({ photo: row.id, key: row.thumbKey }),
+  });
+  return { ok: true as const, on };
 }

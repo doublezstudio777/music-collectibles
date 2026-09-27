@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { priceText, shareHref, type Sale, type ShareView } from "@/lib/data";
+import { SaveMsg, useSave } from "@/components/save-status";
 import { api, openPanel, refreshAccount, useAccount } from "@/lib/account";
 import type { PublicOffer, ThreadMessage } from "@/lib/server/trade";
 import { Photo } from "@/components/share-card";
@@ -49,7 +50,7 @@ type Detail = {
   offers: PublicOffer[];
 };
 
-function OfferBubble({ msg, d, frozen, run }: { msg: ThreadMessage; d: Detail; frozen: boolean; run: (p: string, b: unknown) => void }) {
+function OfferBubble({ msg, d, frozen, run, busy }: { msg: ThreadMessage; d: Detail; frozen: boolean; run: (p: string, b: unknown) => void; busy: boolean }) {
   const o = msg.offer!;
   const { me, geo } = useAccount();
   const mine = msg.from === me?.handle;
@@ -75,10 +76,10 @@ function OfferBubble({ msg, d, frozen, run }: { msg: ThreadMessage; d: Detail; f
       {seller && !closed && !frozen && !geo.canTrade && o.status === "open" ? <RegionNote /> : null}
       {seller && !closed && !frozen && geo.canTrade && o.status === "open" ? (
         <div className="offer-acts">
-          <button type="button" className="btn btn-line" onClick={() => run(`/api/offers/${o.id}/respond`, { answer: "accepted" })}>
+          <button type="button" className="btn btn-line" onClick={() => run(`/api/offers/${o.id}/respond`, { answer: "accepted" })} disabled={busy}>
             接受
           </button>
-          <button type="button" className="btn btn-line" onClick={() => run(`/api/offers/${o.id}/respond`, { answer: "rejected" })}>
+          <button type="button" className="btn btn-line" onClick={() => run(`/api/offers/${o.id}/respond`, { answer: "rejected" })} disabled={busy}>
             拒絕
           </button>
         </div>
@@ -90,7 +91,7 @@ function OfferBubble({ msg, d, frozen, run }: { msg: ThreadMessage; d: Detail; f
       ) : null}
       {!seller && mine && !closed && !frozen && o.status === "open" ? (
         <div className="offer-acts">
-          <button type="button" className="btn btn-line" onClick={() => run(`/api/offers/${o.id}/withdraw`, {})}>
+          <button type="button" className="btn btn-line" onClick={() => run(`/api/offers/${o.id}/withdraw`, {})} disabled={busy}>
             撤回
           </button>
         </div>
@@ -125,13 +126,16 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
     };
   }, [id, version]);
 
-  const run = async (path: string, body: unknown) => {
-    setError("");
-    const r = await api(path, { body });
-    if (!r.ok) setError(r.error.message);
-    setVersion((v) => v + 1);
-    onChange();
-  };
+  // 接受、拒絕、撤回：處理中按鈕停用，成功顯示「已更新」約 3 秒，失敗顯示原因（2026-09-28 回饋一致化）
+  const op = useSave();
+  const run = (path: string, body: unknown) =>
+    void op.run(async () => {
+      setError("");
+      const r = await api(path, { body });
+      setVersion((v) => v + 1);
+      onChange();
+      return r.ok ? { ok: true, text: "已更新" } : { ok: false, text: r.error.message };
+    });
 
   if (missing) {
     return (
@@ -202,7 +206,7 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
               {m.text} · {m.time}
             </p>
           ) : m.offer ? (
-            <OfferBubble key={m.id} msg={m} d={d} frozen={frozen} run={run} />
+            <OfferBubble key={m.id} msg={m} d={d} frozen={frozen} run={run} busy={op.busy} />
           ) : (
             <div key={m.id} className={`msg${m.from === me?.handle ? " mine" : ""}`}>
               <p>{m.text}</p>
@@ -241,6 +245,7 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
           </div>
         ) : null}
         {error ? <p className="field-error" role="alert">{error}</p> : null}
+        <SaveMsg {...op.msg} testid="offer-msg" />
         <form className="composer-row" onSubmit={send}>
           <label className="sr-only" htmlFor="convo-text">
             訊息

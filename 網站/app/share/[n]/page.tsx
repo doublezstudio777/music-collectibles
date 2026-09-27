@@ -41,11 +41,10 @@ export default async function SharePage({ params }: Props) {
   if (!share) notFound();
   const view = c.toDetailView(share);
   const origin = await siteOrigin();
-  const parts = c.shareParts(share);
-  // 被鎖定的不給分享（按鈕與分享圖都不出現）
+  // 被鎖定的不給分享（分享按鈕不出現）
   const shareInfo = view.lock
     ? null
-    : { url: `${origin}${shareHref(n)}`, title: share.what, text: shareDesc(parts, view.author.name), parts };
+    : { url: `${origin}${shareHref(n)}`, title: share.what, text: shareDesc(c.shareParts(share), view.author.name) };
 
   // 底部只放跟同一個系列、藝人、標籤有關的，不放同一位會員的
   return (

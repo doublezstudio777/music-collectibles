@@ -106,7 +106,7 @@ export function WikiEditor({
       ) : null}
       <div className="wiki-acts">
         <button type="submit" className="btn btn-p" disabled={busy}>
-          儲存
+          {busy ? "儲存中…" : "儲存"}
         </button>
         <Link className="btn-text" href={closeHref}>
           取消

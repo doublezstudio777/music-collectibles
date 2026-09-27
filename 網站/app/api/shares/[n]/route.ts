@@ -1,7 +1,7 @@
 import { json, readBody, requireUser } from "@/lib/server/auth";
 import { handle, HttpError } from "@/lib/server/trade";
 import { getCatalog } from "@/lib/server/content";
-import { publicOffers, setSale } from "@/lib/server/trade";
+import { editShare, publicOffers, setSale } from "@/lib/server/trade";
 import { tradeBlocked } from "@/lib/server/geo";
 
 const num = async (p: Promise<Record<string, string>>, k: string) => {
@@ -35,4 +35,21 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ n: string }> 
     await setSale(s.user, await num(ctx.params, "n"), body.state, body.price);
     return json({ ok: true });
   });
+}
+
+/**
+ * 發文者編輯已發布的內容（2026-09-28）：{ about, seriesKey?, itemId?, versionId?, kind?, kindNote?, story, tags, sale? }
+ * 發文者以外（管理員除外）一律 403；出售狀態改成開放出價／定價出售一樣要在台灣
+ */
+export async function PUT(req: Request, ctx: { params: Promise<{ n: string }> }) {
+  // 先把 body 讀完再判斷登入：沒讀完就回 401，本機 Miniflare 同一條連線的下一個請求會卡住
+  const body = await readBody(req);
+  const s = await requireUser(req);
+  if (s instanceof Response) return s;
+  const sale = body.sale as { state?: unknown } | undefined;
+  if (sale && sale.state !== "share") {
+    const blocked = tradeBlocked(req);
+    if (blocked) return blocked;
+  }
+  return handle(async () => json(await editShare(s.user, await num(ctx.params, "n"), body)));
 }

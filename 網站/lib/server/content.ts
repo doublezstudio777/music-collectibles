@@ -221,6 +221,14 @@ async function build(): Promise<Catalog> {
     galleryBy.set(p.shareNo, [...(galleryBy.get(p.shareNo) ?? []), p]);
   }
 
+  /** 管理員標為辨識參考的照片（版本區塊列出）＋在這則裡的順序（單則頁管理員操作） */
+  const refsOf = (list: (typeof pRows)[number][]) => {
+    const idx = list.flatMap((g, i) => (g.refAt ? [i] : []));
+    return idx.length
+      ? { refIdx: idx, refPhotos: idx.map((i) => ({ image: photoUrl(list[i].r2Key), thumb: photoUrl(list[i].thumbKey) })) }
+      : {};
+  };
+
   const now = Date.now();
   const shares: Share[] = shRows
     .sort((a, b) => b.no - a.no)
@@ -246,6 +254,8 @@ async function build(): Promise<Catalog> {
         ...((galleryBy.get(s.no)?.length ?? 0) > 1
           ? { photos: galleryBy.get(s.no)!.map((g) => ({ image: photoUrl(g.r2Key), thumb: photoUrl(g.thumbKey) })) }
           : {}),
+        ...refsOf(galleryBy.get(s.no) ?? []),
+        ...(s.editedAt ? { editedAt: s.editedAt } : {}),
         ...(s.seriesKey
           ? { link: { series: s.seriesKey, ...(s.itemId ? { item: s.itemId } : {}), ...(s.versionId ? { version: s.versionId } : {}) } }
           : {}),
@@ -256,7 +266,6 @@ async function build(): Promise<Catalog> {
           ...(s.soldTo ? { soldTo: handleOf(s.soldTo) } : {}),
           ...(s.soldAt ? { soldAt: relTime(s.soldAt, now) } : {}),
         },
-        ...(s.refPhoto ? { refPhoto: true } : {}),
       };
     });
 

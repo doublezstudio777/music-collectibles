@@ -1,26 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { ShareParts } from "@/lib/data";
-import { SHARE_IMAGE_SIZE, drawShareImage, type ShareImageKind } from "@/lib/share-image";
-import { useAppState } from "@/lib/state";
 
-/** 登入會員：取大圖來畫分享圖（同源 blob，不汙染 canvas）；401／429 或失敗回 null，改用縮圖 */
-async function loadBig(src: string): Promise<HTMLImageElement | null> {
-  try {
-    const r = await fetch(src, { credentials: "same-origin" });
-    if (!r.ok) return null;
-    const url = URL.createObjectURL(await r.blob());
-    const el = new window.Image();
-    el.src = url;
-    await el.decode();
-    return el;
-  } catch {
-    return null;
-  }
-}
-
-export type ShareInfo = { url: string; title: string; text: string; parts: ShareParts };
+export type ShareInfo = { url: string; title: string; text: string };
 
 /** 各平台的分享網址（驗收也用這一份列出來） */
 export const shareLinks = (info: Pick<ShareInfo, "url" | "title">) => ({
@@ -89,37 +71,15 @@ export function CopyLink() {
   );
 }
 
-/** 單則頁：分享（手機原生選單／桌機小選單）＋下載分享圖 */
-export function ShareActions({
-  info,
-  author,
-  what,
-  kind,
-  kindNote,
-  handle,
-  mainImage,
-}: {
-  info: ShareInfo;
-  author: string;
-  /** 發文者帳號（分享圖的浮水印） */
-  handle: string;
-  /** 大圖網址：登入會員下載分享圖時用大圖畫，沒登入或拿不到就用頁面上的縮圖 */
-  mainImage?: string;
-  what: string;
-  kind: string;
-  kindNote?: string;
-}) {
-  const { me } = useAppState();
-  const [menu, setMenu] = useState<"" | "share" | "image">("");
+/** 單則頁：分享（手機原生選單／桌機小選單：複製連結、Facebook、Threads、LINE）。2026-09-28 拿掉「下載分享圖」 */
+export function ShareActions({ info }: { info: ShareInfo }) {
+  const [menu, setMenu] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [busy, setBusy] = useState<ShareImageKind | "">("");
-  const [error, setError] = useState("");
-  const close = () => setMenu("");
-  const ref = useDismiss(Boolean(menu), close);
+  const close = () => setMenu(false);
+  const ref = useDismiss(menu, close);
   const links = shareLinks(info);
 
   const onShare = async () => {
-    setError("");
     if (nativeShareOK()) {
       try {
         await navigator.share({ title: info.title, text: info.text, url: info.url });
@@ -129,7 +89,7 @@ export function ShareActions({
         // 其他錯誤（例如權限）改開小選單
       }
     }
-    setMenu(menu === "share" ? "" : "share");
+    setMenu(!menu);
   };
 
   const onCopy = async () => {
@@ -139,64 +99,14 @@ export function ShareActions({
     }
   };
 
-  const makeImage = async (k: ShareImageKind) => {
-    setBusy(k);
-    setError("");
-    try {
-      let img = document.querySelector<HTMLImageElement>(".detail-photo img");
-      if (img && !img.complete) await img.decode().catch(() => undefined);
-      if (mainImage && me) {
-        const big = await loadBig(mainImage);
-        if (big) img = big;
-      }
-      const blob = await drawShareImage(
-        { parts: info.parts, what, kind, kindNote, author, handle, url: info.url, photo: img && img.naturalWidth ? img : null },
-        k,
-      );
-      const name = `yinzang-${info.url.split("/").pop()}-${k}.jpg`;
-      const file = new File([blob], name, { type: "image/jpeg" });
-      // 手機能分享檔案就直接叫出分享選單（IG 在裡面），不然下載
-      if (nativeShareOK() && navigator.canShare?.({ files: [file] })) {
-        try {
-          await navigator.share({ files: [file] });
-          close();
-          return;
-        } catch (e) {
-          if ((e as Error).name === "AbortError") return;
-        }
-      }
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = name;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-      close();
-    } catch (e) {
-      setError((e as Error).message === "fonts" ? "字型還沒載好，稍等幾秒再試一次" : "分享圖產生失敗，重新整理後再試一次");
-    } finally {
-      setBusy("");
-    }
-  };
-
   return (
     <div className="share-tools" ref={ref}>
       <div className="share-btns">
-        <button type="button" className="btn btn-line" aria-expanded={menu === "share"} onClick={onShare} data-testid="share-btn">
+        <button type="button" className="btn btn-line" aria-expanded={menu} onClick={onShare} data-testid="share-btn">
           分享
         </button>
-        <button
-          type="button"
-          className="btn btn-line"
-          aria-expanded={menu === "image"}
-          onClick={() => setMenu(menu === "image" ? "" : "image")}
-          data-testid="share-image-btn"
-        >
-          下載分享圖
-        </button>
       </div>
-      {menu === "share" ? (
+      {menu ? (
         <ul className="share-menu" data-testid="share-menu">
           <li>
             <button type="button" onClick={onCopy}>
@@ -219,25 +129,6 @@ export function ShareActions({
             </a>
           </li>
         </ul>
-      ) : null}
-      {menu === "image" ? (
-        <ul className="share-menu" data-testid="image-menu">
-          {(Object.keys(SHARE_IMAGE_SIZE) as ShareImageKind[]).map((k) => (
-            <li key={k}>
-              <button type="button" onClick={() => makeImage(k)} disabled={Boolean(busy)} data-kind={k}>
-                <span>{busy === k ? "產生中…" : SHARE_IMAGE_SIZE[k].label}</span>
-                <span className="sub mono">
-                  {SHARE_IMAGE_SIZE[k].w}×{SHARE_IMAGE_SIZE[k].h}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      {error ? (
-        <p className="field-error" role="alert">
-          {error}
-        </p>
       ) : null}
     </div>
   );

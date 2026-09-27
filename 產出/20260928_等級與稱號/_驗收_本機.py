@@ -311,7 +311,8 @@ ev_d = events(U["d"]["id"])
 sh = [e for e in ev_d if e["kind"] == "share"]
 check("3a 今天 7 則：5 則有分、2 則超過每日上限", count(ev_d, "share", "credited") == 5 and count(ev_d, "share", reason="daily_cap") == 2, [(e["state"], e["reason"]) for e in sh])
 refs = {e["source"]: (e["state"], e["reason"]) for e in ev_d if e["kind"] == "ref"}
-check("3b 第 1 則勾辨識參考 +5；第 7 則收藏超過上限，辨識參考也不給", refs.get(f"ref:{share_no['d'][0]}") == ("credited", None) and refs.get(f"ref:{share_no['d'][6]}", ("",))[0] == "void", refs)
+# 2026-09-28 改：拿掉「勾辨識參考 +5」（改由管理員標照片、不給分），不再產生 ref 事件
+check("3b 勾辨識參考不再給分（不產生 ref 事件，2026-09-28 規則拿掉）", not refs or all(v[0] == "void" for v in refs.values()), refs)
 d_before = total(U["d"]["id"])[0]
 requests.post(B + "/api/admin/hide", json={"type": "share", "key": str(share_no["d"][1]), "hidden": True}, headers=AH)
 recompute()
@@ -478,7 +479,8 @@ check("10a 7 天後 A 編輯入帳 310 分", total(U["a"]["id"]) == (310, 0), to
 a_ai = [e for e in ev_a if e["kind"] == "edit" and json.loads(e["detail"])["target"] == AI][0]
 check("10b 過了 7 天才被還原，不影響（仍 credited）", a_ai["state"] == "credited", (a_ai["state"], a_ai["reason"]))
 check("10c B 的極小修改與被還原的編輯 7 天後仍是 0 分", total(U["b"]["id"])[0] == 0, total(U["b"]["id"]))
-check("10d D 總分＝收藏 50＋辨識參考 5＋新增 30＋收到留言 6＝91", total(U["d"]["id"])[0] == 91, (total(U["d"]["id"]), [(e["kind"], e["state"], e["reason"]) for e in events(U["d"]["id"]) if e["state"] == "credited"]))
+# 2026-09-28 改：辨識參考 +5 拿掉，91 → 86
+check("10d D 總分＝收藏 50＋新增 30＋收到留言 6＝86（2026-09-28 拿掉辨識參考 +5）", total(U["d"]["id"])[0] == 86, (total(U["d"]["id"]), [(e["kind"], e["state"], e["reason"]) for e in events(U["d"]["id"]) if e["state"] == "credited"]))
 p1s, p2s = total(U["p1"]["id"])[0], total(U["p2"]["id"])[0]
 check("10e P1＝收藏 100＋給讚 10＋收讚 10＋留言 14＋收到留言 3＝137；P2＝150＋10＋10＋6＋7＝183", (p1s, p2s) == (137, 183), (p1s, p2s))
 check("10f E＝收藏 10＋給讚 9＝19；F＝收藏 10＋留言 18＝28", (total(U["e"]["id"])[0], total(U["f"]["id"])[0]) == (19, 28), (total(U["e"]["id"]), total(U["f"]["id"])))

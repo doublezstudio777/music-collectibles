@@ -1175,3 +1175,13 @@ a.title-chip:hover { background: var(--line); }
 .lightbox-nav.prev { left: 8px; }
 .lightbox-nav.next { right: 8px; }
 .lightbox-count { bottom: 12px; color: #fff; font-family: var(--font-mono); font-size: var(--text-xs); left: 0; position: absolute; right: 0; text-align: center; }
+
+/* 單則頁：最後編輯時間、管理員標辨識參考（2026-09-28） */
+.edited-at { margin-top: 4px; }
+.ref-admin { margin-top: 12px; padding: 12px; border: 1px dashed var(--line); display: grid; gap: 8px; }
+.ref-admin-list { display: flex; flex-wrap: wrap; gap: 12px; list-style: none; margin: 0; padding: 0; }
+.ref-admin-list li { display: flex; align-items: center; gap: 8px; }
+.ref-admin-thumb { width: 48px; aspect-ratio: 1; background: var(--ph1) center / cover no-repeat; display: block; }
+/* 後台操作處理中：整塊按鈕先停用，避免連按（2026-09-28） */
+.admin[aria-busy="true"] button { pointer-events: none; opacity: .6; }
+.admin-toast { min-height: 0; }

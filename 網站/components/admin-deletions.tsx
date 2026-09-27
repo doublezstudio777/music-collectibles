@@ -60,7 +60,7 @@ function Pending({ d, done }: { d: DeletionRow; done: () => void }) {
           <div className="settings-row">
             <input className="input" value={confirm} onChange={(e) => setConfirm(e.target.value)} aria-label="確認帳號名" autoComplete="off" data-testid="del-confirm" />
             <button type="button" className="btn btn-line" onClick={run} disabled={busy || confirm !== d.user.handle} data-testid="del-confirm-go">
-              確定刪除
+              {busy ? "處理中…" : "確定刪除"}
             </button>
             <button type="button" className="btn-text" onClick={() => setStep("idle")}>
               取消

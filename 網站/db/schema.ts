@@ -318,6 +318,7 @@ export const shares = sqliteTable(
     seriesKey: text("series_key"),
     itemId: text("item_id"),
     versionId: text("version_id"),
+    /** 舊欄位：2026-09-28 前會員自己勾「照片可當辨識參考」。改由管理員在照片上標（photos.ref_at），這欄不再讀也不再寫，資料保留 */
     refPhoto: integer("ref_photo").notNull().default(0),
     color: text("color").notNull().default(""),
     /** share｜offer｜sale｜sold */
@@ -330,6 +331,8 @@ export const shares = sqliteTable(
     updatedAt: text("updated_at").notNull().default(now),
     deletedAt: text("deleted_at"),
     hiddenAt: text("hidden_at"),
+    /** 發文者最後一次編輯內容或照片（2026-09-28）；單則頁「最後編輯於」 */
+    editedAt: text("edited_at"),
   },
   (t) => [index("shares_author_idx").on(t.authorId), index("shares_series_idx").on(t.seriesKey)],
 );
@@ -354,6 +357,9 @@ export const photos = sqliteTable(
     sort: integer("sort").notNull().default(0),
     createdAt: text("created_at").notNull().default(now),
     deletedAt: text("deleted_at"),
+    /** 管理員標為「辨識參考」的時間與管理員 id（2026-09-28）；取消就清成 NULL，操作紀錄在 admin_log */
+    refAt: text("ref_at"),
+    refBy: text("ref_by"),
   },
   (t) => [
     index("photos_share_idx").on(t.shareNo),

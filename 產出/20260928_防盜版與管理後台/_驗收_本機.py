@@ -221,7 +221,7 @@ with sync_playwright() as p:
     pg.goto(f"{B}/share/{N}"); settle(pg)
     src = pg.locator(".detail-photo img").first.get_attribute("src") or ""
     wm = pg.locator(".detail-photo [data-testid=watermark]").first
-    check("A3 未登入單則頁是縮圖、浮水印 @r01 · 音藏 顯示", "_t." in src and wm.is_visible() and wm.inner_text() == "@r01 · 音藏", (src, wm.inner_text()))
+    check("A3 未登入單則頁是縮圖、浮水印 @r01 · 樂迷藏 顯示", "_t." in src and wm.is_visible() and wm.inner_text() == "@r01 · 樂迷藏", (src, wm.inner_text()))
     card_wm = pg.locator(".card [data-testid=watermark]").count()
     pg.click("[data-testid=photo-open]"); pg.wait_for_timeout(400)
     check("A3 未登入點照片 → 登入面板（不開大圖）", pg.locator("[data-testid=lightbox]").count() == 0 and pg.get_by_text("登入後可以點開大圖").count() > 0)
@@ -231,7 +231,7 @@ with sync_playwright() as p:
     check("A4 未登入系列頁顯示「登入後查看辨識細節」、看不到條碼", pg.locator("[data-testid=details-gate]").count() > 0 and pg.locator("[data-testid=details]").count() == 0 and bar["b"] not in pg.content())
     pg.screenshot(path=str(IMG / "系列頁_未登入_辨識細節.jpg"), type="jpeg", quality=80); c.close()
 
-    # 登入：大圖＋浮水印、辨識細節、分享圖
+    # 登入：大圖＋浮水印、辨識細節（分享圖 2026-09-28 拿掉）
     c = ctx_for(br, 1440, buyer.tok); pg = page_of(c)
     pg.goto(f"{B}/artist/mountain-radio/1"); settle(pg); pg.wait_for_selector("[data-testid=details]")
     check("A4 登入系列頁看得到辨識細節（含條碼）", pg.locator("[data-testid=details]").count() > 0 and bar["b"] in pg.content())
@@ -240,19 +240,11 @@ with sync_playwright() as p:
     pg.click("[data-testid=photo-open]"); pg.wait_for_selector("[data-testid=lightbox-img]")
     lb = pg.evaluate("(() => { const i = document.querySelector('[data-testid=lightbox-img]'); return [i.naturalWidth, i.naturalHeight]; })()")
     lwm = pg.locator("[data-testid=lightbox] [data-testid=watermark]")
-    check("A3 登入點開大圖 1200px 原檔＋浮水印疊在上面", lb[0] == 1200 and lwm.is_visible() and lwm.inner_text() == "@r01 · 音藏", lb)
+    check("A3 登入點開大圖 1200px 原檔＋浮水印疊在上面", lb[0] == 1200 and lwm.is_visible() and lwm.inner_text() == "@r01 · 樂迷藏", lb)
     pg.screenshot(path=str(IMG / "大圖_浮水印.jpg"), type="jpeg", quality=80)
     pg.keyboard.press("Escape"); pg.wait_for_timeout(200)
-    pg.click("[data-testid=share-image-btn]")
-    with pg.expect_download(timeout=30000) as dl:
-        pg.click("[data-testid=image-menu] button[data-kind=post]")
-    path = IMG / "分享圖_貼文.jpg"; dl.value.save_as(str(path))
-    im = Image.open(path).convert("RGB"); W, H = im.size
-    # 照片區（上傳的是全黑灰 #202024）：右下角浮水印區應出現白字像素，照片其他角落沒有
-    pad, py = 72, 144; ph = round((W - 2 * pad) * 3 / 4)
-    def bright(box): return sum(1 for px in im.crop(box).getdata() if min(px) > 200)
-    br_mark = bright((W - pad - 520, py + ph - 70, W - pad - 10, py + ph - 10)); br_corner = bright((pad + 10, py + 10, pad + 400, py + 70))
-    check("A3 分享圖照片右下角有浮水印白字、其他角落沒有", br_mark > 200 and br_corner == 0, (br_mark, br_corner))
+    # 2026-09-28 改：「下載分享圖」整個拿掉（使用者：分享只要放連結），浮水印只留在顯示與連結預覽圖
+    check("A3 下載分享圖已拿掉（2026-09-28），單則頁只剩分享按鈕", pg.locator("[data-testid=share-image-btn]").count() == 0 and pg.locator("[data-testid=share-btn]").count() == 1)
     c.close()
 
     # 海外：交易按鈕換成「交易僅限台灣地區」

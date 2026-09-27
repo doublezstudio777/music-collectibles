@@ -8,13 +8,13 @@
 
 import { and, asc, desc, eq, inArray, isNull, or } from "drizzle-orm";
 import { getDb } from "@/db";
-import { items, messages, offers, series, shares, threadReads, threads, versions, photos } from "@/db/schema";
-import { KINDS, priceText, relTime, type Kind, type SaleState } from "@/lib/data";
+import { adminLog, items, messages, offers, series, shares, threadReads, threads, versions, photos } from "@/db/schema";
+import { composeWhat, KINDS, priceText, relTime, type Kind, type SaleState } from "@/lib/data";
 import { lockForShare, userNames, type ShareRow } from "@/lib/server/content";
 import { contentKeyExists, parseContentKey } from "@/lib/server/me";
 import { dropOgImage, MAX_SHARE_PHOTOS, removePhotoFiles, unattachedPhotos } from "@/lib/server/photos";
 import { hit } from "@/lib/server/services";
-import { fail, type User } from "@/lib/server/auth";
+import { fail, isAdmin, type User } from "@/lib/server/auth";
 import { recordDeal, voidDeals } from "@/lib/server/prices";
 import { regionNames } from "@/lib/server/geo";
 import { userBadges } from "@/lib/server/scores";
@@ -70,25 +70,15 @@ const strList = (v: unknown, max: number, len: number) =>
         .map((x) => x.slice(0, len))
     : [];
 
-export async function createShare(u: User, body: Record<string, unknown>) {
-  const errors: Record<string, string> = {};
-  if (Array.isArray(body.photoIds) && body.photoIds.length > MAX_SHARE_PHOTOS) {
-    throw new HttpError(400, "TOO_MANY_PHOTOS", `一則最多 ${MAX_SHARE_PHOTOS} 張照片`);
-  }
-  const photoIds = strList(body.photoIds, MAX_SHARE_PHOTOS, 40);
+/**
+ * 內容欄位（發布與編輯共用）：跟誰有關、系列＞品項＞版本（或自由類型）、想說的話、標籤，連同組好的標題。
+ * 可以不選系列；選了系列就要選品項；版本可以「不確定」（不帶 versionId）。
+ */
+async function resolveContent(body: Record<string, unknown>, errors: Record<string, string>) {
   const about = strList(body.about, 10, 40);
   const tags = strList(body.tags, 10, 30);
   const story = typeof body.story === "string" ? body.story.trim().slice(0, 2000) : "";
-  const refPhoto = body.refPhoto === true;
-  const sale = (body.sale ?? {}) as { state?: unknown; price?: unknown };
-  const saleState: SaleState = sale.state === "offer" || sale.state === "sale" ? sale.state : "share";
-  if (saleState === "sale" && !validPrice(sale.price)) errors.price = "填一個整數金額";
-
-  const pics = await unattachedPhotos(u.id, photoIds, "share");
-  if (pics.length === 0) errors.photo = "至少放一張照片";
   if (about.length === 0) errors.about = "至少點一位";
-
-  // 系列＞品項＞版本（可以不選系列；選了系列就要選品項）
   const seriesKey = typeof body.seriesKey === "string" && body.seriesKey ? body.seriesKey : null;
   const itemId = typeof body.itemId === "string" && body.itemId ? body.itemId : null;
   const versionId = typeof body.versionId === "string" && body.versionId ? body.versionId : null;
@@ -122,27 +112,44 @@ export async function createShare(u: User, body: Record<string, unknown>) {
   if (Object.keys(errors).length || !kind) {
     throw new HttpError(400, "INVALID", Object.values(errors)[0] ?? "有欄位沒填好");
   }
+  const what = seriesKey
+    ? composeWhat({ series: seriesTitle, item: kind, version: edition })
+    : composeWhat({ about, kind: kind === "其他周邊" ? (kindNote ?? kind) : kind });
+  return {
+    what,
+    kind,
+    kindNote: kind === "其他周邊" ? kindNote : null,
+    story,
+    about: JSON.stringify(about),
+    tags: JSON.stringify(tags),
+    seriesKey,
+    itemId: seriesKey ? itemId : null,
+    versionId: seriesKey ? versionId : null,
+  };
+}
+
+export async function createShare(u: User, body: Record<string, unknown>) {
+  const errors: Record<string, string> = {};
+  if (Array.isArray(body.photoIds) && body.photoIds.length > MAX_SHARE_PHOTOS) {
+    throw new HttpError(400, "TOO_MANY_PHOTOS", `一則最多 ${MAX_SHARE_PHOTOS} 張照片`);
+  }
+  const photoIds = strList(body.photoIds, MAX_SHARE_PHOTOS, 40);
+  const sale = (body.sale ?? {}) as { state?: unknown; price?: unknown };
+  const saleState: SaleState = sale.state === "offer" || sale.state === "sale" ? sale.state : "share";
+  if (saleState === "sale" && !validPrice(sale.price)) errors.price = "填一個整數金額";
+
+  const pics = await unattachedPhotos(u.id, photoIds, "share");
+  if (pics.length === 0) errors.photo = "至少放一張照片";
+  const content = await resolveContent(body, errors);
   const day = nowIso().slice(0, 10);
   if (!(await hit(`share:${u.id}:${day}`, 30, 86400))) throw new HttpError(429, "RATE_LIMITED", "今天發太多則了，明天再來");
 
-  const what = seriesKey
-    ? [seriesTitle, kind, edition].filter(Boolean).join(" ")
-    : `${about.join("、")} ${kind === "其他周邊" ? kindNote : kind}`;
   const db = getDb();
   const [created] = await db
     .insert(shares)
     .values({
       authorId: u.id,
-      what,
-      kind,
-      kindNote: kind === "其他周邊" ? kindNote : null,
-      story,
-      about: JSON.stringify(about),
-      tags: JSON.stringify(tags),
-      seriesKey,
-      itemId: seriesKey ? itemId : null,
-      versionId: seriesKey ? versionId : null,
-      refPhoto: refPhoto ? 1 : 0,
+      ...content,
       saleState,
       price: saleState === "sale" ? (sale.price as number) : null,
     })
@@ -152,10 +159,53 @@ export async function createShare(u: User, body: Record<string, unknown>) {
       db
         .update(photos)
         .set({ shareNo: created.no, sort: i })
-        .where(and(eq(photos.id, p.id), isNull(photos.shareNo))),
+        .where(and(eq(photos.id, p.id), isNull(photos.deletedAt))),
     ) as never,
   );
   return created.no;
+}
+
+/* ---------- 編輯已發布的內容（2026-09-28） ---------- */
+
+/**
+ * 發文者（或管理員）改內容：說明、標籤、跟誰有關、系列＞品項＞版本（可「不確定」）、出售狀態與價格，標題依同一套規則重組。
+ * - 被鎖定（檢舉達門檻等）不能改；被隱藏、刪除的 shareRow 就找不到（404）
+ * - 已成交：出售狀態與價格不能改（要改先「改回出售中」）
+ * - 出售狀態與價格走 setSale 同一套規則：有人出價中也可以改價，每條對話插一行系統訊息通知出價者
+ * - 管理員只能改內容欄位，出售狀態與價格只有發文者能改；管理員改別人的會寫操作紀錄
+ * - 分數：發炫收藏的事件以這則的編號為準，改版本不會重複加分；版本頁的排序、統計都是讀這則目前掛的版本即時算
+ */
+export async function editShare(u: User, no: number, body: Record<string, unknown>) {
+  const s = await shareRow(no);
+  const admin = isAdmin(u);
+  if (s.authorId !== u.id && !admin) throw new HttpError(403, "FORBIDDEN", "只有發文者可以編輯這則");
+  const lock = await lockForShare(s);
+  if (lock) throw new HttpError(423, "LOCKED", `${lock.label}，暫時不能編輯`);
+  const errors: Record<string, string> = {};
+  const content = await resolveContent(body, errors);
+  const sale = body.sale as { state?: unknown; price?: unknown } | undefined;
+  const saleChanged =
+    sale !== undefined &&
+    (sale.state !== s.saleState || (sale.state === "sale" && sale.price !== s.price));
+  if (saleChanged && s.saleState === "sold") throw new HttpError(409, "SOLD", "已成交，出售狀態與價格不能改");
+  if (saleChanged && s.authorId !== u.id) throw new HttpError(403, "FORBIDDEN", "出售狀態與價格只有發文者可以改");
+  if (saleChanged && sale.state !== "share" && sale.state !== "offer" && sale.state !== "sale") throw new HttpError(400, "BAD_REQUEST", "參數不對");
+  if (saleChanged && sale.state === "sale" && !validPrice(sale.price)) throw new HttpError(400, "INVALID", "填一個整數金額");
+  if (!(await hit(`edit-share:${u.id}`, 60, 3600))) throw new HttpError(429, "RATE_LIMITED", "改太多次了，等一下再試");
+
+  const at = nowIso();
+  const db = getDb();
+  await db.update(shares).set({ ...content, updatedAt: at, editedAt: at }).where(eq(shares.no, no));
+  if (saleChanged) await setSale(u, no, sale.state, sale.price);
+  if (s.authorId !== u.id) {
+    await db.insert(adminLog).values({
+      adminId: u.id,
+      action: "編輯別人的炫收藏",
+      target: `share:${no}`,
+      detail: JSON.stringify({ from: s.what, to: content.what }),
+    });
+  }
+  return { what: content.what, saleChanged };
 }
 
 /* ---------- 編輯照片（2026-09-28：一則最多 10 張，第一張是封面） ---------- */
@@ -207,6 +257,7 @@ export async function setSharePhotos(u: User, no: number, raw: unknown, origin: 
         .where(and(eq(photos.id, id), eq(photos.ownerId, u.id), isNull(photos.deletedAt))),
     ) as never,
   );
+  await db.update(shares).set({ editedAt: nowIso() }).where(eq(shares.no, no));
   const released = await removePhotoFiles(origin, removed);
   const oldCover = current[0]?.id ?? null;
   const coverChanged = oldCover !== ids[0];

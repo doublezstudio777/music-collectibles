@@ -13,6 +13,7 @@ export function DeleteRequest() {
   const [reason, setReason] = useState("");
   const [msg, setMsg] = useState("");
   const [busy, setBusy] = useState(false);
+  const [done, setDone] = useState("");
   if (status === "loading") return null;
   if (!me) {
     return (
@@ -33,12 +34,16 @@ export function DeleteRequest() {
     if (!r.ok) return setMsg(r.error.message);
     setMsg("");
     await refreshAccount();
+    setDone("已送出申請");
   };
   const cancel = async () => {
     setBusy(true);
-    await api("/api/me/delete", { method: "DELETE" });
+    const r = await api("/api/me/delete", { method: "DELETE" });
     setBusy(false);
+    if (!r.ok) return setMsg(r.error.message);
+    setMsg("");
     await refreshAccount();
+    setDone("已取消申請");
   };
   return (
     <div className="settings delete-request">
@@ -58,11 +63,21 @@ export function DeleteRequest() {
       {me.deletionRequested ? (
         <section className="block settings-block" data-testid="delete-requested">
           <p className="page-meta">已收到申請，管理員處理中。</p>
+          {done ? (
+            <p className="field-ok" role="status" data-testid="delete-msg">
+              {done}
+            </p>
+          ) : null}
           <div className="settings-row">
             <button type="button" className="btn btn-line" onClick={cancel} disabled={busy} data-testid="delete-cancel">
-              取消申請
+              {busy ? "處理中…" : "取消申請"}
             </button>
           </div>
+          {msg ? (
+            <p className="field-error" role="alert">
+              {msg}
+            </p>
+          ) : null}
         </section>
       ) : (
         <form className="block settings-block" onSubmit={submit} noValidate data-testid="delete-form">
@@ -72,12 +87,17 @@ export function DeleteRequest() {
           <textarea id="del-reason" className="input textarea" rows={4} maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} />
           <div className="settings-row">
             <button type="submit" className="btn btn-line" disabled={busy}>
-              送出申請
+              {busy ? "送出中…" : "送出申請"}
             </button>
             <Link className="btn-text" href="/settings">
               返回設定
             </Link>
           </div>
+          {done ? (
+            <p className="field-ok" role="status" data-testid="delete-msg">
+              {done}
+            </p>
+          ) : null}
           {msg ? (
             <p className="field-error" role="alert">
               {msg}

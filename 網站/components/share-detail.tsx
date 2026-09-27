@@ -11,7 +11,6 @@ import { useAction, useAppState } from "@/lib/state";
 import type { PublicOffer } from "@/lib/server/trade";
 import { AppealBox, ReportBox } from "@/components/report";
 import { LikeButton } from "@/components/like-button";
-import { NextPhase } from "@/components/next-phase";
 import { Photo, TagList, Watermark } from "@/components/share-card";
 import { ShareActions, type ShareInfo } from "@/components/share-actions";
 import { LevelTag } from "@/components/level-tag";
@@ -309,6 +308,69 @@ function DetailPhoto({
           alt={share.what}
           onClose={close}
         />
+      ) : null}
+    </div>
+  );
+}
+
+/** 最後編輯時間：台灣時間 YYYY/MM/DD HH:mm（伺服器與瀏覽器都用同一個時區算，不會 hydration 不一致） */
+function EditedTime({ iso }: { iso: string }) {
+  const d = new Date(new Date(iso).getTime() + 8 * 3600 * 1000);
+  const p = (x: number) => String(x).padStart(2, "0");
+  const text = `${d.getUTCFullYear()}/${p(d.getUTCMonth() + 1)}/${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())}`;
+  return <time dateTime={iso}>{text}</time>;
+}
+
+/**
+ * 管理員專用：每張照片「標為辨識參考」／「取消」（2026-09-28，取代會員自勾）。
+ * 標過的照片會出現在版本區塊的「辨識參考照片」。按下去按鈕停用顯示處理中，成功後顯示「已更新」並重新整理這頁資料。
+ */
+function RefPhotoAdmin({ share }: { share: ShareView }) {
+  const router = useRouter();
+  const list = share.photos?.length ? share.photos : share.thumb ? [{ image: share.image ?? share.thumb, thumb: share.thumb }] : [];
+  const [marked, setMarked] = useState<number[]>(share.refIdx ?? []);
+  const [busy, setBusy] = useState<number | null>(null);
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  if (!list.length) return null;
+  const toggle = async (i: number) => {
+    const on = !marked.includes(i);
+    setBusy(i);
+    setMsg(null);
+    const r = await api<{ on: boolean }>("/api/admin/ref-photo", { body: { share: share.n, key: list[i].thumb, on } });
+    setBusy(null);
+    if (!r.ok) {
+      setMsg({ ok: false, text: r.error.message });
+      return;
+    }
+    setMarked(on ? [...marked, i].sort((a, b) => a - b) : marked.filter((x) => x !== i));
+    setMsg({ ok: true, text: on ? `第 ${i + 1} 張已標為辨識參考` : `第 ${i + 1} 張已取消辨識參考` });
+    setTimeout(() => setMsg(null), 3000);
+    router.refresh();
+  };
+  return (
+    <div className="ref-admin" data-testid="ref-admin">
+      <span className="sub">管理員：辨識參考</span>
+      <ul className="ref-admin-list">
+        {list.map((p, i) => (
+          <li key={p.thumb}>
+            <span className="ref-admin-thumb" style={{ backgroundImage: `url(${p.thumb})` }} aria-hidden="true" />
+            <button
+              type="button"
+              className="btn btn-line"
+              disabled={busy !== null}
+              aria-pressed={marked.includes(i)}
+              onClick={() => toggle(i)}
+              data-testid="ref-toggle"
+            >
+              {busy === i ? "處理中…" : marked.includes(i) ? "取消" : "標為辨識參考"}
+            </button>
+          </li>
+        ))}
+      </ul>
+      {msg ? (
+        <p className={msg.ok ? "sub" : "field-error"} role={msg.ok ? "status" : "alert"}>
+          {msg.text}
+        </p>
       ) : null}
     </div>
   );
@@ -839,11 +901,19 @@ export function ShareDetail({
           <span className="when">{share.time}</span>
           <LikeButton n={share.n} base={share.likes} large />
         </div>
+        {share.editedAt ? (
+          <p className="sub edited-at" data-testid="edited-at">
+            最後編輯於 <EditedTime iso={share.editedAt} />
+          </p>
+        ) : null}
         {mine && ready && !lock ? (
           editing ? (
             <PhotoEditor share={share} onClose={() => setEditing(false)} />
           ) : (
             <p className="pp-actions">
+              <Link className="btn btn-p" href={`/share/${share.n}/edit`} data-testid="share-edit-open">
+                編輯
+              </Link>
               <button
                 type="button"
                 className="btn btn-line"
@@ -855,7 +925,8 @@ export function ShareDetail({
             </p>
           )
         ) : null}
-        {shareInfo && !lock ? <ShareActions info={shareInfo} author={share.author.name} handle={share.author.handle} mainImage={share.image && share.image !== share.thumb ? share.image : undefined} what={share.what} kind={share.kind} kindNote={share.kindNote} /> : null}
+        {me?.admin && ready ? <RefPhotoAdmin share={share} /> : null}
+        {shareInfo && !lock ? <ShareActions info={shareInfo} /> : null}
         {frozen && sale.state !== "share" ? (
           <FrozenBox sale={sale} offers={offers} />
         ) : mine ? (
@@ -874,22 +945,23 @@ export function ShareDetail({
           </p>
         ) : null}
         {share.story ? <p className="prose">{share.story}</p> : null}
-        <TagList about={share.about} tags={share.tags} />
+        <TagList about={share.about} tags={share.tags} links={share.tagLinks} />
         {share.link ? (
           <p className="detail-link">
             <Link className="link" href={share.link.href}>
               {share.link.label}
             </Link>
           </p>
-        ) : mine ? (
+        ) : mine && !lock ? (
           <p className="detail-link">
-            <NextPhase label="補上系列或品項" className="btn btn-line" />
+            <Link className="btn btn-line" href={`/share/${share.n}/edit`}>
+              補上系列或品項
+            </Link>
           </p>
         ) : null}
         <p className="detail-kind">
           <span>{share.kind}</span>
           {share.kindNote ? <span className="sub">{share.kindNote}</span> : null}
-          {share.refPhoto ? <span className="sub">照片可當辨識參考</span> : null}
         </p>
         <OfferList share={share} sale={sale} offers={offers} mine={mine} frozen={frozen} />
         {!mine ? <ReportBox target={shareTarget(share.n)} label="檢舉這則" /> : null}

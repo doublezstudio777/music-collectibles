@@ -562,7 +562,6 @@ export const shares: Share[] = [
     image: "/images/fictional-music-collection.jpg",
     link: { series: "mountain-radio/1", item: "cd", version: "v1" },
     sale: { state: "sale", price: 1200 },
-    refPhoto: true,
   },
   {
     n: 2, author: "aze", time: "昨天", order: 110,
@@ -646,7 +645,6 @@ export const shares: Share[] = [
     about: ["山線電台"], tags: ["首刷", "印刷差異"], likes: 3, color: "#22334D",
     link: { series: "mountain-radio/1", item: "cd", version: "v1" },
     sale: { state: "sold", soldPrice: 600, soldTo: "xiaomeng", soldAt: "9 月 18 日" },
-    refPhoto: true,
   },
   {
     n: 90, author: "angie", time: "2 天前", order: 105,
@@ -667,7 +665,6 @@ export const shares: Share[] = [
     story: "台南場排了一小時才買到，吊牌背面三個場次都印了，但只有台南場賣白色。",
     about: ["潮汐公路"], tags: ["演唱會戰利品"], likes: 16, color: "",
     link: { series: "tide-highway/3", item: "towel", version: "v2" },
-    refPhoto: true,
   },
   {
     n: 93, author: "angie", time: "昨天", order: 108,

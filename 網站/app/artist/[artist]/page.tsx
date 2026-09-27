@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { artistHref, seriesHref, tagHref, type Series } from "@/lib/data";
+import { artistHref, seriesHref, type Series } from "@/lib/data";
 import { latestRevisionId } from "@/lib/server/wiki";
 import { pageData, siteOrigin } from "@/lib/server/viewer";
 import { ogMeta } from "@/lib/server/og";
@@ -108,7 +108,7 @@ export default async function ArtistPage({ params, searchParams }: Props) {
               <a className="link" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh-hant" rel="license noopener" target="_blank">
                 {artist.wiki.license}
               </a>{" "}
-              授權{edited ? "；{SITE_NAME}使用者改寫的版本同樣以此授權" : ""}
+              授權{edited ? `；${SITE_NAME}使用者改寫的版本同樣以此授權` : ""}
             </p>
           ) : null}
           <p className="edit-line" data-testid="last-edit">
@@ -213,11 +213,12 @@ export default async function ArtistPage({ params, searchParams }: Props) {
         <section className="block">
           <div className="block-head">
             <h2 className="block-title">相關收藏</h2>
-            <Link className="link" href={tagHref(artist.name)}>
-              全部 {related.length} 則
-            </Link>
+            <span className="sub" data-testid="related-count">
+              {related.length} 則
+            </span>
           </div>
-          <ShareWall shares={related.slice(0, 3).map(c.toShareView)} />
+          {/* 2026-09-28：藝人名標籤直接連到這頁，/tag/{藝人名} 301 過來，所以這裡列全部，不再連出去 */}
+          <ShareWall shares={related.map(c.toShareView)} />
         </section>
       ) : null}
     </main>

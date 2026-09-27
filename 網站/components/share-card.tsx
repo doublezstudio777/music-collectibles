@@ -105,20 +105,22 @@ export function Photo({
   );
 }
 
-export function TagList({ about, tags }: { about: string[]; tags: string[] }) {
+/** 對應到公開藝人頁的標籤（links 裡有的）直接連藝人頁，其餘連標籤頁 */
+export function TagList({ about, tags, links }: { about: string[]; tags: string[]; links?: Record<string, string> }) {
   if (about.length + tags.length === 0) return null;
+  const href = (t: string) => links?.[t] ?? tagHref(t);
   return (
     <ul className="tags">
       {about.map((t) => (
         <li key={`a-${t}`}>
-          <Link className="tag tag-about" href={tagHref(t)}>
+          <Link className="tag tag-about" href={href(t)}>
             {t}
           </Link>
         </li>
       ))}
       {tags.map((t) => (
         <li key={`t-${t}`}>
-          <Link className="tag" href={tagHref(t)}>
+          <Link className="tag" href={href(t)}>
             {t}
           </Link>
         </li>
@@ -143,7 +145,7 @@ export function ShareCard({ share }: { share: ShareView }) {
       <h3 className="card-title">
         <Link href={shareHref(share.n)}>{share.what}</Link>
       </h3>
-      <TagList about={share.about} tags={share.tags} />
+      <TagList about={share.about} tags={share.tags} links={share.tagLinks} />
       <footer className="card-foot">
         <Link className="who" href={userHref(share.author.handle)}>
           <span className="ava ava-sm" aria-hidden="true">

@@ -1,0 +1,361 @@
+{
+ "passed": 71,
+ "total": 71,
+ "results": [
+  {
+   "name": "1a 9 個公開頁的 HTML（去掉 script）沒有「音藏」",
+   "ok": true,
+   "detail": "{}"
+  },
+  {
+   "name": "1b 首頁 <title> 是「樂迷藏｜樂迷的收藏分享」",
+   "ok": true,
+   "detail": "<title>樂迷藏｜樂迷的收藏分享</title>"
+  },
+  {
+   "name": "1c og:site_name＝樂迷藏（藝人頁）",
+   "ok": true,
+   "detail": "樂迷藏"
+  },
+  {
+   "name": "1d 頁首字標是樂迷藏",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "1e 使用條款、隱私權政策內文用樂迷藏",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "1f 驗證信寄件人與內文用樂迷藏（程式常數）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "1g 暱稱含「樂迷藏」被擋（保留字）",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"NAME_RESERVED\",\"message\":\"這個暱稱保留給網站用，換一個\"}}"
+  },
+  {
+   "name": "1h 舊名「音藏」仍是保留字",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"NAME_RESERVED\",\"message\":\"這個暱稱保留給網站用，換一個\"}}"
+  },
+  {
+   "name": "4a 發文 201",
+   "ok": true,
+   "detail": "{\"n\":1720}"
+  },
+  {
+   "name": "4b 版本名已含品項：標題＝「BACK Again・2010 CD」（不再是 BACK Again CD 2010 CD）",
+   "ok": true,
+   "detail": "BACK Again・2010 CD"
+  },
+  {
+   "name": "4c 版本名沒含品項：標題＝「GDN Express・黑膠・限定版」",
+   "ok": true,
+   "detail": "GDN Express・黑膠・限定版"
+  },
+  {
+   "name": "4d 版本不確定：標題＝「BACK Again・CD」",
+   "ok": true,
+   "detail": "BACK Again・CD"
+  },
+  {
+   "name": "4e 沒連系列：標題＝「國蛋、熊仔・T 恤」",
+   "ok": true,
+   "detail": "國蛋、熊仔・T 恤"
+  },
+  {
+   "name": "4f 單則頁 h1、og:title 都是新標題",
+   "ok": true,
+   "detail": "BACK Again・2010 CD"
+  },
+  {
+   "name": "4g og:description（分享文字同一套）沒有「CD・2010 CD」重複",
+   "ok": true,
+   "detail": "國蛋・BACK Again・2010 CD"
+  },
+  {
+   "name": "4h 系列頁商品卡標題用新標題",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "3a 單則頁只有「分享」按鈕，沒有「下載分享圖」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "3b 桌機分享選單：複製連結、Facebook、Threads、LINE",
+   "ok": true,
+   "detail": "['複製連結', 'Facebook', 'Threads', 'LINE']"
+  },
+  {
+   "name": "3c og:image 仍在（預覽圖保留）",
+   "ok": true,
+   "detail": "http://127.0.0.1:8791/img/p/NWEp5O4OpctRhkES_t.webp"
+  },
+  {
+   "name": "3d 單則頁 console error 0",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "3e 程式裡沒有 drawShareImage／SHARE_IMAGE_SIZE／share-image-btn",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "7a 單則頁「國蛋」標籤 href＝/artist/gordon",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "7b 自由標籤「簽名」照舊連 /tag/簽名",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "7c /tag/國蛋 回 301 到 /artist/gordon",
+   "ok": true,
+   "detail": "(301, '/artist/gordon')"
+  },
+  {
+   "name": "7d /tag/簽名（自由標籤）200 不轉",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "7e 系列頁商品卡的國蛋標籤也連藝人頁",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "7f 藝人頁關閉（display=off）：/tag/{名} 不轉址 200",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "7g 同一則的標籤照舊連 /tag/",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "7h 藝人頁「相關收藏」列全部、沒有連回 /tag/國蛋",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2a 發文表單沒有「照片可當辨識參考」勾選",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2b API 帶 refPhoto:true 也不會寫進 ref_photo",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2c 一般會員打標記 API 403",
+   "ok": true,
+   "detail": "403"
+  },
+  {
+   "name": "2d 管理員在單則頁看到每張照片的「標為辨識參考」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2e 按下後顯示「已標為辨識參考」並變成「取消」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2f 未登入看不到管理員操作",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2g D1 photos.ref_at 有值、ref_by＝管理員",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2h 系列頁版本區塊「辨識參考照片」列出這張",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2i 取消 200",
+   "ok": true,
+   "detail": "{\"ok\":true,\"on\":false}"
+  },
+  {
+   "name": "2j 取消後版本區塊不再列這張",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2k 操作紀錄寫了 2 筆（標記＋取消）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2l 重算分數後沒有新的 ref 事件（+5 規則拿掉）",
+   "ok": true,
+   "detail": "45"
+  },
+  {
+   "name": "2m 舊 ref 事件全部作廢不計分",
+   "ok": true,
+   "detail": "45"
+  },
+  {
+   "name": "5a 非發文者打編輯 API 403",
+   "ok": true,
+   "detail": "403"
+  },
+  {
+   "name": "5b 沒登入打編輯 API 401",
+   "ok": true,
+   "detail": "401"
+  },
+  {
+   "name": "5c 發文者改說明、標籤、版本、價格 200，回傳新標題",
+   "ok": true,
+   "detail": "{\"what\":\"GDN Express・黑膠・限定版\",\"saleChanged\":true}"
+  },
+  {
+   "name": "5d D1 各欄位都更新了",
+   "ok": true,
+   "detail": "{'what': 'GDN Express・黑膠・限定版', 'story': '改過的說明531589', 'tags': '[\"簽名\",\"新標籤531589\"]', 'series_key': 'gordon/4', 'item_id': 'vinyl', 'version_id': 'v1', 'sale_state': 'sale', 'price': 1200, 'edited_at': '2026-09-27T17:53:31.215Z'}"
+  },
+  {
+   "name": "5e 內容版本號前進（整頁快取換版）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5f 單則頁立刻顯示新標題、說明、價格、最後編輯於",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5g 系列頁跟著換：舊版本（gordon/1）不再列、新版本（gordon/4）列出",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5h 發文事件仍只有 1 筆（改版本不重複加分）",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "name": "5i 重算後發文者的事件數沒多（沒有重複加分）",
+   "ok": true,
+   "detail": "6"
+  },
+  {
+   "name": "5j 版本可以改成「不確定」：標題「BACK Again・CD」",
+   "ok": true,
+   "detail": "{\"what\":\"BACK Again・CD\",\"saleChanged\":false}"
+  },
+  {
+   "name": "5k 別人出價 800 成功",
+   "ok": true,
+   "detail": "{\"ok\":true,\"result\":120}"
+  },
+  {
+   "name": "5l 出價中改價：允許，對話裡插系統訊息通知出價者",
+   "ok": true,
+   "detail": "[{'text': '改為定價出售 NT$ 1,500'}]"
+  },
+  {
+   "name": "5m 鎖定中不能改（423）",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"LOCKED\",\"message\":\"多人檢舉：疑似盜版，暫時不能編輯\"}}"
+  },
+  {
+   "name": "5n 已成交改價格 409",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"SOLD\",\"message\":\"已成交，出售狀態與價格不能改\"}}"
+  },
+  {
+   "name": "5o 已成交仍可改說明（不送出售欄位）",
+   "ok": true,
+   "detail": "{\"what\":\"國蛋、熊仔・T 恤\",\"saleChanged\":false}"
+  },
+  {
+   "name": "5p 被隱藏的不能改（404）",
+   "ok": true,
+   "detail": "404"
+  },
+  {
+   "name": "5q 管理員可以改別人的內容，寫操作紀錄",
+   "ok": true,
+   "detail": "{\"what\":\"國蛋・CD\",\"saleChanged\":false}"
+  },
+  {
+   "name": "5r 發文者看得到「編輯」與「編輯照片」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5s 編輯表單帶入原本的說明",
+   "ok": true,
+   "detail": "管理員修正"
+  },
+  {
+   "name": "5t 存檔後回到單則頁，新說明與標籤立刻看得到",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5u 別人看不到「編輯」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5v 別人直接開編輯頁：只顯示「只有發文者可以編輯這則」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "8a 改暱稱後 1 秒內出現「已儲存」（role=status）",
+   "ok": true,
+   "detail": "0.08s"
+  },
+  {
+   "name": "8b 頁首頭像的暱稱同步更新（不重新載入）",
+   "ok": true,
+   "detail": "新暱稱531589"
+  },
+  {
+   "name": "8c 「已儲存」約 3 秒後消失",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "8d 改過之後輸入框鎖住並寫下次可改日期",
+   "ok": true,
+   "detail": "2026-10-28 以後可以再改"
+  },
+  {
+   "name": "8e 暱稱撞名顯示原因",
+   "ok": true,
+   "detail": "這個暱稱有人用了，換一個"
+  },
+  {
+   "name": "8f 改密碼失敗顯示原因",
+   "ok": true,
+   "detail": "目前的密碼不對"
+  },
+  {
+   "name": "8g 30 天內再改：原因帶下次可改日期",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"NAME_CHANGE_LIMIT\",\"message\":\"暱稱每 30 天只能改一次，2026-10-28 以後可以再改\",\"nextAt\":\"2026-10-27T17:53:45.967Z\"}}"
+  }
+ ]
+}

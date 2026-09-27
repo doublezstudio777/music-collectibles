@@ -110,7 +110,7 @@ export function ReportBox({ target, label = "檢舉" }: { target: TargetKey; lab
       {error ? <p className="field-error">{error}</p> : null}
       <div className="report-acts">
         <button type="submit" className="btn btn-line" disabled={busy}>
-          送出檢舉
+          {busy ? "送出中…" : "送出檢舉"}
         </button>
         <button type="button" className="btn-text" onClick={() => setOpen(false)}>
           取消
@@ -209,7 +209,7 @@ export function AppealBox({ target }: { target: TargetKey }) {
       {error ? <p className="field-error">{error}</p> : null}
       <div className="report-acts">
         <button type="submit" className="btn btn-p" disabled={busy}>
-          送出申訴
+          {busy ? "送出中…" : "送出申訴"}
         </button>
         <button type="button" className="btn-text" onClick={() => setOpen(false)}>
           取消

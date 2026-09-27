@@ -8,6 +8,7 @@
 //   「相關收藏」用同一份資料
 
 import {
+  artistHref,
   getItem,
   itemHref,
   lockFor,
@@ -202,7 +203,6 @@ export class Catalog {
       what: s.what,
       kind: k.kind,
       ...(k.note ? { kindNote: k.note } : {}),
-      ...(s.refPhoto ? { refPhoto: true } : {}),
       story: s.story,
       time: s.time,
       order: s.order,
@@ -218,16 +218,44 @@ export class Catalog {
       aboutSlugs: this.aboutSlugs(s),
       hasFakes: this.linkHasFakes(link),
       lock: lockFor(this.lockData, s.n, link),
+      ...this.#tagLinksOf(s),
     };
   };
 
+  /** 標籤對應到公開藝人頁就直接連藝人頁（名稱、別名、合併後併入的舊名都算）；被隱藏或沒有公開頁的照舊連標籤頁 */
+  artistForTag = (tag: string) => {
+    const a = this.resolveTagArtist(tag);
+    return a && this.artistVisible(a) ? a : undefined;
+  };
+
+  #tagLinksOf = (s: Pick<Share, "about" | "tags">) => {
+    const out: Record<string, string> = {};
+    for (const t of [...s.about, ...s.tags]) {
+      const a = this.artistForTag(t);
+      if (a) out[t] = artistHref(a.slug);
+    }
+    return Object.keys(out).length ? { tagLinks: out } : {};
+  };
+
   /** 單則頁用：加上全部照片（卡片、列表只用封面，不帶這串，省 HTML 大小） */
-  toDetailView = (s: Share): ShareView => ({ ...this.toShareView(s), ...(s.photos ? { photos: s.photos } : {}) });
+  toDetailView = (s: Share): ShareView => ({
+    ...this.toShareView(s),
+    ...(s.photos ? { photos: s.photos } : {}),
+    ...(s.refIdx?.length ? { refIdx: s.refIdx } : {}),
+    ...(s.editedAt ? { editedAt: s.editedAt } : {}),
+  });
+
+  /** 編輯表單：這則「跟誰有關」對得到的藝人（不在預設清單裡也要能拼出系列選項） */
+  formArtistsFor = (names: string[]) =>
+    names
+      .map((n) => this.resolveTagArtist(n))
+      .filter((a): a is Artist => Boolean(a))
+      .map(this.#formArtist);
 
   allShareViews = () => this.shares.map(this.toShareView);
 
   /**
-   * 分享用的四段字：藝人・系列・品項・版本（og:description、分享圖、原生分享的文字共用）。
+   * 分享用的四段字：藝人・系列・品項・版本（og:description、原生分享的文字共用）。
    * 藝人取「跟誰有關」，沒有就取系列署名；沒連到系列的只有藝人＋物件類型。
    */
   shareParts = (s: Share) => {
@@ -303,7 +331,7 @@ export class Catalog {
       const a = this.resolveTagArtist(t);
       if (!a || seen.has(a.slug)) continue;
       seen.add(a.slug);
-      sources.push({ title: `跟${a.name}有關的其他收藏`, href: tagHref(a.name), match: (s) => this.shareHasTag(s, t), scope: { tag: a.name } });
+      sources.push({ title: `跟${a.name}有關的其他收藏`, href: this.artistVisible(a) ? artistHref(a.slug) : tagHref(a.name), match: (s) => this.shareHasTag(s, t), scope: { tag: a.name } });
     }
     const used = new Set<number>();
     const blocks: RelatedBlock[] = [];

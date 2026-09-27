@@ -6,6 +6,7 @@ import { api } from "@/lib/account";
 import { LEVELS, levelLabel } from "@/lib/levels";
 import type { MemberRow } from "@/lib/server/members";
 import { Ava } from "@/components/ava";
+import { SaveMsg, useSave } from "@/components/save-status";
 
 // 跟 lib/server/members.ts 的 SUSPEND_REASONS 同一份（伺服器檔不能被 client 元件載入）
 const REASONS = [
@@ -47,21 +48,24 @@ function Renames({ m }: { m: MemberRow }) {
 
 /** 大頭貼：有就顯示小圖＋「移除」（寫操作紀錄、R2 檔刪除） */
 function AvatarCell({ m, done }: { m: MemberRow; done: () => void }) {
-  const [error, setError] = useState("");
+  const { busy, msg, run } = useSave();
   if (!m.avatar) return null;
-  const remove = async () => {
+  const remove = () => {
     if (!window.confirm(`移除「${m.name}」的大頭貼？`)) return;
-    const r = await api("/api/admin/avatar", { body: { id: m.id } });
-    if (!r.ok) return setError(r.error.message);
-    done();
+    void run(async () => {
+      const r = await api("/api/admin/avatar", { body: { id: m.id } });
+      if (!r.ok) return { ok: false, text: r.error.message };
+      done();
+      return { ok: true, text: "已移除" };
+    });
   };
   return (
     <span className="member-ava">
       <Ava name={m.name} src={m.avatar} />
-      <button type="button" className="btn-text" onClick={remove} data-testid="avatar-admin-remove">
-        移除大頭貼
+      <button type="button" className="btn-text" onClick={remove} disabled={busy} data-testid="avatar-admin-remove">
+        {busy ? "處理中…" : "移除大頭貼"}
       </button>
-      {error ? <span className="field-error">{error}</span> : null}
+      <SaveMsg {...msg} />
     </span>
   );
 }
@@ -70,24 +74,28 @@ function Actions({ m, done }: { m: MemberRow; done: () => void }) {
   const [open, setOpen] = useState(false);
   const [code, setCode] = useState("");
   const [reason, setReason] = useState("");
-  const [error, setError] = useState("");
+  const save = useSave();
   if (m.admin) return <span className="sub">管理員</span>;
   if (m.status === "deleted") return null;
-  const run = async (action: "suspend" | "restore") => {
-    setError("");
-    if (action === "suspend" && !code) return setError("選一個停權原因");
-    const r = await api(`/api/admin/members`, { body: { id: m.id, action, reasonCode: code, note: reason } });
-    if (!r.ok) return setError(r.error.message);
-    setOpen(false);
-    setCode("");
-    setReason("");
-    done();
-  };
+  const run = (action: "suspend" | "restore") =>
+    save.run(async () => {
+      if (action === "suspend" && !code) return { ok: false, text: "選一個停權原因" };
+      const r = await api(`/api/admin/members`, { body: { id: m.id, action, reasonCode: code, note: reason } });
+      if (!r.ok) return { ok: false, text: r.error.message };
+      setOpen(false);
+      setCode("");
+      setReason("");
+      done();
+      return { ok: true, text: action === "suspend" ? "已停權" : "已恢復" };
+    });
   if (m.status === "suspended") {
     return (
-      <button type="button" className="btn btn-line" onClick={() => void run("restore")} data-testid="restore">
-        恢復
-      </button>
+      <>
+        <button type="button" className="btn btn-line" onClick={() => void run("restore")} disabled={save.busy} data-testid="restore">
+          {save.busy ? "處理中…" : "恢復"}
+        </button>
+        <SaveMsg {...save.msg} />
+      </>
     );
   }
   return open ? (
@@ -108,18 +116,21 @@ function Actions({ m, done }: { m: MemberRow; done: () => void }) {
         onChange={(e) => setReason(e.target.value)}
         data-testid="suspend-note"
       />
-      <button type="button" className="btn btn-line" onClick={() => void run("suspend")} data-testid="suspend-confirm">
-        確定停權
+      <button type="button" className="btn btn-line" onClick={() => void run("suspend")} disabled={save.busy} data-testid="suspend-confirm">
+        {save.busy ? "處理中…" : "確定停權"}
       </button>
       <button type="button" className="btn btn-text" onClick={() => setOpen(false)}>
         取消
       </button>
-      {error ? <p className="field-error">{error}</p> : null}
+      <SaveMsg {...save.msg} />
     </div>
   ) : (
-    <button type="button" className="btn btn-line" onClick={() => setOpen(true)} data-testid="suspend">
-      停權
-    </button>
+    <>
+      <button type="button" className="btn btn-line" onClick={() => setOpen(true)} data-testid="suspend">
+        停權
+      </button>
+      <SaveMsg {...save.msg} />
+    </>
   );
 }
 
@@ -128,16 +139,17 @@ function LevelCell({ m, done }: { m: MemberRow; done: () => void }) {
   const [open, setOpen] = useState(false);
   const [level, setLevel] = useState(String(m.override ?? ""));
   const [reason, setReason] = useState("");
-  const [error, setError] = useState("");
+  const save = useSave();
   if (m.admin) return <span>館長</span>;
-  const run = async (action: "set_level" | "clear_level") => {
-    setError("");
-    const r = await api(`/api/admin/members`, { body: { id: m.id, action, level: Number(level), reason } });
-    if (!r.ok) return setError(r.error.message);
-    setOpen(false);
-    setReason("");
-    done();
-  };
+  const run = (action: "set_level" | "clear_level") =>
+    save.run(async () => {
+      const r = await api(`/api/admin/members`, { body: { id: m.id, action, level: Number(level), reason } });
+      if (!r.ok) return { ok: false, text: r.error.message };
+      setOpen(false);
+      setReason("");
+      done();
+      return { ok: true, text: "已儲存" };
+    });
   return (
     <div className="level-cell" data-testid="level-cell">
       <span data-testid="level-label">{m.level}</span>
@@ -159,7 +171,7 @@ function LevelCell({ m, done }: { m: MemberRow; done: () => void }) {
             ))}
           </select>
           <input className="input" value={reason} placeholder="原因（必填）" aria-label="指定原因" onChange={(e) => setReason(e.target.value)} data-testid="level-reason" />
-          <button type="button" className="btn btn-line" onClick={() => void run("set_level")} data-testid="level-confirm">
+          <button type="button" className="btn btn-line" onClick={() => void run("set_level")} disabled={save.busy} data-testid="level-confirm">
             確定指定
           </button>
           <button type="button" className="btn btn-text" onClick={() => setOpen(false)}>
@@ -172,13 +184,13 @@ function LevelCell({ m, done }: { m: MemberRow; done: () => void }) {
             指定等級
           </button>
           {m.override ? (
-            <button type="button" className="btn-text" onClick={() => void run("clear_level")} data-testid="level-clear">
+            <button type="button" className="btn-text" onClick={() => void run("clear_level")} disabled={save.busy} data-testid="level-clear">
               取消指定
             </button>
           ) : null}
         </span>
       )}
-      {error ? <p className="field-error">{error}</p> : null}
+      <SaveMsg {...save.msg} />
     </div>
   );
 }

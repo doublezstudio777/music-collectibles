@@ -84,7 +84,7 @@ function CommentReport({ id, done, onDone }: { id: number; done: boolean; onDone
       {error ? <p className="field-error">{error}</p> : null}
       <div className="report-acts">
         <button type="submit" className="btn btn-line" disabled={busy}>
-          送出檢舉
+          {busy ? "送出中…" : "送出檢舉"}
         </button>
         <button type="button" className="btn-text" onClick={() => setOpen(false)}>
           取消
@@ -218,7 +218,7 @@ export function ShareComments({ share }: { share: number }) {
               {n}／{COMMENT_MAX}
             </span>
             <button type="submit" className="btn btn-line" disabled={busy || over} data-testid="comment-submit">
-              送出
+              {busy ? "送出中…" : "送出"}
             </button>
           </div>
           {error ? (

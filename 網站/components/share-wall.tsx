@@ -282,13 +282,13 @@ const VERSION_SORTS: { key: VersionSort; label: string }[] = [
 export const VERSION_SHOWN = 6;
 
 /**
- * 精選＝「已確認版本且照片可當辨識參考」的排前面 → 讚數多的 → 新的。
+ * 精選＝已確認版本的排前面 → 讚數多的 → 新的（2026-09-28：拿掉會員自勾的「可當辨識參考」，自評不可靠）。
  * 同一個版本區塊裡的收藏都掛在同一個版本，「已確認版本」看的是這個版本的資料狀態（confirmed）。
  */
 export function sortVersionShares(list: ShareView[], sort: VersionSort, confirmed: boolean, likesOf: (s: ShareView) => number) {
   const byNew = (a: ShareView, b: ShareView) => b.order - a.order;
   const byLikes = (a: ShareView, b: ShareView) => likesOf(b) - likesOf(a) || byNew(a, b);
-  const featured = (s: ShareView) => (confirmed && s.refPhoto ? 1 : 0);
+  const featured = (s: ShareView) => (confirmed && s.link?.versionId ? 1 : 0);
   if (sort === "new") return [...list].sort(byNew);
   if (sort === "likes") return [...list].sort(byLikes);
   if (sort === "selling") return list.filter((s) => (s.sale.state === "sale" || s.sale.state === "offer") && !s.lock).sort(byNew);

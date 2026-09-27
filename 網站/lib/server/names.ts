@@ -16,7 +16,7 @@ export const NAME_CHANGE_DAYS = 30;
 export const nameKey = (s: string) => s.normalize("NFKC").toLowerCase().replace(/[\s​-‍⁠﻿]/g, "");
 
 /** 名字裡只要含有就不行 */
-const CONTAINS = [DELETED_NAME, CURATOR, SITE_NAME, "音藏", "管理員", "站長"].map(nameKey);
+const CONTAINS = [DELETED_NAME, CURATOR, SITE_NAME, "樂迷藏", "音藏", "管理員", "站長"].map(nameKey);
 /** 整個名字等於才不行 */
 const EXACT = ["官方", "客服", "系統", "管理者", "admin", "administrator", "system", "yinzang", "moderator"].map(nameKey);
 

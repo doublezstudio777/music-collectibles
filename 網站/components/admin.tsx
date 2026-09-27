@@ -4,6 +4,7 @@ import { Ava } from "@/components/ava";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { reasonLabel, targetLevel, type ReportReason, type TargetKey } from "@/lib/data";
+import { SaveMsg, useSave } from "@/components/save-status";
 import { api } from "@/lib/account";
 import { commentReasonLabel } from "@/lib/comment-rules";
 
@@ -347,12 +348,15 @@ export function Admin() {
     };
   }, [version]);
 
-  const run = async (path: string, body: unknown) => {
-    setError("");
-    const r = await api(path, { body });
-    if (!r.ok) setError(r.error.message);
-    setVersion((v) => v + 1);
-  };
+  // 每個操作按鈕：處理中整塊停用（避免連按），成功顯示「已更新」約 3 秒，失敗顯示原因（2026-09-28 回饋一致化）
+  const op = useSave();
+  const run = (path: string, body: unknown) =>
+    op.run(async () => {
+      setError("");
+      const r = await api(path, { body });
+      setVersion((v) => v + 1);
+      return r.ok ? { ok: true, text: "已更新" } : { ok: false, text: r.error.message };
+    });
 
   if (!data) return error ? <p className="field-error">{error}</p> : null;
 
@@ -370,12 +374,15 @@ export function Admin() {
   const rows = [...data.targets].sort((a, b) => b.total - a.total);
 
   return (
-    <div className="admin">
+    <div className="admin" aria-busy={op.busy}>
       {error ? (
         <p className="field-error" role="alert" data-testid="admin-error">
           {error}
         </p>
       ) : null}
+      <div className="admin-toast">
+        <SaveMsg {...op.msg} testid="admin-msg" />
+      </div>
       <SiteStatus site={data.site} run={run} />
       <Takedown data={data} run={run} />
       <section className="block">
@@ -389,8 +396,8 @@ export function Admin() {
             value={draft ?? String(data.threshold)}
             onChange={(e) => setDraft(e.target.value.replace(/[^\d]/g, ""))}
           />
-          <button type="submit" className="btn btn-line">
-            儲存
+          <button type="submit" className="btn btn-line" disabled={op.busy}>
+            {op.busy ? "儲存中…" : "儲存"}
           </button>
         </form>
       </section>
