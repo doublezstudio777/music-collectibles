@@ -32,6 +32,7 @@ import { ItemLooseWall, VersionWall } from "@/components/share-wall";
 import { IdentifyDetails } from "@/components/identify-details";
 import { SeriesTile } from "@/components/work-cover";
 import { seriesContributors } from "@/lib/server/contributors";
+import { Ava } from "@/components/ava";
 import { LevelTag } from "@/components/level-tag";
 import { YearFill } from "@/components/year-fill";
 import { FieldFill } from "@/components/field-fill";
@@ -351,8 +352,9 @@ export default async function SeriesPage({ params, searchParams }: Props) {
             {contributors.list.map((u, i) => (
               <span key={u.handle} className="contrib" data-n={u.n}>
                 {i > 0 ? "、" : null}
-                <Link className="link" href={`/u/${u.handle}`}>
-                  {u.name}
+                <Link className="link contrib-who" href={`/u/${u.handle}`}>
+                  <Ava name={u.name} src={u.avatar} />
+                  <span>{u.name}</span>
                 </Link>
                 <LevelTag badge={u.badge} />
               </span>

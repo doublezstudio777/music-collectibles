@@ -76,3 +76,25 @@ export async function uploadImage(file: File, purpose: "share" | "appeal", handl
   }
   return api<Uploaded>("/api/uploads", { body: form });
 }
+
+/** 大頭貼（2026-09-28）：從中間裁成正方形、縮成 256×256，轉 WebP（不支援時 JPEG）。伺服器只檢查格式與寬高 */
+export const AVATAR_EDGE = 256;
+export async function prepareAvatar(file: Blob): Promise<Blob> {
+  const img = await loadImage(file);
+  const side = Math.min(img.width, img.height);
+  const sx = Math.round((img.width - side) / 2);
+  const sy = Math.round((img.height - side) / 2);
+  const canvas = document.createElement("canvas");
+  canvas.width = AVATAR_EDGE;
+  canvas.height = AVATAR_EDGE;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("canvas");
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(img, sx, sy, side, side, 0, 0, AVATAR_EDGE, AVATAR_EDGE);
+  const toBlob = (type: string, q: number) => new Promise<Blob | null>((r) => canvas.toBlob(r, type, q));
+  const webp = await toBlob("image/webp", 0.85);
+  if (webp && webp.type === "image/webp") return webp;
+  const jpg = await toBlob("image/jpeg", 0.85);
+  if (!jpg) throw new Error("encode");
+  return jpg;
+}

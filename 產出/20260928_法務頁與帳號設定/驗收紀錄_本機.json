@@ -1,0 +1,492 @@
+{
+ "at": "2026-09-27T14:22:48.022Z",
+ "passed": 97,
+ "total": 97,
+ "results": [
+  {
+   "name": "1a /privacy、/terms 都 200",
+   "ok": true,
+   "detail": "(200, 200)"
+  },
+  {
+   "name": "1b 兩頁頁首都標「草稿，待律師確認」與最後更新日期",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "1c 隱私權政策涵蓋防盜版 README 的 8 項",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "1d 隱私權政策寫明活動紀錄 90 天、公開到國家層級、不販售、當事人權利與申請方式",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "1e 使用條款涵蓋指定的 8 類內容",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "1f 兩頁內文沒有中國用語、路標句、破折號",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "1g 頁尾有隱私權政策、使用條款連結",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "1h /privacy 進整頁快取（第二次 HIT）",
+   "ok": true,
+   "detail": "HIT"
+  },
+  {
+   "name": "3a 註冊：大小寫、空白、全形半形不同的同名都擋（NAME_TAKEN）",
+   "ok": true,
+   "detail": "[('mix name518808', 'NAME_TAKEN'), ('MIXNAME518808', 'NAME_TAKEN'), (' Mix  Name518808 ', 'NAME_TAKEN'), ('ｍｉｘｎａｍｅ５１８８０８', 'NAME_TAKEN')]"
+  },
+  {
+   "name": "3b 註冊：保留字（已刪除的會員、館長、音藏、admin、官方）都擋（NAME_RESERVED）",
+   "ok": true,
+   "detail": "[('已刪除的會員', 'NAME_RESERVED'), ('館長', 'NAME_RESERVED'), ('音藏小幫手', 'NAME_RESERVED'), ('ＡＤＭＩＮ', 'NAME_RESERVED'), ('官方', 'NAME_RESERVED')]"
+  },
+  {
+   "name": "3c 註冊：不重複的暱稱照常成功，name_key 有寫",
+   "ok": true,
+   "detail": "{\"pending\":\"verify\",\"email\":\"regok518808@acc.test\"}"
+  },
+  {
+   "name": "3d 設定頁改暱稱成功，下次可改時間約 30 天後",
+   "ok": true,
+   "detail": "{\"user\":{\"id\":\"u-acn1518808\",\"email\":\"acn1518808@acc.test\",\"handle\":\"acn1518808\",\"name\":\"改後518808\",\"bio\":\"\",\"role\":\"user\",\"verified\":true,\"admin\":false,\"deletionRequested\":false,\"avatar\":null,\"nameNex"
+  },
+  {
+   "name": "3e 下次可改時間＝現在＋30 天（誤差 1 小時內）",
+   "ok": true,
+   "detail": "2026-10-27 14:20:19.346000+00:00"
+  },
+  {
+   "name": "3f 30 天內第二次改名被擋（429 NAME_CHANGE_LIMIT）",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"NAME_CHANGE_LIMIT\",\"message\":\"暱稱每 30 天只能改一次，2026-10-27 以後可以再改\",\"nextAt\":\"2026-10-27T14:20:19.346Z\"}}"
+  },
+  {
+   "name": "3g 送出同一個名字不算改名（200，不寫 users）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "3h 改成別人的暱稱（差一個空白）被擋 409",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"NAME_TAKEN\",\"message\":\"這個暱稱有人用了，換一個\"}}"
+  },
+  {
+   "name": "3i 改成含保留字的暱稱被擋 400",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"NAME_RESERVED\",\"message\":\"這個暱稱保留給網站用，換一個\"}}"
+  },
+  {
+   "name": "3j 滿 30 天後可以再改",
+   "ok": true,
+   "detail": "{\"user\":{\"id\":\"u-acn1518808\",\"email\":\"acn1518808@acc.test\",\"handle\":\"acn1518808\",\"name\":\"三十天後518808\",\"bio\":\"\",\"role\":\"user\",\"verified\":true,\"admin\":false,\"deletionRequested\":false,\"avatar\":null,\"nameN"
+  },
+  {
+   "name": "3k 改名紀錄兩筆（舊名→新名）",
+   "ok": true,
+   "detail": "[{'old_name': 'Mix Name518808', 'new_name': '改後518808'}, {'old_name': '改後518808', 'new_name': '三十天後518808'}]"
+  },
+  {
+   "name": "3l 後台會員列表顯示改名 2 次，點開有兩筆紀錄",
+   "ok": true,
+   "detail": "(2, {'names': [{'oldName': '改後518808', 'newName': '三十天後518808', 'at': '2026-09-27T14:20:20.932Z'}, {'oldName': 'Mix Name518808', 'newName': '改後518808', 'at': '2026-09-27T14:20:19.353Z'}]})"
+  },
+  {
+   "name": "3m 一般會員查改名紀錄 403",
+   "ok": true,
+   "detail": "403"
+  },
+  {
+   "name": "3n 改名紀錄不出現在公開個人頁",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "3o 改名前單則頁是快取 HIT",
+   "ok": true,
+   "detail": "HIT"
+  },
+  {
+   "name": "3p 改名讓內容版本 +1",
+   "ok": true,
+   "detail": "(12707, 12708)"
+  },
+  {
+   "name": "3q 改名後第一次打單則頁 MISS 且已是新名字、沒有舊名字",
+   "ok": true,
+   "detail": "MISS"
+  },
+  {
+   "name": "3r 之後再打回到 HIT，仍是新名字",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4a 不是 256×256 → 400；不是 WebP/JPEG → 415",
+   "ok": true,
+   "detail": "(400, 415)"
+  },
+  {
+   "name": "4b 上傳 256×256 WebP 成功，存成 v/{id}.webp",
+   "ok": true,
+   "detail": "{\"key\":\"v/FtKOqIguYbOnXz_h.webp\",\"url\":\"/img/v/FtKOqIguYbOnXz_h.webp\",\"replaced\":null,\"purged\":0}"
+  },
+  {
+   "name": "4c R2 容量計數＋這張的大小",
+   "ok": true,
+   "detail": "(1052209, 1052411, 202)"
+  },
+  {
+   "name": "4d photos 記一列：purpose=avatar、256×256、主圖＝縮圖同一個檔",
+   "ok": true,
+   "detail": "{'purpose': 'avatar', 'width': 256, 'height': 256, 'bytes': 202, 'same': 1}"
+  },
+  {
+   "name": "4e 大頭貼沒登入也看得到（200 image/webp）",
+   "ok": true,
+   "detail": "(200, 'image/webp')"
+  },
+  {
+   "name": "4f R2 裡有這個檔",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4g /api/me 帶大頭貼網址",
+   "ok": true,
+   "detail": "/img/v/FtKOqIguYbOnXz_h.webp"
+  },
+  {
+   "name": "4h 換一張：新檔上去，舊檔 photos 標刪除",
+   "ok": true,
+   "detail": "{\"key\":\"v/auFUwaY5s-hyNAd_.webp\",\"url\":\"/img/v/auFUwaY5s-hyNAd_.webp\",\"replaced\":\"v/FtKOqIguYbOnXz_h.webp\",\"purged\":1}"
+  },
+  {
+   "name": "4i 換掉的舊檔從 R2 刪除、網址 404",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4j R2 容量計數＝＋新檔－舊檔",
+   "ok": true,
+   "detail": "(1052411, 1052415)"
+  },
+  {
+   "name": "4k 一天第 6 次換大頭貼被擋 429（前 5 次都 201）",
+   "ok": true,
+   "detail": "[201, 201, 201, 429]"
+  },
+  {
+   "name": "4l 換了 5 次後只剩 1 張有效的大頭貼",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "name": "4m 留言 API 帶大頭貼",
+   "ok": true,
+   "detail": "{'id': 1428, 'author': {'handle': 'aca1518808', 'name': '頭貼一號518808', 'badge': '新晉樂迷 Lv.1', 'avatar': '/img/v/GnWTV5tkJYiLUGAj.webp'}, 'body': '大頭貼留言518808', 'at': '2026-09-27T14:20:40.249Z', 'mine': False, 'canDelete': False, 'reported': False, 'warn': False}"
+  },
+  {
+   "name": "4n 單則頁出價列表是大頭貼圖片",
+   "ok": true,
+   "detail": "v/GnWTV5tkJYiLUGAj.webp"
+  },
+  {
+   "name": "4o 系列頁資料貢獻者是大頭貼圖片",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4p 個人頁是大頭貼圖片",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4q 沒有大頭貼的人沿用暱稱字樣頭像",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4r 檢舉別人的大頭貼 201；檢舉自己的 403",
+   "ok": true,
+   "detail": "(201, 403)"
+  },
+  {
+   "name": "4s 儀表板「被檢舉的大頭貼」≥1",
+   "ok": true,
+   "detail": "{'pending': 16, 'reports': 6, 'appeals': 1, 'locked': 92, 'hidden': 9, 'comments': 18, 'commentsHidden': 18, 'duplicates': 12, 'avatars': 1, 'deletions': 0}"
+  },
+  {
+   "name": "4t 管理員移除大頭貼成功",
+   "ok": true,
+   "detail": "{\"removed\":\"v/GnWTV5tkJYiLUGAj.webp\",\"purged\":0}"
+  },
+  {
+   "name": "4u 移除後：users 沒有大頭貼、photos 標刪除、R2 檔刪掉、網址 404",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4v R2 容量計數扣回這張的大小",
+   "ok": true,
+   "detail": "(1054843, 1054645, 198)"
+  },
+  {
+   "name": "4w 移除寫操作紀錄「移除大頭貼」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4x 移除讓內容版本 +1（頁面換成字樣頭像）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4y 移除後不再列在被檢舉的大頭貼",
+   "ok": true,
+   "detail": "(1, 0)"
+  },
+  {
+   "name": "4z 管理員按「保留」後不再列出、大頭貼還在",
+   "ok": true,
+   "detail": "(1, 0)"
+  },
+  {
+   "name": "2a 沒填原因送出 400",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"INVALID\",\"message\":\"寫一下想刪除帳號的原因\"}}"
+  },
+  {
+   "name": "2b 填原因送出 201，帳號照常可用",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2c 重複申請 409",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2d 本人取消申請：狀態 cancelled、帳號標記清掉",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2e 後台刪帳申請佇列列出原因、Email、炫收藏數、照片數",
+   "ok": true,
+   "detail": "{'id': 21, 'status': 'pending', 'reason': '不想用了518808', 'createdAt': '2026-09-27T14:21:07.157Z', 'handledAt': None, 'deletePhotos': False, 'result': {}, 'user': {'id': 'u-acd1518808', 'handle': 'acd1518808', 'name': '刪帳d1改518808', 'email': 'acd1518808@acc.test', 'createdAt': '2026-09-27T14:20:08.092Z', 'posts': 1, 'photos': 1, 'photoBytes': 2382}}"
+  },
+  {
+   "name": "2f 儀表板顯示刪帳申請件數（＝待處理筆數）",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "name": "2g 一般會員打後台刪帳 API 403",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2h 確認欄沒打對帳號名 400，什麼都沒刪",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"CONFIRM\",\"message\":\"確認欄要打出帳號名「acd1518808」\"}}"
+  },
+  {
+   "name": "2i 執行（不勾照片）成功",
+   "ok": true,
+   "detail": "{\"code\":\"del-hzuxebykj2\",\"sessions\":1,\"emailCodes\":0,\"userGeo\":1,\"userActivity\":1,\"rateLimits\":3,\"counters\":1,\"nameChanges\":1,\"photos\":0,\"avatars\":1,\"adminLogRetargeted\":0,\"r2Deleted\":1,\"bytesReleased\":178}"
+  },
+  {
+   "name": "2j 帳號：Email、密碼換掉，暱稱「已刪除的會員」，帳號名是 del- 代號，狀態 deleted",
+   "ok": true,
+   "detail": "{'email': 'del-hzuxebykj2@deleted.invalid', 'password_hash': '!deleted', 'handle': 'del-hzuxebykj2', 'name': '已刪除的會員', 'bio': '', 'status': 'deleted', 'avatar_key': None, 'name_key': None, 'email_verified_at': None}"
+  },
+  {
+   "name": "2k 刪除前這些表都有資料（驗得到東西）",
+   "ok": true,
+   "detail": "{'sessions': 1, 'user_geo': 1, 'user_activity': 1, 'rate_limits': 3, 'counters': 1, 'user_name_changes': 1, 'photos(大頭貼，有效)': 1}"
+  },
+  {
+   "name": "2l 個資清掉：session、國家、活動紀錄、限流與計數、改名紀錄、大頭貼 全部 0",
+   "ok": true,
+   "detail": "{'sessions': 0, 'user_geo': 0, 'user_activity': 0, 'rate_limits': 0, 'counters': 0, 'user_name_changes': 0, 'photos(大頭貼，有效)': 0}"
+  },
+  {
+   "name": "2m 貢獻保留：炫收藏、留言、編輯紀錄、成交、照片 筆數不變",
+   "ok": true,
+   "detail": "{'shares': (1, 1), 'comments': (1, 1), 'revisions': (1, 1), 'deals': (1, 1), 'photos(照片，有效)': (1, 1)}"
+  },
+  {
+   "name": "2n 全站炫收藏總數不變",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2o 沒勾照片：收藏照片仍在 R2、網址 200",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2p 大頭貼一律刪除：R2 沒有、網址 404",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2q R2 容量計數只扣大頭貼",
+   "ok": true,
+   "detail": "(1059973, 1059795, 178)"
+  },
+  {
+   "name": "2r 舊 token 失效、舊 Email 密碼登不進去",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2s 寫操作紀錄「執行刪除帳號」，紀錄裡沒有 Email",
+   "ok": true,
+   "detail": "[{'target': 'user:del-hzuxebykj2', 'detail': '{\"request\":21,\"deletePhotos\":false,\"sessions\":1,\"emailCodes\":0,\"userGeo\":1,\"userActivity\":1,\"rateLimits\":3,\"counters\":1,\"nameChanges\":1,\"photos\":0,\"avatars\":1,\"adminLogRetargeted\":0}'}]"
+  },
+  {
+   "name": "2t 舊的後台紀錄 target 改成新代號，找不到舊帳號名",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2u 同一筆再執行 409（不能重來）",
+   "ok": true,
+   "detail": "409"
+  },
+  {
+   "name": "2v 單則頁作者顯示「已刪除的會員」，沒有舊暱稱",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2w 留言還在，作者顯示「已刪除的會員」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2x 系列頁貢獻者名單照列「已刪除的會員」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2y 個人頁（代號）200，只有「已刪除的會員」與炫收藏，沒有所在地區",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2z 舊帳號名網址 404",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2za 執行（勾照片）成功，回傳照片 1、大頭貼 1",
+   "ok": true,
+   "detail": "{\"code\":\"del-ns2sv6vpxh\",\"sessions\":1,\"emailCodes\":0,\"userGeo\":1,\"userActivity\":1,\"rateLimits\":3,\"counters\":1,\"nameChanges\":1,\"photos\":1,\"avatars\":1,\"adminLogRetargeted\":0,\"r2Deleted\":3,\"bytesReleased\":2560}"
+  },
+  {
+   "name": "2zb 勾照片：收藏照片標刪除、R2 檔全部刪掉、網址 404",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2zc R2 容量計數扣回全部照片＋大頭貼",
+   "ok": true,
+   "detail": "(1059795, 1057235, 2560)"
+  },
+  {
+   "name": "2zd 勾照片仍保留炫收藏、留言、編輯紀錄、成交",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2ze 後台已處理清單顯示結果",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2zf 已刪除的名字不佔用暱稱：別人可以註冊跟刪帳前一樣的暱稱",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5a 設定頁沒有自助刪除表單，只有「申請刪除帳號」小連結",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5b 設定頁顯示暱稱規則「每 30 天可以改一次」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5c 瀏覽器上傳：900×500 JPEG 裁成 256×256 WebP",
+   "ok": true,
+   "detail": "{'content_type': 'image/webp', 'width': 256, 'height': 256}"
+  },
+  {
+   "name": "5d 頭像選單換成大頭貼圖片",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5e 設定頁改名後輸入框鎖住、顯示下次可改日期",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5f 申請頁沒填原因會提示",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5g 送出後顯示處理中、可以取消，帳號沒有被刪",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5h 取消後回到申請表單",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5i 設定頁操作全程 console error 0",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "5j 二次確認：沒打帳號名「確定刪除」是灰的",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5k 畫面執行後帳號已刪除、照片保留（沒勾）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "5l 受影響頁面 1440／390 橫向溢出 0",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "5m 受影響頁面 console error 0",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

@@ -56,15 +56,21 @@ export function SiteHeader() {
               {acc.status === "user" && acc.me ? (
               <details className="me-menu" ref={menu}>
                 <summary
-                  className={`ava ava-name${label?.size === "small" ? " ava-name-sm" : ""}`}
+                  className={acc.me.avatar ? "ava ava-photo" : `ava ava-name${label?.size === "small" ? " ava-name-sm" : ""}`}
                   title={acc.me.name}
                   aria-label={`${acc.me.name}，我的選單`}
+                  data-testid="me-avatar"
                 >
-                  {label?.lines.map((line, i) => (
-                    <span key={i} aria-hidden="true">
-                      {line}
-                    </span>
-                  ))}
+                  {acc.me.avatar ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={acc.me.avatar} alt="" width={40} height={40} />
+                  ) : (
+                    label?.lines.map((line, i) => (
+                      <span key={i} aria-hidden="true">
+                        {line}
+                      </span>
+                    ))
+                  )}
                 </summary>
                 <div className="menu-panel">
                   <p className="menu-now">{acc.me.name}</p>

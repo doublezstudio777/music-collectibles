@@ -183,8 +183,16 @@ ul { list-style: none; margin: 0; padding: 0; }
 }
 .ava-sm { font-size: .75rem; height: 24px; width: 24px; }
 .ava-lg { font-size: 1.75rem; height: 80px; width: 80px; }
+/* 大頭貼（2026-09-28）：正方形小圖，直角；沒有大頭貼時沿用上面的暱稱字樣頭像 */
+.ava-img { background: var(--surface2); object-fit: cover; }
+.ava-photo { background: var(--surface2); overflow: hidden; padding: 0; }
+.ava-photo img { display: block; height: 40px; object-fit: cover; width: 40px; }
+.profile-ava { display: flex; flex: none; flex-direction: column; gap: 4px; }
+.profile-ava .report { margin: 0; }
+.comment-who, .contrib-who { align-items: center; display: inline-flex; gap: 6px; vertical-align: middle; }
+.contrib-who .ava-sm { height: 20px; width: 20px; font-size: .6875rem; }
 
-.me-menu { position: relative; }
+.me-menu { display: flex; position: relative; }
 /* 頂端頭像顯示暱稱：框維持 40×40，最多兩行；字寬 4 以上縮字（規則在 lib/avatar-label.ts） */
 .ava-name { flex-direction: column; font-size: 15px; letter-spacing: 0; line-height: 1.05; overflow: hidden; white-space: nowrap; }
 .ava-name > span { display: block; }
@@ -877,6 +885,16 @@ body.has-modal { overflow: hidden; }
 .settings-block { display: grid; gap: 8px; }
 .settings-row { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
 .settings-row .input { flex: 1 1 200px; min-width: 0; }
+/* 帳號設定（2026-09-28）：大頭貼、刪除帳號改申請制 */
+.avatar-row { align-items: center; display: flex; flex-wrap: wrap; gap: 16px; }
+.avatar-acts { align-items: center; display: flex; flex: 1 1 220px; flex-wrap: wrap; gap: 8px 12px; }
+.avatar-acts .page-meta { flex-basis: 100%; margin: 0; }
+.file-btn { cursor: pointer; position: relative; }
+.file-btn:focus-within { outline: 2px solid var(--text); outline-offset: 2px; }
+.settings-delete { font-size: var(--text-xs); margin-top: 48px; }
+.settings-delete a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+.plain-list { display: grid; gap: 6px; font-size: var(--text-sm); list-style: disc; margin: 0; padding-left: 1.25em; }
+.delete-request .page-meta a { text-decoration: underline; text-underline-offset: 3px; }
 .field-ok { color: var(--muted); font-size: var(--text-sm); }
 .btn-danger { background: var(--text); border-color: var(--text); color: var(--bg); }
 .upload-paused { border: 1px solid var(--line); font-size: var(--text-sm); padding: 12px; }
@@ -1072,3 +1090,45 @@ a.title-chip:hover { background: var(--line); }
 .field-fill-input { width: 12em; }
 .level-actions { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; }
 .level-actions .btn-text { padding: 0; text-decoration: underline; }
+
+/* 後台會員：大頭貼與改名紀錄（2026-09-28） */
+.member-ava { align-items: center; display: flex; gap: 8px; margin-top: 4px; }
+.renames { font-size: var(--text-xs); margin-top: 4px; }
+.renames summary { color: var(--muted); cursor: pointer; }
+.renames ul { display: grid; gap: 2px; list-style: none; margin: 4px 0 0; padding: 0; }
+
+/* 後台刪帳申請（2026-09-28） */
+.del-list { display: grid; list-style: none; margin: 0; padding: 0; }
+.del-item { border-top: 1px solid var(--line); display: grid; gap: 8px; padding: 16px 0; }
+.del-item:last-child { border-bottom: 1px solid var(--line); }
+.del-head { align-items: baseline; display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.del-reason { background: var(--surface); font-size: var(--text-sm); margin: 0; padding: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.del-confirm { border: 1px solid var(--text); display: grid; gap: 8px; padding: 12px; }
+.del-confirm .page-meta { margin: 0; }
+.avatar-reports { display: grid; list-style: none; margin: 0; padding: 0; }
+.avatar-report { align-items: center; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 12px 0; }
+.avatar-report .ava-lg { font-size: 1rem; }
+
+/* 隱私權政策、使用條款（2026-09-28 草稿） */
+.legal h2 { font-size: var(--text-lg); font-weight: 700; margin: 40px 0 12px; }
+.legal p, .legal li { font-size: var(--text-base); line-height: 1.75; }
+.legal ul { display: grid; gap: 8px; list-style: disc; margin: 0; padding-left: 1.25em; }
+.legal a { text-decoration: underline; text-underline-offset: 3px; }
+.legal-draft { align-items: baseline; border: 1px solid var(--text); display: flex; flex-wrap: wrap; font-size: var(--text-sm); gap: 4px 16px; margin: 0 0 24px; padding: 10px 14px; }
+.legal-draft span { color: var(--muted); }
+.legal-tbl { min-width: 640px; }
+.legal-tbl td { font-size: var(--text-sm); vertical-align: top; }
+.legal-tbl td:first-child { font-weight: 600; }
+.legal-other { border-top: 1px solid var(--line); margin-top: 48px; padding-top: 16px; }
+.foot-links { display: flex; gap: 16px; }
+.foot-row .foot-links a { color: var(--muted); font-weight: 400; text-decoration-color: var(--line); }
+.foot-row .foot-links a:hover { color: var(--text); }
+@media (max-width: 640px) {
+  /* 手機：隱私權政策的表改成一筆一段，不用橫捲 */
+  .legal-tbl { min-width: 0; }
+  .legal-tbl thead { display: none; }
+  .legal-tbl, .legal-tbl tbody, .legal-tbl tr, .legal-tbl td { display: block; width: 100%; }
+  .legal-tbl tr { border-bottom: 1px solid var(--line); padding: 12px 0; }
+  .legal-tbl td { border: 0; padding: 2px 0; }
+  .legal-tbl td[data-label]::before { color: var(--muted); content: attr(data-label) "："; }
+}

@@ -1,5 +1,6 @@
 "use client";
 
+import { Ava } from "@/components/ava";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -420,9 +421,7 @@ function OfferList({
             <li key={o.id} className={`offer-row${off ? " is-off" : ""}`} data-status={status === "凍結" ? "frozen" : o.status}>
               <div className="offer-who">
                 <Link className="who" href={userHref(o.buyer.handle)}>
-                  <span className="ava ava-sm" aria-hidden="true">
-                    {Array.from(o.buyer.name)[0] ?? "?"}
-                  </span>
+                  <Ava name={o.buyer.name} src={o.buyer.avatar} />
                   <span>{o.buyer.name}</span>
                 </Link>
                 <LevelTag badge={o.badge} />

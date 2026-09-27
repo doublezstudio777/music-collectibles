@@ -2,6 +2,7 @@ import { json, requireAdmin } from "@/lib/server/auth";
 import { adminOverview } from "@/lib/server/moderation";
 import { dashboardStats } from "@/lib/server/stats";
 import { detectDuplicatePairs } from "@/lib/server/duplicates";
+import { pendingDeletionCount } from "@/lib/server/deletion";
 
 /**
  * 儀表板：統計（10 分鐘快取，?fresh=1 重算）＋待處理佇列（每次即時）。只有管理員。
@@ -25,6 +26,8 @@ export async function GET(req: Request) {
     comments: o.comments.list.length,
     commentsHidden: o.comments.list.filter((c) => c.hidden).length,
     duplicates: dups.length,
+    avatars: o.avatars.length,
+    deletions: await pendingDeletionCount(),
   };
   return json({ stats, cached, queue }, 200, { "Cache-Control": "no-store" });
 }

@@ -8,7 +8,7 @@
 // - comments／comment_reports 沒有內容版本觸發器：寫入不會讓整頁快取失效
 // - 留言者被停權、帳號不存在：留言不顯示
 
-import { and, asc, count, desc, eq, isNotNull, isNull, or, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, isNotNull, isNull, or, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { adminLog, commentReports, comments, settings, shares, users } from "@/db/schema";
 import {
@@ -31,7 +31,7 @@ const LIST_LIMIT = 200;
 
 export type CommentView = {
   id: number;
-  author: { handle: string; name: string; badge: string };
+  author: { handle: string; name: string; badge: string; avatar?: string | null };
   body: string;
   at: string;
   mine: boolean;
@@ -61,10 +61,11 @@ export async function listComments(no: number, viewer: User | null) {
   if (!s) throw new HttpError(404, "NOT_FOUND", "找不到這則炫收藏");
   const db = getDb();
   const rows = await db
-    .select({ id: comments.id, authorId: comments.authorId, body: comments.body, at: comments.createdAt, handle: users.handle, name: users.name })
+    .select({ id: comments.id, authorId: comments.authorId, body: comments.body, at: comments.createdAt, handle: users.handle, name: users.name, avatarKey: users.avatarKey })
     .from(comments)
     .innerJoin(users, eq(users.id, comments.authorId))
-    .where(and(eq(comments.shareNo, no), isNull(comments.deletedAt), isNull(comments.hiddenAt), eq(users.status, "active")))
+    // 已刪除的會員（2026-09-28）留言保留，名字顯示「已刪除的會員」；停權的不列
+    .where(and(eq(comments.shareNo, no), isNull(comments.deletedAt), isNull(comments.hiddenAt), inArray(users.status, ["active", "deleted"])))
     .orderBy(desc(comments.id))
     .limit(LIST_LIMIT);
   rows.reverse();
@@ -85,7 +86,7 @@ export async function listComments(no: number, viewer: User | null) {
   const badges = await userBadges(rows.map((r) => r.authorId));
   const list: CommentView[] = rows.map((r) => ({
     id: r.id,
-    author: { handle: r.handle, name: r.name, badge: badges.get(r.authorId) ?? "" },
+    author: { handle: r.handle, name: r.name, badge: badges.get(r.authorId) ?? "", avatar: r.avatarKey ? `/img/${r.avatarKey}` : null },
     body: r.body,
     at: r.at,
     mine: r.authorId === me,

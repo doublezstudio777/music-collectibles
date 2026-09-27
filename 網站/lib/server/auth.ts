@@ -8,6 +8,10 @@ import { randomToken, sha256hex, sixDigitCode } from "@/lib/server/crypto";
 import { codeMail, getMailer } from "@/lib/server/services";
 import { recordLogin } from "@/lib/server/geo";
 import { SITE_NAME } from "@/lib/data";
+import { nextNameChange } from "@/lib/server/names";
+
+/** 大頭貼 R2 檔名 → 網址 */
+export const avatarUrl = (key: string | null | undefined) => (key ? `/img/${key}` : null);
 
 export const SESSION_COOKIE = "yz_session";
 const SESSION_DAYS = 30;
@@ -38,6 +42,10 @@ export const publicMe = (u: User) => ({
   verified: Boolean(u.emailVerifiedAt),
   admin: isAdmin(u),
   deletionRequested: Boolean(u.deletionRequestedAt),
+  /** 大頭貼網址（沒有是 null，前端用暱稱字樣頭像） */
+  avatar: avatarUrl(u.avatarKey),
+  /** 下次可以改暱稱的時間；現在就能改是 null */
+  nameNextAt: nextNameChange(u.nameChangedAt),
 });
 export type Me = ReturnType<typeof publicMe>;
 
@@ -73,7 +81,8 @@ const RESERVED = new Set([
 ]);
 export function handleProblem(h: string) {
   if (!/^[a-z0-9_-]{3,20}$/.test(h)) return "帳號名 3～20 字，只能用小寫英文、數字、底線、連字號";
-  if (RESERVED.has(h)) return "這個帳號名保留給網站用，換一個";
+  // del- 開頭保留給已刪除帳號的代號（2026-09-28）
+  if (RESERVED.has(h) || h.startsWith("del-")) return "這個帳號名保留給網站用，換一個";
   return null;
 }
 

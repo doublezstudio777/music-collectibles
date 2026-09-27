@@ -1,5 +1,6 @@
 "use client";
 
+import { Ava } from "@/components/ava";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { reasonLabel, targetLevel, type ReportReason, type TargetKey } from "@/lib/data";
@@ -31,11 +32,49 @@ type Overview = {
   appeals: { id: number; target: string; by: string; text: string; status: string; createdAt: string; photos: string[] }[];
   pending: { type: keyof typeof TYPE_WORD; id: string; title: string; detail: string; by: string; at: string }[];
   log: { id: number; by: string; action: string; target: string; detail: string; at: string }[];
+  avatars: { target: string; userId: string; handle: string; name: string; url: string | null; counts: Record<string, number>; total: number }[];
   comments: {
     threshold: number;
     list: { id: number; share: number; body: string; at: string; by: string; handle: string; reports: number; reasons: Record<string, number>; hidden: boolean; warn: boolean }[];
   };
 };
+
+/** 被檢舉的大頭貼（2026-09-28）：移除＝R2 檔刪掉、回到暱稱字樣頭像；保留＝之後不再列出 */
+function AvatarQueue({ data, run }: { data: Overview["avatars"]; run: (path: string, body: unknown) => Promise<void> }) {
+  return (
+    <section className="block" id="avatars">
+      <h2 className="block-title">
+        被檢舉的大頭貼<span className="count">{data.length}</span>
+      </h2>
+      {data.length === 0 ? <p className="empty">沒有被檢舉的大頭貼</p> : null}
+      {data.length ? (
+        <ul className="avatar-reports" data-testid="avatar-reports">
+          {data.map((a) => (
+            <li key={a.target} className="avatar-report" data-target={a.target}>
+              <Ava name={a.name} src={a.url} size="lg" />
+              <span>
+                <Link className="link" href={`/u/${a.handle}`}>
+                  {a.name}
+                </Link>
+                <span className="sub">
+                  {(Object.entries(a.counts) as [ReportReason, number][]).map(([k, n]) => `${reasonLabel("avatar", k)} ${n}`).join("、")}
+                </span>
+              </span>
+              <span className="report-acts">
+                <button type="button" className="btn btn-line" onClick={() => run("/api/admin/avatar", { id: a.userId })} data-testid="avatar-remove-admin">
+                  移除大頭貼
+                </button>
+                <button type="button" className="btn-text" onClick={() => run("/api/admin/targets", { target: a.target, decision: "kept" })} data-testid="avatar-keep">
+                  保留
+                </button>
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </section>
+  );
+}
 
 /** 被檢舉的留言（2026-09-28）：恢復＝之後不再自動隱藏；刪除＝軟刪除。門檻另外調 */
 function CommentQueue({ data, run }: { data: Overview["comments"]; run: (path: string, body: unknown) => Promise<void> }) {
@@ -453,6 +492,8 @@ export function Admin() {
       </section>
 
       <CommentQueue data={data.comments} run={run} />
+
+      <AvatarQueue data={data.avatars ?? []} run={run} />
 
       <section className="block" id="appeals">
         <h2 className="block-title">

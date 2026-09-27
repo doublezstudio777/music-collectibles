@@ -5,7 +5,7 @@ import { photoCache, photoCacheKey } from "@/lib/server/photos";
 import { QUOTA_MESSAGE, takeQuota } from "@/lib/server/quota";
 
 /**
- * 照片：/img/p/{id}.webp（公開）、/img/a/{id}.webp（申訴證據，只給本人與管理員）。
+ * 照片：/img/p/{id}.webp（公開）、/img/a/{id}.webp（申訴證據，只給本人與管理員）、/img/v/{id}.webp（大頭貼，公開，2026-09-28）。
  * 檔名是隨機 id、內容不會改。
  *
  * 順序（2026-09-28 改）：先查 D1（暫停、本月讀取數、這張照片還在不在），再查快取，最後才讀 R2。
@@ -27,7 +27,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ key: string[] }
   const { key } = await ctx.params;
   const k = key.join("/");
   const notFound = () => new Response("Not found", { status: 404, headers: { "X-Content-Type-Options": "nosniff", "Cache-Control": "no-store" } });
-  if (!/^[pa]\/[A-Za-z0-9_-]+\.(webp|jpg)$/.test(k) || !env.PHOTOS) return notFound();
+  if (!/^[pav]\/[A-Za-z0-9_-]+\.(webp|jpg)$/.test(k) || !env.PHOTOS) return notFound();
 
   const { status, photo, gone } = await siteStatus(k);
   // 申訴證據（a/ 開頭，或舊資料裡 purpose=appeal 的）只給上傳的本人與管理員

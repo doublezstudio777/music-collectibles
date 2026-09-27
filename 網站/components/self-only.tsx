@@ -12,3 +12,9 @@ export function useIsSelf(handle: string) {
   const { me, status } = useAccount();
   return { isSelf: me?.handle === handle, ready: status !== "loading" };
 }
+
+/** 不是本人才顯示（例：別人的大頭貼才有「檢舉大頭貼」）；登入狀態還沒讀到前不顯示 */
+export function NotSelf({ handle, children }: { handle: string; children: React.ReactNode }) {
+  const { me, status } = useAccount();
+  return status === "loading" || me?.handle === handle ? null : <>{children}</>;
+}

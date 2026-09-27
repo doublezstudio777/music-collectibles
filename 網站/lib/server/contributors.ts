@@ -1,13 +1,14 @@
 // 系列頁「資料貢獻者」（2026-09-28）：編輯過系列正文、新增過品項或版本、發過這個系列的炫收藏的會員。
 // 一次查詢（UNION ALL 後依會員加總），只在整頁快取沒命中時跑；這些表都有內容版本觸發器，
-// 貢獻或停權（users 更新）都會讓頁面換新。停權的帳號不列；匯入時沒有作者的初始版本不算。
+// 貢獻或停權（users 更新）都會讓頁面換新。停權的帳號不列；已刪除的帳號照列（名字是「已刪除的會員」，2026-09-28）；
+// 匯入時沒有作者的初始版本不算。
 
 import { env } from "cloudflare:workers";
 import { badgeText } from "@/lib/levels";
 import { isAdmin } from "@/lib/server/auth";
 
 export const CONTRIBUTOR_LIMIT = 10;
-export type Contributor = { handle: string; name: string; n: number; badge: string };
+export type Contributor = { handle: string; name: string; n: number; badge: string; avatar: string | null };
 
 export async function seriesContributors(artistSlug: string, no: number): Promise<{ list: Contributor[]; total: number }> {
   const skey = `${artistSlug}/${no}`;
@@ -28,20 +29,21 @@ export async function seriesContributors(artistSlug: string, no: number): Promis
       SELECT author_id, COUNT(*), MIN(created_at) FROM shares
         WHERE series_key = ?4 AND deleted_at IS NULL AND hidden_at IS NULL GROUP BY author_id
     )
-    SELECT u.handle AS handle, u.name AS name, u.email AS email, u.email_verified_at AS verified, COALESCE(sc.score, 0) AS score, lo.level AS override, SUM(x.n) AS n, MIN(x.first) AS first
+    SELECT u.handle AS handle, u.name AS name, u.avatar_key AS avatarKey, u.email AS email, u.email_verified_at AS verified, COALESCE(sc.score, 0) AS score, lo.level AS override, SUM(x.n) AS n, MIN(x.first) AS first
       FROM x JOIN users u ON u.id = x.uid LEFT JOIN user_scores sc ON sc.user_id = u.id LEFT JOIN level_overrides lo ON lo.user_id = u.id
-      WHERE u.status = 'active'
+      WHERE u.status IN ('active', 'deleted')
       GROUP BY u.id
       ORDER BY n DESC, first ASC, u.handle ASC`;
   const r = await env.DB!.prepare(sql)
     .bind(artistSlug, no, `series:${skey}`, skey)
-    .all<{ handle: string; name: string; email: string; verified: string | null; score: number; override: number | null; n: number }>();
+    .all<{ handle: string; name: string; avatarKey: string | null; email: string; verified: string | null; score: number; override: number | null; n: number }>();
   const rows = r.results ?? [];
   return {
     // 等級標籤：分數由每日排程彙總（user_scores 沒有內容版本觸發器，最多跟著整頁快取舊 5 分鐘）
     list: rows.slice(0, CONTRIBUTOR_LIMIT).map((x) => ({
       handle: x.handle,
       name: x.name,
+      avatar: x.avatarKey ? `/img/${x.avatarKey}` : null,
       n: Number(x.n),
       badge: badgeText(Number(x.score), isAdmin({ email: x.email, emailVerifiedAt: x.verified }), x.override),
     })),

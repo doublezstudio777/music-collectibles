@@ -8,6 +8,7 @@ import {
 import { hashPassword, randomToken } from "@/lib/server/crypto";
 import { hit, verifyTurnstile } from "@/lib/server/services";
 import { recordRegister } from "@/lib/server/geo";
+import { nameKey, nameProblem } from "@/lib/server/names";
 
 /** 註冊：Email＋密碼＋帳號名＋顯示名稱。成功後寄 6 位數驗證碼，驗證完才算登入 */
 export async function POST(req: Request) {
@@ -23,16 +24,19 @@ export async function POST(req: Request) {
   if (!validPassword(password)) return fail(400, "WEAK_PASSWORD", "密碼至少 8 個字");
   const hp = handleProblem(handle);
   if (hp) return fail(400, "INVALID_HANDLE", hp);
-  if (!name || name.length > 20) return fail(400, "INVALID_NAME", "顯示名稱 1～20 字");
+  if (!name || Array.from(name).length > 20) return fail(400, "INVALID_NAME", "顯示名稱 1～20 字");
   if (!(await hit(`register:${clientIp(req) ?? "local"}`, 10, 3600))) {
     return fail(429, "RATE_LIMITED", "註冊太多次了，一小時後再試");
   }
   if (await userByEmail(email)) return fail(409, "EMAIL_TAKEN", "這個 Email 已經註冊過，直接登入就好");
   if (await userByHandle(handle)) return fail(409, "HANDLE_TAKEN", "這個帳號名有人用了");
+  // 暱稱全站唯一、保留字（2026-09-28）
+  const np = await nameProblem(name, { max: 20 });
+  if (np) return fail(np.code === "NAME_TAKEN" ? 409 : 400, np.code, np.message);
 
   const [user] = await getDb()
     .insert(users)
-    .values({ id: randomToken(12), email, passwordHash: await hashPassword(password, passwordIterations()), handle, name })
+    .values({ id: randomToken(12), email, passwordHash: await hashPassword(password, passwordIterations()), handle, name, nameKey: nameKey(name) })
     .returning();
   await recordRegister(user.id, req);
   await sendCode(user, "verify");

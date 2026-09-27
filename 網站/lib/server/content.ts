@@ -288,10 +288,16 @@ export const getCatalog = cache(async () => cachedCatalog());
 /** 使用者 id → handle／名稱（私訊、後台用） */
 export async function userNames(ids: string[]) {
   const uniq = Array.from(new Set(ids.filter(Boolean)));
-  if (!uniq.length) return new Map<string, { handle: string; name: string }>();
-  const rows = await getDb()
-    .select({ id: users.id, handle: users.handle, name: users.name })
-    .from(users)
-    .where(inArray(users.id, uniq));
-  return new Map(rows.map((r) => [r.id, { handle: r.handle, name: r.name }]));
+  if (!uniq.length) return new Map<string, { handle: string; name: string; avatar: string | null }>();
+  // 大頭貼一起帶（2026-09-28）；id 超過 90 個分批查（D1 一句最多 100 個參數）
+  const rows: { id: string; handle: string; name: string; avatarKey: string | null }[] = [];
+  for (let i = 0; i < uniq.length; i += 90) {
+    rows.push(
+      ...(await getDb()
+        .select({ id: users.id, handle: users.handle, name: users.name, avatarKey: users.avatarKey })
+        .from(users)
+        .where(inArray(users.id, uniq.slice(i, i + 90)))),
+    );
+  }
+  return new Map(rows.map((r) => [r.id, { handle: r.handle, name: r.name, avatar: r.avatarKey ? `/img/${r.avatarKey}` : null }]));
 }

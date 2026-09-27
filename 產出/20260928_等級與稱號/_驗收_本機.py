@@ -535,7 +535,8 @@ check("12i 出價列表：每位出價者旁有等級", offers and len(re.findal
       offers and (len(re.findall(r'class="lv-tag"', offers.group(0))), len(re.findall(r'class="offer-row', offers.group(0)))))
 s1 = strip(requests.get(f"{B}/artist/{ART}/1").text)
 con = re.search(r'data-testid="contributors".*?</section>', s1, re.S)
-tags = re.findall(r'href="/u/([^"]+)"[^>]*>[^<]*</a><span class="lv-tag"[^>]*>([^<]+)<', con.group(0) if con else "")
+# 2026-09-28 法務頁與帳號設定：名字前多了頭像（<a> 裡是頭像＋<span>名字</span>）
+tags = re.findall(r'href="/u/([^"]+)"[^>]*>(?:(?!</a>).)*</a><span class="lv-tag"[^>]*>([^<]+)<', con.group(0) if con else "")
 check("12j 資料貢獻者名單：每人旁有等級（A＝專業樂迷 Lv.2）", con and (U["a"]["handle"], "專業樂迷 Lv.2") in tags, tags)
 
 # ================= 17. 收到留言 =================

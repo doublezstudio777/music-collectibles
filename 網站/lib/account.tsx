@@ -18,6 +18,10 @@ export type Me = {
   verified: boolean;
   admin: boolean;
   deletionRequested: boolean;
+  /** 大頭貼網址（沒有是 null） */
+  avatar?: string | null;
+  /** 下次可以改暱稱的時間（ISO）；現在就能改是 null */
+  nameNextAt?: string | null;
 };
 
 export type PanelMode = "login" | "register" | "verify" | "forgot" | "reset";

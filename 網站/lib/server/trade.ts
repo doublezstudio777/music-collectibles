@@ -316,7 +316,7 @@ export async function closeDeal(u: User, no: number, offerId: unknown) {
 export type PublicOffer = {
   id: number;
   threadId: number;
-  buyer: { handle: string; name: string };
+  buyer: { handle: string; name: string; avatar?: string | null };
   /** 出價者的等級小標籤（「收藏家 Lv.3」／「館長」） */
   badge: string;
   /** 出價者所在地區（國家層級，例：台灣）；沒有紀錄是空字串 */

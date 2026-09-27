@@ -44,19 +44,24 @@ export type MemberRow = {
   overrideReason: string;
   /** 停權中：原因文字（「分身刷分：說明」） */
   suspendReason: string;
+  /** 大頭貼網址（2026-09-28） */
+  avatar: string | null;
+  /** 改過幾次暱稱（紀錄只有管理員看得到） */
+  renames: number;
 };
 
 export async function searchMembers(query: string, status: string, page: number) {
   const db = env.DB!;
   const q = query.trim().toLowerCase().slice(0, 60);
   const like = `%${q.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
-  const st = status === "active" || status === "suspended" ? status : "";
+  const st = status === "active" || status === "suspended" || status === "deleted" ? status : "";
   const where = `WHERE (?1 = '' OR lower(u.name) LIKE ?2 ESCAPE '\\' OR u.email LIKE ?2 ESCAPE '\\' OR u.handle LIKE ?2 ESCAPE '\\') AND (?3 = '' OR u.status = ?3)`;
   const [list, total] = await db.batch([
     db
       .prepare(
         `SELECT u.id, u.name, u.handle, u.email, u.created_at AS createdAt, u.email_verified_at AS verifiedAt, u.status,
-                u.deletion_requested_at AS delReq,
+                u.deletion_requested_at AS delReq, u.avatar_key AS avatarKey,
+                (SELECT COUNT(*) FROM user_name_changes nc WHERE nc.user_id = u.id) AS renames,
                 (SELECT COUNT(*) FROM shares s WHERE s.author_id = u.id AND s.deleted_at IS NULL) AS posts,
                 (SELECT COUNT(*) FROM deals d WHERE d.voided_at IS NULL AND (d.seller_id = u.id OR d.buyer_id = u.id)) AS deals,
                 (SELECT COUNT(*) FROM reports r JOIN shares s2 ON r.target = 'share:' || s2.no WHERE s2.author_id = u.id) AS reported,
@@ -70,7 +75,7 @@ export async function searchMembers(query: string, status: string, page: number)
   ]);
   const rows = list.results as {
     id: string; name: string; handle: string; email: string; createdAt: string; verifiedAt: string | null; status: string;
-    delReq: string | null; posts: number; deals: number; reported: number; threads: number;
+    delReq: string | null; avatarKey: string | null; renames: number; posts: number; deals: number; reported: number; threads: number;
     score: number; override: number | null; overrideReason: string | null; susp: string | null;
   }[];
   const regions = await regionNames(rows.map((r) => r.id));
@@ -93,6 +98,8 @@ export async function searchMembers(query: string, status: string, page: number)
     level: levelOf(r.score, r.override).label,
     override: r.override,
     overrideReason: r.overrideReason ?? "",
+    avatar: r.avatarKey ? `/img/${r.avatarKey}` : null,
+    renames: r.renames,
     suspendReason: r.status === "suspended" ? (r.susp ? suspendReasonText(...(r.susp.split("\u001f") as [string, string])) : "原因未記錄") : "",
   }));
   return { members, total: (total.results[0] as { n: number }).n, page, pageSize: PAGE_SIZE };
@@ -120,6 +127,7 @@ export async function setMemberStatus(admin: User, id: string, action: string, r
   const [u] = await db.select().from(users).where(eq(users.id, id));
   if (!u) throw new MemberError(404, "NOT_FOUND", "找不到這位會員");
   if (u.id === admin.id || isAdmin(u)) throw new MemberError(403, "FORBIDDEN", "管理員帳號不能停權");
+  if (u.status === "deleted") throw new MemberError(409, "DELETED", "這個帳號已經刪除");
   const to = action === "suspend" ? "suspended" : "active";
   if (u.status === to) throw new MemberError(409, "UNCHANGED", action === "suspend" ? "這位已經停權" : "這位沒有被停權");
   const at = new Date().toISOString();
@@ -179,4 +187,13 @@ export async function memberLog(handle: string) {
     .bind(`user:${handle}`)
     .all();
   return r.results as { action: string; detail: string; at: string }[];
+}
+
+/** 某位會員的改名紀錄（新到舊，只有管理員看得到） */
+export async function nameHistory(userId: string) {
+  const r = await env
+    .DB!.prepare(`SELECT old_name AS oldName, new_name AS newName, created_at AS at FROM user_name_changes WHERE user_id = ?1 ORDER BY id DESC LIMIT 50`)
+    .bind(userId)
+    .all<{ oldName: string; newName: string; at: string }>();
+  return r.results ?? [];
 }

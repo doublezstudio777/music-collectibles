@@ -4,6 +4,7 @@
 // 不進整頁快取：頁面載入後另外打 /api/comments（跟 /api/counts 讚數一樣），換帳號時重抓。
 // 留言一律當純文字輸出（React 跳脫），換行用 CSS 保留。
 
+import { Ava } from "@/components/ava";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { api, openPanel, useAccount } from "@/lib/account";
@@ -13,7 +14,7 @@ import { LevelTag } from "@/components/level-tag";
 
 type C = {
   id: number;
-  author: { handle: string; name: string; badge?: string };
+  author: { handle: string; name: string; badge?: string; avatar?: string | null };
   body: string;
   at: string;
   mine: boolean;
@@ -155,7 +156,8 @@ export function ShareComments({ share }: { share: number }) {
             <li key={c.id} className="comment" data-comment={c.id}>
               <p className="comment-head">
                 <Link className="comment-who" href={`/u/${c.author.handle}`}>
-                  {c.author.name}
+                  <Ava name={c.author.name} src={c.author.avatar} />
+                  <span>{c.author.name}</span>
                 </Link>
                 <LevelTag badge={c.author.badge} />
                 <span className="comment-when">{relTime(c.at, now)}</span>

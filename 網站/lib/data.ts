@@ -295,19 +295,27 @@ export type HoldingView = {
  * - 被鎖的發文者向音藏申訴，管理者看過才解鎖，不自動解鎖
  */
 
-export type ReportReason = "fake" | "never" | "other";
+export type ReportReason = "fake" | "never" | "improper" | "other";
 
 /** 對象鍵：`share:8`、`item:tide-highway/3#towel`、`version:faint-signal/1#cd-v1` */
-export type TargetKey = `share:${number}` | `item:${string}` | `version:${string}`;
-export type TargetLevel = "share" | "item" | "version";
+export type TargetKey = `share:${number}` | `item:${string}` | `version:${string}` | `avatar:${string}`;
+/** avatar＝大頭貼（2026-09-28）：走同一張檢舉表，但不鎖交易，管理員看過決定移除或保留 */
+export type TargetLevel = "share" | "item" | "version" | "avatar";
 export const shareTarget = (n: number): TargetKey => `share:${n}`;
 export const itemTarget = (key: string): TargetKey => `item:${key}`;
 export const versionTarget = (key: string): TargetKey => `version:${key}`;
 export const targetLevel = (t: TargetKey): TargetLevel => t.slice(0, t.indexOf(":")) as TargetLevel;
 
 /** 各層可選的理由 */
+export const avatarTarget = (photoId: string): TargetKey => `avatar:${photoId}`;
+
 export const reasonsFor = (level: TargetLevel): { key: ReportReason; label: string }[] =>
-  level === "share"
+  level === "avatar"
+    ? [
+        { key: "improper", label: "不當圖片或冒用他人" },
+        { key: "other", label: "其他" },
+      ]
+    : level === "share"
     ? [
         { key: "fake", label: "盜版／仿冒" },
         { key: "other", label: "其他" },
@@ -322,7 +330,7 @@ export const reasonLabel = (level: TargetLevel, r: ReportReason) =>
 
 /** 達門檻後的醒目標示 */
 export const lockLabel = (level: TargetLevel) =>
-  level === "share" ? "多人檢舉：疑似盜版" : level === "item" ? "爭議品項：官方未證實發行" : "爭議版本：官方未證實發行";
+  level === "avatar" ? "大頭貼被檢舉" : level === "share" ? "多人檢舉：疑似盜版" : level === "item" ? "爭議品項：官方未證實發行" : "爭議版本：官方未證實發行";
 
 export const DEFAULT_THRESHOLD = 10;
 
@@ -360,6 +368,7 @@ export type LockData = {
 };
 
 export const isTargetLocked = (d: LockData, t: TargetKey) => {
+  if (t.startsWith("avatar:")) return false;
   const decision = d.decisions[t];
   if (decision === "unlocked") return false;
   if (decision === "kept") return true;

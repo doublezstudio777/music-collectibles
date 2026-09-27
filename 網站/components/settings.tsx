@@ -1,9 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { api, openPanel, refreshAccount, setMe, useAccount, type Me } from "@/lib/account";
-import { SITE_NAME } from "@/lib/data";
+import { Ava } from "@/components/ava";
+import { prepareAvatar } from "@/lib/image";
 
 function Msg({ ok, text }: { ok: boolean; text: string }) {
   if (!text) return null;
@@ -14,12 +16,17 @@ function Msg({ ok, text }: { ok: boolean; text: string }) {
   );
 }
 
+/** 台灣日期 2026-10-28 */
+const twDate = (iso: string) => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 10);
+
 function NameBox({ me }: { me: Me }) {
   const [name, setName] = useState(me.name);
   const [msg, setMsg] = useState({ ok: true, text: "" });
   const router = useRouter();
+  const locked = Boolean(me.nameNextAt);
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (name.trim() === me.name) return setMsg({ ok: true, text: "暱稱沒有變" });
     const r = await api<{ user: Me }>("/api/me/profile", { method: "PATCH", body: { name } });
     if (r.ok) {
       setMe(r.data.user);
@@ -28,19 +35,79 @@ function NameBox({ me }: { me: Me }) {
     } else setMsg({ ok: false, text: r.error.message });
   };
   return (
-    <form className="block settings-block" onSubmit={save} noValidate>
-      <h2 className="block-title">顯示名稱</h2>
+    <form className="block settings-block" onSubmit={save} noValidate data-testid="name-box">
+      <h2 className="block-title">暱稱</h2>
+      <p className="page-meta" data-testid="name-rule">
+        {locked ? `${twDate(me.nameNextAt!)} 以後可以再改` : "每 30 天可以改一次，不能跟別人重複"}
+      </p>
       <label className="sr-only" htmlFor="set-name">
-        顯示名稱
+        暱稱
       </label>
       <div className="settings-row">
-        <input id="set-name" className="input" value={name} maxLength={30} onChange={(e) => setName(e.target.value)} />
-        <button type="submit" className="btn btn-line">
+        <input id="set-name" className="input" value={name} maxLength={30} disabled={locked} onChange={(e) => setName(e.target.value)} />
+        <button type="submit" className="btn btn-line" disabled={locked}>
           儲存
         </button>
       </div>
       <Msg {...msg} />
     </form>
+  );
+}
+
+function AvatarBox({ me }: { me: Me }) {
+  const [msg, setMsg] = useState({ ok: true, text: "" });
+  const [busy, setBusy] = useState(false);
+  const router = useRouter();
+  const done = async (text: string) => {
+    await refreshAccount();
+    setMsg({ ok: true, text });
+    router.refresh();
+  };
+  const pick = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    setBusy(true);
+    setMsg({ ok: true, text: "" });
+    try {
+      const blob = await prepareAvatar(file);
+      const form = new FormData();
+      form.append("image", blob, blob.type === "image/webp" ? "avatar.webp" : "avatar.jpg");
+      const r = await api("/api/me/avatar", { body: form });
+      if (r.ok) await done("已換上新的大頭貼");
+      else setMsg({ ok: false, text: r.error.message });
+    } catch {
+      setMsg({ ok: false, text: "這張照片讀不到，換一張再試" });
+    }
+    setBusy(false);
+  };
+  const remove = async () => {
+    setBusy(true);
+    const r = await api("/api/me/avatar", { method: "DELETE" });
+    if (r.ok) await done("已移除大頭貼");
+    else setMsg({ ok: false, text: r.error.message });
+    setBusy(false);
+  };
+  return (
+    <section className="block settings-block" data-testid="avatar-box">
+      <h2 className="block-title">大頭貼</h2>
+      <div className="avatar-row">
+        <Ava name={me.name} src={me.avatar} size="lg" />
+        <div className="avatar-acts">
+          <label className="btn btn-line file-btn">
+            {me.avatar ? "換一張" : "上傳大頭貼"}
+            <input type="file" accept="image/*" className="sr-only" onChange={pick} disabled={busy} data-testid="avatar-input" />
+          </label>
+          {me.avatar ? (
+            <button type="button" className="btn-text" onClick={remove} disabled={busy} data-testid="avatar-remove">
+              移除
+            </button>
+          ) : null}
+          <p className="page-meta">照片會從中間裁成正方形。一天最多換 5 次。</p>
+        </div>
+      </div>
+      <Msg {...msg} />
+    </section>
   );
 }
 
@@ -101,70 +168,6 @@ function SessionsBox() {
   );
 }
 
-/** 刪除帳號：這輪只做申請（確認流程），實際刪除策略待使用者確認 */
-function DeleteBox({ me }: { me: Me }) {
-  const [open, setOpen] = useState(false);
-  const [handle, setHandle] = useState("");
-  const [password, setPassword] = useState("");
-  const [msg, setMsg] = useState({ ok: true, text: "" });
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const r = await api("/api/me/delete", { body: { handle, password } });
-    if (r.ok) {
-      await refreshAccount();
-      setOpen(false);
-    } else setMsg({ ok: false, text: r.error.message });
-  };
-  const cancel = async () => {
-    await api("/api/me/delete", { method: "DELETE" });
-    await refreshAccount();
-  };
-  return (
-    <section className="block settings-block" data-testid="delete-box">
-      <h2 className="block-title">刪除帳號</h2>
-      {me.deletionRequested ? (
-        <>
-          <p className="page-meta" data-testid="delete-requested">
-            已收到刪除申請。{SITE_NAME}會人工處理，處理前帳號照常可用。
-          </p>
-          <div className="settings-row">
-            <button type="button" className="btn-text" onClick={cancel}>
-              取消申請
-            </button>
-          </div>
-        </>
-      ) : open ? (
-        <form onSubmit={submit} noValidate>
-          <p className="page-meta">確認要刪除，請輸入帳號名「{me.handle}」和密碼。</p>
-          <label className="field-label" htmlFor="del-handle">
-            帳號名
-          </label>
-          <input id="del-handle" className="input" value={handle} onChange={(e) => setHandle(e.target.value)} autoComplete="off" />
-          <label className="field-label" htmlFor="del-pw">
-            密碼
-          </label>
-          <input id="del-pw" className="input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <div className="settings-row">
-            <button type="submit" className="btn btn-danger">
-              申請刪除
-            </button>
-            <button type="button" className="btn-text" onClick={() => setOpen(false)}>
-              取消
-            </button>
-          </div>
-          <Msg {...msg} />
-        </form>
-      ) : (
-        <div className="settings-row">
-          <button type="button" className="btn btn-line" onClick={() => setOpen(true)}>
-            刪除帳號…
-          </button>
-        </div>
-      )}
-    </section>
-  );
-}
-
 export function SettingsForm() {
   const { status, me } = useAccount();
   if (status === "loading") return null;
@@ -181,10 +184,15 @@ export function SettingsForm() {
   return (
     <div className="settings">
       <p className="page-meta">{me.email}</p>
-      <NameBox key={me.id} me={me} />
+      <AvatarBox me={me} />
+      <NameBox key={`${me.id}-${me.name}`} me={me} />
       <PasswordBox />
       <SessionsBox />
-      <DeleteBox me={me} />
+      <p className="settings-delete">
+        <Link href="/settings/delete" data-testid="delete-link">
+          {me.deletionRequested ? "刪除帳號申請處理中" : "申請刪除帳號"}
+        </Link>
+      </p>
     </div>
   );
 }

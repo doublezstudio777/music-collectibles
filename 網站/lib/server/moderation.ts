@@ -4,6 +4,7 @@
 // 達門檻（預設 10，後台可調）＝醒目標示＋交易暫停；被鎖的發文者向音藏申訴，管理員裁決才解鎖。
 // 管理員的每個動作（解鎖、維持鎖定、調門檻、核准／退回新增）都寫 admin_log。
 
+import { env } from "cloudflare:workers";
 import { and, count, desc, eq, inArray, isNull, max } from "drizzle-orm";
 import { getDb } from "@/db";
 import {
@@ -29,7 +30,8 @@ import { hiddenList } from "@/lib/server/takedown";
 import { hit } from "@/lib/server/services";
 import { adminComments } from "@/lib/server/comments";
 import { HttpError } from "@/lib/server/trade";
-import { isAdmin, type User } from "@/lib/server/auth";
+import { avatarUrl, isAdmin, type User } from "@/lib/server/auth";
+import { avatarReportable } from "@/lib/server/avatars";
 
 const nowIso = () => new Date().toISOString();
 
@@ -38,6 +40,7 @@ export function parseTarget(v: unknown): TargetKey | null {
   if (/^share:\d{1,9}$/.test(v)) return v as TargetKey;
   if (/^item:[a-z0-9-]+\/\d+#[a-z0-9]+$/.test(v)) return v as TargetKey;
   if (/^version:[a-z0-9-]+\/\d+#[a-z0-9]+-[a-z0-9]+$/.test(v)) return v as TargetKey;
+  if (/^avatar:[A-Za-z0-9_-]{6,40}$/.test(v)) return v as TargetKey;
   return null;
 }
 
@@ -46,6 +49,7 @@ const targetBody = (t: TargetKey) => t.slice(t.indexOf(":") + 1);
 async function targetExists(t: TargetKey) {
   const level = targetLevel(t);
   if (level === "share") return shareExists(Number(targetBody(t)));
+  if (level === "avatar") return true; // 大頭貼在 report() 裡另外檢查（要知道檢舉人是誰）
   return contentKeyExists(targetBody(t), level);
 }
 
@@ -67,6 +71,11 @@ export async function report(u: User, rawTarget: unknown, reason: unknown, note:
   if (level === "share") {
     const [s] = await getDb().select({ a: shares.authorId }).from(shares).where(eq(shares.no, Number(targetBody(target))));
     if (s?.a === u.id) throw new HttpError(403, "FORBIDDEN", "不能檢舉自己的收藏");
+  }
+  if (level === "avatar") {
+    const st = await avatarReportable(targetBody(target), u.id);
+    if (st === "gone") throw new HttpError(404, "NOT_FOUND", "這張大頭貼已經換掉了");
+    if (st === "self") throw new HttpError(403, "FORBIDDEN", "不能檢舉自己的大頭貼");
   }
   if (!(await hit(`report:${u.id}`, 30, 86400))) throw new HttpError(429, "RATE_LIMITED", "今天檢舉太多次了");
   const r = await getDb()
@@ -305,7 +314,19 @@ export async function adminOverview(viewer: User) {
   });
   const counts = Object.fromEntries([...byTarget.entries()].map(([t, c]) => [t, Object.values(c).reduce((a, b) => a + b, 0)]));
   const lockData = { counts, decisions, threshold: th };
-  const allTargets = new Set<string>([...byTarget.keys(), ...apRows.map((a) => a.target)]);
+  const allTargets = new Set<string>([...byTarget.keys(), ...apRows.map((a) => a.target)].filter((t) => !t.startsWith("avatar:")));
+  // 大頭貼檢舉（2026-09-28）：不鎖交易，另外列一區；已換掉／移除的、管理員按過保留的不列
+  const avatarIds = [...byTarget.keys()].filter((t) => t.startsWith("avatar:") && !decisions[t]).map((t) => t.slice(7));
+  const avatarRows = avatarIds.length
+    ? ((
+        await env.DB!.prepare(
+          `SELECT p.id, p.r2_key AS key, u.id AS userId, u.handle, u.name FROM photos p JOIN users u ON u.id = p.owner_id
+           WHERE p.purpose = 'avatar' AND p.deleted_at IS NULL AND u.avatar_key = p.r2_key AND p.id IN (SELECT value FROM json_each(?1))`,
+        )
+          .bind(JSON.stringify(avatarIds))
+          .all<{ id: string; key: string; userId: string; handle: string; name: string }>()
+      ).results ?? [])
+    : [];
   const photoIds = apRows.flatMap((a) => parseJson<string[]>(a.photoIds, []));
   const pics = photoIds.length ? await db.select().from(photos).where(inArray(photos.id, photoIds)) : [];
   const names = await userNames([
@@ -353,6 +374,15 @@ export async function adminOverview(viewer: User) {
       })),
     ],
     log: logRows.map((l) => ({ id: l.id, by: who(l.adminId), action: l.action, target: l.target, detail: l.detail, at: l.createdAt })),
+    avatars: avatarRows.map((r) => ({
+      target: `avatar:${r.id}`,
+      userId: r.userId,
+      handle: r.handle,
+      name: r.name,
+      url: avatarUrl(r.key),
+      counts: byTarget.get(`avatar:${r.id}`) ?? {},
+      total: counts[`avatar:${r.id}`] ?? 0,
+    })),
     // 留言（2026-09-28）：被檢舉還沒處理的、被自動隱藏的
     comments: await adminComments(),
   };
@@ -382,7 +412,10 @@ export async function setDecision(admin: User, rawTarget: unknown, decision: unk
       .values({ target, decision, decidedBy: admin.id })
       .onConflictDoUpdate({ target: targetDecisions.target, set: { decision, decidedBy: admin.id, decidedAt: nowIso() } });
   } else throw new HttpError(400, "BAD_REQUEST", "參數不對");
-  await log(admin.id, decision === "unlocked" ? "解鎖" : decision === "kept" ? "維持鎖定" : "取消裁決", target, extra);
+  const action = target.startsWith("avatar:")
+    ? decision === "kept" ? "保留大頭貼" : "取消裁決"
+    : decision === "unlocked" ? "解鎖" : decision === "kept" ? "維持鎖定" : "取消裁決";
+  await log(admin.id, action, target, extra);
 }
 
 export async function setThreshold(admin: User, n: unknown) {

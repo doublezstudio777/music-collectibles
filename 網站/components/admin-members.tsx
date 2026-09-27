@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/account";
 import { LEVELS, levelLabel } from "@/lib/levels";
 import type { MemberRow } from "@/lib/server/members";
+import { Ava } from "@/components/ava";
 
 // 跟 lib/server/members.ts 的 SUSPEND_REASONS 同一份（伺服器檔不能被 client 元件載入）
 const REASONS = [
@@ -17,7 +18,53 @@ const REASONS = [
 
 type Res = { members: MemberRow[]; total: number; page: number; pageSize: number };
 const day = (iso: string) => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 10);
-const STATUS = { active: "正常", suspended: "停權" } as Record<string, string>;
+const STATUS = { active: "正常", suspended: "停權", deleted: "已刪除" } as Record<string, string>;
+const time = (iso: string) => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 16).replace("T", " ");
+
+/** 改名紀錄（只有管理員看得到）：點開才查 */
+function Renames({ m }: { m: MemberRow }) {
+  const [list, setList] = useState<{ oldName: string; newName: string; at: string }[] | null>(null);
+  if (!m.renames) return null;
+  const open = async () => {
+    const r = await api<{ names: { oldName: string; newName: string; at: string }[] }>(`/api/admin/members?names=${encodeURIComponent(m.id)}`);
+    if (r.ok) setList(r.data.names);
+  };
+  return (
+    <details className="renames" data-testid="renames" onToggle={(e) => (e.currentTarget.open && !list ? void open() : undefined)}>
+      <summary>改名 {m.renames} 次</summary>
+      {list ? (
+        <ul>
+          {list.map((x, i) => (
+            <li key={i}>
+              <span className="num">{time(x.at)}</span> {x.oldName} → {x.newName}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </details>
+  );
+}
+
+/** 大頭貼：有就顯示小圖＋「移除」（寫操作紀錄、R2 檔刪除） */
+function AvatarCell({ m, done }: { m: MemberRow; done: () => void }) {
+  const [error, setError] = useState("");
+  if (!m.avatar) return null;
+  const remove = async () => {
+    if (!window.confirm(`移除「${m.name}」的大頭貼？`)) return;
+    const r = await api("/api/admin/avatar", { body: { id: m.id } });
+    if (!r.ok) return setError(r.error.message);
+    done();
+  };
+  return (
+    <span className="member-ava">
+      <Ava name={m.name} src={m.avatar} />
+      <button type="button" className="btn-text" onClick={remove} data-testid="avatar-admin-remove">
+        移除大頭貼
+      </button>
+      {error ? <span className="field-error">{error}</span> : null}
+    </span>
+  );
+}
 
 function Actions({ m, done }: { m: MemberRow; done: () => void }) {
   const [open, setOpen] = useState(false);
@@ -25,6 +72,7 @@ function Actions({ m, done }: { m: MemberRow; done: () => void }) {
   const [reason, setReason] = useState("");
   const [error, setError] = useState("");
   if (m.admin) return <span className="sub">管理員</span>;
+  if (m.status === "deleted") return null;
   const run = async (action: "suspend" | "restore") => {
     setError("");
     if (action === "suspend" && !code) return setError("選一個停權原因");
@@ -188,6 +236,7 @@ export function AdminMembers() {
           <option value="">全部狀態</option>
           <option value="active">正常</option>
           <option value="suspended">停權</option>
+          <option value="deleted">已刪除</option>
         </select>
         <span className="sub num">{d ? `${d.total} 位` : ""}</span>
       </div>
@@ -224,6 +273,8 @@ export function AdminMembers() {
                     m.name
                   )}
                   <span className="sub">@{m.handle}</span>
+                  <AvatarCell m={m} done={() => void load()} />
+                  <Renames key={`${m.id}-${m.renames}`} m={m} />
                 </td>
                 <td className="mono">{m.email}</td>
                 <td className="num">{day(m.createdAt)}</td>

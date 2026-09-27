@@ -14,6 +14,8 @@ type Queue = {
   comments?: number;
   commentsHidden?: number;
   duplicates?: number;
+  avatars?: number;
+  deletions?: number;
 };
 type StatsRes = { stats: Stats; cached: boolean; queue: Queue };
 type Usage = {
@@ -285,6 +287,14 @@ export function AdminDashboard() {
           <Link href="/admin/duplicates" className="queue-item" data-testid="queue-duplicates">
             <b className="num">{q.duplicates ?? 0}</b>
             <span>疑似重複藝人</span>
+          </Link>
+          <Link href="/admin/moderation#avatars" className="queue-item" data-testid="queue-avatars">
+            <b className="num">{q.avatars ?? 0}</b>
+            <span>被檢舉的大頭貼</span>
+          </Link>
+          <Link href="/admin/deletions" className="queue-item" data-testid="queue-deletions">
+            <b className="num">{q.deletions ?? 0}</b>
+            <span>刪帳申請</span>
           </Link>
         </div>
       </section>

@@ -4,7 +4,7 @@
 // （讚數等是總數，登入者自己的狀態由前端從 /api/me 疊上去），同一個內容版本只要渲染一次。
 //
 // 規則：
-// - 只快取 GET、白名單路徑（首頁、藝人目錄、藝人頁與底下、單則頁、標籤頁、登入頁），200 與 404
+// - 只快取 GET、白名單路徑（首頁、藝人目錄、藝人頁與底下、單則頁、標籤頁、登入頁、隱私權政策、使用條款），200 與 404
 // - 快取鍵含 content_version.v：公開內容一有寫入（含隱藏、下架；按讚、我有、想要 2026-09-28 起不算，數字改走 /api/counts），資料庫觸發器就把 v 加 1，
 //   下一個請求換新鍵，舊副本再也不會被送出去。跟 /img/ 一樣是「先問 D1 再查快取」，不靠清快取，
 //   所以每個資料中心都立刻生效（caches.default.delete 只清單一資料中心）
@@ -27,7 +27,7 @@ type Env = { DB: D1Database; CF_VERSION_METADATA?: { id: string }; LOCAL_TEST?: 
 type Handler = { fetch(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> };
 const app = handler as unknown as Handler;
 
-const CACHEABLE = /^\/(?:$|artists$|login$|artist\/[^/]+(?:\/.*)?$|share\/\d+$|tag\/[^/]+$)/;
+const CACHEABLE = /^\/(?:$|artists$|login$|privacy$|terms$|artist\/[^/]+(?:\/.*)?$|share\/\d+$|tag\/[^/]+$)/;
 const VARY = [
   "rsc",
   "next-router-state-tree",

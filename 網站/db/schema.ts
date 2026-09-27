@@ -36,8 +36,23 @@ export const users = sqliteTable(
     updatedAt: text("updated_at").notNull().default(now),
     /** 2b：使用者在設定頁申請刪除帳號的時間（實際刪除策略待使用者確認，見技術設計第十五節） */
     deletionRequestedAt: text("deletion_requested_at"),
+    /**
+     * 2026-09-28 帳號設定（drizzle/0011）：暱稱比對鍵（NFKC、小寫、去空白；全站唯一由程式檢查，
+     * 不設唯一索引，因為上線前的舊帳號可能已經重複，不能讓遷移失敗）。已刪除的帳號是 NULL
+     */
+    nameKey: text("name_key"),
+    /** 最近一次自己改暱稱的時間（每 30 天一次） */
+    nameChangedAt: text("name_changed_at"),
+    /** 大頭貼 R2 檔名（v/{id}.webp，256×256）；沒有是 NULL */
+    avatarKey: text("avatar_key"),
+    /** 管理員執行刪除帳號的時間（status=deleted） */
+    deletedAt: text("deleted_at"),
   },
-  (t) => [uniqueIndex("users_email_uq").on(t.email), uniqueIndex("users_handle_uq").on(t.handle)],
+  (t) => [
+    uniqueIndex("users_email_uq").on(t.email),
+    uniqueIndex("users_handle_uq").on(t.handle),
+    index("users_name_key_idx").on(t.nameKey),
+  ],
 );
 
 export const sessions = sqliteTable(
@@ -732,3 +747,41 @@ export const levelOverrides = sqliteTable("level_overrides", {
   byAdmin: text("by_admin").notNull(),
   at: text("at").notNull(),
 });
+
+/* =====================================================================
+ * 法務頁與帳號設定（2026-09-28，drizzle/0011）：users 加四個可為 NULL 的欄位與一個索引，新增兩張表。
+ * 兩張新表都不掛內容版本觸發器（改暱稱、大頭貼改的是 users，users 本來就有觸發器）。
+ * ===================================================================== */
+
+/** 改暱稱紀錄：只有管理員看得到（後台會員頁）。帳號刪除時一併刪掉 */
+export const userNameChanges = sqliteTable(
+  "user_name_changes",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: text("user_id").notNull(),
+    oldName: text("old_name").notNull(),
+    newName: text("new_name").notNull(),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [index("user_name_changes_user_idx").on(t.userId, t.id)],
+);
+
+/**
+ * 刪帳申請：會員在設定頁填原因送出，管理員在後台「刪帳申請」執行。status：pending｜done｜cancelled。
+ * 執行後不能還原。delete_photos＝執行時有沒有勾「連同照片一起刪除」；result＝JSON，各表清掉幾列
+ */
+export const deletionRequests = sqliteTable(
+  "deletion_requests",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: text("user_id").notNull(),
+    reason: text("reason").notNull(),
+    status: text("status").notNull().default("pending"),
+    createdAt: text("created_at").notNull().default(now),
+    handledAt: text("handled_at"),
+    handledBy: text("handled_by"),
+    deletePhotos: integer("delete_photos").notNull().default(0),
+    result: text("result").notNull().default("{}"),
+  },
+  (t) => [index("deletion_requests_status_idx").on(t.status, t.id), index("deletion_requests_user_idx").on(t.userId)],
+);

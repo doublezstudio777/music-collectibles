@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { userByHandle } from "@/lib/server/auth";
+import { avatarUrl, userByHandle } from "@/lib/server/auth";
+import { Ava } from "@/components/ava";
+import { ReportBox } from "@/components/report";
+import { NotSelf } from "@/components/self-only";
+import { avatarTarget } from "@/lib/data";
 import { publicHoldings } from "@/lib/server/me";
 import { regionNames } from "@/lib/server/geo";
 import { pageData } from "@/lib/server/viewer";
@@ -19,11 +23,30 @@ type Props = { params: Promise<{ handle: string }> };
 async function loadUser(handle: string) {
   const h = handle.toLowerCase();
   const u = await userByHandle(h);
-  if (u && u.status === "active") {
+  // 已刪除的會員（2026-09-28）：只留暱稱「已刪除的會員」與他的炫收藏，其他個人資訊一律不顯示
+  if (u && u.status === "deleted") {
     return {
+      deleted: true as const,
       handle: u.handle,
       name: u.name,
-      initials: Array.from(u.name)[0] ?? "?",
+      avatar: null,
+      avatarId: "",
+      bio: "",
+      verified: false,
+      region: "",
+      score: null,
+      owned: [],
+      wanted: [],
+    };
+  }
+  if (u && u.status === "active") {
+    return {
+      deleted: false as const,
+      handle: u.handle,
+      name: u.name,
+      avatar: avatarUrl(u.avatarKey),
+      // 檢舉大頭貼用：v/{照片 id}.webp → 照片 id
+      avatarId: u.avatarKey ? u.avatarKey.slice(2).replace(/\.[a-z]+$/, "") : "",
       bio: u.bio,
       verified: Boolean(u.emailVerifiedAt),
       region: (await regionNames([u.id])).get(u.id) ?? "",
@@ -102,16 +125,21 @@ export default async function UserPage({ params }: Props) {
   return (
     <main className="wrap page">
       <header className="profile">
-        <span className="ava ava-lg" aria-hidden="true">
-          {user.initials}
-        </span>
+        <div className="profile-ava">
+          <Ava name={user.name} src={user.avatar} size="lg" />
+          {user.avatarId ? (
+            <NotSelf handle={user.handle}>
+              <ReportBox target={avatarTarget(user.avatarId)} label="檢舉大頭貼" />
+            </NotSelf>
+          ) : null}
+        </div>
         <div className="profile-text">
           <h1 className="page-title">
             {user.name}
             {user.verified ? <span className="verified">已認證</span> : null}
-            <LevelTag badge={user.score.badge} />
+            {user.score ? <LevelTag badge={user.score.badge} /> : null}
           </h1>
-          <ScoreLine handle={user.handle} s={user.score} />
+          {user.score ? <ScoreLine handle={user.handle} s={user.score} /> : null}
           {user.region ? (
             <p className="page-meta" data-testid="profile-region">
               所在地區 {user.region}
@@ -148,13 +176,17 @@ export default async function UserPage({ params }: Props) {
         />
       </section>
 
-      <SaleWall shares={own} />
+      {user.deleted ? null : (
+        <>
+          <SaleWall shares={own} />
 
-      <SelfOnly handle={user.handle}>
-        <FollowList artists={c.artists.map((a) => ({ slug: a.slug, name: a.name, tagline: a.tagline }))} />
-      </SelfOnly>
+          <SelfOnly handle={user.handle}>
+            <FollowList artists={c.artists.map((a) => ({ slug: a.slug, name: a.name, tagline: a.tagline }))} />
+          </SelfOnly>
 
-      <HoldingsList handle={user.handle} owned={user.owned} wanted={user.wanted} catalog={catalog} />
+          <HoldingsList handle={user.handle} owned={user.owned} wanted={user.wanted} catalog={catalog} />
+        </>
+      )}
     </main>
   );
 }
