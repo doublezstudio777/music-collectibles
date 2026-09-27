@@ -1,4 +1,4 @@
-# 等級、分數、稱號＋小修：本機驗收。
+# 等級、分數、稱號＋小修：本機驗收（2026-09-28 定案修改：降低版門檻、收到留言、停權凍結、補資料擴大、停權原因、指定等級）。
 # 用法：python3 _驗收_本機.py <網址，例 http://127.0.0.1:8791> <網站資料夾>
 # 本機資料不清空：每次重跑自己建一批新會員、新藝人、新系列（名稱帶時間戳），只驗這批人的分數。
 # 「7 天後入帳」用管理員 API 的 now 參數模擬（只有本機 LOCAL_TEST=1 收這個參數）。
@@ -87,7 +87,7 @@ def count(evs, kind, state=None, reason="*"):
 # ================= 準備：會員、藝人、系列、收藏 =================
 PW = sql("SELECT password_hash FROM users WHERE email = 'admin@demo.yinzang.test'")[0]["password_hash"]
 TAGS = ["a", "b", "c", "d", "e", "f", "p1", "p2", "p3", "l1", "h", "h2", "s", "bu", "k", "k2", "i", "x", "y", "y2", "z"]
-TAGS += [f"r{n:02d}" for n in range(1, 12)] + [f"m{n:02d}" for n in range(1, 53)]
+TAGS += [f"r{n:02d}" for n in range(1, 12)] + [f"m{n:02d}" for n in range(1, 53)] + ["g", "o", "x2", "q"]
 stmts = []
 for t in TAGS:
     h = f"lv{STAMP}{t}"
@@ -97,7 +97,7 @@ for t in TAGS:
     )
 sql(";\n".join(stmts))
 U = {t: {"id": f"u-lv{STAMP}{t}", "handle": f"lv{STAMP}{t}", "email": f"lv{STAMP}{t}@lvtest.test"} for t in TAGS}
-for t in ["a", "b", "c", "d", "e", "f", "h", "h2", "k", "k2", "z"] + [f"r{n:02d}" for n in range(1, 12)]:
+for t in ["a", "b", "c", "d", "e", "f", "h", "h2", "k", "k2", "z", "g", "o", "x2"] + [f"r{n:02d}" for n in range(1, 12)]:
     U[t].update(login(U[t]["email"]))
 
 ART, ART2, ART3 = f"lvart{STAMP}", f"lvartb{STAMP}", f"lvartc{STAMP}"
@@ -338,7 +338,7 @@ ev_x = events(U["x"]["id"])
 rx = [e for e in ev_x if e["kind"] == "like_recv" and json.loads(e["detail"])["share"] == share_no["x"][0]]
 check("4d 同一則收到 53 個讚，只計 50", count([e for e in rx], "like_recv", "credited") == 50 and sum(1 for e in rx if e["reason"] == "share_cap") == 3, (len(rx), sum(1 for e in rx if e["state"] == "credited")))
 check("4e X 收到讚合計 60（第 1 則 50＋其他 10 則，取消的那個不算）", credited(ev_x, "like_recv") == 60, credited(ev_x, "like_recv"))
-check("4f X 總分＝收藏 120＋收到讚 60＝180", total(U["x"]["id"])[0] == 180, total(U["x"]["id"]))
+check("4f X 總分＝收藏 120＋收到讚 60＋收到留言 7＝187", total(U["x"]["id"])[0] == 187, total(U["x"]["id"]))
 ev_p1, ev_p2 = events(U["p1"]["id"]), events(U["p2"]["id"])
 check("4g 互讚合計 25 次只計 20：P1 給 10、P2 給 10", credited(ev_p1, "like_give") == 10 and credited(ev_p2, "like_give") == 10 and count(ev_p1, "like_give", reason="pair_cap") == 5,
       (credited(ev_p1, "like_give"), credited(ev_p2, "like_give")))
@@ -428,16 +428,49 @@ check("8f 7 天內被改掉的不給分（changed）", count(events(U["k2"]["id"
 recompute(8)
 check("8g 7 天後入帳：K 補資料 50 分", credited(events(U["k"]["id"]), "fill") == 50, credited(events(U["k"]["id"]), "fill"))
 
-# ================= 9. 停權歸零 =================
+# ================= 9. 停權：分數保留、停權期間凍結 =================
+def now_iso():
+    return iso(datetime.now(timezone.utc))
+
+
+def suspend(t, code="other", note="等級驗收"):
+    return requests.post(B + "/api/admin/members", json={"id": U[t]["id"], "action": "suspend", "reasonCode": code, "note": note}, headers=AH)
+
+
+def restore(t):
+    return requests.post(B + "/api/admin/members", json={"id": U[t]["id"], "action": "restore"}, headers=AH)
+
+
 check("9a 停權前 I 10 分、P3 11 分（收藏＋L1 的讚）", total(U["i"]["id"])[0] == 10 and total(U["p3"]["id"])[0] == 11, (total(U["i"]["id"]), total(U["p3"]["id"])))
 for t in ("i", "l1"):
-    requests.post(B + "/api/admin/members", json={"id": U[t]["id"], "action": "suspend", "reason": "等級驗收"}, headers=AH)
+    suspend(t)
+# I 停權期間，O 讚了 I 的收藏（停權期間發生的事件不計）
+sql(f"INSERT INTO likes (user_id, share_no, created_at) VALUES ('{U['o']['id']}', {share_no['i'][0]}, '{now_iso()}')")
 recompute(8)
-check("9b 停權後 I 總分 0", total(U["i"]["id"]) == (0, 0), total(U["i"]["id"]))
-check("9c 按讚者被停權，他給的讚不算：P3 11 → 10", total(U["p3"]["id"])[0] == 10, total(U["p3"]["id"]))
-requests.post(B + "/api/admin/members", json={"id": U["i"]["id"], "action": "restore", "reason": ""}, headers=AH)
+check("9b 停權後 I 分數保留 10（不歸零）", total(U["i"]["id"]) == (10, 0), total(U["i"]["id"]))
+check("9c 按讚者 L1 被停權（原因：其他），他之前給的讚照算：P3 仍 11", total(U["p3"]["id"])[0] == 11, total(U["p3"]["id"]))
+ev_i = events(U["i"]["id"])
+check("9e 停權期間收到的讚不計（suspended）", count(ev_i, "like_recv", reason="suspended") == 1, [(e["kind"], e["state"], e["reason"]) for e in ev_i])
+restore("i")
+time.sleep(0.05)
+sql(f"INSERT INTO likes (user_id, share_no, created_at) VALUES ('{U['m01']['id']}', {share_no['i'][0]}, '{now_iso()}')")
 recompute(8)
-check("9d 恢復後 I 回到 10 分（事件保留）", total(U["i"]["id"])[0] == 10, total(U["i"]["id"]))
+check("9d 恢復後照常：I 10＋恢復後收到的讚 1＝11；停權期間那個讚仍不計", total(U["i"]["id"])[0] == 11 and count(events(U["i"]["id"]), "like_recv", reason="suspended") == 1, total(U["i"]["id"]))
+su = sql(f"SELECT reason, note, ended_at FROM suspensions WHERE user_id = '{U['i']['id']}'")
+check("9f 停權紀錄一筆、恢復時填上結束時間", len(su) == 1 and su[0]["reason"] == "other" and su[0]["ended_at"], su)
+r0 = requests.post(B + "/api/admin/members", json={"id": U["q"]["id"], "action": "suspend"}, headers=AH)
+r1 = requests.post(B + "/api/admin/members", json={"id": U["q"]["id"], "action": "suspend", "reasonCode": "other", "note": ""}, headers=AH)
+r2 = requests.post(B + "/api/admin/members", json={"id": U["q"]["id"], "action": "suspend", "reasonCode": "abc", "note": "x"}, headers=AH)
+check("9g 停權必填原因：沒選 400、選「其他」沒寫說明 400、不在選單內 400", (r0.status_code, r1.status_code, r2.status_code) == (400, 400, 400), (r0.text[:80], r1.text[:80], r2.text[:80]))
+restore("l1")
+suspend("l1", "sockpuppet", "驗收分身")
+recompute(8)
+ev_p3 = events(U["p3"]["id"])
+check("9h 按讚者因「分身刷分」停權：他給的讚不計，P3 11 → 10（peer_sockpuppet）", total(U["p3"]["id"])[0] == 10 and count(ev_p3, "like_recv", reason="peer_sockpuppet") == 1, total(U["p3"]["id"]))
+lg = sql(f"SELECT detail FROM admin_log WHERE target = 'user:{U['l1']['handle']}' AND action = '停權會員' ORDER BY id DESC LIMIT 1")
+check("9i admin_log 記下原因代碼與說明", lg and json.loads(lg[0]["detail"]) == {"reason": "分身刷分：驗收分身", "code": "sockpuppet", "note": "驗收分身"}, lg)
+ml = requests.get(B + "/api/admin/members", params={"q": U["l1"]["handle"]}, headers=AH).json()["members"]
+check("9j 會員列表顯示停權原因", ml and ml[0]["suspendReason"] == "分身刷分：驗收分身", ml and ml[0].get("suspendReason"))
 
 # ================= 10. 7 天後入帳：編輯 =================
 ev_a = events(U["a"]["id"])
@@ -445,9 +478,9 @@ check("10a 7 天後 A 編輯入帳 310 分", total(U["a"]["id"]) == (310, 0), to
 a_ai = [e for e in ev_a if e["kind"] == "edit" and json.loads(e["detail"])["target"] == AI][0]
 check("10b 過了 7 天才被還原，不影響（仍 credited）", a_ai["state"] == "credited", (a_ai["state"], a_ai["reason"]))
 check("10c B 的極小修改與被還原的編輯 7 天後仍是 0 分", total(U["b"]["id"])[0] == 0, total(U["b"]["id"]))
-check("10d D 總分＝收藏 50＋辨識參考 5＋新增 30＝85", total(U["d"]["id"])[0] == 85, (total(U["d"]["id"]), [(e["kind"], e["state"], e["reason"]) for e in events(U["d"]["id"]) if e["state"] == "credited"]))
+check("10d D 總分＝收藏 50＋辨識參考 5＋新增 30＋收到留言 6＝91", total(U["d"]["id"])[0] == 91, (total(U["d"]["id"]), [(e["kind"], e["state"], e["reason"]) for e in events(U["d"]["id"]) if e["state"] == "credited"]))
 p1s, p2s = total(U["p1"]["id"])[0], total(U["p2"]["id"])[0]
-check("10e P1＝收藏 100＋給讚 10＋收讚 10＋留言 14＝134；P2＝150＋10＋10＋6＝176", (p1s, p2s) == (134, 176), (p1s, p2s))
+check("10e P1＝收藏 100＋給讚 10＋收讚 10＋留言 14＋收到留言 3＝137；P2＝150＋10＋10＋6＋7＝183", (p1s, p2s) == (137, 183), (p1s, p2s))
 check("10f E＝收藏 10＋給讚 9＝19；F＝收藏 10＋留言 18＝28", (total(U["e"]["id"])[0], total(U["f"]["id"])[0]) == (19, 28), (total(U["e"]["id"]), total(U["f"]["id"])))
 
 # ================= 11. 稱號 =================
@@ -480,11 +513,11 @@ def strip(h):
 
 
 ph = strip(requests.get(f"{B}/u/{U['a']['handle']}").text)
-check("12a 個人頁：暱稱旁等級（310 分＝專業樂迷 Lv.1）", re.search(r'class="lv-tag"[^>]*>專業樂迷 Lv\.1<', ph), re.findall(r'class="lv-tag"[^>]*>([^<]+)<', ph))
+check("12a 個人頁：暱稱旁等級（310 分＝專業樂迷 Lv.2，門檻 280）", re.search(r'class="lv-tag"[^>]*>專業樂迷 Lv\.2<', ph), re.findall(r'class="lv-tag"[^>]*>([^<]+)<', ph))
 m = re.search(r'data-testid="score-now">([\d,]+)<', ph)
 check("12b 個人頁：目前分數 310", m and m.group(1) == "310", m and m.group(1))
 m = re.search(r'data-testid="score-next">([^<]+)<span class="num">([\d,]+)</span>', ph)
-check("12c 個人頁：離專業樂迷 Lv.2（390）還差 80 分", m and "專業樂迷 Lv.2" in m.group(1) and m.group(2) == "80", m and m.groups())
+check("12c 個人頁：離專業樂迷 Lv.3（380）還差 70 分", m and "專業樂迷 Lv.3" in m.group(1) and m.group(2) == "70", m and m.groups())
 m = re.search(r'data-testid="score-at">([^<]+)<', ph)
 check("12d 個人頁：顯示「分數統計於」時間", m and re.match(r"分數統計於 \d{4}-\d\d-\d\d \d\d:\d\d", m.group(1)), m and m.group(1))
 check("12e 個人頁：稱號「等級藝人頭號樂迷」，連到藝人頁", f'href="/artist/{ART}"' in ph and f"等級藝人{STAMP}頭號樂迷" in ph)
@@ -495,7 +528,7 @@ check("12g 管理員個人頁：固定顯示「館長」、不顯示分數", re.
 requests.post(B + "/api/comments", json={"share": share_no["x"][3], "body": "館長留言"}, headers=AH)
 cl = requests.get(f"{B}/api/comments?share={share_no['x'][3]}").json()["comments"]
 bdg = {c["author"]["handle"]: c["author"].get("badge") for c in cl}
-check("12h 留言帶等級：F＝新晉樂迷 Lv.1（28 分）、管理員＝館長", bdg.get(U["f"]["handle"]) == "新晉樂迷 Lv.1" and bdg.get("yzadmin") == "館長", bdg)
+check("12h 留言帶等級：F＝新晉樂迷 Lv.2（28 分，門檻 20）、管理員＝館長", bdg.get(U["f"]["handle"]) == "新晉樂迷 Lv.2" and bdg.get("yzadmin") == "館長", bdg)
 sh3 = strip(requests.get(f"{B}/share/3").text)
 offers = re.search(r'<section class="offers".*?</section>', sh3, re.S)
 check("12i 出價列表：每位出價者旁有等級", offers and len(re.findall(r'class="lv-tag"', offers.group(0))) == len(re.findall(r'class="offer-row', offers.group(0))) > 0,
@@ -503,7 +536,100 @@ check("12i 出價列表：每位出價者旁有等級", offers and len(re.findal
 s1 = strip(requests.get(f"{B}/artist/{ART}/1").text)
 con = re.search(r'data-testid="contributors".*?</section>', s1, re.S)
 tags = re.findall(r'href="/u/([^"]+)"[^>]*>[^<]*</a><span class="lv-tag"[^>]*>([^<]+)<', con.group(0) if con else "")
-check("12j 資料貢獻者名單：每人旁有等級（A＝專業樂迷 Lv.1）", con and (U["a"]["handle"], "專業樂迷 Lv.1") in tags, tags)
+check("12j 資料貢獻者名單：每人旁有等級（A＝專業樂迷 Lv.2）", con and (U["a"]["handle"], "專業樂迷 Lv.2") in tags, tags)
+
+# ================= 17. 收到留言 =================
+add_shares("x2", 1, start=NOW - timedelta(days=2))
+xs = share_no["x2"][0]
+stmts = [f"INSERT INTO comments (share_no, author_id, body, created_at) VALUES ({xs}, '{U[f'm{n:02d}']['id']}', '收到留言{n}', '{iso(NOW - timedelta(days=1) + timedelta(seconds=n))}')" for n in range(1, 53)]
+stmts.append(f"INSERT INTO comments (share_no, author_id, body, created_at) VALUES ({xs}, '{U['x2']['id']}', '自己回自己', '{iso(NOW - timedelta(days=1, minutes=-5))}')")
+sql(";\n".join(stmts))
+recompute()
+ev_x2 = events(U["x2"]["id"])
+check("17a 同一則收藏收到 52 則留言，只計 50（share_cap 2）", count(ev_x2, "comment_recv", "credited") == 50 and count(ev_x2, "comment_recv", reason="share_cap") == 2, (count(ev_x2, "comment_recv", "credited"), count(ev_x2, "comment_recv", reason="share_cap")))
+check("17b 在自己收藏底下留言不算（X2 沒有自己的留言事件）", count(ev_x2, "comment_recv") == 52 and count(ev_x2, "comment") == 0, count(ev_x2, "comment_recv"))
+check("17c X2 總分＝收藏 10＋收到留言 50＝60", total(U["x2"]["id"])[0] == 60, total(U["x2"]["id"]))
+ev_p1, ev_p2 = events(U["p1"]["id"]), events(U["p2"]["id"])
+check("17d 互留言上限一起算：12 則只計 10，P2 收到 7、P1 收到 3（超過的 2 則兩邊都不給）",
+      credited(ev_p2, "comment_recv") == 7 and credited(ev_p1, "comment_recv") == 3 and count(ev_p1, "comment_recv", reason="pair_cap") == 2 and count(ev_p2, "comment", reason="pair_cap") == 2,
+      (credited(ev_p2, "comment_recv"), credited(ev_p1, "comment_recv")))
+crd = sql(f"SELECT state, reason FROM score_events WHERE source = 'cr:{fc}'")
+check("17e 留言被刪除：作者的收到留言扣回（deleted）", crd and crd[0]["reason"] == "deleted", crd)
+zc = sql(f"SELECT id FROM comments WHERE author_id = '{U['z']['id']}' AND hidden_at IS NOT NULL LIMIT 1")
+crh = sql(f"SELECT state, reason FROM score_events WHERE source = 'cr:{zc[0]['id']}'") if zc else []
+check("17f 留言被隱藏：作者的收到留言扣回（hidden）", crh and crh[0]["reason"] == "hidden", (zc, crh))
+px2 = strip(requests.get(f"{B}/u/{U['x2']['handle']}").text)
+m = re.search(r'data-testid="score-next">離 ([^<]+) 還差 <span class="num">([\d,]+)</span>', px2)
+check("17g 60 分＝新晉樂迷 Lv.3（門檻 50），離新晉樂迷 Lv.4（90）還差 30", re.search(r'class="lv-tag"[^>]*>新晉樂迷 Lv\.3<', px2) and m and m.groups() == ("新晉樂迷 Lv.4", "30"), m and m.groups())
+
+# ================= 18. 補缺漏資料擴大 =================
+sid1 = sql(f"SELECT id FROM series WHERE artist_slug = '{ART2}' AND no = 1")[0]["id"]
+sql(f"INSERT INTO items (series_id, item_id, kind, status) VALUES ({sid1}, 'cd', 'CD', 'approved')")
+iref = sql(f"SELECT id FROM items WHERE series_id = {sid1} AND item_id = 'cd'")[0]["id"]
+sql(";\n".join(
+    f"INSERT INTO versions (item_ref, version_id, edition, status, created_by) VALUES ({iref}, '{vid}', '{ed}', 'approved', {owner})"
+    for vid, ed, owner in [("v1", "初版", "NULL"), ("v2", "再版", "NULL"), ("v3", "G 自己新增的版本", f"'{U['g']['id']}'")]
+))
+VK = {v: f"{ART2}/1#cd-{v}" for v in ("v1", "v2", "v3")}
+vids = {r["version_id"]: r["id"] for r in sql(f"SELECT id, version_id FROM versions WHERE item_ref = {iref}")}
+fl = lambda v, f, val, u="g": requests.post(B + "/api/fill", json={"key": VK[v], "field": f, "value": val}, headers=H(U[u]))
+codes = [fl("v1", "year", "2011").status_code, fl("v1", "region", "台灣").status_code, fl("v1", "label", "驗收唱片").status_code,
+         fl("v1", "catalog", "LV-001").status_code, fl("v1", "identifyBy", "側標印紅字").status_code, fl("v2", "packaging", "紙盒").status_code,
+         fl("v3", "tracks", "1. 第一首").status_code]
+check("18a 版本的發行年、地區、發行、目錄號、辨識特徵、包裝、曲目都能補（200）", codes == [200] * 7, codes)
+check("18b 已經有值的不能再補（409）", fl("v1", "year", "2012").status_code == 409)
+bad = [fl("v2", "barcode", "123").status_code, fl("v2", "year", "abc").status_code, fl("v2", "region", "  ").status_code]
+check("18c 條碼不在清單、年份格式不對、空白 → 400", bad == [400, 400, 400], bad)
+row = sql(f"SELECT year, region, label, catalog, identify_by FROM versions WHERE id = {vids['v1']}")[0]
+check("18d 補上的值寫進版本", row == {"year": "2011", "region": "台灣", "label": "驗收唱片", "catalog": "LV-001", "identify_by": "側標印紅字"}, row)
+recompute()
+ev_g = events(U["g"]["id"])
+check("18e G 補別人的 6 筆：5 筆待入帳、1 筆超過每日上限；補自己新增的版本沒有事件",
+      count(ev_g, "fill") == 6 and count(ev_g, "fill", "pending") == 5 and count(ev_g, "fill", reason="daily_cap") == 1 and not [e for e in ev_g if e["source"] == f"fill:version:{vids['v3']}:tracks"],
+      [(e["source"], e["state"], e["reason"]) for e in ev_g])
+sql(f"UPDATE versions SET region = '日本' WHERE id = {vids['v1']}")
+recompute()
+check("18f 7 天內被改掉的不給分（changed）", count(events(U["g"]["id"]), "fill", reason="changed") == 1, [(e["source"], e["reason"]) for e in events(U["g"]["id"])])
+recompute(8)
+check("18g 7 天後入帳：G 補資料 40 分（5 筆有分、1 筆被改掉）", credited(events(U["g"]["id"]), "fill") == 40, credited(events(U["g"]["id"]), "fill"))
+sp = requests.get(f"{B}/artist/{ART2}/1").text
+check("18h 系列頁：還有空白欄位的版本出現「待補」與可補的欄位", f'data-vkey="{VK["v2"]}"' in sp and 'data-testid="fill-open-region"' in sp, sp.count('data-testid="field-missing"'))
+
+# ================= 19. 管理員指定等級 =================
+cv0 = cv()
+lv = lambda body: requests.post(B + "/api/admin/members", json={"id": U["a"]["id"], **body}, headers=AH)
+r0 = lv({"action": "set_level", "level": 13, "reason": ""})
+r1 = lv({"action": "set_level", "level": 26, "reason": "x"})
+check("19a 指定等級必填原因（400）、等級超出 1～25（400）", (r0.status_code, r1.status_code) == (400, 400), (r0.text[:80], r1.text[:80]))
+r2 = lv({"action": "set_level", "level": 13, "reason": "驗收：資深貢獻"})
+check("19b 指定 A 為資深樂迷 Lv.3（第 13 級）成功", r2.ok, r2.text[:100])
+recompute(8)  # A 的編輯分數要是入帳狀態（前面 17、18 節用今天時間重算過，會回到待入帳）
+pa = strip(requests.get(f"{B}/u/{U['a']['handle']}").text)
+m = re.search(r'data-testid="score-next">離 ([^<]+) 還差 <span class="num">([\d,]+)</span>', pa)
+check("19c 個人頁顯示指定的等級，不標示「指定」", re.search(r'class="lv-tag"[^>]*>資深樂迷 Lv\.3<', pa) and "指定" not in pa, re.findall(r'class="lv-tag"[^>]*>([^<]+)<', pa))
+check("19d 分數照常累計（仍 310），離資深樂迷 Lv.4（1,550）還差 1,240", total(U["a"]["id"])[0] == 310 and m and m.groups() == ("資深樂迷 Lv.4", "1,240"), (total(U["a"]["id"]), m and m.groups()))
+ma = requests.get(B + "/api/admin/members", params={"q": U["a"]["handle"]}, headers=AH).json()["members"][0]
+check("19e 後台會員列表：等級＝資深樂迷 Lv.3、標示指定與原因", ma["level"] == "資深樂迷 Lv.3" and ma["override"] == 13 and ma["overrideReason"] == "驗收：資深貢獻", {k: ma[k] for k in ("level", "override", "overrideReason", "score")})
+con = strip(requests.get(f"{B}/artist/{ART}/1?lv={STAMP}").text)
+check("19f 資料貢獻者名單也顯示指定的等級", f'/u/{U["a"]["handle"]}' in con and "資深樂迷 Lv.3" in con)
+lg = sql(f"SELECT action, detail FROM admin_log WHERE target = 'user:{U['a']['handle']}' ORDER BY id")
+check("19g admin_log 記下指定等級（等級、原因）", lg and lg[-1]["action"] == "指定等級" and json.loads(lg[-1]["detail"])["level"] == 13 and json.loads(lg[-1]["detail"])["reason"] == "驗收：資深貢獻", lg[-1:])
+radm = requests.post(B + "/api/admin/members", json={"id": admin["id"], "action": "set_level", "level": 5, "reason": "x"}, headers=AH)
+check("19h 管理員固定館長，不能指定（403）", radm.status_code == 403, radm.status_code)
+r3 = lv({"action": "clear_level"})
+pa2 = strip(requests.get(f"{B}/u/{U['a']['handle']}").text)
+lg2 = sql(f"SELECT action FROM admin_log WHERE target = 'user:{U['a']['handle']}' ORDER BY id DESC LIMIT 1")
+check("19i 取消指定：回到計算值專業樂迷 Lv.2，留紀錄", r3.ok and re.search(r'class="lv-tag"[^>]*>專業樂迷 Lv\.2<', pa2) and lg2[0]["action"] == "取消指定等級", (r3.text[:80], re.findall(r'class="lv-tag"[^>]*>([^<]+)<', pa2)))
+check("19j 指定、取消指定不讓 content_version 增加", cv() == cv0, (cv0, cv()))
+trig = sql("SELECT name FROM sqlite_master WHERE type = 'trigger' AND tbl_name IN ('suspensions', 'level_overrides')")
+check("19k 兩張新表沒有內容版本觸發器", not trig, trig)
+
+# ================= 20. 門檻表 =================
+src = (SITE / "lib/levels.ts").read_text(encoding="utf-8")
+blk = src[src.index("export const LEVELS"):src.index("] as const;", src.index("export const LEVELS"))]
+nums = [int(x) for x in re.findall(r"\b\d+\b", re.sub(r"//.*", "", blk))]
+EXPECT = [0, 20, 50, 90, 140, 200, 280, 380, 500, 650, 800, 1000, 1250, 1550, 1900, 2300, 2800, 3400, 4100, 5000, 6000, 7200, 8600, 10200, 12000]
+check("20a 門檻換成降低版（25 級）", nums == EXPECT, nums)
 
 # ================= 13. 快取 =================
 cv0 = cv()
@@ -670,13 +796,75 @@ with sync_playwright() as p:
     check("15j 送出後：待審、年份空白", row and row[0] == {"year": "", "status": "pending"}, row)
     shots.append(("submit_series", 1440, pg.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth"), list(errs)))
     ctx.close()
+    # 定案修改的畫面：後台停權原因、指定等級；系列頁補資料
+    ctx = br.new_context(viewport={"width": 1440, "height": 900})
+    ctx.add_cookies([{"name": "yz_session", "value": admin["tok"], "domain": "127.0.0.1", "path": "/", "httpOnly": True}])
+    pg = ctx.new_page()
+    errs = []
+    pg.on("console", lambda m: errs.append(m.text) if m.type == "error" else None)
+    pg.goto(B + "/admin/members", wait_until="networkidle")
+    pg.fill("#member-q", U["q"]["handle"])
+    rowq = pg.locator(f'tr[data-handle="{U["q"]["handle"]}"]')
+    rowq.wait_for(timeout=10000)
+    rowq.locator('[data-testid="suspend"]').click()
+    rowq.locator('[data-testid="suspend-confirm"]').click()
+    pg.wait_for_timeout(300)
+    no_code = rowq.locator(".field-error").inner_text()
+    rowq.locator('[data-testid="suspend-code"]').select_option("spam")
+    rowq.locator('[data-testid="suspend-note"]').fill("畫面驗收")
+    rowq.locator('[data-testid="suspend-confirm"]').click()
+    pg.wait_for_selector(f'tr[data-handle="{U["q"]["handle"]}"][data-status="suspended"]', timeout=10000)
+    txt = pg.locator(f'tr[data-handle="{U["q"]["handle"]}"] [data-testid="suspend-reason"]').inner_text()
+    check("21a 後台停權：沒選原因會提示；選「洗版或騷擾」加說明後停權，列表顯示原因", no_code == "選一個停權原因" and txt == "洗版或騷擾：畫面驗收", (no_code, txt))
+    pg.screenshot(path=str(IMG / "admin_members_suspend.jpg"), type="jpeg", quality=80, full_page=True)
+    pg.fill("#member-q", U["g"]["handle"])
+    rowg = pg.locator(f'tr[data-handle="{U["g"]["handle"]}"]')
+    rowg.wait_for(timeout=10000)
+    rowg.locator('[data-testid="level-open"]').click()
+    rowg.locator('[data-testid="level-select"]').select_option("5")
+    rowg.locator('[data-testid="level-reason"]').fill("畫面驗收")
+    rowg.locator('[data-testid="level-confirm"]').click()
+    pg.wait_for_selector(f'tr[data-handle="{U["g"]["handle"]}"] [data-testid="level-override"]', timeout=10000)
+    lbl = rowg.locator('[data-testid="level-label"]').inner_text()
+    pg.screenshot(path=str(IMG / "admin_members_level.jpg"), type="jpeg", quality=80, full_page=True)
+    rowg.locator('[data-testid="level-clear"]').click()
+    pg.wait_for_selector(f'tr[data-handle="{U["g"]["handle"]}"] [data-testid="level-override"]', state="detached", timeout=10000)
+    lbl2 = rowg.locator('[data-testid="level-label"]').inner_text()
+    check("21b 後台指定等級：新晉樂迷 Lv.5 → 取消指定回到計算值", lbl == "新晉樂迷 Lv.5" and lbl2 == "新晉樂迷 Lv.1", (lbl, lbl2))
+    shots.append(("admin_members_new", 1440, pg.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth"), list(errs)))
+    ctx.close()
+    for w, hgt in [(1440, 900), (390, 844)]:
+        ctx = br.new_context(viewport={"width": w, "height": hgt})
+        ctx.add_cookies([{"name": "yz_session", "value": U["o"]["tok"], "domain": "127.0.0.1", "path": "/", "httpOnly": True}])
+        pg = ctx.new_page()
+        errs = []
+        pg.on("console", lambda m: errs.append(m.text) if m.type == "error" else None)
+        pg.goto(f"{B}/artist/{ART2}/1", wait_until="networkidle")
+        box = pg.locator(f'[data-testid="field-missing"][data-vkey="{VK["v2"]}"]:has([data-testid="fill-open-year"])')
+        box.scroll_into_view_if_needed()
+        if w == 1440:
+            try:
+                pg.wait_for_selector(f'[data-testid="field-missing"][data-vkey="{VK["v2"]}"] [data-testid="fill-open-catalog"]', timeout=10000)
+                cat = 1
+            except Exception:
+                cat = 0
+            box.locator('[data-testid="fill-open-region"]').click()
+            pg.locator('[data-testid="fill-input"]').fill("香港")
+            pg.locator('[data-testid="fill-send"]').click()
+            pg.wait_for_selector("text=已補上地區，謝謝", timeout=10000)
+            reg = sql(f"SELECT region FROM versions WHERE id = {vids['v2']}")[0]["region"]
+            check("21c 系列頁畫面補版本地區：寫進資料、顯示謝謝；登入後辨識細節也有目錄號待補", reg == "香港" and cat == 1, (reg, cat))
+        pg.screenshot(path=str(IMG / f"field_fill_{w}.jpg"), type="jpeg", quality=80)
+        shots.append(("field_fill", w, pg.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth"), list(errs)))
+        ctx.close()
     br.close()
 
 for name, w, ov, errs in shots:
     check(f"16 {name} {w}：無橫向溢出、console error 0", ov <= 0 and not errs, (ov, errs[:2]))
 
-# 還原暫時改動：L1 恢復
-requests.post(B + "/api/admin/members", json={"id": U["l1"]["id"], "action": "restore", "reason": ""}, headers=AH)
+# 還原暫時改動：L1、Q 恢復
+restore("l1")
+restore("q")
 recompute()
 
 (OUT / "驗收紀錄_本機.json").write_text(json.dumps({"stamp": STAMP, "results": res}, ensure_ascii=False, indent=1), encoding="utf-8")

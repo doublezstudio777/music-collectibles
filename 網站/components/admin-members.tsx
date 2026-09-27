@@ -3,7 +3,17 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/account";
+import { LEVELS, levelLabel } from "@/lib/levels";
 import type { MemberRow } from "@/lib/server/members";
+
+// 跟 lib/server/members.ts 的 SUSPEND_REASONS 同一份（伺服器檔不能被 client 元件載入）
+const REASONS = [
+  ["fraud", "詐騙"],
+  ["piracy", "販售盜版"],
+  ["sockpuppet", "分身刷分"],
+  ["spam", "洗版或騷擾"],
+  ["other", "其他"],
+] as const;
 
 type Res = { members: MemberRow[]; total: number; page: number; pageSize: number };
 const day = (iso: string) => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 10);
@@ -11,14 +21,17 @@ const STATUS = { active: "正常", suspended: "停權" } as Record<string, strin
 
 function Actions({ m, done }: { m: MemberRow; done: () => void }) {
   const [open, setOpen] = useState(false);
+  const [code, setCode] = useState("");
   const [reason, setReason] = useState("");
   const [error, setError] = useState("");
   if (m.admin) return <span className="sub">管理員</span>;
   const run = async (action: "suspend" | "restore") => {
     setError("");
-    const r = await api(`/api/admin/members`, { body: { id: m.id, action, reason } });
+    if (action === "suspend" && !code) return setError("選一個停權原因");
+    const r = await api(`/api/admin/members`, { body: { id: m.id, action, reasonCode: code, note: reason } });
     if (!r.ok) return setError(r.error.message);
     setOpen(false);
+    setCode("");
     setReason("");
     done();
   };
@@ -31,7 +44,22 @@ function Actions({ m, done }: { m: MemberRow; done: () => void }) {
   }
   return open ? (
     <div className="suspend-form">
-      <input className="input" value={reason} placeholder="停權原因" aria-label="停權原因" onChange={(e) => setReason(e.target.value)} />
+      <select className="select" value={code} aria-label="停權原因" onChange={(e) => setCode(e.target.value)} data-testid="suspend-code">
+        <option value="">停權原因</option>
+        {REASONS.map(([k, t]) => (
+          <option key={k} value={k}>
+            {t}
+          </option>
+        ))}
+      </select>
+      <input
+        className="input"
+        value={reason}
+        placeholder={code === "other" ? "說明（必填）" : "說明（選填）"}
+        aria-label="停權說明"
+        onChange={(e) => setReason(e.target.value)}
+        data-testid="suspend-note"
+      />
       <button type="button" className="btn btn-line" onClick={() => void run("suspend")} data-testid="suspend-confirm">
         確定停權
       </button>
@@ -44,6 +72,66 @@ function Actions({ m, done }: { m: MemberRow; done: () => void }) {
     <button type="button" className="btn btn-line" onClick={() => setOpen(true)} data-testid="suspend">
       停權
     </button>
+  );
+}
+
+/** 等級欄：目前顯示的等級；可以指定（必填原因）或取消指定 */
+function LevelCell({ m, done }: { m: MemberRow; done: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [level, setLevel] = useState(String(m.override ?? ""));
+  const [reason, setReason] = useState("");
+  const [error, setError] = useState("");
+  if (m.admin) return <span>館長</span>;
+  const run = async (action: "set_level" | "clear_level") => {
+    setError("");
+    const r = await api(`/api/admin/members`, { body: { id: m.id, action, level: Number(level), reason } });
+    if (!r.ok) return setError(r.error.message);
+    setOpen(false);
+    setReason("");
+    done();
+  };
+  return (
+    <div className="level-cell" data-testid="level-cell">
+      <span data-testid="level-label">{m.level}</span>
+      {m.override ? (
+        <span className="sub" title={m.overrideReason} data-testid="level-override">
+          指定（計算值 {m.score.toLocaleString("en-US")} 分）
+        </span>
+      ) : (
+        <span className="sub num">{m.score.toLocaleString("en-US")} 分</span>
+      )}
+      {open ? (
+        <div className="suspend-form">
+          <select className="select" value={level} aria-label="指定等級" onChange={(e) => setLevel(e.target.value)} data-testid="level-select">
+            <option value="">選等級</option>
+            {LEVELS.map((_, i) => (
+              <option key={i} value={i + 1}>
+                {levelLabel(i + 1)}
+              </option>
+            ))}
+          </select>
+          <input className="input" value={reason} placeholder="原因（必填）" aria-label="指定原因" onChange={(e) => setReason(e.target.value)} data-testid="level-reason" />
+          <button type="button" className="btn btn-line" onClick={() => void run("set_level")} data-testid="level-confirm">
+            確定指定
+          </button>
+          <button type="button" className="btn btn-text" onClick={() => setOpen(false)}>
+            取消
+          </button>
+        </div>
+      ) : (
+        <span className="level-actions">
+          <button type="button" className="btn-text" onClick={() => setOpen(true)} data-testid="level-open">
+            指定等級
+          </button>
+          {m.override ? (
+            <button type="button" className="btn-text" onClick={() => void run("clear_level")} data-testid="level-clear">
+              取消指定
+            </button>
+          ) : null}
+        </span>
+      )}
+      {error ? <p className="field-error">{error}</p> : null}
+    </div>
   );
 }
 
@@ -117,6 +205,7 @@ export function AdminMembers() {
               <th className="num">成交</th>
               <th className="num">被檢舉</th>
               <th className="num">對話</th>
+              <th>等級</th>
               <th>狀態</th>
               <th>
                 <span className="sr-only">操作</span>
@@ -145,7 +234,15 @@ export function AdminMembers() {
                 <td className="num">{m.reported}</td>
                 <td className="num">{m.threads}</td>
                 <td>
+                  <LevelCell m={m} done={() => void load()} />
+                </td>
+                <td>
                   {STATUS[m.status] ?? m.status}
+                  {m.suspendReason ? (
+                    <span className="sub" data-testid="suspend-reason">
+                      {m.suspendReason}
+                    </span>
+                  ) : null}
                   {m.deletionRequested ? <span className="sub">申請刪除</span> : null}
                 </td>
                 <td>

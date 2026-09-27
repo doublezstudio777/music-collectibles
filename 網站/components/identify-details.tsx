@@ -5,6 +5,8 @@
 // 同一頁所有版本共用一次請求（一次算一次瀏覽，伺服器端有每帳號每日上限）。
 
 import { useEffect, useSyncExternalStore } from "react";
+import { FieldFill } from "@/components/field-fill";
+import { isBlank } from "@/lib/fill";
 import { api, openPanel } from "@/lib/account";
 import type { Fake, Mark } from "@/lib/data";
 import { useAppState } from "@/lib/state";
@@ -79,7 +81,9 @@ export function IdentifyDetails({ skey, vkey, anchor, hasFakes }: { skey: string
       ...(hasValue(d.catalog) ? [{ label: "目錄號", text: d.catalog }] : []),
       ...d.marks,
     ] as Mark[];
+    const missing = (["catalog", "identifyBy"] as const).filter((k) => isBlank(k, d[k]));
     body = (
+      <>
       <ul className="marks" data-testid="details">
         {marks.map((m) => (
           <li key={m.label + m.text} className={m.photo ? "mark has-photo" : "mark"}>
@@ -91,6 +95,8 @@ export function IdentifyDetails({ skey, vkey, anchor, hasFakes }: { skey: string
           </li>
         ))}
       </ul>
+      <FieldFill vkey={vkey} fields={missing} />
+      </>
     );
   }
 

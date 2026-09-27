@@ -667,7 +667,7 @@ export const scoreEvents = sqliteTable(
   ],
 );
 
-/** 彙總結果：每位會員一列。score＝已入帳總分（停權為 0）；pending＝還在等 7 天的分數 */
+/** 彙總結果：每位會員一列。score＝已入帳總分（停權也保留，停權期間的事件不計）；pending＝還在等 7 天的分數 */
 export const userScores = sqliteTable("user_scores", {
   userId: text("user_id").primaryKey(),
   score: integer("score").notNull().default(0),
@@ -686,3 +686,35 @@ export const userTitles = sqliteTable(
   },
   (t) => [primaryKey({ columns: [t.userId, t.kind, t.ref] }), index("user_titles_ref_idx").on(t.kind, t.ref)],
 );
+
+/* =====================================================================
+ * 等級定案（2026-09-28，drizzle/0009）：停權紀錄、管理員指定等級。兩張新表，都沒有內容版本觸發器。
+ * ===================================================================== */
+
+/**
+ * 停權紀錄：一次停權一列。ended_at 為 NULL＝還在停權。
+ * 分數凍結用：事件發生時間落在 [started_at, ended_at) 之間的一律不計。
+ * reason＝fraud 詐騙｜piracy 販售盜版｜sockpuppet 分身刷分｜spam 洗版或騷擾｜other 其他
+ */
+export const suspensions = sqliteTable(
+  "suspensions",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: text("user_id").notNull(),
+    reason: text("reason").notNull(),
+    note: text("note").notNull().default(""),
+    startedAt: text("started_at").notNull(),
+    endedAt: text("ended_at"),
+    byAdmin: text("by_admin").notNull().default(""),
+  },
+  (t) => [index("suspensions_user_idx").on(t.userId, t.startedAt)],
+);
+
+/** 管理員指定等級：level＝1～25（覆蓋計算結果，分數照常累計）。取消指定＝刪這一列（紀錄在 admin_log） */
+export const levelOverrides = sqliteTable("level_overrides", {
+  userId: text("user_id").primaryKey(),
+  level: integer("level").notNull(),
+  reason: text("reason").notNull(),
+  byAdmin: text("by_admin").notNull(),
+  at: text("at").notNull(),
+});

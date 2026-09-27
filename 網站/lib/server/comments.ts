@@ -8,7 +8,7 @@
 // - comments／comment_reports 沒有內容版本觸發器：寫入不會讓整頁快取失效
 // - 留言者被停權、帳號不存在：留言不顯示
 
-import { and, asc, count, desc, eq, inArray, isNotNull, isNull, or, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, isNotNull, isNull, or, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { adminLog, commentReports, comments, settings, shares, users } from "@/db/schema";
 import {
@@ -76,7 +76,9 @@ export async function listComments(no: number, viewer: User | null) {
           await db
             .select({ c: commentReports.commentId })
             .from(commentReports)
-            .where(and(eq(commentReports.reporterId, me), inArray(commentReports.commentId, rows.map((r) => r.id))))
+            // 不用 inArray 帶留言 id：D1 一句最多 100 個參數，留言超過 99 則會整支 API 500
+            .innerJoin(comments, eq(comments.id, commentReports.commentId))
+            .where(and(eq(commentReports.reporterId, me), eq(comments.shareNo, no)))
         ).map((r) => r.c),
       )
     : new Set<number>();

@@ -28,14 +28,14 @@ export async function seriesContributors(artistSlug: string, no: number): Promis
       SELECT author_id, COUNT(*), MIN(created_at) FROM shares
         WHERE series_key = ?4 AND deleted_at IS NULL AND hidden_at IS NULL GROUP BY author_id
     )
-    SELECT u.handle AS handle, u.name AS name, u.email AS email, u.email_verified_at AS verified, COALESCE(sc.score, 0) AS score, SUM(x.n) AS n, MIN(x.first) AS first
-      FROM x JOIN users u ON u.id = x.uid LEFT JOIN user_scores sc ON sc.user_id = u.id
+    SELECT u.handle AS handle, u.name AS name, u.email AS email, u.email_verified_at AS verified, COALESCE(sc.score, 0) AS score, lo.level AS override, SUM(x.n) AS n, MIN(x.first) AS first
+      FROM x JOIN users u ON u.id = x.uid LEFT JOIN user_scores sc ON sc.user_id = u.id LEFT JOIN level_overrides lo ON lo.user_id = u.id
       WHERE u.status = 'active'
       GROUP BY u.id
       ORDER BY n DESC, first ASC, u.handle ASC`;
   const r = await env.DB!.prepare(sql)
     .bind(artistSlug, no, `series:${skey}`, skey)
-    .all<{ handle: string; name: string; email: string; verified: string | null; score: number; n: number }>();
+    .all<{ handle: string; name: string; email: string; verified: string | null; score: number; override: number | null; n: number }>();
   const rows = r.results ?? [];
   return {
     // 等級標籤：分數由每日排程彙總（user_scores 沒有內容版本觸發器，最多跟著整頁快取舊 5 分鐘）
@@ -43,7 +43,7 @@ export async function seriesContributors(artistSlug: string, no: number): Promis
       handle: x.handle,
       name: x.name,
       n: Number(x.n),
-      badge: badgeText(Number(x.score), isAdmin({ email: x.email, emailVerifiedAt: x.verified })),
+      badge: badgeText(Number(x.score), isAdmin({ email: x.email, emailVerifiedAt: x.verified }), x.override),
     })),
     total: rows.length,
   };

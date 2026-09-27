@@ -48,9 +48,11 @@ function ScoreLine({ handle, s }: { handle: string; s: Awaited<ReturnType<typeof
       {s.admin ? null : (
         <p className="page-meta">
           目前 <b className="num" data-testid="score-now">{s.score.toLocaleString("en-US")}</b> 分
-          <span className="dot" aria-hidden="true">·</span>
+          {s.level.next === null && s.level.level < 25 ? null : (
+            <span className="dot" aria-hidden="true">·</span>
+          )}
           {s.level.next === null ? (
-            "已是最高等級"
+            s.level.level === 25 ? "已是最高等級" : null
           ) : (
             <span data-testid="score-next">
               離 {levelOf(s.level.next).label} 還差 <span className="num">{s.level.toNext.toLocaleString("en-US")}</span> 分

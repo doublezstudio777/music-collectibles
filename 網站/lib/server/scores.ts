@@ -14,9 +14,11 @@
 //   「還原」本身不給分
 // - 新增系列、品項、版本並經核准：+15（管理員新增的直接生效）。品項連帶送出的第一個版本不另外算
 // - 發炫收藏（含照片）：+10，每日上限 5 則；勾選「可當辨識參考」再 +5（那則收藏有算分才算）
-// - 補上缺漏資料（系列發行年待補）：+10，每日上限 5 次，7 天後入帳，7 天內被改掉不給分；補自己新增的系列不算
+// - 補上缺漏資料：+10，每日上限 5 次，7 天後入帳，7 天內被改掉不給分；補自己新增的不算。
+//   可補的欄位（原本空白才能補）：系列發行年；版本的發行年、地區、發行、包裝、內容物、曲目、目錄號、辨識特徵（FILL_FIELDS）
 // - 收到讚：+1，每則收藏最多計 50；自己讚自己不算
 // - 留言：+2，每日上限 10 則；在自己的收藏底下留言不算
+// - 收到留言：+1（給收藏的作者），每則收藏最多計 50 則；在自己的收藏底下留言不算；留言被刪除或隱藏就扣回
 // - 按讚：+1，每日上限 10 次；讚自己的不算
 // - 成交：買賣雙方各 +5
 // - 檢舉成立：+10，7 天後入帳。成立＝管理員維持鎖定、或達門檻且沒被解鎖、或收藏被管理員下架；
@@ -24,16 +26,21 @@
 // - 檢舉被判不成立（管理員解鎖、留言被管理員恢復）：-5
 // 防刷分：
 // - 內容被檢舉成立、被隱藏、被刪除，那筆分數作廢（已入帳的也扣回）；取消讚、刪留言同樣作廢
-// - 同兩個帳號之間：互讚合計最多 20 次、互留言合計最多 10 則、成交各自最多 2 筆有分，超過的不給分
-// - 按讚者被停權，他給的讚不再算對方的「收到讚」
-// - 帳號被停權：總分顯示 0（事件保留，恢復後回來）
+// - 同兩個帳號之間：互讚合計最多 20 次、互留言合計最多 10 則（留言者的「留言」與作者的「收到留言」都算這 10 則，
+//   超過之後兩邊都不給）、成交各自最多 2 筆有分，超過的不給分
+// 停權（2026-09-28 定案）：分數保留不歸零、照常顯示；停權期間凍結，事件發生時間落在停權期間（suspensions 表）的一律不計，恢復後照常。
+// - 對方被停權不影響自己已經拿到的分數（舊規則「按讚者被停權就扣回收到讚」取消）；
+//   例外：對方停權原因是「分身刷分」，他給的讚、留言與跟他的成交全部不計（分身灌的分要拿掉）
 // 時間一律以台灣日期（UTC+8）切「每日」。
 
 import { env } from "cloudflare:workers";
 import { and, desc, eq, inArray, lt, sql } from "drizzle-orm";
 import { getDb } from "@/db";
-import { artists, counters, revisions, scoreEvents, series, userScores, userTitles, users } from "@/db/schema";
+import { artists, counters, levelOverrides, revisions, scoreEvents, series, userScores, userTitles, users } from "@/db/schema";
 import { badgeText, levelOf } from "@/lib/levels";
+import { FILL_FIELDS, isBlank, type FillField } from "@/lib/fill";
+
+export { FILL_FIELDS };
 import { isAdmin, type User } from "@/lib/server/auth";
 import { threshold } from "@/lib/server/content";
 import { hit } from "@/lib/server/services";
@@ -49,6 +56,7 @@ export const POINTS = {
   likeRecv: 1,
   likeGive: 1,
   comment: 2,
+  commentRecv: 1,
   deal: 5,
   reportOk: 10,
   reportBad: -5,
@@ -60,6 +68,7 @@ export const CAPS = {
   commentDay: 10,
   likeGiveDay: 10,
   likeRecvPerShare: 50,
+  commentRecvPerShare: 50,
   pairLikes: 20,
   pairComments: 10,
   pairDeals: 2,
@@ -161,15 +170,26 @@ export async function recordEdit(userId: string, target: string, revId: number, 
     .onConflictDoNothing();
 }
 
-/* ---------- 補上缺漏資料：系列發行年 ---------- */
+/* ---------- 補上缺漏資料 ---------- */
+
+const yearOk = (year: string) => {
+  const max = new Date().getUTCFullYear() + 1;
+  if (!/^\d{4}$/.test(year) || Number(year) < 1900 || Number(year) > max) throw new HttpError(400, "INVALID", `填 1900～${max} 的西元年`);
+};
+
+async function recordFill(u: User, source: string, at: string, detail: Record<string, unknown>) {
+  await getDb()
+    .insert(scoreEvents)
+    .values({ userId: u.id, kind: "fill", source, points: POINTS.fill, occurredAt: at, availableAt: addDays(at, HOLD_DAYS), detail: JSON.stringify(detail) })
+    .onConflictDoNothing();
+}
 
 export async function fillSeriesYear(u: User, rawKey: unknown, rawYear: unknown) {
   if (!u.emailVerifiedAt) throw new HttpError(403, "NOT_VERIFIED", "認證後才能補資料");
   const m = typeof rawKey === "string" ? rawKey.match(/^([a-z0-9-]{1,60})\/(\d{1,6})$/) : null;
   if (!m) throw new HttpError(400, "BAD_REQUEST", "參數不對");
   const year = typeof rawYear === "string" ? rawYear.trim() : typeof rawYear === "number" ? String(rawYear) : "";
-  const max = new Date().getUTCFullYear() + 1;
-  if (!/^\d{4}$/.test(year) || Number(year) < 1900 || Number(year) > max) throw new HttpError(400, "INVALID", `填 1900～${max} 的西元年`);
+  yearOk(year);
   const db = getDb();
   const [w] = await db
     .select()
@@ -189,21 +209,40 @@ export async function fillSeriesYear(u: User, rawKey: unknown, rawYear: unknown)
     .returning({ id: series.id });
   if (!changed.length) throw new HttpError(409, "ALREADY_FILLED", "已經有人補上了");
   // 補自己新增的系列不算分
-  if (w.createdBy !== u.id) {
-    await db
-      .insert(scoreEvents)
-      .values({
-        userId: u.id,
-        kind: "fill",
-        source: `fill:series:${w.id}:year`,
-        points: POINTS.fill,
-        occurredAt: at,
-        availableAt: addDays(at, HOLD_DAYS),
-        detail: JSON.stringify({ series: w.id, field: "year", value: year }),
-      })
-      .onConflictDoNothing();
-  }
+  if (w.createdBy !== u.id) await recordFill(u, `fill:series:${w.id}:year`, at, { series: w.id, field: "year", value: year });
   return { year, name };
+}
+
+/** 補版本的空白欄位：key＝「{藝人}/{流水號}#{品項}-{版本}」 */
+export async function fillVersionField(u: User, rawKey: unknown, rawField: unknown, rawValue: unknown) {
+  if (!u.emailVerifiedAt) throw new HttpError(403, "NOT_VERIFIED", "認證後才能補資料");
+  const m = typeof rawKey === "string" ? rawKey.match(/^([a-z0-9-]{1,60})\/(\d{1,6})#([^#-]{1,40})-([^#-]{1,40})$/) : null;
+  if (!m || typeof rawField !== "string" || !(rawField in FILL_FIELDS)) throw new HttpError(400, "BAD_REQUEST", "參數不對");
+  const field = rawField as FillField;
+  const f = FILL_FIELDS[field];
+  const value = (typeof rawValue === "string" ? rawValue : typeof rawValue === "number" ? String(rawValue) : "").trim();
+  if (field === "year") yearOk(value);
+  else if (isBlank(field, value)) throw new HttpError(400, "INVALID", `填一下${f.label}`);
+  if (value.length > f.max) throw new HttpError(400, "INVALID", `${f.label}最多 ${f.max} 字`);
+  const db = env.DB!;
+  const v = await db
+    .prepare(
+      `SELECT v.id, v.created_by AS createdBy, v.${f.col} AS cur FROM versions v JOIN items i ON i.id = v.item_ref JOIN series w ON w.id = i.series_id
+       WHERE w.artist_slug = ?1 AND w.no = ?2 AND i.item_id = ?3 AND v.version_id = ?4
+         AND w.status = 'approved' AND i.status = 'approved' AND v.status = 'approved'
+         AND w.deleted_at IS NULL AND w.hidden_at IS NULL AND i.deleted_at IS NULL AND i.hidden_at IS NULL AND v.deleted_at IS NULL AND v.hidden_at IS NULL`,
+    )
+    .bind(m[1], Number(m[2]), m[3], m[4])
+    .first<{ id: number; createdBy: string | null; cur: string }>();
+  if (!v) throw new HttpError(404, "NOT_FOUND", "找不到這個版本");
+  if (!isBlank(field, v.cur)) throw new HttpError(409, "ALREADY_FILLED", "已經有人補上了");
+  if (!(await hit(`fill:${u.id}`, 20, 86400))) throw new HttpError(429, "RATE_LIMITED", "今天補太多次了，明天再來");
+  const at = new Date().toISOString();
+  const r = await db.prepare(`UPDATE versions SET ${f.col} = ?1 WHERE id = ?2 AND ${f.col} = ?3`).bind(value, v.id, v.cur).run();
+  if (!r.meta.changes) throw new HttpError(409, "ALREADY_FILLED", "已經有人補上了");
+  // 補自己新增的版本不算分
+  if (v.createdBy !== u.id) await recordFill(u, `fill:version:${v.id}:${field}`, at, { version: v.id, field, value });
+  return { field, value };
 }
 
 /* ---------- 彙總 ---------- */
@@ -243,6 +282,10 @@ const INSERTS = [
   // 留言
   `INSERT OR IGNORE INTO score_events (user_id, kind, source, points, occurred_at, available_at, detail)
    SELECT c.author_id, 'comment', 'c:' || c.id, ${POINTS.comment}, c.created_at, c.created_at, json_object('comment', c.id, 'share', c.share_no, 'peer', s.author_id)
+   FROM comments c JOIN shares s ON s.no = c.share_no WHERE s.author_id != c.author_id`,
+  // 收到留言（收藏的作者）
+  `INSERT OR IGNORE INTO score_events (user_id, kind, source, points, occurred_at, available_at, detail)
+   SELECT s.author_id, 'comment_recv', 'cr:' || c.id, ${POINTS.commentRecv}, c.created_at, c.created_at, json_object('comment', c.id, 'share', c.share_no, 'peer', c.author_id)
    FROM comments c JOIN shares s ON s.no = c.share_no WHERE s.author_id != c.author_id`,
   // 成交：買賣雙方
   `INSERT OR IGNORE INTO score_events (user_id, kind, source, points, occurred_at, available_at, detail)
@@ -304,11 +347,13 @@ const BASE_REASON = `CASE e.kind
     END
   WHEN 'like_give' THEN CASE WHEN NOT EXISTS (SELECT 1 FROM likes l WHERE l.user_id = ${J("liker")} AND l.share_no = ${J("share")}) THEN 'removed' END
   WHEN 'like_recv' THEN CASE WHEN NOT EXISTS (SELECT 1 FROM likes l WHERE l.user_id = ${J("liker")} AND l.share_no = ${J("share")}) THEN 'removed'
-      WHEN (SELECT status FROM users WHERE id = ${J("liker")}) IS NOT 'active' THEN 'peer_suspended'
+      WHEN EXISTS (SELECT 1 FROM suspensions su WHERE su.user_id = ${J("peer")} AND su.reason = 'sockpuppet') THEN 'peer_sockpuppet'
       ELSE (SELECT CASE WHEN s.deleted_at IS NOT NULL THEN 'deleted' WHEN s.hidden_at IS NOT NULL THEN 'hidden' WHEN ${LOCKED("'share:' || s.no")} THEN 'reported' END
             FROM shares s WHERE s.no = ${J("share")}) END
   WHEN 'comment' THEN (SELECT CASE WHEN c.deleted_at IS NOT NULL THEN 'deleted' WHEN c.hidden_at IS NOT NULL THEN 'hidden' END FROM comments c WHERE c.id = ${J("comment")})
-  WHEN 'deal' THEN (SELECT CASE WHEN d.voided_at IS NOT NULL THEN 'voided' END FROM deals d WHERE d.id = ${J("deal")})
+  WHEN 'comment_recv' THEN (SELECT CASE WHEN c.deleted_at IS NOT NULL THEN 'deleted' WHEN c.hidden_at IS NOT NULL THEN 'hidden'
+      WHEN EXISTS (SELECT 1 FROM suspensions su WHERE su.user_id = ${J("peer")} AND su.reason = 'sockpuppet') THEN 'peer_sockpuppet' END FROM comments c WHERE c.id = ${J("comment")})
+  WHEN 'deal' THEN (SELECT CASE WHEN d.voided_at IS NOT NULL THEN 'voided' WHEN EXISTS (SELECT 1 FROM suspensions su WHERE su.user_id = ${J("peer")} AND su.reason = 'sockpuppet') THEN 'peer_sockpuppet' END FROM deals d WHERE d.id = ${J("deal")})
   WHEN 'report_ok' THEN CASE WHEN ${J("report")} IS NOT NULL
       THEN CASE WHEN (SELECT decision FROM target_decisions WHERE target = ${J("target")}) = 'unlocked' THEN 'overturned' END
       ELSE (SELECT CASE WHEN c.decision = 'kept' OR (c.deleted_at IS NULL AND c.hidden_at IS NULL) THEN 'overturned' END FROM comments c WHERE c.id = ${J("comment")}) END
@@ -323,16 +368,25 @@ const BASE_REASON = `CASE e.kind
           AND w.status = 'approved' AND w.deleted_at IS NULL AND w.hidden_at IS NULL) THEN 'hidden'
       WHEN EXISTS (SELECT 1 FROM revisions r2 WHERE r2.target = ${J("target")} AND r2.id > ${J("last")} AND r2.created_at <= e.available_at
           AND (r2.reverted_from < ${J("first")} OR r2.content = (SELECT content FROM revisions WHERE id = ${J("base")}))) THEN 'reverted' END
-  WHEN 'fill' THEN (SELECT CASE WHEN w.deleted_at IS NOT NULL OR w.hidden_at IS NOT NULL THEN 'hidden'
-      WHEN e.state != 'credited' AND w.year != ${J("value")} THEN 'changed' END FROM series w WHERE w.id = ${J("series")})
+  WHEN 'fill' THEN CASE WHEN ${J("version")} IS NOT NULL
+    THEN (SELECT CASE WHEN v.deleted_at IS NOT NULL OR v.hidden_at IS NOT NULL THEN 'hidden'
+        WHEN e.state != 'credited' AND CASE ${J("field")} ${Object.entries(FILL_FIELDS)
+          .map(([k, f]) => `WHEN '${k}' THEN v.${f.col}`)
+          .join(" ")} END IS NOT ${J("value")} THEN 'changed' END FROM versions v WHERE v.id = ${J("version")})
+    ELSE (SELECT CASE WHEN w.deleted_at IS NOT NULL OR w.hidden_at IS NOT NULL THEN 'hidden'
+      WHEN e.state != 'credited' AND w.year != ${J("value")} THEN 'changed' END FROM series w WHERE w.id = ${J("series")}) END
 END`;
+
+/** 停權凍結：事件發生時間落在這個人的停權期間就不計（恢復後的事件照常） */
+const REASON = `CASE WHEN EXISTS (SELECT 1 FROM suspensions su WHERE su.user_id = e.user_id AND su.started_at <= e.occurred_at
+    AND (su.ended_at IS NULL OR e.occurred_at < su.ended_at)) THEN 'suspended' ELSE (${BASE_REASON}) END`;
 
 const PAIR = `CASE WHEN user_id < json_extract(detail, '$.peer') THEN user_id || '|' || json_extract(detail, '$.peer') ELSE json_extract(detail, '$.peer') || '|' || user_id END`;
 
 /** 算出每筆事件的最終 reason 與 state，只改有變的列 */
 const RESOLVE = `UPDATE score_events SET reason = f.r, state = f.st FROM (
   WITH b AS (
-    SELECT e.id, e.kind, e.user_id, e.source, e.points, e.occurred_at, e.available_at, e.detail, ${BASE_REASON} AS r FROM score_events e
+    SELECT e.id, e.kind, e.user_id, e.source, e.points, e.occurred_at, e.available_at, e.detail, ${REASON} AS r FROM score_events e
   ),
   -- 上限一律以「全部事件」排名：之後被隱藏、刪除、取消的仍佔名額，扣回才會真的扣到（不會由超額的那筆遞補）
   k AS (
@@ -346,9 +400,10 @@ const RESOLVE = `UPDATE score_events SET reason = f.r, state = f.st FROM (
   d AS (
     SELECT *, COALESCE(r,
       CASE WHEN kind IN ('like_give', 'like_recv') AND pair_n > ${CAPS.pairLikes} THEN 'pair_cap'
-           WHEN kind = 'comment' AND pair_n > ${CAPS.pairComments} THEN 'pair_cap'
+           WHEN kind IN ('comment', 'comment_recv') AND pair_n > ${CAPS.pairComments} THEN 'pair_cap'
            WHEN kind = 'deal' AND pair_user_n > ${CAPS.pairDeals} THEN 'pair_cap' END,
-      CASE WHEN kind = 'like_recv' AND share_n > ${CAPS.likeRecvPerShare} THEN 'share_cap' END,
+      CASE WHEN kind = 'like_recv' AND share_n > ${CAPS.likeRecvPerShare} THEN 'share_cap'
+           WHEN kind = 'comment_recv' AND share_n > ${CAPS.commentRecvPerShare} THEN 'share_cap' END,
       CASE WHEN kind = 'share' AND day_n > ${CAPS.shareDay} THEN 'daily_cap'
            WHEN kind = 'fill' AND day_n > ${CAPS.fillDay} THEN 'daily_cap'
            WHEN kind = 'comment' AND day_n > ${CAPS.commentDay} THEN 'daily_cap'
@@ -364,8 +419,8 @@ const RESOLVE = `UPDATE score_events SET reason = f.r, state = f.st FROM (
 
 const TOTALS = `INSERT INTO user_scores (user_id, score, pending, updated_at)
   SELECT u.id,
-    CASE WHEN u.status != 'active' THEN 0 ELSE MAX(0, COALESCE(SUM(CASE WHEN e.state = 'credited' THEN e.points END), 0)) END,
-    CASE WHEN u.status != 'active' THEN 0 ELSE COALESCE(SUM(CASE WHEN e.state = 'pending' THEN e.points END), 0) END,
+    MAX(0, COALESCE(SUM(CASE WHEN e.state = 'credited' THEN e.points END), 0)),
+    COALESCE(SUM(CASE WHEN e.state = 'pending' THEN e.points END), 0),
     ?1
   FROM users u JOIN score_events e ON e.user_id = u.id WHERE 1 GROUP BY u.id
   ON CONFLICT(user_id) DO UPDATE SET score = excluded.score, pending = excluded.pending, updated_at = excluded.updated_at
@@ -440,12 +495,20 @@ export async function lastRunAt() {
 export async function userBadges(ids: string[]) {
   const uniq = Array.from(new Set(ids.filter(Boolean)));
   if (!uniq.length) return new Map<string, string>();
-  const rows = await getDb()
-    .select({ id: users.id, email: users.email, emailVerifiedAt: users.emailVerifiedAt, score: userScores.score })
-    .from(users)
-    .leftJoin(userScores, eq(userScores.userId, users.id))
-    .where(inArray(users.id, uniq));
-  return new Map(rows.map((r) => [r.id, badgeText(r.score ?? 0, isAdmin(r))]));
+  // D1 一句最多 100 個參數：每 90 位查一次
+  const rows = (
+    await Promise.all(
+      Array.from({ length: Math.ceil(uniq.length / 90) }, (_, i) =>
+        getDb()
+          .select({ id: users.id, email: users.email, emailVerifiedAt: users.emailVerifiedAt, score: userScores.score, override: levelOverrides.level })
+          .from(users)
+          .leftJoin(userScores, eq(userScores.userId, users.id))
+          .leftJoin(levelOverrides, eq(levelOverrides.userId, users.id))
+          .where(inArray(users.id, uniq.slice(i * 90, i * 90 + 90))),
+      ),
+    )
+  ).flat();
+  return new Map(rows.map((r) => [r.id, badgeText(r.score ?? 0, isAdmin(r), r.override)]));
 }
 
 export type TitleView = { kind: "fakebuster" | "topfan"; label: string; href?: string };
@@ -453,8 +516,9 @@ export type TitleView = { kind: "fakebuster" | "topfan"; label: string; href?: s
 /** 個人頁：分數、等級、離下一級、稱號 */
 export async function profileScore(u: User) {
   const db = getDb();
-  const [[s], titles, runAt] = await Promise.all([
+  const [[s], [o], titles, runAt] = await Promise.all([
     db.select().from(userScores).where(eq(userScores.userId, u.id)),
+    db.select({ level: levelOverrides.level }).from(levelOverrides).where(eq(levelOverrides.userId, u.id)),
     db.select().from(userTitles).where(eq(userTitles.userId, u.id)),
     lastRunAt(),
   ]);
@@ -471,5 +535,6 @@ export async function profileScore(u: User) {
   ];
   const score = s?.score ?? 0;
   const admin = isAdmin(u);
-  return { admin, badge: badgeText(score, admin), score, pending: s?.pending ?? 0, level: levelOf(score), runAt, titles: views };
+  // 管理員指定的等級：會員自己看到的就是那個等級，不另外標示
+  return { admin, badge: badgeText(score, admin, o?.level), score, pending: s?.pending ?? 0, level: levelOf(score, o?.level), runAt, titles: views };
 }

@@ -1058,3 +1058,6 @@ a.title-chip:hover { background: var(--line); }
 .year-fill .input { width: 6.5em; }
 .submit-year { align-items: center; grid-template-columns: auto 6.5em auto; justify-content: start; column-gap: 8px; }
 .check-inline { align-items: center; display: inline-flex; gap: 4px; white-space: nowrap; }
+.field-fill-input { width: 12em; }
+.level-actions { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; }
+.level-actions .btn-text { padding: 0; text-decoration: underline; }

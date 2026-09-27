@@ -34,6 +34,8 @@ import { SeriesTile } from "@/components/work-cover";
 import { seriesContributors } from "@/lib/server/contributors";
 import { LevelTag } from "@/components/level-tag";
 import { YearFill } from "@/components/year-fill";
+import { FieldFill } from "@/components/field-fill";
+import { FILL_FIELDS, isBlank, type FillField } from "@/lib/fill";
 
 type Props = { params: Promise<{ artist: string; no: string }>; searchParams?: Promise<{ edit?: string }> };
 
@@ -48,6 +50,11 @@ const ROWS: { label: string; get: (v: Version) => string; mono?: boolean }[] = [
   { label: "曲目", get: (v) => v.tracks },
   { label: "資料狀態", get: (v) => v.status },
 ];
+
+/** 公開頁面上可以補的空白欄位（目錄號、辨識特徵在登入後的辨識細節補） */
+const PUBLIC_FILL = (Object.keys(FILL_FIELDS) as FillField[]).filter(
+  (k): k is "year" | "region" | "label" | "packaging" | "contents" | "tracks" => FILL_FIELDS[k].public,
+);
 
 /** 單一版本不比較，只列有值的欄位 */
 const hasValue = (x: string) => x && x !== "—" && x !== "待查證" && x !== "無條碼";
@@ -170,6 +177,7 @@ function VersionBlock({
         <OwnersCount vkey={vkey} owners={v.owners} />
       </h3>
       <LockBanner target={versionTarget(vkey)} locked={isTargetLocked(locks, versionTarget(vkey))} />
+      <FieldFill vkey={vkey} fields={PUBLIC_FILL.filter((f) => isBlank(f, v[f]))} />
 
       {price ? <PriceHistory summary={price} /> : null}
 
