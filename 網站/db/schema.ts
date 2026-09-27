@@ -791,3 +791,63 @@ export const deletionRequests = sqliteTable(
   },
   (t) => [index("deletion_requests_status_idx").on(t.status, t.id), index("deletion_requests_user_idx").on(t.userId)],
 );
+
+/* =====================================================================
+ * 藝人照片（2026-09-28，drizzle/0013）：只新增一張表。
+ * 藝人頁上方一張「目前使用中」的照片（status=active，每位藝人最多一張，由部分唯一索引保證）。
+ * 來源兩種：wiki＝scripts/import-artist-photos.mjs 從維基共享資源匯入（只收 CC0／CC BY／CC BY-SA／公有領域，本機縮成
+ * 長邊 800px JPEG 後上傳 R2 `r/`）；member＝會員投稿（瀏覽器端壓縮，規格同收藏照片：主圖 1600＋縮圖 480），進後台佇列不公開。
+ * 檔案不記在 photos 表：投稿寫入不會觸發 photos 的內容版本觸發器，整頁快取只在「使用中」那張有變動時才作廢
+ * （觸發器在 0013 的 SQL 裡，帶 WHEN 條件）。容量一樣計入 counters.r2_bytes。
+ * status：pending（待審）｜active（使用中）｜retired（被替換下來，檔案保留，可再設回使用中）｜
+ *         rejected（退回，檔案已刪）｜removed（撤下，檔案已刪）｜deleted（刪除，檔案已刪）
+ * ===================================================================== */
+export const artistPhotos = sqliteTable(
+  "artist_photos",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    artistSlug: text("artist_slug").notNull(),
+    /** wiki｜member */
+    source: text("source").notNull(),
+    status: text("status").notNull().default("pending"),
+    r2Key: text("r2_key").notNull(),
+    /** 縮圖；維基匯入只有一個檔，跟 r2_key 相同 */
+    thumbKey: text("thumb_key").notNull(),
+    contentType: text("content_type").notNull(),
+    /** 主圖＋縮圖合計位元組（同一個檔只算一次） */
+    bytes: integer("bytes").notNull().default(0),
+    width: integer("width").notNull().default(0),
+    height: integer("height").notNull().default(0),
+    /** 投稿的會員 id；維基匯入為 NULL */
+    submitterId: text("submitter_id"),
+    /** 攝影者（顯示用）：維基＝Commons 的 Artist 欄文字；投稿＝投稿時的暱稱 */
+    author: text("author").notNull().default(""),
+    authorUrl: text("author_url"),
+    /** 授權簡稱（例：CC BY-SA 4.0、CC0、公有領域）與授權條款網址 */
+    license: text("license").notNull(),
+    licenseUrl: text("license_url"),
+    /** 來源頁：維基＝Commons 檔案頁網址；投稿＝NULL */
+    sourceUrl: text("source_url"),
+    /** 維基檔名（File: 之後那段），匯入去重用 */
+    sourceFile: text("source_file"),
+    /** 投稿附的拍攝場合（選填） */
+    occasion: text("occasion").notNull().default(""),
+    occasionDate: text("occasion_date").notNull().default(""),
+    /** 投稿時勾的兩項聲明（本人拍攝、同意 CC BY-SA 4.0），存當下時間 */
+    agreedAt: text("agreed_at"),
+    createdAt: text("created_at").notNull().default(now),
+    /** 第一次被設為使用中的時間（計分用） */
+    activatedAt: text("activated_at"),
+    handledAt: text("handled_at"),
+    handledBy: text("handled_by"),
+    note: text("note").notNull().default(""),
+  },
+  (t) => [
+    index("artist_photos_artist_idx").on(t.artistSlug, t.status),
+    index("artist_photos_status_idx").on(t.status, t.id),
+    index("artist_photos_submitter_idx").on(t.submitterId, t.createdAt),
+    index("artist_photos_r2key_idx").on(t.r2Key),
+    index("artist_photos_thumbkey_idx").on(t.thumbKey),
+    uniqueIndex("artist_photos_active_uq").on(t.artistSlug).where(sql`status = 'active'`),
+  ],
+);

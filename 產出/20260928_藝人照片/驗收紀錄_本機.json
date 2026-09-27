@@ -1,0 +1,382 @@
+[
+ {
+  "name": "1a mc-hotdog 有一張維基匯入的照片",
+  "ok": true,
+  "detail": "1"
+ },
+ {
+  "name": "1b 藝人頁上方有照片（在 h1 前面）",
+  "ok": true,
+  "detail": "<figure class=\"artist-photo\" style=\"width:187px\" data-testid=\"artist-photo\"><img src=\"/img/r/kc28erZ68_rD.jpg\" alt=\"MC H"
+ },
+ {
+  "name": "1c 照片下方標示攝影者、授權、來源連結（維基共享資源檔案頁）",
+  "ok": true,
+  "detail": "<figure class=\"artist-photo\" style=\"width:187px\" data-testid=\"artist-photo\"><img src=\"/img/r/kc28erZ68_rD.jpg\" alt=\"MC HotDog\" width=\"533\" height=\"800\" decoding=\"async\"/><figcaption class=\"artist-photo-credit\" data-testid=\"artist-photo-credit\">攝影：<a class=\"link\" href=\"https://commons.wikimedia.org/wiki/User:Kuyohong\" target=\"_blank\" rel=\"noopener\">邱鈺鋒</a><span class=\"dot\" aria-hidden=\"true\">·</spa"
+ },
+ {
+  "name": "1d og:image 改用這張藝人照片",
+  "ok": true,
+  "detail": "http://127.0.0.1:8791/img/r/kc28erZ68_rD.jpg"
+ },
+ {
+  "name": "1e og:image 的檔案就是匯入時縮好的原檔（沒有燒浮水印）",
+  "ok": true,
+  "detail": "48815 vs 48815"
+ },
+ {
+  "name": "1f 維基照片是長邊 800px 的 JPEG",
+  "ok": true,
+  "detail": "JPEG (533, 800)"
+ },
+ {
+  "name": "1g 使用中的照片訪客不用登入就看得到",
+  "ok": true,
+  "detail": "200 public, max-age=31536000, immutable"
+ },
+ {
+  "name": "1h 沒有照片的藝人頁維持原樣（沒有 figure、header 沒有 has-photo）",
+  "ok": true,
+  "detail": "gordon"
+ },
+ {
+  "name": "2a 匯入報告至少一筆因「合理使用」被排除",
+  "ok": true,
+  "detail": "[{'slug': 'shang-xin-yu-jue', 'name': '傷心欲絕', 'file': \"Logo_of_Wayne's_So_Sad.jpg\", 'how': 'pageimages', 'reason': 'fair_use', 'license': '合理使用', '原因': '合理使用'}]"
+ },
+ {
+  "name": "2b 被排除的藝人沒有任何藝人照片列",
+  "ok": true,
+  "detail": "shang-xin-yu-jue"
+ },
+ {
+  "name": "2c 那張圖在維基確實是非自由（本地檔案、NonFree）",
+  "ok": true,
+  "detail": "local {'value': 'true', 'source': 'commons-desc-page', 'hidden': ''}"
+ },
+ {
+  "name": "2d 匯入的授權只有 CC0／CC BY／CC BY-SA／公有領域",
+  "ok": true,
+  "detail": "['CC BY-SA 4.0', 'CC BY 3.0', 'CC0', 'CC BY-SA 3.0', 'CC BY-SA 2.0', 'CC BY 4.0', 'CC BY 2.0', 'CC BY 2.5', '公有領域']"
+ },
+ {
+  "name": "2e 匯入的總位元組＝artist_photos 的 bytes 合計",
+  "ok": true,
+  "detail": "0"
+ },
+ {
+  "name": "2f 重跑不重抓：已經有照片的全部跳過",
+  "ok": true,
+  "detail": "\"已經有照片跳過\": 48"
+ },
+ {
+  "name": "3a 沒登入投稿 401",
+  "ok": true,
+  "detail": "401"
+ },
+ {
+  "name": "3b 沒勾「本人拍攝」400",
+  "ok": true,
+  "detail": "{\"error\":{\"code\":\"AGREE_REQUIRED\",\"message\":\"兩項都要勾選才能投稿\"}}"
+ },
+ {
+  "name": "3c 沒勾授權 400",
+  "ok": true,
+  "detail": "{\"error\":{\"code\":\"AGREE_REQUIRED\",\"message\":\"兩項都要勾選才能投稿\"}}"
+ },
+ {
+  "name": "3d Email 沒驗證 403",
+  "ok": true,
+  "detail": "{\"error\":{\"code\":\"NOT_VERIFIED\",\"message\":\"驗證 Email 後才能投稿\"}}"
+ },
+ {
+  "name": "3e 不存在的藝人 404",
+  "ok": true,
+  "detail": "404"
+ },
+ {
+  "name": "3f 投稿成功 201、狀態 pending",
+  "ok": true,
+  "detail": "{\"id\":49,\"status\":\"pending\",\"left\":4}"
+ },
+ {
+  "name": "3g 存了主圖＋縮圖、拍攝場合、授權 CC BY-SA 4.0",
+  "ok": true,
+  "detail": "{'r2_key': 'r/fNjeteSyzmFb-y1N.webp', 'thumb_key': 'r/fNjeteSyzmFb-y1N_t.webp', 'occasion': '大港開唱', 'license': 'CC BY-SA 4.0'}"
+ },
+ {
+  "name": "3h 容量計數加上主圖＋縮圖的位元組",
+  "ok": true,
+  "detail": "3902 vs 3902"
+ },
+ {
+  "name": "3i 投稿不讓整頁快取作廢（content_version 不變）",
+  "ok": true,
+  "detail": "16986 → 16986"
+ },
+ {
+  "name": "3j 投稿不公開：訪客看照片 404",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "3k 投稿者本人、管理員看得到",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "3l 別的會員看不到待審投稿",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "3m 藝人頁仍是維基那張",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "3n 每人每日 5 張：第 6 張 429",
+  "ok": true,
+  "detail": "[201, 201, 201, 201, 201, 429]"
+ },
+ {
+  "name": "3o 被上限擋下的那張不佔容量",
+  "ok": true,
+  "detail": "429"
+ },
+ {
+  "name": "4a 非管理員讀後台清單 403",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4b 非管理員設為使用中 403",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4c 非管理員撤下 403",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4d 沒登入打後台 API 401",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4e 管理員清單有待審投稿（含拍攝場合、投稿者）",
+  "ok": true,
+  "detail": "6"
+ },
+ {
+  "name": "4f 儀表板待處理佇列顯示投稿數",
+  "ok": true,
+  "detail": "6 vs 6"
+ },
+ {
+  "name": "5a 設為使用中 200",
+  "ok": true,
+  "detail": "{\"id\":49,\"status\":\"active\",\"purged\":0}"
+ },
+ {
+  "name": "5b 原本的維基照片改成 retired（檔案保留）",
+  "ok": true,
+  "detail": "retired"
+ },
+ {
+  "name": "5c 整頁快取作廢（content_version 加 1 以上）",
+  "ok": true,
+  "detail": "16987 → 16989"
+ },
+ {
+  "name": "5d 藝人頁出現投稿照片，標示「攝影：@帳號」與 CC BY-SA 4.0",
+  "ok": true,
+  "detail": "<figure class=\"artist-photo\" style=\"width:240px\" data-testid=\"artist-photo\"><img src=\"/img/r/fNjeteSyzmFb-y1N.webp\" alt=\"MC HotDog\" width=\"1600\" height=\"1200\" decoding=\"async\"/><figcaption class=\"artist-photo-credit\" data-testid=\"artist-photo-credit\">攝影：<a class=\"link\" href=\"/u/apa533621\">@apa533621"
+ },
+ {
+  "name": "5e og:image 換成投稿照片（沒有燒浮水印，就是原檔）",
+  "ok": true,
+  "detail": "http://127.0.0.1:8791/img/r/fNjeteSyzmFb-y1N.webp"
+ },
+ {
+  "name": "5f 使用中之後訪客看得到",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5g 被替換下來的維基照片不公開了",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5h 寫了操作紀錄",
+  "ok": true,
+  "detail": "1"
+ },
+ {
+  "name": "5i 投稿被設為使用中 +15（比照新增並經核准）",
+  "ok": true,
+  "detail": "[{'points': 15, 'state': 'credited', 'reason': None}]"
+ },
+ {
+  "name": "5j 已經是使用中的不能再設一次（409）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "6a 退回 200、狀態 rejected",
+  "ok": true,
+  "detail": "{\"id\":50,\"status\":\"rejected\",\"purged\":0}"
+ },
+ {
+  "name": "6b 退回後 R2 主圖、縮圖都刪了",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "6c 退回後容量扣回",
+  "ok": true,
+  "detail": "3892 vs 3892"
+ },
+ {
+  "name": "6d 退回後管理員也看不到（404）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "6e 退回不讓整頁快取作廢",
+  "ok": true,
+  "detail": "16989 → 16989"
+ },
+ {
+  "name": "6f 退回寫操作紀錄（含備註）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "6g 刪除待審投稿：狀態 deleted、R2 刪檔、容量扣回",
+  "ok": true,
+  "detail": "{\"id\":51,\"status\":\"deleted\",\"purged\":0}"
+ },
+ {
+  "name": "6h 使用中的不能直接刪除（要用撤下）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "7a 撤下 200、狀態 removed",
+  "ok": true,
+  "detail": "{\"id\":49,\"status\":\"removed\",\"purged\":1}"
+ },
+ {
+  "name": "7b 撤下時清了照片快取（先前已被快取的主圖）",
+  "ok": true,
+  "detail": "{'id': 49, 'status': 'removed', 'purged': 1}"
+ },
+ {
+  "name": "7c 撤下後 R2 主圖、縮圖都刪了",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "7d 撤下後容量扣回",
+  "ok": true,
+  "detail": "3902 vs 3902"
+ },
+ {
+  "name": "7e 撤下後照片網址 404",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "7f 撤下後藝人頁沒有照片、整頁快取已換新",
+  "ok": true,
+  "detail": "16989 → 16990"
+ },
+ {
+  "name": "7g 撤下寫操作紀錄",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "7h 被撤下的投稿分數作廢",
+  "ok": true,
+  "detail": "[{'state': 'void', 'reason': 'deleted'}]"
+ },
+ {
+  "name": "8a 訪客按投稿入口 → 跳出登入面板",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "8b 沒勾兩項不能送出（提示兩項都要勾）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "8c 瀏覽器投稿送出成功",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "8d 瀏覽器端壓縮：主圖長邊 1600、WebP，縮圖另存",
+  "ok": true,
+  "detail": "{'width': 1600, 'height': 1067, 'content_type': 'image/webp', 'occasion': '簡單生活節', 'occasion_date': '2025-12-06'}"
+ },
+ {
+  "name": "8e 儀表板有「藝人照片投稿」佇列",
+  "ok": true,
+  "detail": "4藝人照片投稿"
+ },
+ {
+  "name": "8f 後台藝人照片頁列出投稿（縮圖看得到）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "8g 後台按「設為使用中」生效",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "8h 藝人頁顯示投稿照片與「攝影：@帳號・CC BY-SA 4.0」",
+  "ok": true,
+  "detail": "攝影：@apc533621·CC BY-SA 4.0"
+ },
+ {
+  "name": "8i 後台按「撤下」（確認框）生效",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "8j 被替換下來的維基照片可以再設回使用中",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "8k 藝人頁_維基照片_桌機：照片載入、沒有水平溢出",
+  "ok": true,
+  "detail": "0"
+ },
+ {
+  "name": "8k 藝人頁_維基照片_手機：照片載入、沒有水平溢出",
+  "ok": true,
+  "detail": "0"
+ },
+ {
+  "name": "8l 瀏覽器 console 沒有錯誤",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "9a 使用條款有藝人照片一段：本人拍攝、授權、只收公開演出、肖像權與撤下申請",
+  "ok": true,
+  "detail": "id=\"artist-photos\">藝人照片藝人頁上方的照片，一部分來自維基共享資源，只收 CC0、CC BY、CC BY-SA 與公有領域的照片，照片下方標示攝影者、授權與來源；另一部分由會員投稿投稿的照片必須是你本人拍攝，而且只收公開演出的場合（演唱會、音樂祭、公開活動）。後台、私人聚會、偷拍，或未經同意拍攝私人生活的照片不收投稿即表示你以CC BY-SA 4.0授權樂迷藏與其他人使用這張照"
+ },
+ {
+  "name": "9b 使用條款維持草稿標示",
+  "ok": true,
+  "detail": ""
+ }
+]

@@ -3,6 +3,7 @@ import { adminOverview } from "@/lib/server/moderation";
 import { dashboardStats } from "@/lib/server/stats";
 import { detectDuplicatePairs } from "@/lib/server/duplicates";
 import { pendingDeletionCount } from "@/lib/server/deletion";
+import { pendingArtistPhotoCount } from "@/lib/server/artist-photos";
 
 /**
  * 儀表板：統計（10 分鐘快取，?fresh=1 重算）＋待處理佇列（每次即時）。只有管理員。
@@ -28,6 +29,7 @@ export async function GET(req: Request) {
     duplicates: dups.length,
     avatars: o.avatars.length,
     deletions: await pendingDeletionCount(),
+    artistPhotos: await pendingArtistPhotoCount(),
   };
   return json({ stats, cached, queue }, 200, { "Cache-Control": "no-store" });
 }

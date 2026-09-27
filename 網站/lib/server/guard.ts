@@ -29,7 +29,19 @@ export async function siteStatus(photoKey?: string) {
     db.prepare(`SELECT key, value, updated_at AS at FROM settings WHERE key IN ('paused', 'paused_reason', 'photo_read_limit', 'daily_photo_limit')`),
     db.prepare(`SELECT value FROM counters WHERE key = ?1`).bind(monthKey()),
     // 照片連同它掛的炫收藏一起查：照片刪了、收藏被隱藏或刪除，/img/ 都回 404（2026-09-28）
-    ...(photoKey
+    // 藝人照片（r/ 開頭，2026-09-28）另外一張表：artist_photos。退回、撤下、刪除＝gone；使用中以外（待審、被替換下來）只給投稿者與管理員
+    ...(photoKey?.startsWith("r/")
+      ? [
+          db
+            .prepare(
+              `SELECT submitter_id AS ownerId, 'artist' AS purpose, NULL AS shareNo,
+                      CASE WHEN status IN ('rejected', 'removed', 'deleted') THEN status END AS photoDeleted,
+                      0 AS isMain, '' AS handle, NULL AS shareFound, NULL AS shareHidden, NULL AS shareDeleted, status AS artistStatus
+               FROM artist_photos WHERE r2_key = ?1 OR thumb_key = ?1 LIMIT 1`,
+            )
+            .bind(photoKey),
+        ]
+      : photoKey
       ? [
           db
             .prepare(
@@ -60,10 +72,12 @@ export async function siteStatus(photoKey?: string) {
   const row = p?.results[0] as
     | {
         ownerId: string; purpose: string; shareNo: number | null; photoDeleted: string | null; isMain: number; handle: string | null;
-        shareFound: number | null; shareHidden: string | null; shareDeleted: string | null;
+        shareFound: number | null; shareHidden: string | null; shareDeleted: string | null; artistStatus?: string;
       }
     | undefined;
-  const photo = row ? { ownerId: row.ownerId, purpose: row.purpose, shareNo: row.shareNo, isMain: row.isMain === 1, handle: row.handle ?? "" } : null;
+  const photo = row
+    ? { ownerId: row.ownerId, purpose: row.purpose, shareNo: row.shareNo, isMain: row.isMain === 1, handle: row.handle ?? "", artistStatus: row.artistStatus ?? null }
+    : null;
   /** 這張照片還能不能公開給人看：資料庫沒有這張、照片已刪、掛的收藏不見／被隱藏／被刪 → 不行 */
   const gone =
     !row || !!row.photoDeleted || (row.shareNo !== null && (row.shareFound === null || !!row.shareHidden || !!row.shareDeleted));

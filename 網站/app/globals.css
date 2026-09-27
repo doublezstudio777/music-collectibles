@@ -1185,3 +1185,28 @@ a.title-chip:hover { background: var(--line); }
 /* 後台操作處理中：整塊按鈕先停用，避免連按（2026-09-28） */
 .admin[aria-busy="true"] button { pointer-events: none; opacity: .6; }
 .admin-toast { min-height: 0; }
+
+/* 藝人照片（2026-09-28）：藝人頁上方一張，照片下方攝影者・授權・來源；沒有照片時頁首維持原樣 */
+.head-split.has-photo { align-items: flex-end; }
+.artist-head-text { flex: 1 1 260px; min-width: 0; }
+.artist-photo { flex: 0 0 auto; margin: 0; max-width: 100%; }
+.artist-photo img { background: var(--ph0); display: block; height: auto; width: 100%; }
+.artist-photo-credit { color: var(--muted); font-size: var(--text-xs); line-height: 1.5; margin-top: 6px; overflow-wrap: anywhere; }
+.artist-photo-credit .dot { margin: 0 4px; }
+.artist-photo-credit .lic { white-space: nowrap; }
+.artist-photo-entry { font-weight: 400; margin-top: 4px; min-height: 36px; }
+.artist-photo-form { margin-top: 12px; }
+.artist-photo-occasion { display: flex; flex-wrap: wrap; gap: 8px; }
+.artist-photo-occasion .input-sm { flex: 1 1 180px; }
+
+/* 後台「藝人照片」 */
+.ap-list { display: flex; flex-direction: column; }
+.ap-item { border-top: 1px solid var(--line); display: grid; gap: 16px; grid-template-columns: 160px minmax(0, 1fr); padding: 16px 0; }
+.ap-item img { background: var(--ph0); display: block; height: auto; max-height: 200px; object-fit: contain; width: 160px; }
+.ap-meta { display: flex; flex-direction: column; gap: 6px; font-size: var(--text-sm); min-width: 0; }
+.ap-meta .sub { overflow-wrap: anywhere; }
+.ap-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 700px) {
+  .ap-item { grid-template-columns: 96px minmax(0, 1fr); }
+  .ap-item img { width: 96px; }
+}

@@ -13,6 +13,7 @@
 //   同一人在同一頁連續編輯（中間沒有別人改、間隔 60 分鐘內）合併成一次，依合併後的總改動算分
 //   「還原」本身不給分
 // - 新增系列、品項、版本並經核准：+15（管理員新增的直接生效）。品項連帶送出的第一個版本不另外算
+// - 藝人照片投稿被管理員設為使用中：+15（2026-09-28，比照上一條）；之後被別張替換仍保留，被撤下或刪除作廢
 // - 發炫收藏（含照片）：+10，每日上限 5 則（2026-09-28 拿掉「勾辨識參考 +5」，改管理員標記、不給分）
 // - 補上缺漏資料：+10，每日上限 5 次，7 天後入帳，7 天內被改掉不給分；補自己新增的不算。
 //   可補的欄位（原本空白才能補）：系列發行年；版本的發行年、地區、發行、包裝、內容物、曲目、目錄號、辨識特徵（FILL_FIELDS）
@@ -269,6 +270,10 @@ const INSERTS = [
    SELECT v.created_by, 'create', 'version:' || v.id, ${POINTS.create}, v.created_at, v.created_at, json_object('type', 'version', 'id', v.id)
    FROM versions v JOIN items i ON i.id = v.item_ref
    WHERE v.created_by IS NOT NULL AND NOT (v.version_id = 'v1' AND i.created_by IS v.created_by)`,
+  // 藝人照片投稿被設為使用中（2026-09-28）：+15，比照新增並經核准；時間＝第一次設為使用中
+  `INSERT OR IGNORE INTO score_events (user_id, kind, source, points, occurred_at, available_at, detail)
+   SELECT submitter_id, 'create', 'aphoto:' || id, ${POINTS.create}, activated_at, activated_at, json_object('type', 'artist_photo', 'id', id)
+   FROM artist_photos WHERE source = 'member' AND submitter_id IS NOT NULL AND activated_at IS NOT NULL`,
   // 按讚（給讚的人）、收到讚（收藏的作者）
   `INSERT OR IGNORE INTO score_events (user_id, kind, source, points, occurred_at, available_at, detail)
    SELECT l.user_id, 'like_give', 'lg:' || l.user_id || ':' || l.share_no, ${POINTS.likeGive}, l.created_at, l.created_at,
@@ -343,6 +348,7 @@ const BASE_REASON = `CASE e.kind
         WHEN v.status != 'approved' THEN 'not_approved'
         WHEN ${LOCKED("'version:' || w.artist_slug || '/' || w.no || '#' || i.item_id || '-' || v.version_id")} THEN 'reported' END
         FROM versions v JOIN items i ON i.id = v.item_ref JOIN series w ON w.id = i.series_id WHERE v.id = ${J("id")})
+    WHEN 'artist_photo' THEN (SELECT CASE WHEN p.status IN ('removed', 'deleted') THEN 'deleted' END FROM artist_photos p WHERE p.id = ${J("id")})
     END
   WHEN 'like_give' THEN CASE WHEN NOT EXISTS (SELECT 1 FROM likes l WHERE l.user_id = ${J("liker")} AND l.share_no = ${J("share")}) THEN 'removed' END
   WHEN 'like_recv' THEN CASE WHEN NOT EXISTS (SELECT 1 FROM likes l WHERE l.user_id = ${J("liker")} AND l.share_no = ${J("share")}) THEN 'removed'

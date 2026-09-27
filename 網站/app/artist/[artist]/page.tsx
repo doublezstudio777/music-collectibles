@@ -11,6 +11,9 @@ import { isLocked, lastEdit, loadPage } from "@/lib/server/wiki";
 import { ShareWall } from "@/components/share-wall";
 import { SeriesTile } from "@/components/work-cover";
 import { SITE_NAME } from "@/lib/data";
+import { activeArtistPhoto } from "@/lib/server/artist-photos";
+import { ArtistPhotoFigure } from "@/components/artist-photo";
+import { ArtistPhotoSubmit } from "@/components/artist-photo-submit";
 
 type Props = { params: Promise<{ artist: string }>; searchParams: Promise<{ edit?: string }> };
 
@@ -19,12 +22,16 @@ export async function generateMetadata({ params }: Props) {
   const a = c.visibleArtist((await params).artist);
   if (!a) return { title: "找不到藝人" };
   const related = c.sharesWithTag(a.name);
+  // 藝人照片（2026-09-28）：有使用中的照片就當 og:image。這張不是會員的收藏，不燒浮水印；授權標示在頁面上
+  const photo = await activeArtistPhoto(a.slug);
   return ogMeta({
     origin: await siteOrigin(),
     path: artistHref(a.slug),
     title: a.name,
     description: [a.tagline, related.length ? `${related.length} 則炫收藏` : ""].filter(Boolean).join("・") || `${a.name} 在${SITE_NAME}`,
-    photo: c.ogPhotoOf(related),
+    photo: photo
+      ? { url: photo.url, ...(photo.width && photo.height ? { size: { w: photo.width, h: photo.height } } : {}), type: photo.contentType === "image/webp" ? "image/webp" : "image/jpeg" }
+      : c.ogPhotoOf(related),
   });
 }
 
@@ -35,7 +42,7 @@ export default async function ArtistPage({ params, searchParams }: Props) {
   if (!artist) notFound();
   const editing = (await searchParams).edit === "1";
   const wt = { kind: "artist" as const, slug: artist.slug };
-  const [page, locked, edited] = await Promise.all([loadPage(wt), isLocked(wt), lastEdit(wt)]);
+  const [page, locked, edited, photo] = await Promise.all([loadPage(wt), isLocked(wt), lastEdit(wt), activeArtistPhoto(artist.slug)]);
   const self = artistHref(artist.slug);
   const lastBy = edited ?? artist.lastEdit;
 
@@ -49,8 +56,9 @@ export default async function ArtistPage({ params, searchParams }: Props) {
 
   return (
     <main className="wrap page">
-      <header className="page-head head-split">
-        <div>
+      <header className={`page-head head-split${photo ? " has-photo" : ""}`}>
+        {photo ? <ArtistPhotoFigure photo={photo} name={artist.name} /> : null}
+        <div className="artist-head-text">
           <h1 className="page-title">{artist.name}</h1>
           <p className="page-meta">
             {artist.kind === "發行單位" ? (
@@ -60,6 +68,7 @@ export default async function ArtistPage({ params, searchParams }: Props) {
             ) : null}
             {artist.tagline}
           </p>
+          <ArtistPhotoSubmit slug={artist.slug} name={artist.name} />
         </div>
         <div className="head-actions">
           <FollowButton slug={artist.slug} name={artist.name} />

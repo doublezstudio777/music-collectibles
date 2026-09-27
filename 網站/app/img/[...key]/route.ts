@@ -5,7 +5,8 @@ import { photoCache, photoCacheKey } from "@/lib/server/photos";
 import { QUOTA_MESSAGE, takeQuota } from "@/lib/server/quota";
 
 /**
- * 照片：/img/p/{id}.webp（公開）、/img/a/{id}.webp（申訴證據，只給本人與管理員）、/img/v/{id}.webp（大頭貼，公開，2026-09-28）。
+ * 照片：/img/p/{id}.webp（公開）、/img/a/{id}.webp（申訴證據，只給本人與管理員）、/img/v/{id}.webp（大頭貼，公開，2026-09-28）、
+ * /img/r/{id}.webp（藝人照片，2026-09-28：使用中的公開、大小圖都不用登入；待審與被替換下來的只給投稿者與管理員）。
  * 檔名是隨機 id、內容不會改。
  *
  * 順序（2026-09-28 改）：先查 D1（暫停、本月讀取數、這張照片還在不在），再查快取，最後才讀 R2。
@@ -27,11 +28,11 @@ export async function GET(req: Request, ctx: { params: Promise<{ key: string[] }
   const { key } = await ctx.params;
   const k = key.join("/");
   const notFound = () => new Response("Not found", { status: 404, headers: { "X-Content-Type-Options": "nosniff", "Cache-Control": "no-store" } });
-  if (!/^[pav]\/[A-Za-z0-9_-]+\.(webp|jpg)$/.test(k) || !env.PHOTOS) return notFound();
+  if (!/^[pavr]\/[A-Za-z0-9_-]+\.(webp|jpg)$/.test(k) || !env.PHOTOS) return notFound();
 
   const { status, photo, gone } = await siteStatus(k);
   // 申訴證據（a/ 開頭，或舊資料裡 purpose=appeal 的）只給上傳的本人與管理員
-  const priv = k.startsWith("a/") || photo?.purpose === "appeal";
+  const priv = k.startsWith("a/") || photo?.purpose === "appeal" || (photo?.purpose === "artist" && photo.artistStatus !== "active");
   const origin = new URL(req.url).origin;
   const cache = !priv ? photoCache() : undefined;
   if (gone) {
@@ -41,7 +42,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ key: string[] }
   if (priv) {
     const t = tokenFrom(req);
     const s = t ? await userByToken(t.token) : null;
-    if (!photo || !s || (s.user.id !== photo.ownerId && !isAdmin(s.user))) return notFound();
+    if (!photo || !s || ((!photo.ownerId || s.user.id !== photo.ownerId) && !isAdmin(s.user))) return notFound();
   }
   const members = !priv && photo && (photo.isMain || photo.purpose === "mark");
   if (members) {

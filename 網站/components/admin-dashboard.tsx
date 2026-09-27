@@ -16,6 +16,7 @@ type Queue = {
   duplicates?: number;
   avatars?: number;
   deletions?: number;
+  artistPhotos?: number;
 };
 type StatsRes = { stats: Stats; cached: boolean; queue: Queue };
 type Usage = {
@@ -295,6 +296,10 @@ export function AdminDashboard() {
           <Link href="/admin/deletions" className="queue-item" data-testid="queue-deletions">
             <b className="num">{q.deletions ?? 0}</b>
             <span>刪帳申請</span>
+          </Link>
+          <Link href="/admin/artist-photos" className="queue-item" data-testid="queue-artist-photos">
+            <b className="num">{q.artistPhotos ?? 0}</b>
+            <span>藝人照片投稿</span>
           </Link>
         </div>
       </section>

@@ -124,6 +124,16 @@ export async function executeDeletion(admin: User, id: number, deletePhotos: boo
       .bind(uid, deletePhotos ? 1 : 0)
       .all<{ id: string; a: string; b: string; c: string | null; bytes: number; purpose: string }>()
   ).results ?? [];
+  // 藝人照片投稿（2026-09-28）：待審的一律刪；使用中或被替換下來的只在勾選時刪（CC BY-SA 已授權，不勾就保留，標示改成「已刪除的會員」）
+  const artistFiles = (
+    await db
+      .prepare(
+        `SELECT id, r2_key AS a, thumb_key AS b, NULL AS c, bytes, 'artist' AS purpose FROM artist_photos
+         WHERE submitter_id = ?1 AND (status = 'pending' OR (?2 = 1 AND status IN ('active', 'retired')))`,
+      )
+      .bind(uid, deletePhotos ? 1 : 0)
+      .all<{ id: number; a: string; b: string; c: string | null; bytes: number; purpose: string }>()
+  ).results ?? [];
   const avatarFiles = files.filter((f) => f.purpose === "avatar").length;
   const likeUid = `%${uid.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
 
@@ -137,6 +147,9 @@ export async function executeDeletion(admin: User, id: number, deletePhotos: boo
     db.prepare(`DELETE FROM user_name_changes WHERE user_id = ?1`).bind(uid),
     db.prepare(`UPDATE photos SET deleted_at = ?1 WHERE id IN (SELECT value FROM json_each(?2))`).bind(at, JSON.stringify(files.map((f) => f.id))),
     db.prepare(`UPDATE admin_log SET target = ?1 WHERE target = ?2`).bind(`user:${code}`, `user:${req.handle}`),
+    db
+      .prepare(`UPDATE artist_photos SET status = 'deleted', handled_at = ?1, handled_by = ?2, note = '刪除帳號' WHERE id IN (SELECT value FROM json_each(?3))`)
+      .bind(at, admin.id, JSON.stringify(artistFiles.map((f) => f.id))),
     db
       .prepare(
         `UPDATE users SET email = ?1, email_verified_at = NULL, password_hash = '!deleted', handle = ?2, name = ?3, bio = '',
@@ -159,6 +172,7 @@ export async function executeDeletion(admin: User, id: number, deletePhotos: boo
     photos: files.length - avatarFiles,
     avatars: avatarFiles,
     adminLogRetargeted: n(8),
+    artistPhotos: artistFiles.length,
   };
   await db.batch([
     db
@@ -175,7 +189,7 @@ export async function executeDeletion(admin: User, id: number, deletePhotos: boo
   let r2Deleted = 0;
   let bytes = 0;
   const cache = photoCache();
-  for (const f of files) {
+  for (const f of [...files, ...artistFiles]) {
     const keys = [...new Set([f.a, f.b, ...(f.c ? [f.c] : [])])];
     for (const k of keys) {
       await env.PHOTOS?.delete(k).catch(() => undefined);
