@@ -60,4 +60,7 @@ BODY=$(curl -fsS "$URL/")
 grep -q '<meta name="robots" content="noindex"' <<<"$BODY" || { echo "煙霧測試失敗：meta robots noindex"; exit 1; }; echo "meta robots noindex"
 ROBOTS=$(curl -fsS "$URL/robots.txt")
 grep -q "Disallow: /admin" <<<"$ROBOTS" || { echo "煙霧測試失敗：robots.txt 正常"; exit 1; }; echo "robots.txt 正常"
+# 瀏覽器步驟（2026-09-28 加）：curl 看不出連結點了沒反應，要真的開瀏覽器點一次；失敗整個腳本失敗
+step "7. 瀏覽器煙霧測試（Playwright：點連結換頁、console error 0）"
+python3 scripts/smoke-browser.py "$URL" || { echo "煙霧測試失敗：瀏覽器步驟（程式已部署，要回復見部署手冊第八節）"; exit 1; }
 echo "部署完成。接著照部署手冊跑「部署後檢查」。"

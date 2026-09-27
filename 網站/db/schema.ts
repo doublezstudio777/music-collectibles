@@ -538,3 +538,19 @@ export const artistDismissals = sqliteTable(
   },
   (t) => [primaryKey({ columns: [t.userId, t.artistSlug] })],
 );
+
+/* =====================================================================
+ * 上線後第一批（2026-09-28）：藝人識別碼轉址。只新增這一張表。
+ * 藝人改網址識別碼時寫一筆 舊 → 新；/artist/{舊}/... 一律 301 到 /artist/{新}/...
+ * 連續改名（a→b→c）時，舊的紀錄一併改指到最新的（a→c、b→c），不會轉兩次。
+ * ===================================================================== */
+export const artistRedirects = sqliteTable(
+  "artist_redirects",
+  {
+    oldSlug: text("old_slug").primaryKey(),
+    newSlug: text("new_slug").notNull(),
+    createdBy: text("created_by"),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [index("artist_redirects_new_idx").on(t.newSlug)],
+);

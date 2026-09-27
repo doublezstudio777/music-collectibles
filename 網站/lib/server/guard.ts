@@ -27,7 +27,19 @@ export async function siteStatus(photoKey?: string) {
   const stmts = [
     db.prepare(`SELECT key, value, updated_at AS at FROM settings WHERE key IN ('paused', 'paused_reason', 'photo_read_limit')`),
     db.prepare(`SELECT value FROM counters WHERE key = ?1`).bind(monthKey()),
-    ...(photoKey ? [db.prepare(`SELECT owner_id AS ownerId, purpose FROM photos WHERE r2_key = ?1 OR thumb_key = ?1 LIMIT 1`).bind(photoKey)] : []),
+    // 照片連同它掛的炫收藏一起查：照片刪了、收藏被隱藏或刪除，/img/ 都回 404（2026-09-28）
+    ...(photoKey
+      ? [
+          db
+            .prepare(
+              `SELECT p.owner_id AS ownerId, p.purpose, p.share_no AS shareNo, p.deleted_at AS photoDeleted,
+                      s.no AS shareFound, s.hidden_at AS shareHidden, s.deleted_at AS shareDeleted
+               FROM photos p LEFT JOIN shares s ON s.no = p.share_no
+               WHERE p.r2_key = ?1 OR p.thumb_key = ?1 LIMIT 1`,
+            )
+            .bind(photoKey),
+        ]
+      : []),
   ];
   const [s, c, p] = await db.batch(stmts);
   const map = new Map((s.results as { key: string; value: string; at: string }[]).map((r) => [r.key, r]));
@@ -39,8 +51,14 @@ export async function siteStatus(photoKey?: string) {
     reads: ((c.results[0] as { value: number } | undefined)?.value ?? 0) + pendingReads,
     readLimit: Number.isInteger(limit) && limit > 0 ? limit : DEFAULT_READ_LIMIT,
   };
-  const photo = (p?.results[0] as { ownerId: string; purpose: string } | undefined) ?? null;
-  return { status, photo };
+  const row = p?.results[0] as
+    | { ownerId: string; purpose: string; shareNo: number | null; photoDeleted: string | null; shareFound: number | null; shareHidden: string | null; shareDeleted: string | null }
+    | undefined;
+  const photo = row ? { ownerId: row.ownerId, purpose: row.purpose, shareNo: row.shareNo } : null;
+  /** 這張照片還能不能公開給人看：資料庫沒有這張、照片已刪、掛的收藏不見／被隱藏／被刪 → 不行 */
+  const gone =
+    !row || !!row.photoDeleted || (row.shareNo !== null && (row.shareFound === null || !!row.shareHidden || !!row.shareDeleted));
+  return { status, photo, gone };
 }
 
 /** 記一次 R2 讀取；累積到 FLUSH_EVERY 才寫 D1 */

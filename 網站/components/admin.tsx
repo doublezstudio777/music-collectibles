@@ -98,6 +98,7 @@ function Takedown({ data, run }: { data: Overview; run: (path: string, body: unk
   const [type, setType] = useState<HideType>("share");
   const [key, setKey] = useState("");
   const [mode, setMode] = useState<keyof typeof DISPLAY_WORD>("on");
+  const [slugTo, setSlugTo] = useState("");
   const k = key.trim();
   return (
     <section className="block">
@@ -147,6 +148,30 @@ function Takedown({ data, run }: { data: Overview; run: (path: string, body: unk
             <button type="button" className="btn btn-line" disabled={!k} onClick={() => run("/api/admin/display", { slug: k, mode })}>
               套用
             </button>
+          </span>
+        ) : null}
+        {type === "artist" ? (
+          <span className="report-acts">
+            <label className="sr-only" htmlFor="td-slug-to">
+              新的網址識別碼
+            </label>
+            <input
+              id="td-slug-to"
+              className="input"
+              value={slugTo}
+              placeholder="新的網址識別碼，例：cao-dong"
+              onChange={(e) => setSlugTo(e.target.value)}
+            />
+            <button
+              type="button"
+              className="btn btn-line"
+              disabled={!k || !slugTo.trim()}
+              data-testid="rename-artist"
+              onClick={() => run("/api/admin/rename-artist", { from: k, to: slugTo.trim() }).then(() => setSlugTo(""))}
+            >
+              改識別碼
+            </button>
+            <span className="sub">舊網址會自動轉到新網址</span>
           </span>
         ) : null}
       </form>

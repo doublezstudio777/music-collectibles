@@ -20,14 +20,14 @@ import {
 import { pageData, siteOrigin } from "@/lib/server/viewer";
 import { ogMeta } from "@/lib/server/og";
 import { CopyLink } from "@/components/share-actions";
-import { HoldingButtons } from "@/components/holding-buttons";
+import { HoldingButtons, OwnersCount } from "@/components/holding-buttons";
 import { PriceHistory } from "@/components/price-history";
 import { WikiEditor } from "@/components/wiki-editor";
 import { priceSummaries } from "@/lib/server/prices";
 import { isLocked, lastEdit, latestRevisionId, loadPage } from "@/lib/server/wiki";
 import type { PriceSummary } from "@/lib/prices";
 import { LockBanner, ReportBox } from "@/components/report";
-import { ItemLooseWall, ShareWall } from "@/components/share-wall";
+import { ItemLooseWall, VersionWall } from "@/components/share-wall";
 
 type Props = { params: Promise<{ artist: string; no: string }>; searchParams?: Promise<{ edit?: string }> };
 
@@ -167,6 +167,7 @@ function VersionBlock({
       <h3 className="ver-title">
         {v.edition} {hasValue(v.catalog) ? <span className="mono sub-inline">{v.catalog}</span> : null}
         {v.fakes?.length ? <span className="flag flag-fake">有已知仿冒</span> : null}
+        <OwnersCount vkey={vkey} owners={v.owners} />
       </h3>
       <LockBanner target={versionTarget(vkey)} locked={isTargetLocked(locks, versionTarget(vkey))} />
 
@@ -250,7 +251,7 @@ function VersionBlock({
       <h4 className="sub-title">
         炫收藏<span className="count">{list.length}</span>
       </h4>
-      <ShareWall shares={list.map(view)} empty={<p className="empty">還沒有人炫過這個版本</p>} />
+      <VersionWall shares={list.map(view)} confirmed={v.status === "已確認"} id={versionAnchor(item, v)} />
       <ReportBox target={versionTarget(vkey)} label="檢舉這個版本" />
     </section>
   );

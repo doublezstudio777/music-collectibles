@@ -269,3 +269,73 @@ export function ItemLooseWall({ shares }: { shares: ShareView[] }) {
     </section>
   );
 }
+
+/** 版本底下的炫收藏排序（2026-09-28）：預設精選 */
+export type VersionSort = "featured" | "new" | "likes" | "selling";
+const VERSION_SORTS: { key: VersionSort; label: string }[] = [
+  { key: "featured", label: "精選" },
+  { key: "new", label: "最新" },
+  { key: "likes", label: "最多讚" },
+  { key: "selling", label: "在賣的" },
+];
+/** 每個版本先顯示幾則 */
+export const VERSION_SHOWN = 6;
+
+/**
+ * 精選＝「已確認版本且照片可當辨識參考」的排前面 → 讚數多的 → 新的。
+ * 同一個版本區塊裡的收藏都掛在同一個版本，「已確認版本」看的是這個版本的資料狀態（confirmed）。
+ */
+export function sortVersionShares(list: ShareView[], sort: VersionSort, confirmed: boolean, likesOf: (s: ShareView) => number) {
+  const byNew = (a: ShareView, b: ShareView) => b.order - a.order;
+  const byLikes = (a: ShareView, b: ShareView) => likesOf(b) - likesOf(a) || byNew(a, b);
+  const featured = (s: ShareView) => (confirmed && s.refPhoto ? 1 : 0);
+  if (sort === "new") return [...list].sort(byNew);
+  if (sort === "likes") return [...list].sort(byLikes);
+  if (sort === "selling") return list.filter((s) => (s.sale.state === "sale" || s.sale.state === "offer") && !s.lock).sort(byNew);
+  return [...list].sort((a, b) => featured(b) - featured(a) || byLikes(a, b));
+}
+
+/** 系列頁每個版本的炫收藏：排序分頁籤＋先顯示 6 則，其餘收進「看全部 N 則」 */
+export function VersionWall({ shares, confirmed, id }: { shares: ShareView[]; confirmed: boolean; id: string }) {
+  const { liked } = useAppState();
+  const [sort, setSort] = useState<VersionSort>("featured");
+  const [all, setAll] = useState(false);
+  if (shares.length === 0) return <p className="empty">還沒有人炫過這個版本</p>;
+  const list = sortVersionShares(shares, sort, confirmed, (s) => s.likes + (liked(s.n) ? 1 : 0));
+  const shown = all ? list : list.slice(0, VERSION_SHOWN);
+  return (
+    <div className="wall-wrap" data-testid="version-wall" data-sort={sort}>
+      <div className="wall-bar">
+        <nav className="filters" aria-label="排序">
+          {VERSION_SORTS.map((o) => (
+            <button
+              key={o.key}
+              type="button"
+              className="filter"
+              aria-pressed={o.key === sort}
+              aria-current={o.key === sort ? "true" : undefined}
+              onClick={() => setSort(o.key)}
+            >
+              {o.label}
+            </button>
+          ))}
+        </nav>
+        <span />
+      </div>
+      {shown.length === 0 ? (
+        <p className="empty">這個版本目前沒有人在賣</p>
+      ) : (
+        <div className="wall" id={`${id}-wall`}>
+          {shown.map((s) => (
+            <ShareCard key={s.n} share={s} />
+          ))}
+        </div>
+      )}
+      {!all && list.length > VERSION_SHOWN ? (
+        <button type="button" className="btn btn-line more-all" aria-controls={`${id}-wall`} onClick={() => setAll(true)} data-testid="version-more">
+          看全部 {list.length} 則
+        </button>
+      ) : null}
+    </div>
+  );
+}

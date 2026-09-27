@@ -146,3 +146,29 @@ export async function unattachedPhotos(ownerId: string, ids: string[], purpose: 
     .where(and(eq(photos.ownerId, ownerId), eq(photos.purpose, purpose), isNull(photos.shareNo), isNull(photos.deletedAt)));
   return ids.map((id) => rows.find((r) => r.id === id)).filter((r): r is (typeof rows)[number] => Boolean(r));
 }
+
+/* ---------- 照片快取（2026-09-28） ----------
+ * /img/ 的公開照片由 Worker 自己用 Cache API（caches.default）存，快取鍵是「網站來源＋路徑」，不含查詢字串。
+ * 收藏被隱藏或刪除時呼叫 purgePhotoCache 清主圖與縮圖。
+ * 注意：caches.default.delete 只清「這次請求落在的那個資料中心」，其他資料中心的副本清不到；
+ * 所以真正擋住的是 /img/ 每次先查 D1（guard.ts siteStatus 的 gone），這裡的清除是把本地副本一併丟掉、不佔空間。
+ */
+export const photoCacheKey = (origin: string, key: string) => new Request(`${origin}/img/${key}`);
+
+const defaultCache = () => (typeof caches !== "undefined" ? (caches as unknown as { default?: Cache }).default : undefined);
+
+export async function purgePhotoCache(origin: string, keys: string[]) {
+  const cache = defaultCache();
+  if (!cache) return 0;
+  let n = 0;
+  for (const k of keys) if (await cache.delete(photoCacheKey(origin, k)).catch(() => false)) n++;
+  return n;
+}
+
+/** 某則炫收藏的所有照片（主圖＋縮圖）從快取清掉；回傳清掉幾個 */
+export async function purgeSharePhotos(origin: string, shareNo: number) {
+  const rows = await getDb().select({ a: photos.r2Key, b: photos.thumbKey }).from(photos).where(eq(photos.shareNo, shareNo));
+  return purgePhotoCache(origin, rows.flatMap((r) => [r.a, r.b]));
+}
+
+export { defaultCache as photoCache };

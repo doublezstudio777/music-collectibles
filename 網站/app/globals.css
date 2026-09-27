@@ -438,6 +438,12 @@ ul { list-style: none; margin: 0; padding: 0; }
 }
 .filter:hover { color: var(--text); }
 .filter[aria-current="page"] { border-bottom-color: var(--orange); color: var(--text); }
+/* 系列頁版本底下的排序（按鈕，不換網址） */
+button.filter { background: none; border-left: 0; border-right: 0; border-top: 0; cursor: pointer; font: inherit; font-weight: 600; }
+.filter[aria-pressed="true"] { border-bottom-color: var(--orange); color: var(--text); }
+.ver-block .wall-bar { margin-bottom: 20px; }
+.more-all { margin-top: 20px; }
+.ver-owners { color: var(--muted); font-size: var(--text-sm); font-weight: 500; margin-left: 8px; }
 .sell-toggle {
   align-items: center; color: var(--muted); display: inline-flex; flex: none; font-size: var(--text-sm);
   font-weight: 600; gap: 8px; padding: 10px 0; white-space: nowrap;

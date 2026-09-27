@@ -1,11 +1,32 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { indexingAllowed } from "@/lib/server/guard";
+import { redirectTarget } from "@/lib/server/redirects";
 
 /**
  * 全站回應加 X-Robots-Tag（不給搜尋引擎收錄，開關是 ALLOW_INDEXING）。
  * 頁面另外有 <meta name="robots" content="noindex">（layout.tsx）。robots.txt 不擋爬取，理由見 app/robots.txt/route.ts。
+ *
+ * 藝人識別碼轉址（2026-09-28）：/artist/{舊}/...（含系列、歷史）→ 301 到 /artist/{新}/...，查詢字串照帶；
+ * 只有 /artist/ 開頭才查 D1（一筆主鍵查詢）。
  */
-export function proxy() {
+export async function proxy(req: NextRequest) {
+  const m = req.nextUrl.pathname.match(/^\/artist\/([^/]+)(\/.*)?$/);
+  if (m) {
+    let slug = m[1];
+    try {
+      slug = decodeURIComponent(slug);
+    } catch {
+      /* 解不開就照原字查 */
+    }
+    const to = await redirectTarget(slug).catch(() => null);
+    if (to) {
+      const url = req.nextUrl.clone();
+      url.pathname = `/artist/${to}${m[2] ?? ""}`;
+      const res = NextResponse.redirect(url, 301);
+      if (!indexingAllowed()) res.headers.set("X-Robots-Tag", "noindex");
+      return res;
+    }
+  }
   const res = NextResponse.next();
   if (!indexingAllowed()) res.headers.set("X-Robots-Tag", "noindex");
   return res;
