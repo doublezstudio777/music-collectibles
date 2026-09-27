@@ -21,6 +21,7 @@
 import handler from "vinext/server/fetch-handler";
 import { take, tooMany, weight } from "./lib/edge/limiter";
 import { cleanupOldRecords } from "./lib/server/cleanup";
+import { recomputeScores } from "./lib/server/scores";
 
 type Env = { DB: D1Database; CF_VERSION_METADATA?: { id: string }; LOCAL_TEST?: string; GEO_DEFAULT?: string };
 type Handler = { fetch(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> };
@@ -135,12 +136,19 @@ const worker = {
     return out;
   },
 
-  // 每天一次（wrangler.production.jsonc 的 triggers.crons）：國家與活動紀錄、限流計數保存 90 天，
-  // 超過就清掉（lib/server/cleanup.ts）。失敗只記 console，不影響下一次排程。
+  // 每天一次（wrangler.production.jsonc 的 triggers.crons，台灣時間 02:00）：
+  // - 國家與活動紀錄、限流計數保存 90 天，超過就清掉（lib/server/cleanup.ts）
+  // - 彙總會員分數、等級、稱號（lib/server/scores.ts；SQL 在 D1 裡跑，不吃 Worker CPU）
+  // 兩件事各自獨立，失敗只記 console，不影響另一件與下一次排程。
   async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
     ctx.waitUntil(
       cleanupOldRecords().catch((e) => {
         console.error("[音藏排程] 清理過期紀錄失敗", e);
+      }),
+    );
+    ctx.waitUntil(
+      recomputeScores().catch((e) => {
+        console.error("[音藏排程] 彙總分數失敗", e);
       }),
     );
   },

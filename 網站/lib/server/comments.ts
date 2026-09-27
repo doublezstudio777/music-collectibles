@@ -22,6 +22,7 @@ import {
   looksOffsite,
 } from "@/lib/comment-rules";
 import { isAdmin, type User } from "@/lib/server/auth";
+import { userBadges } from "@/lib/server/scores";
 import { hit } from "@/lib/server/services";
 import { HttpError } from "@/lib/server/trade";
 
@@ -30,7 +31,7 @@ const LIST_LIMIT = 200;
 
 export type CommentView = {
   id: number;
-  author: { handle: string; name: string };
+  author: { handle: string; name: string; badge: string };
   body: string;
   at: string;
   mine: boolean;
@@ -79,9 +80,10 @@ export async function listComments(no: number, viewer: User | null) {
         ).map((r) => r.c),
       )
     : new Set<number>();
+  const badges = await userBadges(rows.map((r) => r.authorId));
   const list: CommentView[] = rows.map((r) => ({
     id: r.id,
-    author: { handle: r.handle, name: r.name },
+    author: { handle: r.handle, name: r.name, badge: badges.get(r.authorId) ?? "" },
     body: r.body,
     at: r.at,
     mine: r.authorId === me,

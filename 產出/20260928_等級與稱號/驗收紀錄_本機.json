@@ -1,0 +1,635 @@
+{
+ "stamp": "499518",
+ "results": [
+  {
+   "name": "1a 編輯 API 成功",
+   "ok": true,
+   "detail": "(201, 201, '{\"id\":794}')"
+  },
+  {
+   "name": "1b A 在系列四連續 12 次編輯都成功",
+   "ok": true,
+   "detail": "12"
+  },
+  {
+   "name": "1c C 還原系列三 API 成功",
+   "ok": true,
+   "detail": "{\"id\":818}"
+  },
+  {
+   "name": "1d 重算不讓 content_version 增加",
+   "ok": true,
+   "detail": "(3606, 3606)"
+  },
+  {
+   "name": "1e A 在系列一連續兩次編輯合併成一筆",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "name": "1f 合併後改動 200 字以上＝30 分",
+   "ok": true,
+   "detail": "{'target': 'series:lvart499518/1', 'base': 793, 'first': 794, 'last': 795, 'lastAt': '2026-09-27T08:59:09.879Z', 'chars': 259}"
+  },
+  {
+   "name": "1g 編輯 7 天內是待入帳（pending），總分 0",
+   "ok": true,
+   "detail": "(0, 310)"
+  },
+  {
+   "name": "1h 系列四 12 次編輯＝12 筆，每筆 20 分（不設每日上限）",
+   "ok": true,
+   "detail": "[20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]"
+  },
+  {
+   "name": "1i 只改標點空白＋5 個字＝極小修改 0 分（void／minor）",
+   "ok": true,
+   "detail": "(0, 'minor', 4)"
+  },
+  {
+   "name": "1j 7 天內被還原＝不給分（reverted）",
+   "ok": true,
+   "detail": "('void', 'reverted')"
+  },
+  {
+   "name": "1k 還原本身不給分（C 沒有系列三的事件）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "1l A 待入帳 30＋20＋240＋20＝310",
+   "ok": true,
+   "detail": "310"
+  },
+  {
+   "name": "2a 會員送審：待審（approved=false）",
+   "ok": true,
+   "detail": "('{\"type\":\"series\",\"key\":\"lvart499518/5\",\"approved\":false}', '{\"type\":\"item\",\"key\":\"lvart499518/1#towel\",\"approved\":false}')"
+  },
+  {
+   "name": "2b 送審時選「不記得」＝年份空白、名稱沒有年份",
+   "ok": true,
+   "detail": "{'id': 165, 'year': '', 'name': '《D送審499518》專輯發行', 'status': 'pending'}"
+  },
+  {
+   "name": "2c 待審的新增不給分（not_approved）",
+   "ok": true,
+   "detail": "[('series:165', 'not_approved'), ('item:72', 'not_approved')]"
+  },
+  {
+   "name": "2d 核准後系列、品項各 +15",
+   "ok": true,
+   "detail": "{'series:165': ('credited', None, 15), 'item:72': ('credited', None, 15), 'version:95': ('void', 'not_approved', 15)}"
+  },
+  {
+   "name": "2e 品項連帶的第一個版本不另外算",
+   "ok": true,
+   "detail": "{'series:165': ('credited', None, 15), 'item:72': ('credited', None, 15), 'version:95': ('void', 'not_approved', 15)}"
+  },
+  {
+   "name": "2f 被退回的版本不給分",
+   "ok": true,
+   "detail": "(201, [{'id': 95}], {'series:165': ('credited', None, 15), 'item:72': ('credited', None, 15), 'version:95': ('void', 'not_approved', 15)})"
+  },
+  {
+   "name": "2g 管理員新增系列直接生效（approved=true、status=approved）",
+   "ok": true,
+   "detail": "('{\"type\":\"series\",\"key\":\"lvart499518/6\",\"approved\":true}', {'id': 166, 'no': 6, 'status': 'approved'})"
+  },
+  {
+   "name": "2h 不在審核佇列",
+   "ok": true,
+   "detail": "4"
+  },
+  {
+   "name": "2i 前台看得到（系列頁 200）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2j 管理員新增的品項、版本、藝人也直接生效",
+   "ok": true,
+   "detail": "{'it': 'approved', 'vs': 'approved,approved', 'ar': 'approved'}"
+  },
+  {
+   "name": "2k 管理員免審核寫操作紀錄（4 筆）",
+   "ok": true,
+   "detail": "4"
+  },
+  {
+   "name": "3a 今天 7 則：5 則有分、2 則超過每日上限",
+   "ok": true,
+   "detail": "[('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('void', 'daily_cap'), ('void', 'daily_cap')]"
+  },
+  {
+   "name": "3b 第 1 則勾辨識參考 +5；第 7 則收藏超過上限，辨識參考也不給",
+   "ok": true,
+   "detail": "{'ref:506': ('credited', None), 'ref:512': ('void', 'daily_cap')}"
+  },
+  {
+   "name": "3c 管理員下架一則有分的收藏：扣回 10 分，超過上限的那則不遞補",
+   "ok": true,
+   "detail": "(85, 75)"
+  },
+  {
+   "name": "4a 按讚、取消讚不讓 content_version 增加",
+   "ok": true,
+   "detail": "(3624, 3624)"
+  },
+  {
+   "name": "4b E 今天讚 12 則：10 則有分、2 則超過每日上限、取消的那則作廢",
+   "ok": true,
+   "detail": "[('credited', None), ('credited', None), ('credited', None), ('credited', None), ('void', 'removed'), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('void', 'daily_cap'), ('void', 'daily_cap')]"
+  },
+  {
+   "name": "4c 讚自己的收藏沒有事件",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4d 同一則收到 53 個讚，只計 50",
+   "ok": true,
+   "detail": "(53, 50)"
+  },
+  {
+   "name": "4e X 收到讚合計 60（第 1 則 50＋其他 10 則，取消的那個不算）",
+   "ok": true,
+   "detail": "60"
+  },
+  {
+   "name": "4f X 總分＝收藏 120＋收到讚 60＝180",
+   "ok": true,
+   "detail": "(180, 0)"
+  },
+  {
+   "name": "4g 互讚合計 25 次只計 20：P1 給 10、P2 給 10",
+   "ok": true,
+   "detail": "(10, 10)"
+  },
+  {
+   "name": "4h 互讚的收到讚同樣只計 20：P1 收 10、P2 收 10",
+   "ok": true,
+   "detail": "(10, 10)"
+  },
+  {
+   "name": "5a F 今天 12 則：10 則有分、2 則超過每日上限",
+   "ok": true,
+   "detail": "[('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('void', 'daily_cap'), ('void', 'daily_cap')]"
+  },
+  {
+   "name": "5b 在自己收藏底下的留言沒有事件",
+   "ok": true,
+   "detail": "12"
+  },
+  {
+   "name": "5c 互留言合計 12 則只計 10：P1 7 則 14 分、P2 3 則 6 分",
+   "ok": true,
+   "detail": "(14, 6)"
+  },
+  {
+   "name": "5d 留言、刪留言不讓 content_version 增加",
+   "ok": true,
+   "detail": "(200, 201, 3624, 3624)"
+  },
+  {
+   "name": "5e 刪掉一則有分的留言：扣回 2 分，超過上限的不遞補（今天第 13 則也不給）",
+   "ok": true,
+   "detail": "(18, [('credited', None), ('void', 'daily_cap'), ('void', 'daily_cap'), ('void', 'daily_cap')])"
+  },
+  {
+   "name": "6a 同一對買賣 3 筆成交只計 2 筆：賣家 +10、買家 +10",
+   "ok": true,
+   "detail": "(10, 10)"
+  },
+  {
+   "name": "6b 作廢的成交不給分",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "7a 管理員維持鎖定＝檢舉成立 +10，7 天內待入帳",
+   "ok": true,
+   "detail": "((0, 50), [('pending', None), ('pending', None), ('pending', None), ('pending', None), ('pending', None)])"
+  },
+  {
+   "name": "7b 管理員解鎖＝檢舉不成立 -5（總分 10－5＝5）",
+   "ok": true,
+   "detail": "(5, 0)"
+  },
+  {
+   "name": "7c 達門檻（10 人）＝前 10 位檢舉成立（待入帳）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "7d 達門檻後才跟上的第 11 位不給分",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "7e 被檢舉成立的收藏扣回（Y 5 則 reported）",
+   "ok": true,
+   "detail": "[('share:551', 'reported'), ('share:552', 'reported'), ('share:553', 'reported'), ('share:554', 'reported'), ('share:555', 'reported'), ('share:556', 'daily_cap')]"
+  },
+  {
+   "name": "7f 達門檻被鎖的收藏扣回",
+   "ok": true,
+   "detail": "[('share:557', 'reported')]"
+  },
+  {
+   "name": "7g 留言被 3 人檢舉自動隱藏＝檢舉成立（待入帳）；留言者那則作廢",
+   "ok": true,
+   "detail": "([201, 201, 201], [('rok:152', 'pending'), ('crok:32', 'pending')])"
+  },
+  {
+   "name": "7h 7 天後檢舉成立入帳：H 50 分",
+   "ok": true,
+   "detail": "(50, 0)"
+  },
+  {
+   "name": "7i 被翻案：原本成立的 +10 作廢（overturned）、改 -5",
+   "ok": true,
+   "detail": "[('report_ok', 'void', 'overturned'), ('report_bad', 'credited', None)]"
+  },
+  {
+   "name": "7j 第 11 位也 -5（總分最低 0）",
+   "ok": true,
+   "detail": "(0, 0)"
+  },
+  {
+   "name": "7k 翻案後 Y2 的收藏分數回來",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "8a 補發行年 API 都成功",
+   "ok": true,
+   "detail": "[200, 200, 200, 200, 200, 200, 200]"
+  },
+  {
+   "name": "8b 已經有年份不能再補（409）",
+   "ok": true,
+   "detail": "409"
+  },
+  {
+   "name": "8c 年份格式不對 400",
+   "ok": true,
+   "detail": "400"
+  },
+  {
+   "name": "8d 補上後系列名稱帶年份",
+   "ok": true,
+   "detail": "2011《補年1》專輯發行"
+  },
+  {
+   "name": "8e K 補 6 則別人的：5 則待入帳、1 則超過每日上限；補自己新增的沒有事件",
+   "ok": true,
+   "detail": "[('series:162', 'credited', None), ('fill:series:156:year', 'pending', None), ('fill:series:157:year', 'pending', None), ('fill:series:158:year', 'pending', None), ('fill:series:159:year', 'pending', None), ('fill:series:160:year', 'pending', None), ('fill:series:161:year', 'void', 'daily_cap')]"
+  },
+  {
+   "name": "8f 7 天內被改掉的不給分（changed）",
+   "ok": true,
+   "detail": "[('void', 'changed')]"
+  },
+  {
+   "name": "8g 7 天後入帳：K 補資料 50 分",
+   "ok": true,
+   "detail": "50"
+  },
+  {
+   "name": "9a 停權前 I 10 分、P3 11 分（收藏＋L1 的讚）",
+   "ok": true,
+   "detail": "((10, 0), (11, 0))"
+  },
+  {
+   "name": "9b 停權後 I 總分 0",
+   "ok": true,
+   "detail": "(0, 0)"
+  },
+  {
+   "name": "9c 按讚者被停權，他給的讚不算：P3 11 → 10",
+   "ok": true,
+   "detail": "(10, 0)"
+  },
+  {
+   "name": "9d 恢復後 I 回到 10 分（事件保留）",
+   "ok": true,
+   "detail": "(10, 0)"
+  },
+  {
+   "name": "10a 7 天後 A 編輯入帳 310 分",
+   "ok": true,
+   "detail": "(310, 0)"
+  },
+  {
+   "name": "10b 過了 7 天才被還原，不影響（仍 credited）",
+   "ok": true,
+   "detail": "('credited', None)"
+  },
+  {
+   "name": "10c B 的極小修改與被還原的編輯 7 天後仍是 0 分",
+   "ok": true,
+   "detail": "(0, 0)"
+  },
+  {
+   "name": "10d D 總分＝收藏 50＋辨識參考 5＋新增 30＝85",
+   "ok": true,
+   "detail": "((85, 0), [('share', 'credited', None), ('share', 'credited', None), ('share', 'credited', None), ('share', 'credited', None), ('share', 'credited', None), ('ref', 'credited', None), ('create', 'credited', None), ('create', 'credited', None)])"
+  },
+  {
+   "name": "10e P1＝收藏 100＋給讚 10＋收讚 10＋留言 14＝134；P2＝150＋10＋10＋6＝176",
+   "ok": true,
+   "detail": "(134, 176)"
+  },
+  {
+   "name": "10f E＝收藏 10＋給讚 9＝19；F＝收藏 10＋留言 18＝28",
+   "ok": true,
+   "detail": "((19, 0), (28, 0))"
+  },
+  {
+   "name": "11a 打假先鋒：H 檢舉成立 5 次",
+   "ok": true,
+   "detail": "[('fakebuster', '')]"
+  },
+  {
+   "name": "11b 檢舉成立 1 次的不給（R01）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "11c 頭號樂迷：A 是等級藝人的頭號樂迷（14 次有效編輯）",
+   "ok": true,
+   "detail": "[('topfan', 'lvart499518'), ('topfan', 'lvartc499518')]"
+  },
+  {
+   "name": "11d 同分（A、C 各 1 次）取先達到的 A",
+   "ok": true,
+   "detail": "([('topfan', 'lvart499518'), ('topfan', 'lvartc499518')], [])"
+  },
+  {
+   "name": "11e 每位藝人只有一位頭號樂迷",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "name": "11f C 超過 A：頭號樂迷換人",
+   "ok": true,
+   "detail": "([('topfan', 'lvart499518')], [('topfan', 'lvartc499518')])"
+  },
+  {
+   "name": "11g 打假先鋒被翻案剩 4 次：稱號拿掉",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "11h 恢復成立：稱號回來",
+   "ok": true,
+   "detail": "[('fakebuster', '')]"
+  },
+  {
+   "name": "12a 個人頁：暱稱旁等級（310 分＝專業樂迷 Lv.1）",
+   "ok": true,
+   "detail": "['專業樂迷 Lv.1']"
+  },
+  {
+   "name": "12b 個人頁：目前分數 310",
+   "ok": true,
+   "detail": "310"
+  },
+  {
+   "name": "12c 個人頁：離專業樂迷 Lv.2（390）還差 80 分",
+   "ok": true,
+   "detail": "('離 專業樂迷 Lv.2 還差 ', '80')"
+  },
+  {
+   "name": "12d 個人頁：顯示「分數統計於」時間",
+   "ok": true,
+   "detail": "分數統計於 2026-10-05 17:03（每天統計一次）"
+  },
+  {
+   "name": "12e 個人頁：稱號「等級藝人頭號樂迷」，連到藝人頁",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "12f H 個人頁顯示「打假先鋒」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "12g 管理員個人頁：固定顯示「館長」、不顯示分數",
+   "ok": true,
+   "detail": "['館長']"
+  },
+  {
+   "name": "12h 留言帶等級：F＝新晉樂迷 Lv.1（28 分）、管理員＝館長",
+   "ok": true,
+   "detail": "{'lv499518f': '新晉樂迷 Lv.1', 'yzadmin': '館長'}"
+  },
+  {
+   "name": "12i 出價列表：每位出價者旁有等級",
+   "ok": true,
+   "detail": "(2, 2)"
+  },
+  {
+   "name": "12j 資料貢獻者名單：每人旁有等級（A＝專業樂迷 Lv.1）",
+   "ok": true,
+   "detail": "[('lv499518a', '專業樂迷 Lv.1'), ('lv499518b', '新晉樂迷 Lv.1'), ('lv499518d', '新晉樂迷 Lv.3')]"
+  },
+  {
+   "name": "13a 按讚、留言、重算分數、看個人頁：content_version 不變",
+   "ok": true,
+   "detail": "(3665, 3665)"
+  },
+  {
+   "name": "13b 單則頁整頁快取前後都是 HIT",
+   "ok": true,
+   "detail": "('MISS', 'HIT', 'HIT')"
+  },
+  {
+   "name": "13c 三張計分表與 counters 都沒有內容版本觸發器",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "14a 藝人頁系列：新的在前、年份不明排最後（2024、2021、2019、待補）",
+   "ok": true,
+   "detail": "['2025《館長新增499518》專輯發行', '2024《系列三499518》專輯發行', '2021《系列四499518》專輯發行', '2019《系列一499518》專輯發行', '《D送審499518》專輯發行', '《系列二499518》專輯發行']"
+  },
+  {
+   "name": "14b 全部系列（含送審、館長新增）也照同一規則",
+   "ok": true,
+   "detail": "[2025, 2024, 2021, 2019, -1, -1]"
+  },
+  {
+   "name": "14c 年份空白的系列頁有「發行年待補」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "14d 有年份的系列頁沒有這行",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "15a 成交總金額 1440：Range 量每個字都在框內、沒有省略號",
+   "ok": true,
+   "detail": "{'ok': True, 'text': 'NT$533,350', 'lines': 2, 'rightMax': 1258.328125, 'innerRight': 1271.5, 'font': '22px', 'overflow': 'visible', 'textOverflow': 'clip', 'bad': 0}"
+  },
+  {
+   "name": "15b 成交總金額 1440：顯示完整金額 NT$533,350",
+   "ok": true,
+   "detail": "('NT$533,350', 533350)"
+  },
+  {
+   "name": "15c 金額九位數 1440：仍不截斷（放不下時換行，行數 4）",
+   "ok": true,
+   "detail": "{'ok': True, 'text': 'NT$123,456,789', 'lines': 4, 'rightMax': 1260.328125, 'innerRight': 1271.5, 'font': '22px', 'overflow': 'visible', 'textOverflow': 'clip', 'bad': 0}"
+  },
+  {
+   "name": "15d 留言畫面 1440：每則留言都有等級（2/2）",
+   "ok": true,
+   "detail": "(2, 2)"
+  },
+  {
+   "name": "15a 成交總金額 390：Range 量每個字都在框內、沒有省略號",
+   "ok": true,
+   "detail": "{'ok': True, 'text': 'NT$533,350', 'lines': 2, 'rightMax': 171, 'innerRight': 355.5, 'font': '22px', 'overflow': 'visible', 'textOverflow': 'clip', 'bad': 0}"
+  },
+  {
+   "name": "15b 成交總金額 390：顯示完整金額 NT$533,350",
+   "ok": true,
+   "detail": "('NT$533,350', 533350)"
+  },
+  {
+   "name": "15c 金額九位數 390：仍不截斷（放不下時換行，行數 2）",
+   "ok": true,
+   "detail": "{'ok': True, 'text': 'NT$123,456,789', 'lines': 2, 'rightMax': 219, 'innerRight': 355.5, 'font': '22px', 'overflow': 'visible', 'textOverflow': 'clip', 'bad': 0}"
+  },
+  {
+   "name": "15d 留言畫面 390：每則留言都有等級（2/2）",
+   "ok": true,
+   "detail": "(2, 2)"
+  },
+  {
+   "name": "15e 畫面上補發行年：補完後「發行年待補」消失、標題帶 2017",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "15f 補上 2017 後系列二排到 2019 之後",
+   "ok": true,
+   "detail": "['2025《館長新增499518》專輯發行', '2024《系列三499518》專輯發行', '2021《系列四499518》專輯發行', '2019《系列一499518》專輯發行', '2017《系列二499518》專輯發行', '《D送審499518》專輯發行']"
+  },
+  {
+   "name": "15g K2 畫面補的那筆算「補上缺漏資料」（待入帳）",
+   "ok": true,
+   "detail": "[('fill:series:163:year', 'void'), ('fill:series:153:year', 'pending')]"
+  },
+  {
+   "name": "15h 新增系列：沒填年份也沒勾不記得 → 提示",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "15i 勾「不記得」後年份欄停用",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "15j 送出後：待審、年份空白",
+   "ok": true,
+   "detail": "[{'year': '', 'status': 'pending'}]"
+  },
+  {
+   "name": "16 admin_dash 1440：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 profile_a 1440：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 profile_h 1440：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 profile_admin 1440：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 share_comments 1440：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 share_offers 1440：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 series_contrib 1440：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 artist_sort 1440：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 admin_dash 390：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 profile_a 390：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 profile_h 390：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 profile_admin 390：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 share_comments 390：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 share_offers 390：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 series_contrib 390：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 artist_sort 390：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 year_fill 390：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  },
+  {
+   "name": "16 submit_series 1440：無橫向溢出、console error 0",
+   "ok": true,
+   "detail": "(0, [])"
+  }
+ ]
+}

@@ -11,6 +11,7 @@ import { getDb } from "@/db";
 import { adminLog, artists, pageLocks, revisions, series } from "@/db/schema";
 import { isAdmin, type User } from "@/lib/server/auth";
 import { parseJson, userNames } from "@/lib/server/content";
+import { recordEdit } from "@/lib/server/scores";
 import { hit } from "@/lib/server/services";
 import { HttpError } from "@/lib/server/trade";
 import { SITE_NAME } from "@/lib/data";
@@ -217,7 +218,10 @@ export async function edit(u: User, rawTarget: unknown, rawContent: unknown, raw
     throw new HttpError(409, "EDIT_CONFLICT", "你編輯的時候有人先改了，重新整理看最新內容再改");
   }
   if (same(paras, page.content)) throw new HttpError(409, "NO_CHANGE", "內容沒有變");
-  return { id: await write(u, t, page, paras, summary, null) };
+  const id = await write(u, t, page, paras, summary, null);
+  // 計分：記一筆 7 天後入帳的編輯事件（還原不記）
+  await recordEdit(u.id, targetKey(t), id, paras, new Date().toISOString());
+  return { id };
 }
 
 /** 還原到某一版＝新增一筆內容等於那一版的紀錄 */

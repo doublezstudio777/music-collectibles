@@ -632,3 +632,57 @@ export const commentReports = sqliteTable(
   },
   (t) => [uniqueIndex("comment_reports_uq").on(t.commentId, t.reporterId), index("comment_reports_comment_idx").on(t.commentId)],
 );
+
+/* =====================================================================
+ * 等級與分數（2026-09-28，drizzle/0008）：只新增三張表與索引，全部不掛內容版本觸發器。
+ * 計分寫入（編輯、補資料時記一筆；每日排程彙總）不會讓公開頁面的整頁快取失效。
+ * 規則與數值見 lib/server/scores.ts 開頭，門檻見 lib/levels.ts。
+ * ===================================================================== */
+
+/**
+ * 分數事件：每一筆加減分一列。source 是來源的唯一鍵（例：share:12、lg:{會員}:{收藏}、edit:{第一筆修改 id}），
+ * 同一來源只會有一筆。state：pending（還沒到 available_at）｜credited（已入帳）｜void（不給分，reason 寫原因）。
+ * 排程每次重算 state 與 reason（被隱藏、刪除、還原、超過上限…），不刪任何一筆。
+ */
+export const scoreEvents = sqliteTable(
+  "score_events",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: text("user_id").notNull(),
+    kind: text("kind").notNull(),
+    source: text("source").notNull(),
+    points: integer("points").notNull().default(0),
+    occurredAt: text("occurred_at").notNull(),
+    availableAt: text("available_at").notNull(),
+    state: text("state").notNull().default("pending"),
+    reason: text("reason"),
+    /** JSON：編輯＝{ target, base, first, last, lastAt, chars }；補資料＝{ series, field, value } */
+    detail: text("detail").notNull().default("{}"),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [
+    uniqueIndex("score_events_source_uq").on(t.source),
+    index("score_events_user_idx").on(t.userId, t.kind),
+    index("score_events_kind_idx").on(t.kind, t.occurredAt),
+  ],
+);
+
+/** 彙總結果：每位會員一列。score＝已入帳總分（停權為 0）；pending＝還在等 7 天的分數 */
+export const userScores = sqliteTable("user_scores", {
+  userId: text("user_id").primaryKey(),
+  score: integer("score").notNull().default(0),
+  pending: integer("pending").notNull().default(0),
+  updatedAt: text("updated_at").notNull().default(now),
+});
+
+/** 自動稱號：kind＝fakebuster（打假先鋒）｜topfan（某某藝人頭號樂迷，ref＝藝人 slug） */
+export const userTitles = sqliteTable(
+  "user_titles",
+  {
+    userId: text("user_id").notNull(),
+    kind: text("kind").notNull(),
+    ref: text("ref").notNull().default(""),
+    since: text("since").notNull().default(now),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.kind, t.ref] }), index("user_titles_ref_idx").on(t.kind, t.ref)],
+);

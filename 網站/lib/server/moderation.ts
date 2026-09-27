@@ -29,7 +29,7 @@ import { hiddenList } from "@/lib/server/takedown";
 import { hit } from "@/lib/server/services";
 import { adminComments } from "@/lib/server/comments";
 import { HttpError } from "@/lib/server/trade";
-import type { User } from "@/lib/server/auth";
+import { isAdmin, type User } from "@/lib/server/auth";
 
 const nowIso = () => new Date().toISOString();
 
@@ -140,7 +140,16 @@ const s80 = (v: unknown, n = 80) => (typeof v === "string" ? v.trim().slice(0, n
 export type SubmitKind = "artist" | "series" | "item" | "version";
 
 export async function submitContent(u: User, type: unknown, b: Record<string, unknown>) {
-  if (!(await hit(`submit:${u.id}`, 20, 86400))) throw new HttpError(429, "RATE_LIMITED", "今天送出太多筆了，明天再來");
+  // 管理員新增的直接生效，不進審核佇列（寫 admin_log）
+  const admin = isAdmin(u);
+  const r = await submitInner(u, type, b, admin ? "approved" : "pending");
+  if (admin) await log(u.id, "新增（免審核）", `${r.type}:${r.key}`, {});
+  return { ...r, approved: admin };
+}
+
+async function submitInner(u: User, type: unknown, b: Record<string, unknown>, status: "approved" | "pending") {
+  // 每天 20 筆的上限是擋會員灌待審佇列；管理員新增直接生效、不進佇列，不受這個限制
+  if (status === "pending" && !(await hit(`submit:${u.id}`, 20, 86400))) throw new HttpError(429, "RATE_LIMITED", "今天送出太多筆了，明天再來");
   const db = getDb();
   if (type === "artist") {
     const name = s80(b.name, 60);
@@ -151,7 +160,7 @@ export async function submitContent(u: User, type: unknown, b: Record<string, un
     const region = ["domestic", "overseas"].includes(String(b.region)) ? String(b.region) : null;
     const r = await db
       .insert(artists)
-      .values({ slug, name, gender, region, kind: b.kind === "發行單位" ? "發行單位" : "藝人", status: "pending", createdBy: u.id })
+      .values({ slug, name, gender, region, kind: b.kind === "發行單位" ? "發行單位" : "藝人", status, createdBy: u.id })
       .onConflictDoNothing()
       .returning({ slug: artists.slug });
     if (!r.length) throw new HttpError(409, "TAKEN", "這個網址已經有人用了，換一個");
@@ -181,7 +190,7 @@ export async function submitContent(u: User, type: unknown, b: Record<string, un
       seriesType,
       year,
       credits: JSON.stringify([artist]),
-      status: "pending",
+      status,
       createdBy: u.id,
     });
     return { type, key: `${artist}/${no}` };
@@ -204,10 +213,10 @@ export async function submitContent(u: User, type: unknown, b: Record<string, un
     for (let i = 2; existing.some((x) => x.id === itemId); i++) itemId = `${base}${i}`;
     const [it] = await db
       .insert(items)
-      .values({ seriesId: w.id, itemId, kind, sort: existing.length, status: "pending", createdBy: u.id })
+      .values({ seriesId: w.id, itemId, kind, sort: existing.length, status, createdBy: u.id })
       .returning({ id: items.id });
     // 品項至少要有一個版本才會出現；一起送一個待審的版本
-    await db.insert(versions).values({ itemRef: it.id, versionId: "v1", edition, status: "pending", createdBy: u.id });
+    await db.insert(versions).values({ itemRef: it.id, versionId: "v1", edition, status, createdBy: u.id });
     return { type, key: `${seriesKey}#${itemId}` };
   }
   if (type === "version") {
@@ -241,7 +250,7 @@ export async function submitContent(u: User, type: unknown, b: Record<string, un
       year: /^\d{4}$/.test(s80(b.year)) ? s80(b.year) : "",
       catalog: s80(b.catalog, 40) || "待查證",
       barcode: s80(b.barcode, 40) || "無條碼",
-      status: "pending",
+      status,
       createdBy: u.id,
     });
     return { type, key: `${itemKey}-${versionId}` };

@@ -63,10 +63,11 @@ type FormSeries = FormOptions["series"][number];
  */
 function SubmitNew({ type, parent, label }: { type: "artist" | "series" | "item" | "version"; parent?: string; label: string }) {
   const [open, setOpen] = useState(false);
-  const [done, setDone] = useState(false);
+  const [done, setDone] = useState<"" | "pending" | "approved">("");
   const [f, setF] = useState<Record<string, string>>({});
+  const [noYear, setNoYear] = useState(false);
   const [error, setError] = useState("");
-  if (done) return <span className="sub" role="status">已送出，等管理員審核</span>;
+  if (done) return <span className="sub" role="status">{done === "approved" ? "已新增，重新整理後就能選" : "已送出，等管理員審核"}</span>;
   if (!open) {
     return (
       <button type="button" className="pick pick-add" onClick={() => whenLoggedIn("登入後才能新增", () => setOpen(true))}>
@@ -84,7 +85,6 @@ function SubmitNew({ type, parent, label }: { type: "artist" | "series" | "item"
         ? [
             { k: "title", label: "系列名稱", ph: "例：夜行採集" },
             { k: "seriesType", label: "類型", ph: "專輯發行／巡迴演唱會" },
-            { k: "year", label: "年份", ph: "2024" },
           ]
         : type === "item"
           ? [{ k: "edition", label: "版本名稱", ph: "一般版" }]
@@ -95,7 +95,14 @@ function SubmitNew({ type, parent, label }: { type: "artist" | "series" | "item"
             ];
   const send = async () => {
     const body: Record<string, unknown> = { type, ...f };
-    if (type === "series") body.artist = parent;
+    if (type === "series") {
+      body.artist = parent;
+      body.year = noYear ? "" : (f.year ?? "").trim();
+      if (!noYear && !/^\d{4}$/.test(body.year as string)) {
+        setError("填發行年（西元四位數），或勾「不記得」");
+        return;
+      }
+    }
     if (type === "item") {
       body.seriesKey = parent;
       if (!f.kind) {
@@ -104,8 +111,8 @@ function SubmitNew({ type, parent, label }: { type: "artist" | "series" | "item"
       }
     }
     if (type === "version") body.itemKey = parent;
-    const r = await api("/api/catalog/submit", { body });
-    if (r.ok) setDone(true);
+    const r = await api<{ approved?: boolean }>("/api/catalog/submit", { body });
+    if (r.ok) setDone(r.data.approved ? "approved" : "pending");
     else setError(r.error.message);
   };
   return (
@@ -125,6 +132,26 @@ function SubmitNew({ type, parent, label }: { type: "artist" | "series" | "item"
           <input className="input input-sm" placeholder={x.ph} value={f[x.k] ?? ""} onChange={(e) => setF({ ...f, [x.k]: e.target.value })} />
         </label>
       ))}
+      {type === "series" ? (
+        <div className="submit-field submit-year">
+          <label htmlFor="submit-series-year">發行年</label>
+          <input
+            id="submit-series-year"
+            className="input input-sm"
+            inputMode="numeric"
+            maxLength={4}
+            placeholder="2024"
+            disabled={noYear}
+            value={noYear ? "" : (f.year ?? "")}
+            onChange={(e) => setF({ ...f, year: e.target.value })}
+            data-testid="submit-series-year"
+          />
+          <label className="check-inline">
+            <input type="checkbox" checked={noYear} onChange={(e) => setNoYear(e.target.checked)} data-testid="submit-series-noyear" />
+            不記得
+          </label>
+        </div>
+      ) : null}
       {error ? <p className="field-error">{error}</p> : null}
       <span className="report-acts">
         <button type="button" className="btn btn-line" onClick={send}>

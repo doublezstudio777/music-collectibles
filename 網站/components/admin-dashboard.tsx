@@ -31,10 +31,21 @@ const pct = (a: number, b: number) => `${b ? Math.round((a / b) * 1000) / 10 : 0
 const tw = (iso: string) => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 16).replace("T", " ");
 
 function Tile({ label, value, sub, testid }: { label: string; value: string; sub?: string; testid?: string }) {
+  // 金額：幣別與數字分開，放不下時在兩者之間換行；字多時縮小一級。不截斷
+  const m = value.match(/^(NT\$)(.+)$/);
   return (
     <div className="stat" data-testid={testid}>
       <span className="stat-label">{label}</span>
-      <b className="stat-value num">{value}</b>
+      <b className={`stat-value num${value.length > 8 ? " stat-value-long" : ""}`}>
+        {m ? (
+          <>
+            <span>{m[1]}</span>
+            <span>{m[2]}</span>
+          </>
+        ) : (
+          value
+        )}
+      </b>
       {sub ? <span className="stat-sub">{sub}</span> : null}
     </div>
   );

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { artistHref, seriesHref, tagHref } from "@/lib/data";
+import { artistHref, seriesHref, tagHref, type Series } from "@/lib/data";
 import { latestRevisionId } from "@/lib/server/wiki";
 import { pageData, siteOrigin } from "@/lib/server/viewer";
 import { ogMeta } from "@/lib/server/og";
@@ -39,9 +39,12 @@ export default async function ArtistPage({ params, searchParams }: Props) {
   const self = artistHref(artist.slug);
   const lastBy = edited ?? artist.lastEdit;
 
-  const main = c.mainSeriesOf(artist.slug);
-  const guests = c.guestSeriesOf(artist.slug);
-  const comps = c.compilationsOf(artist.slug);
+  // 系列依發行年排序，新的在前；年份不明的排最後（同年份流水號大的在前）
+  const yearOf = (w: Series) => (/^\d{4}/.test(w.year) ? Number(w.year.slice(0, 4)) : -1);
+  const newest = (x: Series, y: Series) => (yearOf(x) < 0 ? 1 : 0) - (yearOf(y) < 0 ? 1 : 0) || yearOf(y) - yearOf(x) || y.no - x.no;
+  const main = c.mainSeriesOf(artist.slug).sort(newest);
+  const guests = c.guestSeriesOf(artist.slug).sort((x, y) => newest(x.series, y.series));
+  const comps = c.compilationsOf(artist.slug).sort((x, y) => newest(x.series, y.series));
   const related = c.sharesWithTag(artist.name);
 
   return (

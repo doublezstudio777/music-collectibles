@@ -57,6 +57,13 @@
       "when": 1790488299726,
       "tag": "0007_comments",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1790497269206,
+      "tag": "0008_scores",
+      "breakpoints": true
     }
   ]
 }

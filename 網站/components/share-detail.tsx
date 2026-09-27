@@ -12,6 +12,7 @@ import { LikeButton } from "@/components/like-button";
 import { NextPhase } from "@/components/next-phase";
 import { Photo, TagList, Watermark } from "@/components/share-card";
 import { ShareActions, type ShareInfo } from "@/components/share-actions";
+import { LevelTag } from "@/components/level-tag";
 
 /** 金額輸入：只收正整數 */
 export function parsePrice(raw: string) {
@@ -424,6 +425,7 @@ function OfferList({
                   </span>
                   <span>{o.buyer.name}</span>
                 </Link>
+                <LevelTag badge={o.badge} />
                 {o.region ? <span className="region-tag" title="所在地區">{o.region}</span> : null}
                 <span className="offer-kind">{o.kind === "buy" ? "我要買" : "出價"}</span>
                 <span className="offer-amt">{priceText(o.price)}</span>

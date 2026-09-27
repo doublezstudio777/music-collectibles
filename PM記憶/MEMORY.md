@@ -31,3 +31,5 @@
 - 表格包 `overflow-x:auto` 仍整頁溢出：`th` 裡的 `.sr-only` 是 absolute，會逃出沒定位的捲動容器；捲動容器加 `position: relative`（2026-09-27）
 - Playwright 免走登入頁：`context.add_cookies([{"name":"yz_session","value":API登入拿到的token,"domain":"127.0.0.1","path":"/","httpOnly":True}])` 直接帶身分開頁；`purgePhotoCache` 只算「真的清掉快取的檔」，沒被請求過的檔不算在 purgedPhotos 裡，新增第三張圖時舊驗收腳本的期望值不一定要跟著變（2026-09-28）
 - 驗收用 SQL 改 users（停權、清驗證）會觸發 cv_users 讓 content_version 加 1，量「前後版本不變」要把這類準備動作放在量之前；抓 HTML 數字先去掉 React 插的 `<!-- -->`；舊輪驗收腳本複製到 scratchpad 跑，不覆寫舊輪 img（2026-09-28）
+- 本機 `npm start -- --test-scheduled` 對預先打包的 dist 沒作用（`/__scheduled` 404、`/cdn-cgi/handler/scheduled` 回 exception），排程要測就開管理員 API 呼叫同一支函式；儀表板統計有 10 分鐘快取，驗數字跟 `/api/admin/stats` 比不跟 D1 比（2026-09-28）
+- 新驗收腳本建的測試資料會弄壞舊腳本：藝人別設 display='on'（上線後第一批數強制顯示）、借照片要挑主圖縮圖分開且沒有預覽圖的；`其他系列與評論區` 的 2h 本身不能重跑（每跑一次在夜貓組多一個系列）（2026-09-28）

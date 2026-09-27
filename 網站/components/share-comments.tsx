@@ -9,10 +9,11 @@ import { useCallback, useEffect, useState } from "react";
 import { api, openPanel, useAccount } from "@/lib/account";
 import { relTime } from "@/lib/data";
 import { charCount, COMMENT_MAX, COMMENT_REASONS, looksOffsite, type CommentReason } from "@/lib/comment-rules";
+import { LevelTag } from "@/components/level-tag";
 
 type C = {
   id: number;
-  author: { handle: string; name: string };
+  author: { handle: string; name: string; badge?: string };
   body: string;
   at: string;
   mine: boolean;
@@ -156,6 +157,7 @@ export function ShareComments({ share }: { share: number }) {
                 <Link className="comment-who" href={`/u/${c.author.handle}`}>
                   {c.author.name}
                 </Link>
+                <LevelTag badge={c.author.badge} />
                 <span className="comment-when">{relTime(c.at, now)}</span>
               </p>
               <p className="comment-body">{c.body}</p>

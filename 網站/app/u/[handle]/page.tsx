@@ -5,6 +5,9 @@ import { publicHoldings } from "@/lib/server/me";
 import { regionNames } from "@/lib/server/geo";
 import { pageData } from "@/lib/server/viewer";
 import { SelfOnly } from "@/components/self-only";
+import { LevelTag } from "@/components/level-tag";
+import { profileScore } from "@/lib/server/scores";
+import { levelOf } from "@/lib/levels";
 import { FollowList } from "@/components/follow-list";
 import { HoldingsList } from "@/components/holdings-list";
 import { SaleWall } from "@/components/sale-wall";
@@ -24,6 +27,7 @@ async function loadUser(handle: string) {
       bio: u.bio,
       verified: Boolean(u.emailVerifiedAt),
       region: (await regionNames([u.id])).get(u.id) ?? "",
+      score: await profileScore(u),
       ...(await publicHoldings(u.id)),
     };
   }
@@ -33,6 +37,56 @@ async function loadUser(handle: string) {
 export async function generateMetadata({ params }: Props) {
   const u = await loadUser((await params).handle);
   return { title: u ? u.name : "找不到使用者" };
+}
+
+/** 台灣時間「2026-09-28 02:00」 */
+const twTime = (iso: string) => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 16).replace("T", " ");
+
+function ScoreLine({ handle, s }: { handle: string; s: Awaited<ReturnType<typeof profileScore>> }) {
+  return (
+    <div className="score-box" data-testid="profile-score">
+      {s.admin ? null : (
+        <p className="page-meta">
+          目前 <b className="num" data-testid="score-now">{s.score.toLocaleString("en-US")}</b> 分
+          <span className="dot" aria-hidden="true">·</span>
+          {s.level.next === null ? (
+            "已是最高等級"
+          ) : (
+            <span data-testid="score-next">
+              離 {levelOf(s.level.next).label} 還差 <span className="num">{s.level.toNext.toLocaleString("en-US")}</span> 分
+            </span>
+          )}
+        </p>
+      )}
+      {s.admin ? null : (
+        <p className="score-at" data-testid="score-at">
+          {s.runAt ? `分數統計於 ${twTime(s.runAt)}（每天統計一次）` : "分數尚未統計"}
+        </p>
+      )}
+      {!s.admin && s.pending > 0 ? (
+        <SelfOnly handle={handle}>
+          <p className="page-meta" data-testid="score-pending">
+            另有 {s.pending.toLocaleString("en-US")} 分待入帳（編輯頁面、補資料、檢舉成立 7 天後入帳）
+          </p>
+        </SelfOnly>
+      ) : null}
+      {s.titles.length ? (
+        <p className="title-list" data-testid="profile-titles">
+          {s.titles.map((t) =>
+            t.href ? (
+              <Link key={t.label} className="title-chip" href={t.href}>
+                {t.label}
+              </Link>
+            ) : (
+              <span key={t.label} className="title-chip">
+                {t.label}
+              </span>
+            ),
+          )}
+        </p>
+      ) : null}
+    </div>
+  );
 }
 
 export default async function UserPage({ params }: Props) {
@@ -53,7 +107,9 @@ export default async function UserPage({ params }: Props) {
           <h1 className="page-title">
             {user.name}
             {user.verified ? <span className="verified">已認證</span> : null}
+            <LevelTag badge={user.score.badge} />
           </h1>
+          <ScoreLine handle={user.handle} s={user.score} />
           {user.region ? (
             <p className="page-meta" data-testid="profile-region">
               所在地區 {user.region}

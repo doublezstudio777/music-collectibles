@@ -32,6 +32,8 @@ import { ItemLooseWall, VersionWall } from "@/components/share-wall";
 import { IdentifyDetails } from "@/components/identify-details";
 import { SeriesTile } from "@/components/work-cover";
 import { seriesContributors } from "@/lib/server/contributors";
+import { LevelTag } from "@/components/level-tag";
+import { YearFill } from "@/components/year-fill";
 
 type Props = { params: Promise<{ artist: string; no: string }>; searchParams?: Promise<{ edit?: string }> };
 
@@ -260,6 +262,7 @@ export default async function SeriesPage({ params, searchParams }: Props) {
             <span className="num">{owners}</span> 人有 · <span className="num">{wanted}</span> 人想要 ·{" "}
             <span className="num">{related.length}</span> 則炫收藏
           </p>
+          {/^\d{4}/.test(series.year) ? null : <YearFill skey={skey} />}
         </div>
         <div className="head-actions">
           <CopyLink />
@@ -343,6 +346,7 @@ export default async function SeriesPage({ params, searchParams }: Props) {
                 <Link className="link" href={`/u/${u.handle}`}>
                   {u.name}
                 </Link>
+                <LevelTag badge={u.badge} />
               </span>
             ))}
             {contributors.total > contributors.list.length ? <span className="contrib-more">等 {contributors.total} 位</span> : null}

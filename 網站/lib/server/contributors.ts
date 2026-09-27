@@ -3,9 +3,11 @@
 // 貢獻或停權（users 更新）都會讓頁面換新。停權的帳號不列；匯入時沒有作者的初始版本不算。
 
 import { env } from "cloudflare:workers";
+import { badgeText } from "@/lib/levels";
+import { isAdmin } from "@/lib/server/auth";
 
 export const CONTRIBUTOR_LIMIT = 10;
-export type Contributor = { handle: string; name: string; n: number };
+export type Contributor = { handle: string; name: string; n: number; badge: string };
 
 export async function seriesContributors(artistSlug: string, no: number): Promise<{ list: Contributor[]; total: number }> {
   const skey = `${artistSlug}/${no}`;
@@ -26,12 +28,23 @@ export async function seriesContributors(artistSlug: string, no: number): Promis
       SELECT author_id, COUNT(*), MIN(created_at) FROM shares
         WHERE series_key = ?4 AND deleted_at IS NULL AND hidden_at IS NULL GROUP BY author_id
     )
-    SELECT u.handle AS handle, u.name AS name, SUM(x.n) AS n, MIN(x.first) AS first
-      FROM x JOIN users u ON u.id = x.uid
+    SELECT u.handle AS handle, u.name AS name, u.email AS email, u.email_verified_at AS verified, COALESCE(sc.score, 0) AS score, SUM(x.n) AS n, MIN(x.first) AS first
+      FROM x JOIN users u ON u.id = x.uid LEFT JOIN user_scores sc ON sc.user_id = u.id
       WHERE u.status = 'active'
       GROUP BY u.id
       ORDER BY n DESC, first ASC, u.handle ASC`;
-  const r = await env.DB!.prepare(sql).bind(artistSlug, no, `series:${skey}`, skey).all<{ handle: string; name: string; n: number }>();
+  const r = await env.DB!.prepare(sql)
+    .bind(artistSlug, no, `series:${skey}`, skey)
+    .all<{ handle: string; name: string; email: string; verified: string | null; score: number; n: number }>();
   const rows = r.results ?? [];
-  return { list: rows.slice(0, CONTRIBUTOR_LIMIT).map((x) => ({ handle: x.handle, name: x.name, n: Number(x.n) })), total: rows.length };
+  return {
+    // 等級標籤：分數由每日排程彙總（user_scores 沒有內容版本觸發器，最多跟著整頁快取舊 5 分鐘）
+    list: rows.slice(0, CONTRIBUTOR_LIMIT).map((x) => ({
+      handle: x.handle,
+      name: x.name,
+      n: Number(x.n),
+      badge: badgeText(Number(x.score), isAdmin({ email: x.email, emailVerifiedAt: x.verified })),
+    })),
+    total: rows.length,
+  };
 }

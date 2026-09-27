@@ -17,6 +17,7 @@ import { hit } from "@/lib/server/services";
 import { fail, type User } from "@/lib/server/auth";
 import { recordDeal, voidDeals } from "@/lib/server/prices";
 import { regionNames } from "@/lib/server/geo";
+import { userBadges } from "@/lib/server/scores";
 
 export class HttpError extends Error {
   constructor(
@@ -316,6 +317,8 @@ export type PublicOffer = {
   id: number;
   threadId: number;
   buyer: { handle: string; name: string };
+  /** 出價者的等級小標籤（「收藏家 Lv.3」／「館長」） */
+  badge: string;
   /** 出價者所在地區（國家層級，例：台灣）；沒有紀錄是空字串 */
   region: string;
   kind: "offer" | "buy";
@@ -331,7 +334,7 @@ export async function publicOffers(no: number): Promise<PublicOffer[]> {
   rows.forEach((r) => {
     if (!latest.has(r.buyerId)) latest.set(r.buyerId, r);
   });
-  const [names, regions] = await Promise.all([userNames([...latest.keys()]), regionNames([...latest.keys()])]);
+  const [names, regions, badges] = await Promise.all([userNames([...latest.keys()]), regionNames([...latest.keys()]), userBadges([...latest.keys()])]);
   const now = Date.now();
   return [...latest.values()]
     .sort((a, b) => a.id - b.id)
@@ -339,6 +342,7 @@ export async function publicOffers(no: number): Promise<PublicOffer[]> {
       id: r.id,
       threadId: r.threadId,
       buyer: names.get(r.buyerId) ?? { handle: "", name: "（已刪除）" },
+      badge: badges.get(r.buyerId) ?? "",
       region: regions.get(r.buyerId) ?? "",
       kind: r.kind as PublicOffer["kind"],
       price: r.price,
