@@ -20,3 +20,5 @@
 - canvas 畫中文要等 `document.fonts.load(字型, 實際要畫的字)`，Google Fonts 中文是分段載入，只等 fonts.ready 不夠；等寬字型鏈要接 Noto Sans TC，不然中文掉到系統等寬字（2026-09-27）
 - 正式站 Turnstile 是受管理模式，無頭瀏覽器過不了：WSL 用 CDP 開 Windows Chrome（暫存 profile）只拿 token，再用 API 打註冊／登入；CDP 轉接程式每次連線前要重起，不然第二次會卡住。驗證碼用 Resend API 取信件內文，不用碰 Gmail（2026-09-27）
 - Windows 排程叫 WSL 腳本：cmd 傳中文路徑給 wsl.exe 會亂碼，路徑用 `*` 代替中文段；`bash -lc` 不讀 .bashrc，nvm 的 node 要在腳本裡自己載（2026-09-27）
+- 正式站行為要用 `npm run build`＋`npm start -- --port 8791` 的建置版驗，dev 不打包，chunk 合併類 bug（如 Link 點不動）只在建置版出現；正式站測登入後畫面、又不能動真帳號時，用 Playwright 攔 `/api/me` 回假帳號（2026-09-27）
+

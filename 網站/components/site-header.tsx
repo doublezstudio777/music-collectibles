@@ -7,6 +7,7 @@ import { Mail, Search } from "lucide-react";
 import { userHref } from "@/lib/data";
 import { clearFollows } from "@/lib/state";
 import { logout, openPanel, useAccount } from "@/lib/account";
+import { avatarLabel } from "@/lib/avatar-label";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -14,6 +15,7 @@ export function SiteHeader() {
   const acc = useAccount();
   const unread = acc.unread > 0;
   const isForm = pathname === "/share/new";
+  const label = acc.me ? avatarLabel(acc.me.name) : null;
   const close = () => {
     if (menu.current) menu.current.open = false;
   };
@@ -52,8 +54,16 @@ export function SiteHeader() {
               ) : null}
               {acc.status === "user" && acc.me ? (
               <details className="me-menu" ref={menu}>
-                <summary className="ava" aria-label="我的選單">
-                  {Array.from(acc.me.name)[0] ?? "我"}
+                <summary
+                  className={`ava ava-name${label?.size === "small" ? " ava-name-sm" : ""}`}
+                  title={acc.me.name}
+                  aria-label={`${acc.me.name}，我的選單`}
+                >
+                  {label?.lines.map((line, i) => (
+                    <span key={i} aria-hidden="true">
+                      {line}
+                    </span>
+                  ))}
                 </summary>
                 <div className="menu-panel">
                   <p className="menu-now">{acc.me.name}</p>

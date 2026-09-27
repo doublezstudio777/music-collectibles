@@ -69,6 +69,21 @@ export default defineConfig(async () => {
       ...(managedLinux ? { host: "0.0.0.0", allowedHosts: ["terminal.local"] } : {}),
       ...(isCodexSeatbeltSandbox ? { watch: { useFsEvents: false, usePolling: true } } : {}),
     },
+    // 瀏覽器端：rolldown 預設會把共用 chunk 的匯出名稱縮成單字母，但 vinext 的 next/link 用
+    // import("./navigation.js").then(m => m.getPrefetchInterceptionContext) 這種「動態載入後照原名取用」，
+    // navigation 被併進共用 chunk 後名稱被縮掉，正式站所有 <Link> 點擊都丟 "e is not a function"、頁面不換。
+    // dev 不打包所以本機看不到。保留原名即可（2026-09-28）。
+    environments: {
+      client: {
+        build: {
+          rolldownOptions: {
+            output: {
+              codeSplitting: { groups: [{ name: "vinext-navigation", test: /vinext[\\/]dist[\\/]shims[\\/]navigation\.js$/ }] },
+            },
+          },
+        },
+      },
+    },
     plugins: [
       vinext(),
       sites({ mockAuth: !managedLinux }),

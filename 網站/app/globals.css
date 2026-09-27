@@ -185,6 +185,10 @@ ul { list-style: none; margin: 0; padding: 0; }
 .ava-lg { font-size: 1.75rem; height: 80px; width: 80px; }
 
 .me-menu { position: relative; }
+/* 頂端頭像顯示暱稱：框維持 40×40，最多兩行；字寬 4 以上縮字（規則在 lib/avatar-label.ts） */
+.ava-name { flex-direction: column; font-size: 15px; letter-spacing: 0; line-height: 1.05; overflow: hidden; white-space: nowrap; }
+.ava-name > span { display: block; }
+.ava-name-sm { font-size: 11px; line-height: 1.1; }
 .me-menu summary { cursor: pointer; list-style: none; }
 .me-menu summary::-webkit-details-marker { display: none; }
 .me-menu[open] summary { outline: 2px solid var(--text); outline-offset: 2px; }
