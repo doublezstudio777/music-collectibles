@@ -24,3 +24,5 @@
 - 分辨 `cf-cache-status: HIT` 是哪層：開 `wrangler tail` 打那個網址，有 Worker 執行紀錄＝Worker 自己的 Cache API，沒有＝CDN 層；Cache API 的 `delete` 只清單一資料中心，要擋就擋在 D1（2026-09-28）
 - 正式站大量匯入前後都要看 CPU：用 GraphQL `workersInvocationsAdaptive` 看 cpuTime p50／p90 與 errors，免費方案 10ms，內容目錄整張讀，資料一多就 exceededCpu 503；驗收腳本狂重試會讓節流更嚴，打一輪就停（2026-09-28）
 
+- 本機量 Worker CPU：`wrangler dev --inspector-port 9230` 後用 `ws` 套件連 `ws://127.0.0.1:9230/ws` 跑 Profiler（Node 內建 WebSocket 連不上）；dist 若是 `YINZANG_DEPLOY=production` 建的，本機會連錯 D1 全站 500，先重建；curl 打正式站一律加 `-m`，不然 503 時會卡死整個背景迴圈（2026-09-27）
+- 驗收腳本會覆寫舊輪 `img/` 截圖：跑前先確認輸出路徑，別事後 `git restore`（2026-09-27 丟過一次新截圖）（2026-09-27）

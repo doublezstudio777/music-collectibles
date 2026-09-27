@@ -554,3 +554,13 @@ export const artistRedirects = sqliteTable(
   },
   (t) => [index("artist_redirects_new_idx").on(t.newSlug)],
 );
+
+/**
+ * 公開內容版本號（2026-09-28 CPU 修正）。只有一列 id=1。
+ * 公開頁面讀到的表一有寫入，資料庫觸發器就把 v 加 1（觸發器在 drizzle/0004_content_version.sql，
+ * 不靠程式記得去加，連手動 SQL 也會觸發）。整頁快取與內容目錄的記憶體快取都以 v 當鍵，v 一變就全部作廢。
+ */
+export const contentVersion = sqliteTable("content_version", {
+  id: integer("id").primaryKey(),
+  v: integer("v").notNull().default(0),
+});

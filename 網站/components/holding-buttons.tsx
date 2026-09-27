@@ -1,12 +1,15 @@
 "use client";
 
+import { useLiveCount } from "@/lib/counts";
 import { toggleHolding, useAppState } from "@/lib/state";
 
-/** 我有／想要，掛在版本上。owners、wanted 是其他人的人數 */
+/** 我有／想要，掛在版本上。owners、wanted 是資料庫總數（含自己），顯示由 useLiveCount 換算 */
 export function HoldingButtons({ vkey, owners, wanted }: { vkey: string; owners: number; wanted: number }) {
   const { holds, ready } = useAppState();
   const own = holds("owned", vkey);
   const want = holds("wanted", vkey);
+  const ownN = useLiveCount(owners, own);
+  const wantN = useLiveCount(wanted, want);
   return (
     <div className="holding">
       <button
@@ -15,7 +18,7 @@ export function HoldingButtons({ vkey, owners, wanted }: { vkey: string; owners:
         aria-pressed={ready ? own : undefined}
         onClick={() => toggleHolding("owned", vkey)}
       >
-        我有 <span className="num">{owners + (own ? 1 : 0)}</span>
+        我有 <span className="num">{ownN}</span>
       </button>
       <button
         type="button"
@@ -23,7 +26,7 @@ export function HoldingButtons({ vkey, owners, wanted }: { vkey: string; owners:
         aria-pressed={ready ? want : undefined}
         onClick={() => toggleHolding("wanted", vkey)}
       >
-        想要 <span className="num">{wanted + (want ? 1 : 0)}</span>
+        想要 <span className="num">{wantN}</span>
       </button>
     </div>
   );
@@ -32,9 +35,10 @@ export function HoldingButtons({ vkey, owners, wanted }: { vkey: string; owners:
 /** 版本標題旁「N 人有這個版本」：持有數（其他人＋自己按了我有），跟我有按鈕同一個數字 */
 export function OwnersCount({ vkey, owners }: { vkey: string; owners: number }) {
   const { holds } = useAppState();
+  const n = useLiveCount(owners, holds("owned", vkey));
   return (
     <span className="ver-owners" data-testid="ver-owners">
-      <span className="num">{owners + (holds("owned", vkey) ? 1 : 0)}</span> 人有這個版本
+      <span className="num">{n}</span> 人有這個版本
     </span>
   );
 }

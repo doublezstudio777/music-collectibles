@@ -5,7 +5,7 @@ import { createShare, handle } from "@/lib/server/trade";
 /** 炫收藏列表（新的在前），App 用；?page=1，每頁 24 則 */
 export async function GET(req: Request) {
   const page = Math.max(1, Number(new URL(req.url).searchParams.get("page")) || 1);
-  const all = (await getCatalog(null)).allShareViews();
+  const all = (await getCatalog()).allShareViews();
   return json({ shares: all.slice((page - 1) * 24, page * 24), total: all.length, page });
 }
 

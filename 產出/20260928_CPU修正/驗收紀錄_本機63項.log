@@ -1,0 +1,66 @@
+PASS 照片：隱藏前主圖、縮圖 200 [200, 200, 200, 200]
+PASS 照片：第二次讀取來自快取（cf-cache-status HIT） ['HIT', 'HIT']
+PASS 照片：隱藏 API 清掉主圖＋縮圖快取 {'target': 'share:137', 'hidden': True, 'purgedPhotos': 2}
+PASS 照片：隱藏後主圖、縮圖、帶查詢字串都 404 [404, 404, 404]
+PASS 照片：隱藏後單則頁 404 
+PASS 照片：恢復後 200 
+PASS 照片：照片列標刪除後 404 
+PASS 照片：資料庫沒有這張的檔名 404 
+預期 精選 [1, 12, 99, 98, 100, 97, 20] 最新 [100, 99, 98, 97, 1, 12, 20] 最多讚 [1, 99, 98, 100, 97, 12, 20] 在賣 [100, 99, 98, 97, 1]
+PASS 精選：預設排序與前 6 則 [1, 12, 99, 98, 100, 97]
+PASS 精選：「看全部 N 則」按鈕 看全部 7 則
+PASS 精選：展開後全部 [1, 12, 99, 98, 100, 97, 20]
+PASS 排序：最新 [100, 99, 98, 97, 1, 12, 20]
+PASS 排序：最多讚 [1, 99, 98, 100, 97, 12, 20]
+PASS 排序：在賣的 [100, 99, 98, 97, 1]
+PASS 版本標題：N 人有這個版本（持有數） 5 人有這個版本
+PASS 系列頁 console error 0 []
+PASS 轉址：後台「改識別碼」按鈕 
+PASS 轉址：/artist/guts → 301 /artist/guts-rename-test 301 /artist/guts-rename-test
+PASS 轉址：/artist/guts/1 → 301 /artist/guts-rename-test/1 301 /artist/guts-rename-test/1
+PASS 轉址：/artist/guts/1/history → 301 /artist/guts-rename-test/1/history 301 /artist/guts-rename-test/1/history
+PASS 轉址：/artist/guts/history?x=1 → 301 /artist/guts-rename-test/history?x=1 301 /artist/guts-rename-test/history?x=1
+PASS 轉址：新網址 200 
+PASS 轉址：系列跟著改 1
+PASS 轉址：追蹤跟著改 ['guts-rename-test']
+PASS 轉址：轉址紀錄 
+PASS 轉址：改回原識別碼 {"from":"guts-rename-test","to":"guts"}
+PASS 轉址：改回後舊網址 200、測試網址 301 回原本 
+PASS 轉址：改回後沒有自己轉自己 
+PASS 轉址：不合規則的識別碼擋下 {"error":{"code":"INVALID","message":"網址用英文名或音譯，小寫英文、數字、連字號，60 字以內"}}
+PASS 轉址：撞到既有識別碼擋下 {"error":{"code":"TAKEN","message":"識別碼 gordon 已經有人用了"}}
+PASS 匯入：藝人 233、強制顯示 24、系列 38、品項 41、版本 47 {'a': 233, 'o': 24, 's': 38, 'i': 41, 'v': 47}
+PASS 匯入：重疊藝人的獎項合併（mc-hotdog） [{"year":"第35屆","award":"金曲獎","category":"年度歌曲獎","result":"入圍"},{"year":"第35屆","award":"金曲獎","category":"最佳華語男歌手獎","resu
+PASS 匯入：沒內容的一般藝人不顯示（elephant-gym 404） 
+PASS 匯入：沒內容但強制顯示的顏社藝人顯示（wan-zhi-xuan 200） 
+PASS 1440 /artist/gordon 無橫向溢出、console error 0 scrollWidth=1440 []
+PASS 維基出處 /artist/gordon 來源：維基百科，以 CC BY-SA 4.0 授權
+PASS 1440 /artist/mc-hotdog 無橫向溢出、console error 0 scrollWidth=1440 []
+PASS 維基出處 /artist/mc-hotdog 來源：維基百科，以 CC BY-SA 4.0 授權
+PASS 1440 /artist/soft-lipa 無橫向溢出、console error 0 scrollWidth=1440 []
+PASS 維基出處 /artist/soft-lipa 來源：維基百科，以 CC BY-SA 4.0 授權
+PASS 1440 /artist/zhang-zhen-yue 無橫向溢出、console error 0 scrollWidth=1440 []
+PASS 維基出處 /artist/zhang-zhen-yue 來源：維基百科，以 CC BY-SA 4.0 授權
+PASS 1440 /artist/mj116 無橫向溢出、console error 0 scrollWidth=1440 []
+PASS 維基出處 /artist/mj116 來源：維基百科，以 CC BY-SA 4.0 授權
+PASS 1440 /artist/mountain-radio/1 無橫向溢出、console error 0 scrollWidth=1440 []
+PASS 1440 /artist/gordon/10 無橫向溢出、console error 0 scrollWidth=1440 []
+PASS 1440 /artist/mc-hotdog/2 無橫向溢出、console error 0 scrollWidth=1440 []
+PASS 1440 /artist/wan-zhi-xuan 無橫向溢出、console error 0 scrollWidth=1440 []
+PASS 1440 /artists 無橫向溢出、console error 0 scrollWidth=1440 []
+PASS 1440 / 無橫向溢出、console error 0 scrollWidth=1440 []
+PASS 1440 /admin 無橫向溢出、console error 0 scrollWidth=1440 []
+PASS 390 /artist/gordon 無橫向溢出、console error 0 scrollWidth=390 []
+PASS 390 /artist/mc-hotdog 無橫向溢出、console error 0 scrollWidth=390 []
+PASS 390 /artist/soft-lipa 無橫向溢出、console error 0 scrollWidth=390 []
+PASS 390 /artist/zhang-zhen-yue 無橫向溢出、console error 0 scrollWidth=390 []
+PASS 390 /artist/mj116 無橫向溢出、console error 0 scrollWidth=390 []
+PASS 390 /artist/mountain-radio/1 無橫向溢出、console error 0 scrollWidth=390 []
+PASS 390 /artist/gordon/10 無橫向溢出、console error 0 scrollWidth=390 []
+PASS 390 /artist/mc-hotdog/2 無橫向溢出、console error 0 scrollWidth=390 []
+PASS 390 /artist/wan-zhi-xuan 無橫向溢出、console error 0 scrollWidth=390 []
+PASS 390 /artists 無橫向溢出、console error 0 scrollWidth=390 []
+PASS 390 / 無橫向溢出、console error 0 scrollWidth=390 []
+PASS 390 /admin 無橫向溢出、console error 0 scrollWidth=390 []
+
+本機驗收 63/63

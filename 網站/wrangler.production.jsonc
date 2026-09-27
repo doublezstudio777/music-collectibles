@@ -4,7 +4,9 @@
 // 密鑰一律 `wrangler secret put`，不寫在這裡：TURNSTILE_SECRET、RESEND_API_KEY、BUDGET_WEBHOOK_SECRET
 {
   "name": "yinzang",
-  "main": "vinext/server/fetch-handler",
+  "main": "./worker.ts",
+  // 部署版本號：整頁快取的鍵含這個，新部署不會拿到舊版 HTML（worker.ts）
+  "version_metadata": { "binding": "CF_VERSION_METADATA" },
   "compatibility_date": "2026-05-15",
   "compatibility_flags": ["nodejs_compat"],
   "account_id": "48743ee150caa3577d8abd6e99196709",

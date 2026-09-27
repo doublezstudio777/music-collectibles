@@ -1,5 +1,6 @@
 "use client";
 
+import { useLiveCount } from "@/lib/counts";
 import { toggleLike, useAppState } from "@/lib/state";
 
 export function Heart() {
@@ -10,10 +11,11 @@ export function Heart() {
   );
 }
 
-/** 讚數公開；誰點的不公開。base 是其他人的讚數 */
+/** 讚數公開；誰點的不公開。base 是資料庫總讚數（含自己），顯示由 useLiveCount 換算 */
 export function LikeButton({ n, base, large = false }: { n: number; base: number; large?: boolean }) {
   const { liked, ready } = useAppState();
   const on = liked(n);
+  const count = useLiveCount(base, on);
   return (
     <button
       type="button"
@@ -23,7 +25,7 @@ export function LikeButton({ n, base, large = false }: { n: number; base: number
       onClick={() => toggleLike(n)}
     >
       <Heart />
-      <span className="num">{base + (on ? 1 : 0)}</span>
+      <span className="num">{count}</span>
     </button>
   );
 }

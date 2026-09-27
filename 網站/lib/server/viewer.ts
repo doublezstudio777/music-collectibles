@@ -1,5 +1,5 @@
 // 伺服器元件（頁面）拿目前登入者：讀請求的 cookie，跟 API 同一套 session。
-// 頁面用它扣掉「自己那一下」的讚數與我有／想要人數，以及後台守門。
+// 後台與私人頁面守門用；公開頁面不讀（見 pageData）。
 
 import { cache } from "react";
 import { headers } from "next/headers";
@@ -16,11 +16,13 @@ export const getViewer = cache(async (): Promise<User | null> => {
 
 export { isAdmin } from "@/lib/server/auth";
 
-/** 頁面用：登入者＋內容目錄（讚數與我有／想要扣掉登入者自己那一下） */
+/**
+ * 頁面用：內容目錄。不讀登入者：公開頁面不因人而異，整頁才能快取（worker.ts）。
+ * 登入者自己的讚、我有、想要由前端從 /api/me 取得再疊上去（lib/counts.ts）。
+ */
 export async function pageData() {
   const { getCatalog } = await import("@/lib/server/content");
-  const viewer = await getViewer();
-  return { viewer, c: await getCatalog(viewer?.id ?? null) };
+  return { c: await getCatalog() };
 }
 
 /** 目前網站的來源（https://yinzang.dblzm.workers.dev），給 og:url、og:image 這類要絕對網址的地方 */

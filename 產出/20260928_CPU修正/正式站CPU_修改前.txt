@@ -1,0 +1,6 @@
+/                            n=  8 cpu p50=30 p90=81 max=176 {'canceled': 2, 'ok': 6}
+/artist/mc-hotdog            n=  8 cpu p50=40 p90=63 max=176 {'ok': 5, 'exceededCpu': 1, 'canceled': 2}
+/artist/mc-hotdog/1          n=  8 cpu p50=38 p90=58 max=103 {'ok': 4, 'canceled': 3, 'exceededCpu': 1}
+/artists                     n=  8 cpu p50=66 p90=90 max=143 {'ok': 7, 'exceededCpu': 1}
+/login                       n=  8 cpu p50=9 p90=10 max=18 {'ok': 7, 'exceededCpu': 1}
+/share/2                     n=  8 cpu p50=36 p90=97 max=102 {'ok': 6, 'canceled': 2}

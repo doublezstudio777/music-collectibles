@@ -6,7 +6,7 @@ import { priceSummaries } from "@/lib/server/prices";
 export async function GET(req: Request) {
   const key = new URL(req.url).searchParams.get("series") ?? "";
   if (!/^[a-z0-9-]{1,60}\/\d{1,6}$/.test(key)) return fail(400, "BAD_REQUEST", "參數不對");
-  const c = await getCatalog(null);
+  const c = await getCatalog();
   if (!c.getSeriesByKey(key)) return fail(404, "NOT_FOUND", "找不到這個系列");
   const locked = new Set(c.shares.filter((s) => s.link?.series === key && c.toShareView(s).lock).map((s) => s.n));
   return json({ versions: Object.fromEntries(await priceSummaries(key, locked)) });

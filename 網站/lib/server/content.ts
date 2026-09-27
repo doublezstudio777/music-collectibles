@@ -1,14 +1,17 @@
 // 從 D1 讀內容，組成 lib/catalog.ts 的 Catalog。
 //
-// 目前資料量小（朋友測試期），一個請求把已核准的內容整包讀出來，頁面在記憶體裡查；
-// 資料量起來後改成各頁只查自己要的（已知取捨，寫在 2b 驗收 README）。
-// 讚數、我有／想要人數是資料庫實際計數，扣掉目前登入者自己那一下（前端再疊上去，按了馬上變）。
+// 已核准的內容整包讀出來，頁面在記憶體裡查。整包組好的目錄放在 Worker 記憶體（isolate）裡重複用，
+// 鍵是 content_version.v（公開內容一有寫入，資料庫觸發器就加 1），所以每個請求只多一個很小的查詢，
+// 不會讀到舊資料（2026-09-28 CPU 修正，產出/20260928_CPU修正/README.md）。
+// 讚數、我有／想要人數是資料庫實際總數，包含登入者自己那一下：頁面不因人而異，整頁才能快取。
+// 前端用 lib/counts.ts 以「拿到這份總數時自己按了沒」扣回去再疊上現在的狀態。
 
 import { cache } from "react";
 import { and, count, eq, inArray, isNull } from "drizzle-orm";
 import { getDb } from "@/db";
 import {
   artists as tArtists,
+  contentVersion,
   holdings,
   items as tItems,
   likes,
@@ -98,7 +101,7 @@ export async function lockForShare(s: Pick<ShareRow, "no" | "seriesKey" | "itemI
 
 /* ---------- 整包讀 ---------- */
 
-async function build(viewerId: string | null): Promise<Catalog> {
+async function build(): Promise<Catalog> {
   const db = getDb();
   const [aRows, sRows, iRows, vRows, mRows, fRows, shRows, uRows, pRows, likeRows, holdRows] = await db.batch([
     db.select().from(tArtists).where(and(eq(tArtists.status, "approved"), isNull(tArtists.deletedAt), isNull(tArtists.hiddenAt))),
@@ -114,21 +117,12 @@ async function build(viewerId: string | null): Promise<Catalog> {
     db.select({ key: holdings.targetKey, kind: holdings.kind, c: count() }).from(holdings).groupBy(holdings.targetKey, holdings.kind),
   ]);
 
-  const mine = viewerId
-    ? await db.batch([
-        db.select({ n: likes.shareNo }).from(likes).where(eq(likes.userId, viewerId)),
-        db.select({ key: holdings.targetKey, kind: holdings.kind }).from(holdings).where(eq(holdings.userId, viewerId)),
-      ])
-    : ([[], []] as const);
-  const myLikes = new Set(mine[0].map((x) => x.n));
-  const myHold = new Set(mine[1].map((x) => `${x.kind}:${x.key}`));
-
   const userById = new Map(uRows.map((u) => [u.id, u]));
   const handleOf = (id: string | null) => (id ? (userById.get(id)?.handle ?? "") : "");
   const nameOf = (id: string | null) => (id ? (userById.get(id)?.name ?? "") : "");
   const likeCount = new Map(likeRows.map((x) => [x.n, x.c]));
   const holdCount = new Map(holdRows.map((x) => [`${x.kind}:${x.key}`, x.c]));
-  const others = (key: string) => (holdCount.get(key) ?? 0) - (myHold.has(key) ? 1 : 0);
+  const others = (key: string) => holdCount.get(key) ?? 0;
 
   const artists: Artist[] = aRows
     .map((a) => ({
@@ -239,7 +233,7 @@ async function build(viewerId: string | null): Promise<Catalog> {
         story: s.story,
         about: parseJson<string[]>(s.about, []),
         tags: parseJson<string[]>(s.tags, []),
-        likes: total - (myLikes.has(s.no) ? 1 : 0),
+        likes: total,
         color: s.color,
         ...(p ? { image: photoUrl(p.r2Key), thumb: photoUrl(p.thumbKey) } : {}),
         ...(p && p.width > 0 && p.height > 0 ? { imageSize: { w: p.width, h: p.height } } : {}),
@@ -260,8 +254,34 @@ async function build(viewerId: string | null): Promise<Catalog> {
   return new Catalog(artists, seriesList, shares, await loadLockData());
 }
 
-/** 同一個請求（generateMetadata＋頁面）只讀一次 */
-export const getCatalog = cache(async (viewerId: string | null) => build(viewerId));
+/** 公開內容版本號；讀不到（遷移還沒套）回 -1，呼叫端當作不快取 */
+export async function readContentVersion(): Promise<number> {
+  try {
+    const [row] = await getDb().select({ v: contentVersion.v }).from(contentVersion).where(eq(contentVersion.id, 1));
+    return row ? row.v : -1;
+  } catch {
+    return -1;
+  }
+}
+
+// isolate 記憶體快取：同一個版本號只組一次。版本號變了（有人改內容、按讚、隱藏）下一個請求就重組。
+let memo: { v: number; at: number; catalog: Promise<Catalog> } | null = null;
+const MEMO_MS = 5 * 60 * 1000; // 相對時間（「3 小時前」）最多舊 5 分鐘
+
+async function cachedCatalog(): Promise<Catalog> {
+  const v = await readContentVersion();
+  const now = Date.now();
+  if (v >= 0 && memo && memo.v === v && now - memo.at < MEMO_MS) return memo.catalog;
+  const catalog = build();
+  if (v >= 0) {
+    memo = { v, at: now, catalog };
+    catalog.catch(() => (memo = null));
+  }
+  return catalog;
+}
+
+/** 同一個請求（generateMetadata＋頁面）只讀一次。內容不因登入者而異 */
+export const getCatalog = cache(async () => cachedCatalog());
 
 /** 使用者 id → handle／名稱（私訊、後台用） */
 export async function userNames(ids: string[]) {

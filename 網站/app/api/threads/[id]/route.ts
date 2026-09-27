@@ -10,7 +10,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
     const id = Number((await ctx.params).id);
     if (!Number.isInteger(id) || id <= 0) throw new HttpError(404, "NOT_FOUND", "找不到這段對話");
     const t = await threadDetail(s.user, id);
-    const c = await getCatalog(s.user.id);
+    const c = await getCatalog();
     const share = c.getShare(t.shareNo);
     if (!share) throw new HttpError(404, "NOT_FOUND", "這則收藏已經不在了");
     return json({ thread: t, share: c.toShareView(share), offers: await publicOffers(t.shareNo) });

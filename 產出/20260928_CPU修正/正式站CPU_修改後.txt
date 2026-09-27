@@ -1,0 +1,14 @@
+# m=a 固定網址（快取命中）
+/                            n=  8 cpu p50=1 p90=1 max=179 {'ok': 8}
+/artist/mc-hotdog            n=  8 cpu p50=1 p90=2 max=108 {'ok': 8}
+/artist/mc-hotdog/1          n=  8 cpu p50=1 p90=1 max=29 {'ok': 8}
+/artists                     n=  8 cpu p50=2 p90=2 max=24 {'ok': 8}
+/login                       n=  8 cpu p50=1 p90=2 max=11 {'ok': 8}
+/share/2                     n=  8 cpu p50=1 p90=5 max=41 {'ok': 8}
+# m=d 每次不同查詢字串（強制沒命中）
+/                            n=  8 cpu p50=17 p90=29 max=185 {'ok': 8}
+/artist/mc-hotdog            n=  8 cpu p50=54 p90=129 max=180 {'ok': 8}
+/artist/mc-hotdog/1          n=  8 cpu p50=23 p90=47 max=54 {'ok': 8}
+/artists                     n=  8 cpu p50=39 p90=44 max=48 {'ok': 8}
+/login                       n=  8 cpu p50=17 p90=25 max=124 {'ok': 8}
+/share/2                     n=  8 cpu p50=23 p90=37 max=58 {'ok': 8}

@@ -7,7 +7,7 @@ export async function GET(req: Request) {
   const q = new URL(req.url).searchParams;
   const g = ["male", "female", "group"].includes(q.get("g") ?? "") ? (q.get("g") as ArtistGender) : undefined;
   const r = ["domestic", "overseas"].includes(q.get("r") ?? "") ? (q.get("r") as ArtistRegion) : undefined;
-  const c = await getCatalog(null);
+  const c = await getCatalog();
   return json({
     artists: c.artistDirectory(g, r).map(({ artist: a, count }) => ({
       slug: a.slug,

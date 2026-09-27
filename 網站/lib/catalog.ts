@@ -43,7 +43,44 @@ export class Catalog {
     readonly lockData: LockData,
   ) {}
 
-  getArtist = (slug: string) => this.artists.find((a) => a.slug === slug);
+  // 查找表（2026-09-28 CPU 修正）：目錄在 Worker 記憶體裡跨請求重複用，第一次用到才建，建一次。
+  // 原本 sharesWithTag 每則收藏的每個標籤都掃一遍整張藝人表，藝人 233 位時首頁一次要 700ms（本機）。
+  #memo = new Map<string, unknown>();
+  #lazy = <T,>(key: string, make: () => T): T => {
+    if (!this.#memo.has(key)) this.#memo.set(key, make());
+    return this.#memo.get(key) as T;
+  };
+  #artistBySlug = () => this.#lazy("artistBySlug", () => new Map(this.artists.map((a) => [a.slug, a])));
+  /** 名稱或別名（norm 後）→ 藝人；同名時取目錄順序第一位，跟原本 find 的結果一樣 */
+  #artistByName = () =>
+    this.#lazy("artistByName", () => {
+      const m = new Map<string, Artist>();
+      for (const a of this.artists) for (const x of [a.name, ...a.aliases]) if (!m.has(norm(x))) m.set(norm(x), a);
+      return m;
+    });
+  #tagKeys = new Map<string, string>();
+  #shareKeys = new WeakMap<object, Set<string>>();
+  #keysOf = (share: Pick<Share, "about" | "tags">) => {
+    let k = this.#shareKeys.get(share);
+    if (!k) {
+      k = new Set([...share.about, ...share.tags].map((t) => this.tagKey(t)));
+      this.#shareKeys.set(share, k);
+    }
+    return k;
+  };
+  #sharesByKey = () =>
+    this.#lazy("sharesByKey", () => {
+      const m = new Map<string, Share[]>();
+      for (const s of this.shares) for (const k of this.#keysOf(s)) {
+          const list = m.get(k);
+          if (list) list.push(s);
+          else m.set(k, [s]);
+        }
+      return m;
+    });
+  #visible = new Map<string, boolean>();
+
+  getArtist = (slug: string) => this.#artistBySlug().get(slug);
 
   /**
    * 藝人頁對外顯示嗎（2c）：沒有任何系列（主要、客串、合輯）也沒有任何相關收藏就不顯示，
@@ -52,12 +89,15 @@ export class Catalog {
   artistVisible = (a: Artist) => {
     if (a.display === "on") return true;
     if (a.display === "off") return false;
-    return (
+    const hit = this.#visible.get(a.slug);
+    if (hit !== undefined) return hit;
+    const v =
       this.mainSeriesOf(a.slug).length > 0 ||
       this.guestSeriesOf(a.slug).length > 0 ||
       this.compilationsOf(a.slug).length > 0 ||
-      this.sharesWithTag(a.name).length > 0
-    );
+      this.sharesWithTag(a.name).length > 0;
+    this.#visible.set(a.slug, v);
+    return v;
   };
 
   /** 前台看得到的藝人頁 */
@@ -72,8 +112,9 @@ export class Catalog {
       .filter((a) => a.kind === "藝人" && this.artistVisible(a))
       .filter((a) => (!gender || a.gender === gender) && (!region || a.region === region))
       .map((a) => ({ artist: a, count: this.sharesWithTag(a.name).length }));
-  getShare = (n: number) => this.shares.find((s) => s.n === n);
-  getSeriesByKey = (key: string) => this.seriesList.find((w) => seriesKey(w) === key);
+  getShare = (n: number) => this.#lazy("shareByNo", () => new Map(this.shares.map((s) => [s.n, s]))).get(n);
+  getSeriesByKey = (key: string) =>
+    this.#lazy("seriesByKey", () => new Map(this.seriesList.map((w) => [seriesKey(w), w]))).get(key);
   getSeries = (artistSlug: string, no: number) => this.seriesList.find((w) => w.artistSlug === artistSlug && w.no === no);
 
   resolveVersionKey = (key: string) => {
@@ -93,23 +134,23 @@ export class Catalog {
   };
 
   /** 標籤撞到藝人名或別名就回傳那位藝人 */
-  resolveTagArtist = (tag: string) => {
-    const t = norm(tag);
-    return this.artists.find((a) => norm(a.name) === t || a.aliases.some((x) => norm(x) === t));
-  };
+  resolveTagArtist = (tag: string) => this.#artistByName().get(norm(tag));
 
   /** 合流用的標籤鍵：撞名的一律算成同一位藝人 */
   tagKey = (tag: string) => {
-    const artist = this.resolveTagArtist(tag);
-    return artist ? `artist:${artist.slug}` : `tag:${norm(tag)}`;
+    let k = this.#tagKeys.get(tag);
+    if (k === undefined) {
+      const artist = this.resolveTagArtist(tag);
+      k = artist ? `artist:${artist.slug}` : `tag:${norm(tag)}`;
+      this.#tagKeys.set(tag, k);
+    }
+    return k;
   };
 
-  shareHasTag = (share: Pick<Share, "about" | "tags">, tag: string) => {
-    const key = this.tagKey(tag);
-    return [...share.about, ...share.tags].some((t) => this.tagKey(t) === key);
-  };
+  shareHasTag = (share: Pick<Share, "about" | "tags">, tag: string) => this.#keysOf(share).has(this.tagKey(tag));
 
-  sharesWithTag = (tag: string) => this.shares.filter((s) => this.shareHasTag(s, tag));
+  /** 新的在前；回傳新陣列，呼叫端可以自己排序 */
+  sharesWithTag = (tag: string) => [...(this.#sharesByKey().get(this.tagKey(tag)) ?? [])];
 
   /** 主要系列：署名裡有他，共同署名兩邊都列 */
   mainSeriesOf = (slug: string) => this.seriesList.filter((w) => w.credits.includes(slug));

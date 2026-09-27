@@ -1,0 +1,6 @@
+http://127.0.0.1:8791/ status=200 每請求非閒置 14.42 ms
+http://127.0.0.1:8791/artists status=200 每請求非閒置 12.46 ms
+http://127.0.0.1:8791/artist/mc-hotdog status=200 每請求非閒置 15.85 ms
+http://127.0.0.1:8791/artist/mc-hotdog/1 status=200 每請求非閒置 14.10 ms
+http://127.0.0.1:8791/share/137 status=200 每請求非閒置 15.43 ms
+http://127.0.0.1:8791/login status=200 每請求非閒置 8.23 ms

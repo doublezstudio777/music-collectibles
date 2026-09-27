@@ -159,7 +159,7 @@ export function ShareWall({
   limit?: number;
   empty?: React.ReactNode;
 }) {
-  const { state, liked } = useAppState();
+  const { state } = useAppState();
   const [localSort, setSort] = useState<WallSort>("new");
   const sort = paged ? initialSort : localSort;
   /** 追蹤中分頁：沒追蹤任何藝人時，上方熱門藝人、下方照最新排 */
@@ -178,7 +178,7 @@ export function ShareWall({
     })
     .sort((a, b) =>
       sort === "likes"
-        ? b.likes + (liked(b.n) ? 1 : 0) - (a.likes + (liked(a.n) ? 1 : 0))
+        ? b.likes - a.likes
         : b.order - a.order,
     );
   const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
@@ -297,11 +297,10 @@ export function sortVersionShares(list: ShareView[], sort: VersionSort, confirme
 
 /** 系列頁每個版本的炫收藏：排序分頁籤＋先顯示 6 則，其餘收進「看全部 N 則」 */
 export function VersionWall({ shares, confirmed, id }: { shares: ShareView[]; confirmed: boolean; id: string }) {
-  const { liked } = useAppState();
   const [sort, setSort] = useState<VersionSort>("featured");
   const [all, setAll] = useState(false);
   if (shares.length === 0) return <p className="empty">還沒有人炫過這個版本</p>;
-  const list = sortVersionShares(shares, sort, confirmed, (s) => s.likes + (liked(s.n) ? 1 : 0));
+  const list = sortVersionShares(shares, sort, confirmed, (s) => s.likes);
   const shown = all ? list : list.slice(0, VERSION_SHOWN);
   return (
     <div className="wall-wrap" data-testid="version-wall" data-sort={sort}>

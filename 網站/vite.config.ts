@@ -14,7 +14,8 @@ const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const managedLinux = readExecutionProfile() === "managed-linux";
 
 const localBindingConfig = {
-  main: "vinext/server/fetch-handler",
+  // 自己的進入點包在 vinext 外面做整頁快取（2026-09-28 CPU 修正，見 worker.ts）
+  main: "./worker.ts",
   compatibility_flags: ["nodejs_compat"],
   d1_databases: d1
     ? [
