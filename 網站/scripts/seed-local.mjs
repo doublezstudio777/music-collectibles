@@ -177,8 +177,8 @@ lines.push(
     thumb_key: photoKey,
     content_type: "image/jpeg",
     bytes: statSync(photoFile).size,
-    width: 0,
-    height: 0,
+    width: 1400,
+    height: 933,
   }),
 );
 lines.push(`INSERT OR IGNORE INTO counters (key, value) VALUES ('r2_bytes', 0);`);

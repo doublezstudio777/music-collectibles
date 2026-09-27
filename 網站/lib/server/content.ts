@@ -242,6 +242,7 @@ async function build(viewerId: string | null): Promise<Catalog> {
         likes: total - (myLikes.has(s.no) ? 1 : 0),
         color: s.color,
         ...(p ? { image: photoUrl(p.r2Key), thumb: photoUrl(p.thumbKey) } : {}),
+        ...(p && p.width > 0 && p.height > 0 ? { imageSize: { w: p.width, h: p.height } } : {}),
         ...(s.seriesKey
           ? { link: { series: s.seriesKey, ...(s.itemId ? { item: s.itemId } : {}), ...(s.versionId ? { version: s.versionId } : {}) } }
           : {}),

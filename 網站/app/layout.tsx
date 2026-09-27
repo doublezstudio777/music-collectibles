@@ -4,12 +4,13 @@ import { SiteHeader } from "@/components/site-header";
 import { AuthPanel } from "@/components/auth-panel";
 import { turnstileSiteKey } from "@/lib/server/services";
 import { indexingAllowed } from "@/lib/server/guard";
+import { SITE_DESC } from "@/lib/data";
 
 // 不給搜尋引擎收錄（2026-09-26 定案，名稱定案後用 ALLOW_INDEXING=1 一次打開）
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: { default: "音藏｜樂迷的收藏分享", template: "%s｜音藏" },
-    description: "看樂迷收了什麼、炫自己的收藏，沿著藝人、系列、版本與標籤找下去。",
+    description: SITE_DESC,
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
     ...(indexingAllowed() ? {} : { robots: { index: false } }),
   };

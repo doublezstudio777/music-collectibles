@@ -2,7 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { artistHref, seriesHref, tagHref } from "@/lib/data";
 import { latestRevisionId } from "@/lib/server/wiki";
-import { pageData } from "@/lib/server/viewer";
+import { pageData, siteOrigin } from "@/lib/server/viewer";
+import { ogMeta } from "@/lib/server/og";
+import { CopyLink } from "@/components/share-actions";
 import { FollowButton } from "@/components/follow-button";
 import { WikiEditor } from "@/components/wiki-editor";
 import { isLocked, lastEdit, loadPage } from "@/lib/server/wiki";
@@ -14,7 +16,15 @@ type Props = { params: Promise<{ artist: string }>; searchParams: Promise<{ edit
 export async function generateMetadata({ params }: Props) {
   const { c } = await pageData();
   const a = c.visibleArtist((await params).artist);
-  return { title: a ? a.name : "找不到藝人", description: a?.tagline };
+  if (!a) return { title: "找不到藝人" };
+  const related = c.sharesWithTag(a.name);
+  return ogMeta({
+    origin: await siteOrigin(),
+    path: artistHref(a.slug),
+    title: a.name,
+    description: [a.tagline, related.length ? `${related.length} 則炫收藏` : ""].filter(Boolean).join("・") || `${a.name} 在音藏`,
+    photo: c.ogPhotoOf(related),
+  });
 }
 
 export default async function ArtistPage({ params, searchParams }: Props) {
@@ -49,6 +59,7 @@ export default async function ArtistPage({ params, searchParams }: Props) {
         </div>
         <div className="head-actions">
           <FollowButton slug={artist.slug} name={artist.name} />
+          <CopyLink />
           <Link className="btn btn-line" href={`${self}?edit=1#intro`} data-testid="edit-link">
             編輯
           </Link>

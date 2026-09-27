@@ -181,6 +181,29 @@ export class Catalog {
 
   allShareViews = () => this.shares.map(this.toShareView);
 
+  /**
+   * 分享用的四段字：藝人・系列・品項・版本（og:description、分享圖、原生分享的文字共用）。
+   * 藝人取「跟誰有關」，沒有就取系列署名；沒連到系列的只有藝人＋物件類型。
+   */
+  shareParts = (s: Share) => {
+    const w = s.link ? this.getSeriesByKey(s.link.series) : undefined;
+    const it = w ? getItem(w, s.link?.item) : undefined;
+    const v = it && s.link?.version ? it.versions.find((x) => x.id === s.link?.version) : undefined;
+    const artists = (s.about.length ? s.about : w ? this.creditNames(w).map((a) => a.name) : []).join("、");
+    return {
+      artist: artists,
+      series: w?.title ?? "",
+      item: it?.kind ?? (w ? "" : normKind(s.kind).kind),
+      version: v?.edition ?? "",
+    };
+  };
+
+  /** 連結預覽用的照片：清單裡第一則有照片、而且沒被鎖的（被隱藏的本來就不在 shares 裡） */
+  ogPhotoOf = (list: Share[]) => {
+    const s = list.find((x) => x.image && !this.toShareView(x).lock);
+    return s?.image ? { url: s.image, size: s.imageSize } : null;
+  };
+
   toHoldingView = (key: string): HoldingView | null => {
     const r = this.resolveVersionKey(key);
     if (!r) return null;

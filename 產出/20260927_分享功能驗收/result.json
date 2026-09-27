@@ -1,0 +1,597 @@
+{
+ "checks": [
+  {
+   "name": "0 建立長標題測試收藏",
+   "ok": true,
+   "detail": "n=137"
+  },
+  {
+   "name": "1 單則（有照片） og 標籤完整、圖片絕對網址且 200",
+   "ok": true,
+   "detail": "/share/1 miss=[] image=http://localhost:5173/img/p/demo-share-1.jpg → 200 image/jpeg 333739B"
+  },
+  {
+   "name": "1 單則（有照片） og:image:width/height 與實際尺寸一致",
+   "ok": true,
+   "detail": "meta 1400×933 實際 (1400, 933)"
+  },
+  {
+   "name": "1 單則（長標題） og 標籤完整、圖片絕對網址且 200",
+   "ok": true,
+   "detail": "/share/137 miss=[] image=http://localhost:5173/img/p/oiz_R5eo_agOl85q.webp → 200 image/webp 8576B"
+  },
+  {
+   "name": "1 單則（長標題） og:image:width/height 與實際尺寸一致",
+   "ok": true,
+   "detail": "meta 1600×1067 實際 (1600, 1067)"
+  },
+  {
+   "name": "1 單則（沒照片） og 標籤完整、圖片絕對網址且 200",
+   "ok": true,
+   "detail": "/share/4 miss=[] image=http://localhost:5173/og-default.png → 200 image/png 28121B"
+  },
+  {
+   "name": "1 單則（沒照片） og:image:width/height 與實際尺寸一致",
+   "ok": true,
+   "detail": "meta 1200×630 實際 (1200, 630)"
+  },
+  {
+   "name": "1 系列 og 標籤完整、圖片絕對網址且 200",
+   "ok": true,
+   "detail": "/artist/mountain-radio/1 miss=[] image=http://localhost:5173/img/p/iFFLCKOV5h-txmtb.jpg → 200 image/jpeg 8228B"
+  },
+  {
+   "name": "1 系列 og:image:width/height 與實際尺寸一致",
+   "ok": true,
+   "detail": "meta 800×600 實際 (800, 600)"
+  },
+  {
+   "name": "1 藝人 og 標籤完整、圖片絕對網址且 200",
+   "ok": true,
+   "detail": "/artist/mountain-radio miss=[] image=http://localhost:5173/img/p/oiz_R5eo_agOl85q.webp → 200 image/webp 8576B"
+  },
+  {
+   "name": "1 藝人 og:image:width/height 與實際尺寸一致",
+   "ok": true,
+   "detail": "meta 1600×1067 實際 (1600, 1067)"
+  },
+  {
+   "name": "1 系列（收藏全被鎖） og 標籤完整、圖片絕對網址且 200",
+   "ok": true,
+   "detail": "/artist/faint-signal/1 miss=[] image=http://localhost:5173/og-default.png → 200 image/png 28121B"
+  },
+  {
+   "name": "1 系列（收藏全被鎖） og:image:width/height 與實際尺寸一致",
+   "ok": true,
+   "detail": "meta 1200×630 實際 (1200, 630)"
+  },
+  {
+   "name": "1 單則描述＝藝人・系列・品項・版本",
+   "ok": true,
+   "detail": "山線電台・夜行採集・CD・首批紙套版"
+  },
+  {
+   "name": "1 系列頁收藏全被鎖 → 用站方預設圖",
+   "ok": true,
+   "detail": "http://localhost:5173/og-default.png"
+  },
+  {
+   "name": "1 鎖定 share/8：head 不含原標題與照片，og 用通用字＋預設圖",
+   "ok": true,
+   "detail": "what=2016 台中書店寄賣的自製卡帶，附手繪歌詞 og:title=一則炫收藏 image=http://localhost:5173/og-default.png"
+  },
+  {
+   "name": "1 鎖定 share/6：head 不含原標題與照片，og 用通用字＋預設圖",
+   "ok": true,
+   "detail": "what=凌晨四點 電台宣傳片 PROMO-04 og:title=一則炫收藏 image=http://localhost:5173/og-default.png"
+  },
+  {
+   "name": "1 隱藏的單則：404、不含原標題、無 og:image",
+   "ok": true,
+   "detail": "404 og={}"
+  },
+  {
+   "name": "1 隱藏的系列：404、不含系列名、無 og:image",
+   "ok": true,
+   "detail": "404"
+  },
+  {
+   "name": "1 恢復後系列頁 200",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 1440 share/1 有分享與下載分享圖按鈕",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 1440 share/1 小選單在畫面內、三個平台網址正確",
+   "ok": true,
+   "detail": "box={'x': 781.953125, 'y': 289.78125, 'width': 220, 'height': 181} got={'Facebook': 'https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A5173%2Fshare%2F1', 'Threads': 'https://www.threads.net/intent/post?text=%E5%A4%9C%E8%A1%8C%E6%8E%A1%E9%9B%86%20%E5%8F%B0%E7%81%A3%E9%A6%96%E6%89%B9%E7%B4%99%E5%A5%97%20CD%EF%BC%8C%E8%B7%9F%E6%97%A5%E7%89%88%E6%93%BA%E4%B8%80%E8%B5%B7%20http%3A%2F%2Flocalhost%3A5173%2Fshare%2F1', 'LINE': 'https://social-plugins.line.me/lineit/share?url=http%3A%"
+  },
+  {
+   "name": "2 1440 share/1 複製連結",
+   "ok": true,
+   "detail": "http://localhost:5173/share/1"
+  },
+  {
+   "name": "2 1440 share/1 Esc 收起選單",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 1440 share/1 分享圖選單在畫面內",
+   "ok": true,
+   "detail": "{'x': 781.953125, 'y': 289.78125, 'width': 220, 'height': 91}"
+  },
+  {
+   "name": "2 1440 share/1 點外面收起",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 1440 share/1 無水平溢出",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "name": "2 1440 share/137 有分享與下載分享圖按鈕",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 1440 share/137 小選單在畫面內、三個平台網址正確",
+   "ok": true,
+   "detail": "box={'x': 781.953125, 'y': 326.171875, 'width': 220, 'height': 181} got={'Facebook': 'https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A5173%2Fshare%2F137', 'Threads': 'https://www.threads.net/intent/post?text=%E5%B1%B1%E7%B7%9A%E9%9B%BB%E5%8F%B0%E3%80%81%E6%BD%AE%E6%B1%90%E5%85%AC%E8%B7%AF%E3%80%81%E7%A9%BA%E6%88%BF%E9%96%93%E3%80%81%E5%BE%AE%E5%85%89%E8%A8%8A%E8%99%9F%E3%80%81%E9%9B%A8%E5%81%9C%E4%BB%A5%E5%89%8D%20%E6%B5%B7%E6%B8%AF%E9%9F%B3%E6%A8%82%E7%A5%AD%E9%99%90%E5%AE"
+  },
+  {
+   "name": "2 1440 share/137 複製連結",
+   "ok": true,
+   "detail": "http://localhost:5173/share/137"
+  },
+  {
+   "name": "2 1440 share/137 Esc 收起選單",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 1440 share/137 分享圖選單在畫面內",
+   "ok": true,
+   "detail": "{'x': 781.953125, 'y': 326.171875, 'width': 220, 'height': 91}"
+  },
+  {
+   "name": "2 1440 share/137 點外面收起",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 1440 share/137 無水平溢出",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "name": "2 1440 鎖定 share/8 沒有分享按鈕",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 1440 鎖定 share/6 沒有分享按鈕",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 1440 系列頁複製連結（去掉 ?、#）",
+   "ok": true,
+   "detail": "http://localhost:5173/artist/mountain-radio/1"
+  },
+  {
+   "name": "2 1440 系列頁無水平溢出",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "name": "2 1440 藝人頁複製連結（去掉 ?、#）",
+   "ok": true,
+   "detail": "http://localhost:5173/artist/mountain-radio"
+  },
+  {
+   "name": "2 1440 藝人頁無水平溢出",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "name": "2 390 share/1 有分享與下載分享圖按鈕",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 390 share/1 小選單在畫面內、三個平台網址正確",
+   "ok": true,
+   "detail": "box={'x': 18, 'y': 644.1875, 'width': 220, 'height': 181} got={'Facebook': 'https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A5173%2Fshare%2F1', 'Threads': 'https://www.threads.net/intent/post?text=%E5%A4%9C%E8%A1%8C%E6%8E%A1%E9%9B%86%20%E5%8F%B0%E7%81%A3%E9%A6%96%E6%89%B9%E7%B4%99%E5%A5%97%20CD%EF%BC%8C%E8%B7%9F%E6%97%A5%E7%89%88%E6%93%BA%E4%B8%80%E8%B5%B7%20http%3A%2F%2Flocalhost%3A5173%2Fshare%2F1', 'LINE': 'https://social-plugins.line.me/lineit/share?url=http%3A%2F%2Floca"
+  },
+  {
+   "name": "2 390 share/1 複製連結",
+   "ok": true,
+   "detail": "http://localhost:5173/share/1"
+  },
+  {
+   "name": "2 390 share/1 Esc 收起選單",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 390 share/1 分享圖選單在畫面內",
+   "ok": true,
+   "detail": "{'x': 18, 'y': 644.1875, 'width': 220, 'height': 91}"
+  },
+  {
+   "name": "2 390 share/1 點外面收起",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 390 share/1 無水平溢出",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "name": "2 390 share/137 有分享與下載分享圖按鈕",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 390 share/137 小選單在畫面內、三個平台網址正確",
+   "ok": true,
+   "detail": "box={'x': 18, 'y': 737.375, 'width': 220, 'height': 181} got={'Facebook': 'https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A5173%2Fshare%2F137', 'Threads': 'https://www.threads.net/intent/post?text=%E5%B1%B1%E7%B7%9A%E9%9B%BB%E5%8F%B0%E3%80%81%E6%BD%AE%E6%B1%90%E5%85%AC%E8%B7%AF%E3%80%81%E7%A9%BA%E6%88%BF%E9%96%93%E3%80%81%E5%BE%AE%E5%85%89%E8%A8%8A%E8%99%9F%E3%80%81%E9%9B%A8%E5%81%9C%E4%BB%A5%E5%89%8D%20%E6%B5%B7%E6%B8%AF%E9%9F%B3%E6%A8%82%E7%A5%AD%E9%99%90%E5%AE%9A%E4%B8%8"
+  },
+  {
+   "name": "2 390 share/137 複製連結",
+   "ok": true,
+   "detail": "http://localhost:5173/share/137"
+  },
+  {
+   "name": "2 390 share/137 Esc 收起選單",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 390 share/137 分享圖選單在畫面內",
+   "ok": true,
+   "detail": "{'x': 18, 'y': 737.375, 'width': 220, 'height': 91}"
+  },
+  {
+   "name": "2 390 share/137 點外面收起",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 390 share/137 無水平溢出",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "name": "2 390 鎖定 share/8 沒有分享按鈕",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 390 鎖定 share/6 沒有分享按鈕",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2 390 系列頁複製連結（去掉 ?、#）",
+   "ok": true,
+   "detail": "http://localhost:5173/artist/mountain-radio/1"
+  },
+  {
+   "name": "2 390 系列頁無水平溢出",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "name": "2 390 藝人頁複製連結（去掉 ?、#）",
+   "ok": true,
+   "detail": "http://localhost:5173/artist/mountain-radio"
+  },
+  {
+   "name": "2 390 藝人頁無水平溢出",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "name": "3 手機有 navigator.share：叫原生分享帶標題、文字、網址，不開小選單",
+   "ok": true,
+   "detail": "[{'title': '夜行採集 台灣首批紙套 CD，跟日版擺一起', 'text': '山線電台・夜行採集・CD・首批紙套版', 'url': 'http://localhost:5173/share/1', 'files': []}]"
+  },
+  {
+   "name": "3 手機能分享檔案：分享圖直接叫分享選單（帶 1 個 JPEG 檔）",
+   "ok": true,
+   "detail": "{'title': None, 'text': None, 'url': None, 'files': [{'name': 'yinzang-1-story.jpg', 'type': 'image/jpeg', 'size': 246300}]}"
+  },
+  {
+   "name": "4 分享圖 有照片 story 尺寸 1080×1920",
+   "ok": true,
+   "detail": "(1080, 1920) 246300B 205ms"
+  },
+  {
+   "name": "4 分享圖 有照片 post 尺寸 1080×1350",
+   "ok": true,
+   "detail": "(1080, 1350) 203017B 146ms"
+  },
+  {
+   "name": "4 有照片 產生分享圖不經伺服器（0 個站內請求、R2 讀取計數不變）",
+   "ok": true,
+   "detail": "requests=[] fonts=['https://fonts.gstatic.com/s/notosanstc/v39/-nF7OG829Oofr2wohFbTp9i1OCEK.woff2', 'https://fonts.gstatic.com/s/ibmplexmono/v20/-F6qfjptAgt5VM-kVkqdyU8n3twJwlBFgg.woff2'] r2 40→40"
+  },
+  {
+   "name": "4 有照片 畫圖時字型已載入",
+   "ok": true,
+   "detail": "[['700 64px \"Noto Sans TC\"', True], ['500 40px \"Noto Sans TC\"', True], ['700 64px \"Inter\"', True], ['500 28px \"IBM Plex Mono\"', True]]"
+  },
+  {
+   "name": "4 分享圖 長標題 story 尺寸 1080×1920",
+   "ok": true,
+   "detail": "(1080, 1920) 177466B 239ms"
+  },
+  {
+   "name": "4 分享圖 長標題 post 尺寸 1080×1350",
+   "ok": true,
+   "detail": "(1080, 1350) 141634B 197ms"
+  },
+  {
+   "name": "4 長標題 產生分享圖不經伺服器（0 個站內請求、R2 讀取計數不變）",
+   "ok": true,
+   "detail": "requests=[] fonts=[] r2 40→40"
+  },
+  {
+   "name": "4 長標題 畫圖時字型已載入",
+   "ok": true,
+   "detail": "[['700 64px \"Noto Sans TC\"', True], ['500 40px \"Noto Sans TC\"', True], ['700 64px \"Inter\"', True], ['500 28px \"IBM Plex Mono\"', True]]"
+  },
+  {
+   "name": "4 分享圖 沒照片 story 尺寸 1080×1920",
+   "ok": true,
+   "detail": "(1080, 1920) 58707B 151ms"
+  },
+  {
+   "name": "4 分享圖 沒照片 post 尺寸 1080×1350",
+   "ok": true,
+   "detail": "(1080, 1350) 49808B 143ms"
+  },
+  {
+   "name": "4 沒照片 產生分享圖不經伺服器（0 個站內請求、R2 讀取計數不變）",
+   "ok": true,
+   "detail": "requests=[] fonts=[] r2 40→40"
+  },
+  {
+   "name": "4 沒照片 畫圖時字型已載入",
+   "ok": true,
+   "detail": "[['700 64px \"Noto Sans TC\"', True], ['500 40px \"Noto Sans TC\"', True], ['700 64px \"Inter\"', True], ['500 28px \"IBM Plex Mono\"', True]]"
+  },
+  {
+   "name": "5 console error 0",
+   "ok": true,
+   "detail": "[]"
+  }
+ ],
+ "links": {
+  "1440 share/1": {
+   "Facebook": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A5173%2Fshare%2F1",
+   "Threads": "https://www.threads.net/intent/post?text=%E5%A4%9C%E8%A1%8C%E6%8E%A1%E9%9B%86%20%E5%8F%B0%E7%81%A3%E9%A6%96%E6%89%B9%E7%B4%99%E5%A5%97%20CD%EF%BC%8C%E8%B7%9F%E6%97%A5%E7%89%88%E6%93%BA%E4%B8%80%E8%B5%B7%20http%3A%2F%2Flocalhost%3A5173%2Fshare%2F1",
+   "LINE": "https://social-plugins.line.me/lineit/share?url=http%3A%2F%2Flocalhost%3A5173%2Fshare%2F1"
+  },
+  "1440 share/137": {
+   "Facebook": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A5173%2Fshare%2F137",
+   "Threads": "https://www.threads.net/intent/post?text=%E5%B1%B1%E7%B7%9A%E9%9B%BB%E5%8F%B0%E3%80%81%E6%BD%AE%E6%B1%90%E5%85%AC%E8%B7%AF%E3%80%81%E7%A9%BA%E6%88%BF%E9%96%93%E3%80%81%E5%BE%AE%E5%85%89%E8%A8%8A%E8%99%9F%E3%80%81%E9%9B%A8%E5%81%9C%E4%BB%A5%E5%89%8D%20%E6%B5%B7%E6%B8%AF%E9%9F%B3%E6%A8%82%E7%A5%AD%E9%99%90%E5%AE%9A%E4%B8%89%E4%BA%BA%E5%85%A8%E7%B0%BD%E5%90%8D%E7%B4%80%E5%BF%B5%E5%B8%83%E8%A3%BD%E5%A4%A7%E5%9E%8B%E6%8E%9B%E6%97%97%E5%90%AB%E5%8E%9F%E8%A3%9D%E6%94%B6%E7%B4%8D%E7%AD%92%20http%3A%2F%2Flocalhost%3A5173%2Fshare%2F137",
+   "LINE": "https://social-plugins.line.me/lineit/share?url=http%3A%2F%2Flocalhost%3A5173%2Fshare%2F137"
+  },
+  "390 share/1": {
+   "Facebook": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A5173%2Fshare%2F1",
+   "Threads": "https://www.threads.net/intent/post?text=%E5%A4%9C%E8%A1%8C%E6%8E%A1%E9%9B%86%20%E5%8F%B0%E7%81%A3%E9%A6%96%E6%89%B9%E7%B4%99%E5%A5%97%20CD%EF%BC%8C%E8%B7%9F%E6%97%A5%E7%89%88%E6%93%BA%E4%B8%80%E8%B5%B7%20http%3A%2F%2Flocalhost%3A5173%2Fshare%2F1",
+   "LINE": "https://social-plugins.line.me/lineit/share?url=http%3A%2F%2Flocalhost%3A5173%2Fshare%2F1"
+  },
+  "390 share/137": {
+   "Facebook": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A5173%2Fshare%2F137",
+   "Threads": "https://www.threads.net/intent/post?text=%E5%B1%B1%E7%B7%9A%E9%9B%BB%E5%8F%B0%E3%80%81%E6%BD%AE%E6%B1%90%E5%85%AC%E8%B7%AF%E3%80%81%E7%A9%BA%E6%88%BF%E9%96%93%E3%80%81%E5%BE%AE%E5%85%89%E8%A8%8A%E8%99%9F%E3%80%81%E9%9B%A8%E5%81%9C%E4%BB%A5%E5%89%8D%20%E6%B5%B7%E6%B8%AF%E9%9F%B3%E6%A8%82%E7%A5%AD%E9%99%90%E5%AE%9A%E4%B8%89%E4%BA%BA%E5%85%A8%E7%B0%BD%E5%90%8D%E7%B4%80%E5%BF%B5%E5%B8%83%E8%A3%BD%E5%A4%A7%E5%9E%8B%E6%8E%9B%E6%97%97%E5%90%AB%E5%8E%9F%E8%A3%9D%E6%94%B6%E7%B4%8D%E7%AD%92%20http%3A%2F%2Flocalhost%3A5173%2Fshare%2F137",
+   "LINE": "https://social-plugins.line.me/lineit/share?url=http%3A%2F%2Flocalhost%3A5173%2Fshare%2F137"
+  }
+ },
+ "og": {
+  "單則（有照片）": {
+   "og:title": "夜行採集 台灣首批紙套 CD，跟日版擺一起",
+   "og:description": "山線電台・夜行採集・CD・首批紙套版",
+   "og:url": "http://localhost:5173/share/1",
+   "og:site_name": "音藏",
+   "og:type": "article",
+   "og:locale": "zh_TW",
+   "og:image": "http://localhost:5173/img/p/demo-share-1.jpg",
+   "og:image:width": "1400",
+   "og:image:height": "933",
+   "og:image:alt": "夜行採集 台灣首批紙套 CD，跟日版擺一起",
+   "twitter:card": "summary_large_image",
+   "twitter:title": "夜行採集 台灣首批紙套 CD，跟日版擺一起",
+   "twitter:description": "山線電台・夜行採集・CD・首批紙套版",
+   "twitter:image": "http://localhost:5173/img/p/demo-share-1.jpg"
+  },
+  "單則（長標題）": {
+   "og:title": "山線電台、潮汐公路、空房間、微光訊號、雨停以前 海港音樂祭限定三人全簽名紀念布製大型掛旗含原裝收納筒",
+   "og:description": "山線電台、潮汐公路、空房間、微光訊號、雨停以前・其他周邊",
+   "og:url": "http://localhost:5173/share/137",
+   "og:site_name": "音藏",
+   "og:type": "article",
+   "og:locale": "zh_TW",
+   "og:image": "http://localhost:5173/img/p/oiz_R5eo_agOl85q.webp",
+   "og:image:width": "1600",
+   "og:image:height": "1067",
+   "og:image:alt": "山線電台、潮汐公路、空房間、微光訊號、雨停以前 海港音樂祭限定三人全簽名紀念布製大型掛旗含原裝收納筒",
+   "twitter:card": "summary_large_image",
+   "twitter:title": "山線電台、潮汐公路、空房間、微光訊號、雨停以前 海港音樂祭限定三人全簽名紀念布製大型掛旗含原裝收納筒",
+   "twitter:description": "山線電台、潮汐公路、空房間、微光訊號、雨停以前・其他周邊",
+   "twitter:image": "http://localhost:5173/img/p/oiz_R5eo_agOl85q.webp"
+  },
+  "單則（沒照片）": {
+   "og:title": "島嶼低鳴 透明海藍膠，缺了內附小海報",
+   "og:description": "潮汐公路・島嶼低鳴・黑膠・透明海藍膠",
+   "og:url": "http://localhost:5173/share/4",
+   "og:site_name": "音藏",
+   "og:type": "article",
+   "og:locale": "zh_TW",
+   "og:image": "http://localhost:5173/og-default.png",
+   "og:image:width": "1200",
+   "og:image:height": "630",
+   "og:image:alt": "音藏",
+   "twitter:card": "summary_large_image",
+   "twitter:title": "島嶼低鳴 透明海藍膠，缺了內附小海報",
+   "twitter:description": "潮汐公路・島嶼低鳴・黑膠・透明海藍膠",
+   "twitter:image": "http://localhost:5173/og-default.png"
+  },
+  "系列": {
+   "og:title": "2018《夜行採集》專輯發行｜山線電台",
+   "og:description": "山線電台・夜行採集・CD、卡帶、黑膠、毛巾・18 則炫收藏",
+   "og:url": "http://localhost:5173/artist/mountain-radio/1",
+   "og:site_name": "音藏",
+   "og:type": "website",
+   "og:locale": "zh_TW",
+   "og:image": "http://localhost:5173/img/p/iFFLCKOV5h-txmtb.jpg",
+   "og:image:width": "800",
+   "og:image:height": "600",
+   "og:image:alt": "2018《夜行採集》專輯發行｜山線電台",
+   "twitter:card": "summary_large_image",
+   "twitter:title": "2018《夜行採集》專輯發行｜山線電台",
+   "twitter:description": "山線電台・夜行採集・CD、卡帶、黑膠、毛巾・18 則炫收藏",
+   "twitter:image": "http://localhost:5173/img/p/iFFLCKOV5h-txmtb.jpg"
+  },
+  "藝人": {
+   "og:title": "山線電台",
+   "og:description": "台中三人樂團，2014 年至今・24 則炫收藏",
+   "og:url": "http://localhost:5173/artist/mountain-radio",
+   "og:site_name": "音藏",
+   "og:type": "website",
+   "og:locale": "zh_TW",
+   "og:image": "http://localhost:5173/img/p/oiz_R5eo_agOl85q.webp",
+   "og:image:width": "1600",
+   "og:image:height": "1067",
+   "og:image:alt": "山線電台",
+   "twitter:card": "summary_large_image",
+   "twitter:title": "山線電台",
+   "twitter:description": "台中三人樂團，2014 年至今・24 則炫收藏",
+   "twitter:image": "http://localhost:5173/img/p/oiz_R5eo_agOl85q.webp"
+  },
+  "系列（收藏全被鎖）": {
+   "og:title": "2019《凌晨四點》EP 宣傳｜微光訊號",
+   "og:description": "微光訊號・凌晨四點・CD・3 則炫收藏",
+   "og:url": "http://localhost:5173/artist/faint-signal/1",
+   "og:site_name": "音藏",
+   "og:type": "website",
+   "og:locale": "zh_TW",
+   "og:image": "http://localhost:5173/og-default.png",
+   "og:image:width": "1200",
+   "og:image:height": "630",
+   "og:image:alt": "音藏",
+   "twitter:card": "summary_large_image",
+   "twitter:title": "2019《凌晨四點》EP 宣傳｜微光訊號",
+   "twitter:description": "微光訊號・凌晨四點・CD・3 則炫收藏",
+   "twitter:image": "http://localhost:5173/og-default.png"
+  },
+  "鎖定 share/8": {
+   "og:title": "一則炫收藏",
+   "og:description": "看樂迷收了什麼、炫自己的收藏，沿著藝人、系列、版本與標籤找下去。",
+   "og:url": "http://localhost:5173/share/8",
+   "og:site_name": "音藏",
+   "og:type": "article",
+   "og:locale": "zh_TW",
+   "og:image": "http://localhost:5173/og-default.png",
+   "og:image:width": "1200",
+   "og:image:height": "630",
+   "og:image:alt": "音藏",
+   "twitter:card": "summary_large_image",
+   "twitter:title": "一則炫收藏",
+   "twitter:description": "看樂迷收了什麼、炫自己的收藏，沿著藝人、系列、版本與標籤找下去。",
+   "twitter:image": "http://localhost:5173/og-default.png"
+  },
+  "鎖定 share/6": {
+   "og:title": "一則炫收藏",
+   "og:description": "看樂迷收了什麼、炫自己的收藏，沿著藝人、系列、版本與標籤找下去。",
+   "og:url": "http://localhost:5173/share/6",
+   "og:site_name": "音藏",
+   "og:type": "article",
+   "og:locale": "zh_TW",
+   "og:image": "http://localhost:5173/og-default.png",
+   "og:image:width": "1200",
+   "og:image:height": "630",
+   "og:image:alt": "音藏",
+   "twitter:card": "summary_large_image",
+   "twitter:title": "一則炫收藏",
+   "twitter:description": "看樂迷收了什麼、炫自己的收藏，沿著藝人、系列、版本與標籤找下去。",
+   "twitter:image": "http://localhost:5173/og-default.png"
+  }
+ },
+ "images": {
+  "分享圖_有照片_story_1080x1920.jpg": {
+   "size": [
+    1080,
+    1920
+   ],
+   "bytes": 246300,
+   "ms": 205,
+   "file": "yinzang-1-story.jpg"
+  },
+  "分享圖_有照片_post_1080x1350.jpg": {
+   "size": [
+    1080,
+    1350
+   ],
+   "bytes": 203017,
+   "ms": 146,
+   "file": "yinzang-1-post.jpg"
+  },
+  "分享圖_長標題_story_1080x1920.jpg": {
+   "size": [
+    1080,
+    1920
+   ],
+   "bytes": 177466,
+   "ms": 239,
+   "file": "yinzang-137-story.jpg"
+  },
+  "分享圖_長標題_post_1080x1350.jpg": {
+   "size": [
+    1080,
+    1350
+   ],
+   "bytes": 141634,
+   "ms": 197,
+   "file": "yinzang-137-post.jpg"
+  },
+  "分享圖_沒照片_story_1080x1920.jpg": {
+   "size": [
+    1080,
+    1920
+   ],
+   "bytes": 58707,
+   "ms": 151,
+   "file": "yinzang-4-story.jpg"
+  },
+  "分享圖_沒照片_post_1080x1350.jpg": {
+   "size": [
+    1080,
+    1350
+   ],
+   "bytes": 49808,
+   "ms": 143,
+   "file": "yinzang-4-post.jpg"
+  }
+ },
+ "stamp": "467993",
+ "targets": {
+  "photo": 1,
+  "long": 137,
+  "nophoto": 4,
+  "locked": 8,
+  "locked_version": 6
+ },
+ "console_errors": 0,
+ "summary": "75/75"
+}

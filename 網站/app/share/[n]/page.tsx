@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { KIND_LABEL_FALLBACK, shareHref } from "@/lib/data";
+import { SITE_DESC, shareDesc, shareHref } from "@/lib/data";
+import { ogMeta } from "@/lib/server/og";
 import { pageData, siteOrigin } from "@/lib/server/viewer";
 import { publicOffers } from "@/lib/server/trade";
 import { ShareDetail } from "@/components/share-detail";
@@ -13,24 +14,20 @@ export async function generateMetadata({ params }: Props) {
   const { c } = await pageData();
   const s = c.getShare(Number(n));
   if (!s) return { title: "找不到這則炫收藏" };
-  // 分享到 FB、Threads 時的預覽：標題、一句描述、那則收藏的主圖、網址
   const origin = await siteOrigin();
-  const url = `${origin}${shareHref(s.n)}`;
-  const desc = (s.story || `${s.authorName ?? s.author} 的${s.kind || KIND_LABEL_FALLBACK}`).replace(/\s+/g, " ").slice(0, 120);
-  return {
+  const path = shareHref(s.n);
+  // 被鎖定的：預覽只給通用字與站方預設圖，不露出原本的標題與照片
+  if (c.toShareView(s).lock) {
+    return ogMeta({ origin, path, title: "一則炫收藏", description: SITE_DESC, photo: null, type: "article" });
+  }
+  return ogMeta({
+    origin,
+    path,
     title: s.what,
-    description: desc,
-    alternates: { canonical: url },
-    openGraph: {
-      type: "article",
-      siteName: "音藏",
-      locale: "zh_TW",
-      title: s.what,
-      description: desc,
-      url,
-      ...(s.image ? { images: [{ url: `${origin}${s.image}`, alt: s.what }] } : {}),
-    },
-  };
+    description: shareDesc(c.shareParts(s), s.authorName ?? s.author),
+    photo: s.image ? { url: s.image, size: s.imageSize } : null,
+    type: "article",
+  });
 }
 
 export default async function SharePage({ params }: Props) {
@@ -40,11 +37,18 @@ export default async function SharePage({ params }: Props) {
   const share = Number.isInteger(n) ? c.getShare(n) : undefined;
 
   if (!share) notFound();
+  const view = c.toShareView(share);
+  const origin = await siteOrigin();
+  const parts = c.shareParts(share);
+  // 被鎖定的不給分享（按鈕與分享圖都不出現）
+  const shareInfo = view.lock
+    ? null
+    : { url: `${origin}${shareHref(n)}`, title: share.what, text: shareDesc(parts, view.author.name), parts };
 
   // 底部只放跟同一個系列、藝人、標籤有關的，不放同一位會員的
   return (
     <main className="wrap page">
-      <ShareDetail share={c.toShareView(share)} offers={await publicOffers(n)} />
+      <ShareDetail share={view} offers={await publicOffers(n)} shareInfo={shareInfo} />
       {c.relatedFor(share).map((b) => (
         <section className="block related" key={b.title}>
           <div className="block-head">

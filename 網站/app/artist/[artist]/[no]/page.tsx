@@ -17,7 +17,9 @@ import {
   type ShareView,
   type Version,
 } from "@/lib/data";
-import { pageData } from "@/lib/server/viewer";
+import { pageData, siteOrigin } from "@/lib/server/viewer";
+import { ogMeta } from "@/lib/server/og";
+import { CopyLink } from "@/components/share-actions";
 import { HoldingButtons } from "@/components/holding-buttons";
 import { PriceHistory } from "@/components/price-history";
 import { WikiEditor } from "@/components/wiki-editor";
@@ -54,7 +56,15 @@ async function load(params: Props["params"]) {
 export async function generateMetadata({ params }: Props) {
   const { c, series: w } = await load(params);
   if (!w) return { title: "找不到系列" };
-  return { title: `${w.name}｜${c.creditNames(w).map((a) => a.name).join("、")}` };
+  const artists = c.creditNames(w).map((a) => a.name).join("、");
+  const n = c.sharesOfSeries(w).length;
+  return ogMeta({
+    origin: await siteOrigin(),
+    path: `/artist/${w.artistSlug}/${w.no}`,
+    title: `${w.name}｜${artists}`,
+    description: [artists, w.title, Array.from(new Set(w.items.map((i) => i.kind))).join("、"), n ? `${n} 則炫收藏` : ""].filter(Boolean).join("・"),
+    photo: c.ogPhotoOf(c.sharesOfSeries(w)),
+  });
 }
 
 function Compare({ series, item }: { series: Series; item: Item }) {
@@ -295,6 +305,7 @@ export default async function SeriesPage({ params, searchParams }: Props) {
           </p>
         </div>
         <div className="head-actions">
+          <CopyLink />
           <Link className="btn btn-line" href={`${self}?edit=1#body`} data-testid="edit-link">
             編輯
           </Link>

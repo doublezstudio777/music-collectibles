@@ -896,3 +896,21 @@ body.has-modal { overflow: hidden; }
   .hidden-row > .sub { grid-column: 1; }
   .hot-item .hot-acts { gap: 6px; }
 }
+
+/* 分享（2026-09-27）：單則頁「分享」「下載分享圖」＋小選單；系列頁、藝人頁「複製連結」 */
+.share-tools { margin-top: 16px; position: relative; }
+.share-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.share-menu {
+  background: var(--bg); border: 1px solid var(--text); left: 0; list-style: none; margin: 0; min-width: 220px;
+  padding: 0; position: absolute; top: calc(100% + 4px); z-index: 20;
+}
+.share-menu li + li { border-top: 1px solid var(--line); }
+.share-menu a, .share-menu button {
+  align-items: center; background: none; border: 0; color: var(--text); cursor: pointer; display: flex; font: inherit;
+  font-size: var(--text-sm); font-weight: 600; gap: 12px; justify-content: space-between; min-height: 44px;
+  padding: 0 16px; text-decoration: none; width: 100%;
+}
+.share-menu a:hover, .share-menu button:hover { background: var(--surface); }
+.share-menu button:disabled { cursor: default; opacity: .6; }
+.share-menu .sub { color: var(--muted); font-weight: 400; }
+.share-tools .field-error { margin-top: 8px; }

@@ -33,6 +33,16 @@ export const normKind = (raw: string): { kind: Kind; note?: string } => {
 /** og:description 沒有故事時的物件類型預設字 */
 export const KIND_LABEL_FALLBACK = "收藏";
 
+/** 站方描述：首頁、被鎖定內容的連結預覽共用 */
+export const SITE_DESC = "看樂迷收了什麼、炫自己的收藏，沿著藝人、系列、版本與標籤找下去。";
+
+/** 分享用的四段字（Catalog.shareParts 算出來） */
+export type ShareParts = { artist: string; series: string; item: string; version: string };
+
+/** 藝人・系列・品項・版本；四段都空時退回「某某的收藏」 */
+export const shareDesc = (p: ShareParts, author: string) =>
+  [p.artist, p.series, p.item, p.version].filter(Boolean).join("・") || `${author} 的${KIND_LABEL_FALLBACK}`;
+
 export type Artist = {
   /** 網址識別碼：英文名或音譯，小寫、連字號 */
   slug: string;
@@ -150,6 +160,8 @@ export type Share = {
   likes: number;
   color: string;
   image?: string;
+  /** 主圖像素尺寸（og:image:width／height 用）；舊資料沒記就沒有 */
+  imageSize?: { w: number; h: number };
   /** 縮圖網址；D1 讀出來的才有 */
   thumb?: string;
   /** 作者顯示名稱；D1 讀出來的才有 */

@@ -11,6 +11,7 @@ import { AppealBox, ReportBox } from "@/components/report";
 import { LikeButton } from "@/components/like-button";
 import { NextPhase } from "@/components/next-phase";
 import { Photo, TagList } from "@/components/share-card";
+import { ShareActions, type ShareInfo } from "@/components/share-actions";
 
 /** 金額輸入：只收正整數 */
 export function parsePrice(raw: string) {
@@ -358,7 +359,16 @@ function OfferList({
   );
 }
 
-export function ShareDetail({ share, offers }: { share: ShareView; offers: PublicOffer[] }) {
+export function ShareDetail({
+  share,
+  offers,
+  shareInfo,
+}: {
+  share: ShareView;
+  offers: PublicOffer[];
+  /** 被鎖定的是 null：不出現分享按鈕 */
+  shareInfo: ShareInfo | null;
+}) {
   const { me, ready } = useAppState();
   const mine = Boolean(me) && share.author.handle === me?.handle;
   const sale = share.sale;
@@ -391,6 +401,7 @@ export function ShareDetail({ share, offers }: { share: ShareView; offers: Publi
           <span className="when">{share.time}</span>
           <LikeButton n={share.n} base={share.likes} large />
         </div>
+        {shareInfo && !lock ? <ShareActions info={shareInfo} author={share.author.name} what={share.what} kind={share.kind} kindNote={share.kindNote} /> : null}
         {frozen && sale.state !== "share" ? (
           <FrozenBox sale={sale} offers={offers} />
         ) : mine ? (
