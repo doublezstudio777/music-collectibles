@@ -1,0 +1,453 @@
+{
+  "環境": "local",
+  "有維基條目的藝人": 125,
+  "已經有照片跳過": 48,
+  "條目沒有圖": 66,
+  "找到照片": 11,
+  "因授權排除": 11,
+  "排除明細": {
+    "合理使用": 1,
+    "授權不明": 0,
+    "其他授權": 10
+  },
+  "成功匯入": 0,
+  "失敗": 0,
+  "匯入位元組": 0,
+  "清單": {
+    "匯入": [],
+    "排除": [
+      {
+        "slug": "gao-wu-ren",
+        "name": "告五人",
+        "file": "Accusefive_2021.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "karencici",
+        "name": "Karencici",
+        "file": "Karencici.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "kenzy",
+        "name": "小春",
+        "file": "2021年12月25日_周文傑_桃園市政府.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "lv-shi-xuan",
+        "name": "呂士軒",
+        "file": "Trout_Fresh_in_2020_New_Year’s_Eve.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "matzka",
+        "name": "Matzka",
+        "file": "Matzka.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "mixer",
+        "name": "麋先生",
+        "file": "Mixer_2023.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "shang-xin-yu-jue",
+        "name": "傷心欲絕",
+        "file": "Logo_of_Wayne's_So_Sad.jpg",
+        "how": "pageimages",
+        "reason": "fair_use",
+        "license": "合理使用",
+        "原因": "合理使用"
+      },
+      {
+        "slug": "wei-ru-xuan",
+        "name": "魏如萱",
+        "file": "Waa_Wei_2024_(cropped).jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "yang-nai-wen",
+        "name": "楊乃文",
+        "file": "Yang_Naiwen_2023.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "yi-zi-le-tuan",
+        "name": "椅子樂團",
+        "file": "2020台灣燈會主題曲發表會-椅子樂團.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "zhang-zhen-yue",
+        "name": "張震嶽",
+        "file": "Ayal_Komod_2024.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      }
+    ],
+    "沒有圖": [
+      {
+        "slug": "aden",
+        "name": "王ADEN",
+        "missing": false
+      },
+      {
+        "slug": "ba-shi-ba-ke-ba-le-zi",
+        "name": "八十八顆芭樂籽",
+        "missing": false
+      },
+      {
+        "slug": "cai-jia-zhen",
+        "name": "蔡家蓁",
+        "missing": false
+      },
+      {
+        "slug": "carris-tsai",
+        "name": "蔡秋鳳",
+        "missing": false
+      },
+      {
+        "slug": "ceng-wei-zhong",
+        "name": "曾瑋中",
+        "missing": false
+      },
+      {
+        "slug": "chen-jian-qi",
+        "name": "陳建騏",
+        "missing": false
+      },
+      {
+        "slug": "chen-xian-jing",
+        "name": "陳嫺靜",
+        "missing": false
+      },
+      {
+        "slug": "chen-xiao-xia",
+        "name": "陳小霞",
+        "missing": false
+      },
+      {
+        "slug": "chen-xin-yue",
+        "name": "陳忻玥",
+        "missing": false
+      },
+      {
+        "slug": "chen-yi-heng",
+        "name": "陳以恆",
+        "missing": false
+      },
+      {
+        "slug": "chen-yi-ting",
+        "name": "陳怡婷",
+        "missing": false
+      },
+      {
+        "slug": "chunyan",
+        "name": "春艷",
+        "missing": false
+      },
+      {
+        "slug": "deca-joins",
+        "name": "deca joins",
+        "missing": false
+      },
+      {
+        "slug": "double-j",
+        "name": "呆寶靜",
+        "missing": false
+      },
+      {
+        "slug": "elephant-gym",
+        "name": "大象體操",
+        "missing": false
+      },
+      {
+        "slug": "erika-liu",
+        "name": "劉艾立",
+        "missing": false
+      },
+      {
+        "slug": "funkymo",
+        "name": "FunkyMo",
+        "missing": false
+      },
+      {
+        "slug": "giyu-tjuljaviya",
+        "name": "張淦勛",
+        "missing": false
+      },
+      {
+        "slug": "gordon",
+        "name": "國蛋",
+        "missing": false
+      },
+      {
+        "slug": "gummy-b",
+        "name": "Gummy B",
+        "missing": false
+      },
+      {
+        "slug": "guts",
+        "name": "兄弟本色",
+        "missing": false
+      },
+      {
+        "slug": "huang-jing-shi-yi",
+        "name": "荒井十一",
+        "missing": false
+      },
+      {
+        "slug": "huang-qi-shan",
+        "name": "黃綺珊",
+        "missing": false
+      },
+      {
+        "slug": "huang-yu-han",
+        "name": "黃宇寒",
+        "missing": false
+      },
+      {
+        "slug": "huang-zi-xuan",
+        "name": "黃子軒",
+        "missing": false
+      },
+      {
+        "slug": "ice-paper",
+        "name": "Ice Paper",
+        "missing": false
+      },
+      {
+        "slug": "icyball",
+        "name": "icyball冰球樂團",
+        "missing": false
+      },
+      {
+        "slug": "james-lee",
+        "name": "李銖銜",
+        "missing": false
+      },
+      {
+        "slug": "kang-shi-tan-de-bian-hua-qiu",
+        "name": "康士坦的變化球",
+        "missing": false
+      },
+      {
+        "slug": "ke-zhi-tang",
+        "name": "柯智棠",
+        "missing": false
+      },
+      {
+        "slug": "lao-wang-le-dui",
+        "name": "老王樂隊",
+        "missing": false
+      },
+      {
+        "slug": "leo",
+        "name": "Leo王",
+        "missing": false
+      },
+      {
+        "slug": "li-quan-zhe",
+        "name": "李權哲",
+        "missing": false
+      },
+      {
+        "slug": "li-zhu-xin",
+        "name": "李竺芯",
+        "missing": false
+      },
+      {
+        "slug": "limi",
+        "name": "Limi",
+        "missing": false
+      },
+      {
+        "slug": "lin-jun-yi",
+        "name": "林俊逸",
+        "missing": false
+      },
+      {
+        "slug": "lin-yu-ting",
+        "name": "林鈺婷",
+        "missing": false
+      },
+      {
+        "slug": "marz23",
+        "name": "Marz23",
+        "missing": false
+      },
+      {
+        "slug": "mei-xiu-ji-tuan",
+        "name": "美秀集團",
+        "missing": false
+      },
+      {
+        "slug": "mi-sha",
+        "name": "米莎",
+        "missing": false
+      },
+      {
+        "slug": "miss-ko",
+        "name": "葛仲珊",
+        "missing": false
+      },
+      {
+        "slug": "mj116",
+        "name": "頑童MJ116",
+        "missing": false
+      },
+      {
+        "slug": "muta",
+        "name": "大淵MUTA",
+        "missing": false
+      },
+      {
+        "slug": "nong-cun-wu-zhuang-qing-nian",
+        "name": "農村武裝青年",
+        "missing": false
+      },
+      {
+        "slug": "o-kai-singers",
+        "name": "歐開合唱團",
+        "missing": false
+      },
+      {
+        "slug": "ozi",
+        "name": "ØZI",
+        "missing": false
+      },
+      {
+        "slug": "qin-si-feng",
+        "name": "秦四風",
+        "missing": false
+      },
+      {
+        "slug": "qiu-de",
+        "name": "裘德",
+        "missing": false
+      },
+      {
+        "slug": "sangpuy",
+        "name": "桑布伊",
+        "missing": false
+      },
+      {
+        "slug": "soft-lipa",
+        "name": "蛋堡",
+        "missing": false
+      },
+      {
+        "slug": "su-ming-yuan",
+        "name": "蘇明淵",
+        "missing": false
+      },
+      {
+        "slug": "su-yu-han",
+        "name": "蘇郁涵",
+        "missing": false
+      },
+      {
+        "slug": "sunset-rollercoaster",
+        "name": "落日飛車",
+        "missing": false
+      },
+      {
+        "slug": "tiu-tiu",
+        "name": "淺堤",
+        "missing": false
+      },
+      {
+        "slug": "tizzy-bac",
+        "name": "Tizzy Bac",
+        "missing": false
+      },
+      {
+        "slug": "vash-hsu",
+        "name": "徐暐翔",
+        "missing": false
+      },
+      {
+        "slug": "wu-yong-ji",
+        "name": "吳永吉",
+        "missing": false
+      },
+      {
+        "slug": "xiong-mei-ling",
+        "name": "熊美玲",
+        "missing": false
+      },
+      {
+        "slug": "xiong-zai",
+        "name": "熊仔",
+        "missing": false
+      },
+      {
+        "slug": "xu-fu-kai",
+        "name": "許富凱",
+        "missing": false
+      },
+      {
+        "slug": "yang-su-hao",
+        "name": "楊肅浩",
+        "missing": false
+      },
+      {
+        "slug": "ye-ying",
+        "name": "葉穎",
+        "missing": false
+      },
+      {
+        "slug": "yeemao",
+        "name": "夜貓組",
+        "missing": false
+      },
+      {
+        "slug": "yuan-ya-wei",
+        "name": "袁婭維",
+        "missing": false
+      },
+      {
+        "slug": "zheng-nan",
+        "name": "鄭楠",
+        "missing": false
+      },
+      {
+        "slug": "zheng-yi-nong",
+        "name": "鄭宜農",
+        "missing": false
+      }
+    ],
+    "失敗": []
+  }
+}

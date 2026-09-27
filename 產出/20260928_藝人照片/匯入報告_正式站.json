@@ -1,0 +1,1030 @@
+{
+  "環境": "remote",
+  "有維基條目的藝人": 125,
+  "已經有照片跳過": 0,
+  "條目沒有圖": 66,
+  "找到照片": 59,
+  "因授權排除": 11,
+  "排除明細": {
+    "合理使用": 1,
+    "授權不明": 0,
+    "其他授權": 10
+  },
+  "成功匯入": 48,
+  "失敗": 0,
+  "匯入位元組": 2272058,
+  "清單": {
+    "匯入": [
+      {
+        "slug": "9m88",
+        "name": "9m88",
+        "id": 1,
+        "key": "r/ihAnJvJthNev.jpg",
+        "file": "9m88_2019大港開唱_resized.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "Ken26729264",
+        "bytes": 46164,
+        "size": "533x800"
+      },
+      {
+        "slug": "a-lin",
+        "name": "A-Lin",
+        "id": 2,
+        "key": "r/WE0WqnultX6S.jpg",
+        "file": "A-Lin_at_the_2023_Golden_Melody_Awards_1.jpg",
+        "how": "pageimages",
+        "license": "CC BY 3.0",
+        "author": "Play大明星",
+        "bytes": 24440,
+        "size": "447x585"
+      },
+      {
+        "slug": "a-luo-ka-li-ting-ba-qi-la",
+        "name": "阿洛·卡力亭·巴奇辣",
+        "id": 3,
+        "key": "r/xt0WMcbiK3TI.jpg",
+        "file": "Pangcah_indigenous_group_dancers_at_Amis_Music_Festival_2016_IMF1487.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "HaeB",
+        "bytes": 57652,
+        "size": "533x800"
+      },
+      {
+        "slug": "amei",
+        "name": "張惠妹",
+        "id": 4,
+        "key": "r/_5YOxzugmgVJ.jpg",
+        "file": "2025_A-Mei_ASMR_MAXXX_Concert_Tour-Guangzhou.jpg",
+        "how": "pageimages",
+        "license": "CC0",
+        "author": "Kkman12345",
+        "bytes": 35681,
+        "size": "602x800"
+      },
+      {
+        "slug": "bai-bing-bing",
+        "name": "白冰冰",
+        "id": 5,
+        "key": "r/n3kn3ZgnpLyt.jpg",
+        "file": "PaiPingPing@Taipei_New_Year's_Eve_Party_2011.JPG",
+        "how": "pageimages",
+        "license": "CC BY-SA 3.0",
+        "author": "Tksteven",
+        "bytes": 45938,
+        "size": "523x800"
+      },
+      {
+        "slug": "cao-dong-mei-you-pai-dui",
+        "name": "草東沒有派對",
+        "id": 6,
+        "key": "r/KZGDa30v4FmZ.jpg",
+        "file": "No_Party_For_Cao_Dong_in_2023.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "三年目 ( UID:8159583 )",
+        "bytes": 31020,
+        "size": "800x533"
+      },
+      {
+        "slug": "chen-qi-zhen",
+        "name": "陳綺貞",
+        "id": 7,
+        "key": "r/jCk4Vj1XWjI5.jpg",
+        "file": "20170429《房間裡的音樂會》香港站@匯星_Star_Hall.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "Imustak",
+        "bytes": 28659,
+        "size": "800x530"
+      },
+      {
+        "slug": "chen-shan-ni",
+        "name": "陳珊妮",
+        "id": 8,
+        "key": "r/wgn_WVZrFShM.jpg",
+        "file": "Sandee_Chan_live_in_2013.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "Andrew318",
+        "bytes": 40337,
+        "size": "600x800"
+      },
+      {
+        "slug": "dan-yi-chun",
+        "name": "單依純",
+        "id": 9,
+        "key": "r/wcnEhDzyiwjJ.jpg",
+        "file": "單依純，中國好聲音.png",
+        "how": "pageimages",
+        "license": "CC0",
+        "author": "中國好聲音",
+        "bytes": 33593,
+        "size": "614x780"
+      },
+      {
+        "slug": "dong-li-huo-che",
+        "name": "動力火車",
+        "id": 10,
+        "key": "r/nIsKypxWSGhL.jpg",
+        "file": "Power_Station_Taiwan.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 2.0",
+        "author": "輝攝地帶 平面攝影工作室",
+        "bytes": 67856,
+        "size": "789x800"
+      },
+      {
+        "slug": "e-so",
+        "name": "瘦子E.SO",
+        "id": 11,
+        "key": "r/lb-Idq18DTWP.jpg",
+        "file": "瘦子E.SO.png",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "ETtoday星光雲/官方平台",
+        "bytes": 58574,
+        "size": "800x725"
+      },
+      {
+        "slug": "eason-chan",
+        "name": "陳奕迅",
+        "id": 12,
+        "key": "r/Q9crLlW_X1M3.jpg",
+        "file": "FEAR_AND_DREAMS_Eason_Chan_in_Guangzhou_2024.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "WoodmanT1",
+        "bytes": 39693,
+        "size": "533x800"
+      },
+      {
+        "slug": "feng-xiao-yue",
+        "name": "鳳小岳",
+        "id": 13,
+        "key": "r/KeDs2J3mSEA0.jpg",
+        "file": "Rhydian-Vaughan.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "邱鈺鋒",
+        "bytes": 46506,
+        "size": "533x800"
+      },
+      {
+        "slug": "hong-pei-yu",
+        "name": "洪佩瑜",
+        "id": 14,
+        "key": "r/kcaNrFhZBAKw.jpg",
+        "file": "第60屆金馬獎_最佳原創電影歌曲_洪佩瑜.png",
+        "how": "pageimages",
+        "license": "CC BY 3.0",
+        "author": "三立娛樂星聞",
+        "bytes": 42883,
+        "size": "481x800"
+      },
+      {
+        "slug": "huang-fei",
+        "name": "黃妃",
+        "id": 15,
+        "key": "r/BEwMo5PKIuis.jpg",
+        "file": "HuangFei_2017_0312.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "吹笛牧童",
+        "bytes": 49207,
+        "size": "800x533"
+      },
+      {
+        "slug": "huang-rui-feng",
+        "name": "黃瑞豐",
+        "id": 16,
+        "key": "r/VkAyb1TjtRde.jpg",
+        "file": "Rich_HUANG_黃瑞豐.jpg",
+        "how": "pageimages",
+        "license": "CC0",
+        "author": "黃霏霏",
+        "bytes": 54160,
+        "size": "600x800"
+      },
+      {
+        "slug": "ivana-wong",
+        "name": "王菀之",
+        "id": 17,
+        "key": "r/1rcVg-xSgoUG.jpg",
+        "file": "Usc2013_Ivana_Wong.JPG",
+        "how": "pageimages",
+        "license": "CC BY 3.0",
+        "author": "Tksteven",
+        "bytes": 68063,
+        "size": "600x800"
+      },
+      {
+        "slug": "jiang-hui-yi",
+        "name": "江惠儀",
+        "id": 18,
+        "key": "r/LBHkYGa77keS.jpg",
+        "file": "20190216潭子農會百年慶江惠儀DSC_1758.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "蕭嘉錡",
+        "bytes": 51400,
+        "size": "800x535"
+      },
+      {
+        "slug": "jj-lin",
+        "name": "林俊傑",
+        "id": 19,
+        "key": "r/GvpENCpAvqgM.jpg",
+        "file": "JJ林俊杰在JJ20世界巡回演唱会北京站_(cropped).jpg",
+        "how": "pageimages",
+        "license": "CC BY 4.0",
+        "author": "进阶的无处",
+        "bytes": 30326,
+        "size": "600x800"
+      },
+      {
+        "slug": "joanna-wang",
+        "name": "王若琳",
+        "id": 20,
+        "key": "r/nho1c4MgdZ7T.jpg",
+        "file": "Joanna_Wang.jpg",
+        "how": "pageimages",
+        "license": "CC BY 2.0",
+        "author": "giggle1025（ https://www.flickr.com/photos/giggle1025/）",
+        "bytes": 27679,
+        "size": "500x750"
+      },
+      {
+        "slug": "khalil-fong",
+        "name": "方大同",
+        "id": 21,
+        "key": "r/CLJgbUl4RV3V.jpg",
+        "file": "Khalil_Fong_So_Close!_(3x4_cropped).jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 2.0",
+        "author": "Karen Ka Ying Wong from Melbourne, Australia",
+        "bytes": 30886,
+        "size": "594x800"
+      },
+      {
+        "slug": "kong-long-de-pi",
+        "name": "恐龍的皮",
+        "id": 22,
+        "key": "r/TECKRjp8hh1f.jpg",
+        "file": "The_Dinosaur_Skin_Play_Taiwan_Music_&_Food_Fest_2024.jpg",
+        "how": "pageimages",
+        "license": "CC BY 4.0",
+        "author": "Fotointheworld",
+        "bytes": 114405,
+        "size": "800x533"
+      },
+      {
+        "slug": "li-rong-hao",
+        "name": "李榮浩",
+        "id": 23,
+        "key": "r/Hd5sjP4OLxyT.jpg",
+        "file": "咪咕音乐盛典_(6).jpg",
+        "how": "pageimages",
+        "license": "CC BY 2.5",
+        "author": "GEM_Ady (GEM_brilliant)",
+        "bytes": 38862,
+        "size": "520x800"
+      },
+      {
+        "slug": "li-ying-hong",
+        "name": "李英宏",
+        "id": 24,
+        "key": "r/ZxmFiBxWOoXk.jpg",
+        "file": "李英宏獲第55屆金馬獎「最佳原創電影歌曲」.jpg",
+        "how": "pageimages",
+        "license": "公有領域",
+        "author": "徐肇昌",
+        "bytes": 8600,
+        "size": "237x341"
+      },
+      {
+        "slug": "lu-guang-zhong",
+        "name": "盧廣仲",
+        "id": 25,
+        "key": "r/MbbRcKecxFvP.jpg",
+        "file": "CrowdLu_201707_taiwan.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "Shekwashaaa",
+        "bytes": 110568,
+        "size": "800x800"
+      },
+      {
+        "slug": "mc-hotdog",
+        "name": "MC HotDog",
+        "id": 26,
+        "key": "r/sQANyVA7op6T.jpg",
+        "file": "MC_HotDog_with_Adidas_microphone_20120504.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "邱鈺鋒",
+        "bytes": 48815,
+        "size": "533x800"
+      },
+      {
+        "slug": "peng-bai-yi",
+        "name": "彭柏邑",
+        "id": 27,
+        "key": "r/aO2ScJE19k18.jpg",
+        "file": "彭柏邑_Boiii_P.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "Lucky0291",
+        "bytes": 32122,
+        "size": "728x484"
+      },
+      {
+        "slug": "peng-jia-hui",
+        "name": "彭佳慧",
+        "id": 28,
+        "key": "r/0WjlainYz_dg.jpg",
+        "file": "上海_咪咕颁奖礼红毯_(5).jpg",
+        "how": "pageimages",
+        "license": "CC BY 2.5",
+        "author": "GEM_Ady (GEM_brilliant)",
+        "bytes": 67390,
+        "size": "727x800"
+      },
+      {
+        "slug": "penny-tai",
+        "name": "戴佩妮",
+        "id": 29,
+        "key": "r/bqxBq8q6zQVg.jpg",
+        "file": "Penny_Tai_in_2024_(2).jpg",
+        "how": "pageimages",
+        "license": "CC BY 3.0",
+        "author": "活力副刊",
+        "bytes": 13773,
+        "size": "324x450"
+      },
+      {
+        "slug": "qiu-li-ting",
+        "name": "邱立婷",
+        "id": 30,
+        "key": "r/lYTr67clcXLA.jpg",
+        "file": "邱立婷於第35屆金曲獎典禮紅毯現場.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "Fan Feng-Shan (范鳳珊)",
+        "bytes": 60104,
+        "size": "800x788"
+      },
+      {
+        "slug": "sandy-lam",
+        "name": "林憶蓮",
+        "id": 31,
+        "key": "r/Vx9-dkbkwqAw.jpg",
+        "file": "Sandy_Lam_20240429.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "Tombus20032000",
+        "bytes": 19474,
+        "size": "600x800"
+      },
+      {
+        "slug": "shi-shi",
+        "name": "孫盛希",
+        "id": 32,
+        "key": "r/VYX7EsmxZxdh.jpg",
+        "file": "ShiShi_Sun.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "SSeun",
+        "bytes": 54014,
+        "size": "533x800"
+      },
+      {
+        "slug": "sorry-youth",
+        "name": "拍謝少年",
+        "id": 33,
+        "key": "r/O0hDSK7A0gaT.jpg",
+        "file": "Sorry_Youth.jpg",
+        "how": "pageimages",
+        "license": "CC BY 2.5",
+        "author": "Sorry Youth",
+        "bytes": 54976,
+        "size": "800x533"
+      },
+      {
+        "slug": "su-yun-ying",
+        "name": "蘇運瑩",
+        "id": 34,
+        "key": "r/CooiawE_XRlL.jpg",
+        "file": "1203咪咕音乐盛典_（6）.jpg",
+        "how": "pageimages",
+        "license": "CC BY 2.5",
+        "author": "GEM_Ady",
+        "bytes": 14271,
+        "size": "544x800"
+      },
+      {
+        "slug": "tanya-chua",
+        "name": "蔡健雅",
+        "id": 35,
+        "key": "r/ft4uCrQP3Mgn.jpg",
+        "file": "Tanya_Chua_2022.jpg",
+        "how": "pageimages",
+        "license": "CC BY 3.0",
+        "author": "三立娛樂星聞",
+        "bytes": 33287,
+        "size": "554x800"
+      },
+      {
+        "slug": "terence-lam",
+        "name": "林家謙",
+        "id": 36,
+        "key": "r/VHsmOXGNcTkX.jpg",
+        "file": "Terence_Lam_20251227.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "Tombus20032000",
+        "bytes": 110153,
+        "size": "600x800"
+      },
+      {
+        "slug": "usay-kawlu",
+        "name": "舞思愛",
+        "id": 37,
+        "key": "r/zwANOfrdMAl0.jpg",
+        "file": "舞思愛_維基百科.png",
+        "how": "pageimages",
+        "license": "CC0",
+        "author": "陳伊涵",
+        "bytes": 70723,
+        "size": "800x800"
+      },
+      {
+        "slug": "wang-hui-zhu",
+        "name": "王彙筑",
+        "id": 38,
+        "key": "r/Rr2NRgdcOWiB.jpg",
+        "file": "HuiChuWang_20221120.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "PD222PD222",
+        "bytes": 74544,
+        "size": "800x531"
+      },
+      {
+        "slug": "wang-xin-ling",
+        "name": "王心凌",
+        "id": 39,
+        "key": "r/pIuEIocn6k4n.jpg",
+        "file": "CyndiWang.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "Ccm306728",
+        "bytes": 45379,
+        "size": "533x800"
+      },
+      {
+        "slug": "weng-li-you",
+        "name": "翁立友",
+        "id": 40,
+        "key": "r/iMSHCk73p-HK.jpg",
+        "file": "翁立友202112_(cropped).jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "TOMO0208",
+        "bytes": 58440,
+        "size": "594x800"
+      },
+      {
+        "slug": "xiao-huang-qi",
+        "name": "蕭煌奇",
+        "id": 41,
+        "key": "r/ZJhVb7e_j3h3.jpg",
+        "file": "蕭煌奇.jpg",
+        "how": "pageimages",
+        "license": "CC BY 3.0",
+        "author": "zh:Elle 臺灣",
+        "bytes": 20750,
+        "size": "449x471"
+      },
+      {
+        "slug": "xie-ming-you",
+        "name": "謝銘祐",
+        "id": 42,
+        "key": "r/R3sP-3umNeAy.jpg",
+        "file": "謝銘祐---.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "詹雅炘",
+        "bytes": 68096,
+        "size": "661x779"
+      },
+      {
+        "slug": "xiu-lan-ma-ya",
+        "name": "秀蘭瑪雅",
+        "id": 43,
+        "key": "r/XBnac-Qi0nAl.jpg",
+        "file": "秀蘭瑪雅.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "吹笛牧童",
+        "bytes": 38640,
+        "size": "800x533"
+      },
+      {
+        "slug": "xu-zhe-pei",
+        "name": "許哲珮",
+        "id": 44,
+        "key": "r/T0d90pbicYKF.jpg",
+        "file": "Peggy_Hsu_performing_live_in_2026.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "RickWangTW",
+        "bytes": 29031,
+        "size": "534x800"
+      },
+      {
+        "slug": "ya-wei-mo-rui",
+        "name": "雅維·茉芮",
+        "id": 45,
+        "key": "r/wZuYoNX4WkX_.jpg",
+        "file": "雅維·茉芮_Yaway‧Mawring.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "JM99",
+        "bytes": 61672,
+        "size": "480x800"
+      },
+      {
+        "slug": "zhan-ya-wen",
+        "name": "詹雅雯",
+        "id": 46,
+        "key": "r/lDPQN2TfVaOB.jpg",
+        "file": "詹雅雯_20140928.jpg",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "蕭嘉錡",
+        "bytes": 14138,
+        "size": "227x447"
+      },
+      {
+        "slug": "zhou-tang-hao",
+        "name": "周湯豪",
+        "id": 47,
+        "key": "r/ozf7ZRqZhljR.jpg",
+        "file": "周湯豪.JPG",
+        "how": "pageimages",
+        "license": "CC BY-SA 4.0",
+        "author": "onlymyself65536",
+        "bytes": 56244,
+        "size": "600x800"
+      },
+      {
+        "slug": "zhou-yun-peng",
+        "name": "周雲蓬",
+        "id": 48,
+        "key": "r/UDaFKGz5ZY-p.jpg",
+        "file": "Zhouyunpeng.JPG",
+        "how": "pageimages",
+        "license": "公有領域",
+        "author": "maizibusi1988",
+        "bytes": 42870,
+        "size": "800x535"
+      }
+    ],
+    "排除": [
+      {
+        "slug": "gao-wu-ren",
+        "name": "告五人",
+        "file": "Accusefive_2021.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "karencici",
+        "name": "Karencici",
+        "file": "Karencici.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "kenzy",
+        "name": "小春",
+        "file": "2021年12月25日_周文傑_桃園市政府.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "lv-shi-xuan",
+        "name": "呂士軒",
+        "file": "Trout_Fresh_in_2020_New_Year’s_Eve.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "matzka",
+        "name": "Matzka",
+        "file": "Matzka.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "mixer",
+        "name": "麋先生",
+        "file": "Mixer_2023.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "shang-xin-yu-jue",
+        "name": "傷心欲絕",
+        "file": "Logo_of_Wayne's_So_Sad.jpg",
+        "how": "pageimages",
+        "reason": "fair_use",
+        "license": "合理使用",
+        "原因": "合理使用"
+      },
+      {
+        "slug": "wei-ru-xuan",
+        "name": "魏如萱",
+        "file": "Waa_Wei_2024_(cropped).jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "yang-nai-wen",
+        "name": "楊乃文",
+        "file": "Yang_Naiwen_2023.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "yi-zi-le-tuan",
+        "name": "椅子樂團",
+        "file": "2020台灣燈會主題曲發表會-椅子樂團.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      },
+      {
+        "slug": "zhang-zhen-yue",
+        "name": "張震嶽",
+        "file": "Ayal_Komod_2024.jpg",
+        "how": "pageimages",
+        "reason": "other",
+        "license": "Attribution",
+        "原因": "其他授權"
+      }
+    ],
+    "沒有圖": [
+      {
+        "slug": "aden",
+        "name": "王ADEN",
+        "missing": false
+      },
+      {
+        "slug": "ba-shi-ba-ke-ba-le-zi",
+        "name": "八十八顆芭樂籽",
+        "missing": false
+      },
+      {
+        "slug": "cai-jia-zhen",
+        "name": "蔡家蓁",
+        "missing": false
+      },
+      {
+        "slug": "carris-tsai",
+        "name": "蔡秋鳳",
+        "missing": false
+      },
+      {
+        "slug": "ceng-wei-zhong",
+        "name": "曾瑋中",
+        "missing": false
+      },
+      {
+        "slug": "chen-jian-qi",
+        "name": "陳建騏",
+        "missing": false
+      },
+      {
+        "slug": "chen-xian-jing",
+        "name": "陳嫺靜",
+        "missing": false
+      },
+      {
+        "slug": "chen-xiao-xia",
+        "name": "陳小霞",
+        "missing": false
+      },
+      {
+        "slug": "chen-xin-yue",
+        "name": "陳忻玥",
+        "missing": false
+      },
+      {
+        "slug": "chen-yi-heng",
+        "name": "陳以恆",
+        "missing": false
+      },
+      {
+        "slug": "chen-yi-ting",
+        "name": "陳怡婷",
+        "missing": false
+      },
+      {
+        "slug": "chunyan",
+        "name": "春艷",
+        "missing": false
+      },
+      {
+        "slug": "deca-joins",
+        "name": "deca joins",
+        "missing": false
+      },
+      {
+        "slug": "double-j",
+        "name": "呆寶靜",
+        "missing": false
+      },
+      {
+        "slug": "elephant-gym",
+        "name": "大象體操",
+        "missing": false
+      },
+      {
+        "slug": "erika-liu",
+        "name": "劉艾立",
+        "missing": false
+      },
+      {
+        "slug": "funkymo",
+        "name": "FunkyMo",
+        "missing": false
+      },
+      {
+        "slug": "giyu-tjuljaviya",
+        "name": "張淦勛",
+        "missing": false
+      },
+      {
+        "slug": "gordon",
+        "name": "國蛋",
+        "missing": false
+      },
+      {
+        "slug": "gummy-b",
+        "name": "Gummy B",
+        "missing": false
+      },
+      {
+        "slug": "guts",
+        "name": "兄弟本色",
+        "missing": false
+      },
+      {
+        "slug": "huang-jing-shi-yi",
+        "name": "荒井十一",
+        "missing": false
+      },
+      {
+        "slug": "huang-qi-shan",
+        "name": "黃綺珊",
+        "missing": false
+      },
+      {
+        "slug": "huang-yu-han",
+        "name": "黃宇寒",
+        "missing": false
+      },
+      {
+        "slug": "huang-zi-xuan",
+        "name": "黃子軒",
+        "missing": false
+      },
+      {
+        "slug": "ice-paper",
+        "name": "Ice Paper",
+        "missing": false
+      },
+      {
+        "slug": "icyball",
+        "name": "icyball冰球樂團",
+        "missing": false
+      },
+      {
+        "slug": "james-lee",
+        "name": "李銖銜",
+        "missing": false
+      },
+      {
+        "slug": "kang-shi-tan-de-bian-hua-qiu",
+        "name": "康士坦的變化球",
+        "missing": false
+      },
+      {
+        "slug": "ke-zhi-tang",
+        "name": "柯智棠",
+        "missing": false
+      },
+      {
+        "slug": "lao-wang-le-dui",
+        "name": "老王樂隊",
+        "missing": false
+      },
+      {
+        "slug": "leo",
+        "name": "Leo王",
+        "missing": false
+      },
+      {
+        "slug": "li-quan-zhe",
+        "name": "李權哲",
+        "missing": false
+      },
+      {
+        "slug": "li-zhu-xin",
+        "name": "李竺芯",
+        "missing": false
+      },
+      {
+        "slug": "limi",
+        "name": "Limi",
+        "missing": false
+      },
+      {
+        "slug": "lin-jun-yi",
+        "name": "林俊逸",
+        "missing": false
+      },
+      {
+        "slug": "lin-yu-ting",
+        "name": "林鈺婷",
+        "missing": false
+      },
+      {
+        "slug": "marz23",
+        "name": "Marz23",
+        "missing": false
+      },
+      {
+        "slug": "mei-xiu-ji-tuan",
+        "name": "美秀集團",
+        "missing": false
+      },
+      {
+        "slug": "mi-sha",
+        "name": "米莎",
+        "missing": false
+      },
+      {
+        "slug": "miss-ko",
+        "name": "葛仲珊",
+        "missing": false
+      },
+      {
+        "slug": "mj116",
+        "name": "頑童MJ116",
+        "missing": false
+      },
+      {
+        "slug": "muta",
+        "name": "大淵MUTA",
+        "missing": false
+      },
+      {
+        "slug": "nong-cun-wu-zhuang-qing-nian",
+        "name": "農村武裝青年",
+        "missing": false
+      },
+      {
+        "slug": "o-kai-singers",
+        "name": "歐開合唱團",
+        "missing": false
+      },
+      {
+        "slug": "ozi",
+        "name": "ØZI",
+        "missing": false
+      },
+      {
+        "slug": "qin-si-feng",
+        "name": "秦四風",
+        "missing": false
+      },
+      {
+        "slug": "qiu-de",
+        "name": "裘德",
+        "missing": false
+      },
+      {
+        "slug": "sangpuy",
+        "name": "桑布伊",
+        "missing": false
+      },
+      {
+        "slug": "soft-lipa",
+        "name": "蛋堡",
+        "missing": false
+      },
+      {
+        "slug": "su-ming-yuan",
+        "name": "蘇明淵",
+        "missing": false
+      },
+      {
+        "slug": "su-yu-han",
+        "name": "蘇郁涵",
+        "missing": false
+      },
+      {
+        "slug": "sunset-rollercoaster",
+        "name": "落日飛車",
+        "missing": false
+      },
+      {
+        "slug": "tiu-tiu",
+        "name": "淺堤",
+        "missing": false
+      },
+      {
+        "slug": "tizzy-bac",
+        "name": "Tizzy Bac",
+        "missing": false
+      },
+      {
+        "slug": "vash-hsu",
+        "name": "徐暐翔",
+        "missing": false
+      },
+      {
+        "slug": "wu-yong-ji",
+        "name": "吳永吉",
+        "missing": false
+      },
+      {
+        "slug": "xiong-mei-ling",
+        "name": "熊美玲",
+        "missing": false
+      },
+      {
+        "slug": "xiong-zai",
+        "name": "熊仔",
+        "missing": false
+      },
+      {
+        "slug": "xu-fu-kai",
+        "name": "許富凱",
+        "missing": false
+      },
+      {
+        "slug": "yang-su-hao",
+        "name": "楊肅浩",
+        "missing": false
+      },
+      {
+        "slug": "ye-ying",
+        "name": "葉穎",
+        "missing": false
+      },
+      {
+        "slug": "yeemao",
+        "name": "夜貓組",
+        "missing": false
+      },
+      {
+        "slug": "yuan-ya-wei",
+        "name": "袁婭維",
+        "missing": false
+      },
+      {
+        "slug": "zheng-nan",
+        "name": "鄭楠",
+        "missing": false
+      },
+      {
+        "slug": "zheng-yi-nong",
+        "name": "鄭宜農",
+        "missing": false
+      }
+    ],
+    "失敗": []
+  }
+}

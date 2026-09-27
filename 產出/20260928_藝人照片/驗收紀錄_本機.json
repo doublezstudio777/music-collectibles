@@ -97,12 +97,12 @@
  {
   "name": "3f 投稿成功 201、狀態 pending",
   "ok": true,
-  "detail": "{\"id\":49,\"status\":\"pending\",\"left\":4}"
+  "detail": "{\"id\":56,\"status\":\"pending\",\"left\":4}"
  },
  {
   "name": "3g 存了主圖＋縮圖、拍攝場合、授權 CC BY-SA 4.0",
   "ok": true,
-  "detail": "{'r2_key': 'r/fNjeteSyzmFb-y1N.webp', 'thumb_key': 'r/fNjeteSyzmFb-y1N_t.webp', 'occasion': '大港開唱', 'license': 'CC BY-SA 4.0'}"
+  "detail": "{'r2_key': 'r/OJ9k6V9guPnQVOx3.webp', 'thumb_key': 'r/OJ9k6V9guPnQVOx3_t.webp', 'occasion': '大港開唱', 'license': 'CC BY-SA 4.0'}"
  },
  {
   "name": "3h 容量計數加上主圖＋縮圖的位元組",
@@ -112,7 +112,7 @@
  {
   "name": "3i 投稿不讓整頁快取作廢（content_version 不變）",
   "ok": true,
-  "detail": "16986 → 16986"
+  "detail": "18129 → 18129"
  },
  {
   "name": "3j 投稿不公開：訪客看照片 404",
@@ -167,17 +167,17 @@
  {
   "name": "4e 管理員清單有待審投稿（含拍攝場合、投稿者）",
   "ok": true,
-  "detail": "6"
+  "detail": "9"
  },
  {
   "name": "4f 儀表板待處理佇列顯示投稿數",
   "ok": true,
-  "detail": "6 vs 6"
+  "detail": "9 vs 9"
  },
  {
   "name": "5a 設為使用中 200",
   "ok": true,
-  "detail": "{\"id\":49,\"status\":\"active\",\"purged\":0}"
+  "detail": "{\"id\":56,\"status\":\"active\",\"purged\":0}"
  },
  {
   "name": "5b 原本的維基照片改成 retired（檔案保留）",
@@ -187,17 +187,17 @@
  {
   "name": "5c 整頁快取作廢（content_version 加 1 以上）",
   "ok": true,
-  "detail": "16987 → 16989"
+  "detail": "18130 → 18132"
  },
  {
   "name": "5d 藝人頁出現投稿照片，標示「攝影：@帳號」與 CC BY-SA 4.0",
   "ok": true,
-  "detail": "<figure class=\"artist-photo\" style=\"width:240px\" data-testid=\"artist-photo\"><img src=\"/img/r/fNjeteSyzmFb-y1N.webp\" alt=\"MC HotDog\" width=\"1600\" height=\"1200\" decoding=\"async\"/><figcaption class=\"artist-photo-credit\" data-testid=\"artist-photo-credit\">攝影：<a class=\"link\" href=\"/u/apa533621\">@apa533621"
+  "detail": "<figure class=\"artist-photo\" style=\"width:240px\" data-testid=\"artist-photo\"><img src=\"/img/r/OJ9k6V9guPnQVOx3.webp\" alt=\"MC HotDog\" width=\"1600\" height=\"1200\" decoding=\"async\"/><figcaption class=\"artist-photo-credit\" data-testid=\"artist-photo-credit\">攝影：<a class=\"link\" href=\"/u/apa534566\">@apa534566"
  },
  {
   "name": "5e og:image 換成投稿照片（沒有燒浮水印，就是原檔）",
   "ok": true,
-  "detail": "http://127.0.0.1:8791/img/r/fNjeteSyzmFb-y1N.webp"
+  "detail": "http://127.0.0.1:8791/img/r/OJ9k6V9guPnQVOx3.webp"
  },
  {
   "name": "5f 使用中之後訪客看得到",
@@ -227,7 +227,7 @@
  {
   "name": "6a 退回 200、狀態 rejected",
   "ok": true,
-  "detail": "{\"id\":50,\"status\":\"rejected\",\"purged\":0}"
+  "detail": "{\"id\":57,\"status\":\"rejected\",\"purged\":0}"
  },
  {
   "name": "6b 退回後 R2 主圖、縮圖都刪了",
@@ -247,7 +247,7 @@
  {
   "name": "6e 退回不讓整頁快取作廢",
   "ok": true,
-  "detail": "16989 → 16989"
+  "detail": "18132 → 18132"
  },
  {
   "name": "6f 退回寫操作紀錄（含備註）",
@@ -257,7 +257,7 @@
  {
   "name": "6g 刪除待審投稿：狀態 deleted、R2 刪檔、容量扣回",
   "ok": true,
-  "detail": "{\"id\":51,\"status\":\"deleted\",\"purged\":0}"
+  "detail": "{\"id\":58,\"status\":\"deleted\",\"purged\":0}"
  },
  {
   "name": "6h 使用中的不能直接刪除（要用撤下）",
@@ -267,12 +267,12 @@
  {
   "name": "7a 撤下 200、狀態 removed",
   "ok": true,
-  "detail": "{\"id\":49,\"status\":\"removed\",\"purged\":1}"
+  "detail": "{\"id\":56,\"status\":\"removed\",\"purged\":1}"
  },
  {
   "name": "7b 撤下時清了照片快取（先前已被快取的主圖）",
   "ok": true,
-  "detail": "{'id': 49, 'status': 'removed', 'purged': 1}"
+  "detail": "{'id': 56, 'status': 'removed', 'purged': 1}"
  },
  {
   "name": "7c 撤下後 R2 主圖、縮圖都刪了",
@@ -292,7 +292,7 @@
  {
   "name": "7f 撤下後藝人頁沒有照片、整頁快取已換新",
   "ok": true,
-  "detail": "16989 → 16990"
+  "detail": "18132 → 18133"
  },
  {
   "name": "7g 撤下寫操作紀錄",
@@ -327,7 +327,7 @@
  {
   "name": "8e 儀表板有「藝人照片投稿」佇列",
   "ok": true,
-  "detail": "4藝人照片投稿"
+  "detail": "7藝人照片投稿"
  },
  {
   "name": "8f 後台藝人照片頁列出投稿（縮圖看得到）",
@@ -342,7 +342,7 @@
  {
   "name": "8h 藝人頁顯示投稿照片與「攝影：@帳號・CC BY-SA 4.0」",
   "ok": true,
-  "detail": "攝影：@apc533621·CC BY-SA 4.0"
+  "detail": "攝影：@apc534566·CC BY-SA 4.0"
  },
  {
   "name": "8i 後台按「撤下」（確認框）生效",
