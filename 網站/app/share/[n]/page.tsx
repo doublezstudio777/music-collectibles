@@ -7,6 +7,7 @@ import { pageData, siteOrigin } from "@/lib/server/viewer";
 import { publicOffers } from "@/lib/server/trade";
 import { ShareDetail } from "@/components/share-detail";
 import { ShareWall } from "@/components/share-wall";
+import { ShareComments } from "@/components/share-comments";
 
 type Props = { params: Promise<{ n: string }> };
 
@@ -50,6 +51,8 @@ export default async function SharePage({ params }: Props) {
   return (
     <main className="wrap page">
       <ShareDetail share={view} offers={await publicOffers(n)} shareInfo={shareInfo} />
+      {/* 留言不在整頁快取裡，前端另外打 /api/comments 載入 */}
+      <ShareComments share={n} />
       {c.relatedFor(share).map((b) => (
         <section className="block related" key={b.title}>
           <div className="block-head">

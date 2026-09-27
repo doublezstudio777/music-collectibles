@@ -24,6 +24,8 @@ export type Stats = {
   regions: { code: string; name: string; n: number }[];
   content: { shares: number; sharesWeek: number; hiddenShares: number; photos: number; photosWeek: number };
   trade: { offers: number; deals: number; amount: number };
+  /** 留言（2026-09-28）；舊快取裡沒有這欄 */
+  comments?: { total: number; week: number; today: number; hidden: number; reported: number };
   trend: DayPoint[];
 };
 
@@ -83,6 +85,14 @@ async function compute(): Promise<Stats> {
     // 所在地區：跟 geo.ts regionCodes 同一套規則，但整批算
     q(`SELECT user_id AS u, country AS c, COUNT(*) AS n, MAX(day) AS last FROM user_activity WHERE day >= ?1 GROUP BY user_id, country`, b.utc30),
     q(`SELECT u.id AS u, g.register_country AS r, g.last_login_country AS l FROM users u LEFT JOIN user_geo g ON g.user_id = u.id`),
+    // 留言（2026-09-28）
+    q(
+      `SELECT COUNT(*) AS total, COALESCE(SUM(created_at >= ?1), 0) AS week, COALESCE(SUM(created_at >= ?2), 0) AS today,
+              COALESCE(SUM(hidden_at IS NOT NULL), 0) AS hidden,
+              COALESCE(SUM(EXISTS (SELECT 1 FROM comment_reports r WHERE r.comment_id = comments.id)), 0) AS reported
+         FROM comments WHERE deleted_at IS NULL`,
+      b.weekIso, b.todayIso,
+    ),
   ]);
   const one = <T,>(i: number) => res[i].results[0] as T;
   const rows = <T,>(i: number) => res[i].results as T[];
@@ -139,6 +149,7 @@ async function compute(): Promise<Stats> {
     regions,
     content: { shares: sh.total, sharesWeek: sh.week, hiddenShares: sh.hidden, photos: ph.total, photosWeek: ph.week },
     trade: { offers, deals: deals.n, amount: deals.amount },
+    comments: one<{ total: number; week: number; today: number; hidden: number; reported: number }>(15),
     trend,
   };
 }

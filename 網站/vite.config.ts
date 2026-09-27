@@ -43,6 +43,8 @@ const localBindingConfig = {
     // IP 限流只算帶 x-yz-rl-test 表頭的請求。正式設定（wrangler.production.jsonc）絕不能有這個，deploy.sh 會檢查
     LOCAL_TEST: "1",
     GEO_DEFAULT: process.env.GEO_DEFAULT ?? "TW",
+    // 頁尾贊助連結：本機驗收時才帶，平常不設（連結不出現）
+    ...(process.env.SPONSOR_URL ? { SPONSOR_URL: process.env.SPONSOR_URL } : {}),
     ...(process.env.CF_ANALYTICS_TOKEN ? { CF_ANALYTICS_TOKEN: process.env.CF_ANALYTICS_TOKEN, CF_ACCOUNT_ID: process.env.CF_ACCOUNT_ID ?? "" } : {}),
     // 2c：本機預設不寄真信（沒有 RESEND_API_KEY＝印 console）。真實寄信測試時才用環境變數帶進來，並用 MAIL_ALLOWLIST 限收件人
     ...(process.env.RESEND_API_KEY ? { RESEND_API_KEY: process.env.RESEND_API_KEY } : {}),

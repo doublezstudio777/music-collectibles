@@ -107,6 +107,20 @@ export async function verifyTurnstile(token: unknown, ip: string | null) {
 
 export const turnstileSiteKey = () => env.TURNSTILE_SITE_KEY ?? "";
 
+/* ---------- 贊助連結（2026-09-28） ---------- */
+
+/** 頁尾「贊助」的網址：環境變數 SPONSOR_URL，只收 https（本機可 http）；沒設或格式不對回空字串＝連結不出現 */
+export function sponsorUrl() {
+  const raw = (env.SPONSOR_URL ?? "").trim();
+  if (!raw) return "";
+  try {
+    const u = new URL(raw);
+    return u.protocol === "https:" || (u.protocol === "http:" && env.LOCAL_TEST === "1") ? u.toString() : "";
+  } catch {
+    return "";
+  }
+}
+
 /* ---------- 頻率限制（固定視窗） ---------- */
 
 /** 回傳 true＝還在額度內（並記一次）；false＝超過 */

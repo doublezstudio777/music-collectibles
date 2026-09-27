@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { AuthPanel } from "@/components/auth-panel";
-import { turnstileSiteKey } from "@/lib/server/services";
+import { sponsorUrl, turnstileSiteKey } from "@/lib/server/services";
 import { indexingAllowed } from "@/lib/server/guard";
 import { SITE_DESC } from "@/lib/data";
 import { SITE_NAME, SITE_TITLE } from "@/lib/data";
@@ -18,6 +18,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  // 贊助：全站最不顯眼的小字連結，網址在環境變數 SPONSOR_URL，沒設就整個不出現（2026-09-28）
+  const sponsor = sponsorUrl();
   return (
     <html lang="zh-Hant-TW">
       <head>
@@ -35,7 +37,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <footer className="foot">
           <div className="wrap foot-row">
             <span>{SITE_NAME}</span>
-            <a href="#">贊助</a>
+            <p className="foot-note">照片著作權屬於上傳者；專輯封面、藝人名稱等屬於原權利人。</p>
+            {sponsor ? (
+              <a className="foot-sponsor" href={sponsor} target="_blank" rel="noopener noreferrer" data-testid="sponsor">
+                贊助
+              </a>
+            ) : null}
           </div>
         </footer>
       </body>

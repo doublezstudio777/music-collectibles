@@ -27,6 +27,7 @@ import { STORAGE_LIMIT, storageUsed, unattachedPhotos } from "@/lib/server/photo
 import { siteStatus } from "@/lib/server/guard";
 import { hiddenList } from "@/lib/server/takedown";
 import { hit } from "@/lib/server/services";
+import { adminComments } from "@/lib/server/comments";
 import { HttpError } from "@/lib/server/trade";
 import type { User } from "@/lib/server/auth";
 
@@ -343,6 +344,8 @@ export async function adminOverview(viewer: User) {
       })),
     ],
     log: logRows.map((l) => ({ id: l.id, by: who(l.adminId), action: l.action, target: l.target, detail: l.detail, at: l.createdAt })),
+    // 留言（2026-09-28）：被檢舉還沒處理的、被自動隱藏的
+    comments: await adminComments(),
   };
 }
 

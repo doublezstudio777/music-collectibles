@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { reasonLabel, targetLevel, type ReportReason, type TargetKey } from "@/lib/data";
 import { api } from "@/lib/account";
+import { commentReasonLabel } from "@/lib/comment-rules";
 
 const STATUS_WORD: Record<string, string> = { pending: "審核中", unlocked: "已解鎖", kept: "維持鎖定" };
 const TYPE_WORD = { artist: "藝人", series: "系列", item: "品項", version: "版本" } as const;
@@ -30,7 +31,86 @@ type Overview = {
   appeals: { id: number; target: string; by: string; text: string; status: string; createdAt: string; photos: string[] }[];
   pending: { type: keyof typeof TYPE_WORD; id: string; title: string; detail: string; by: string; at: string }[];
   log: { id: number; by: string; action: string; target: string; detail: string; at: string }[];
+  comments: {
+    threshold: number;
+    list: { id: number; share: number; body: string; at: string; by: string; handle: string; reports: number; reasons: Record<string, number>; hidden: boolean; warn: boolean }[];
+  };
 };
+
+/** 被檢舉的留言（2026-09-28）：恢復＝之後不再自動隱藏；刪除＝軟刪除。門檻另外調 */
+function CommentQueue({ data, run }: { data: Overview["comments"]; run: (path: string, body: unknown) => Promise<void> }) {
+  const [draft, setDraft] = useState<string | null>(null);
+  const save = (e: React.FormEvent) => {
+    e.preventDefault();
+    const n = Number(draft ?? data.threshold);
+    setDraft(null);
+    void run("/api/admin/comments", { threshold: n });
+  };
+  return (
+    <section className="block" id="comments">
+      <h2 className="block-title">
+        被檢舉的留言<span className="count">{data.list.length}</span>
+      </h2>
+      <form className="threshold" onSubmit={save} noValidate>
+        <label htmlFor="comment-threshold">幾人檢舉就自動隱藏</label>
+        <input
+          id="comment-threshold"
+          className="input input-num"
+          inputMode="numeric"
+          value={draft ?? String(data.threshold)}
+          onChange={(e) => setDraft(e.target.value.replace(/[^\d]/g, ""))}
+        />
+        <button type="submit" className="btn btn-line">
+          儲存
+        </button>
+      </form>
+      {data.list.length === 0 ? <p className="empty">沒有被檢舉的留言</p> : null}
+      {data.list.length ? (
+        <div className="tbl-scroll">
+          <table className="tbl admin-tbl" data-testid="comment-table">
+            <thead>
+              <tr>
+                <th>留言</th>
+                <th>理由</th>
+                <th className="num-col">人數</th>
+                <th>處理</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.list.map((c) => (
+                <tr key={c.id} data-comment={c.id}>
+                  <td>
+                    <span className="comment-admin-body">{c.body}</span>
+                    <span className="sub">
+                      {c.by}・{day(c.at)}・
+                      <Link className="link" href={`/share/${c.share}#comments`}>
+                        第 {c.share} 則
+                      </Link>
+                      {c.warn ? "・含站外交易字眼" : ""}
+                    </span>
+                  </td>
+                  <td>{Object.entries(c.reasons).map(([k, n]) => `${commentReasonLabel(k)} ${n}`).join("、")}</td>
+                  <td className="num-col num">{c.reports}</td>
+                  <td>
+                    {c.hidden ? <span className="flag flag-lock">已自動隱藏</span> : "未達門檻"}
+                    <span className="report-acts">
+                      <button type="button" className="btn btn-line" onClick={() => run("/api/admin/comments", { id: c.id, action: "restore" })}>
+                        {c.hidden ? "恢復" : "保留"}
+                      </button>
+                      <button type="button" className="btn-text" onClick={() => run("/api/admin/comments", { id: c.id, action: "delete" })}>
+                        刪除
+                      </button>
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
+    </section>
+  );
+}
 
 /** 對象鍵 → 連結（不查資料庫，照網址規則組） */
 function targetLink(t: string) {
@@ -371,6 +451,8 @@ export function Admin() {
           </div>
         ) : null}
       </section>
+
+      <CommentQueue data={data.comments} run={run} />
 
       <section className="block" id="appeals">
         <h2 className="block-title">

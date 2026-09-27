@@ -1,0 +1,477 @@
+[
+ {
+  "name": "1a / 找不到「贊助」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1b / 有版權聲明",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1a /artists 找不到「贊助」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1b /artists 有版權聲明",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1a /artist/tide-highway 找不到「贊助」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1b /artist/tide-highway 有版權聲明",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1a /artist/tide-highway/2 找不到「贊助」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1b /artist/tide-highway/2 有版權聲明",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1a /share/95 找不到「贊助」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1b /share/95 有版權聲明",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1a /login 找不到「贊助」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1b /login 有版權聲明",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1a /search?q=海 找不到「贊助」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1b /search?q=海 有版權聲明",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1a /tag/%E5%B1%B1%E7%B7%9A%E9%9B%BB%E5%8F%B0 找不到「贊助」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1b /tag/%E5%B1%B1%E7%B7%9A%E9%9B%BB%E5%8F%B0 有版權聲明",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1a /u/rin 找不到「贊助」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1b /u/rin 有版權聲明",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1c 單則頁沒有咖啡、奶茶字樣",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "2a 共同署名系列（海線對話）每位藝人各一區",
+  "ok": true,
+  "detail": "['tide-highway', 'mountain-radio']"
+ },
+ {
+  "name": "2b 各區依發行年由舊到新",
+  "ok": true,
+  "detail": "{'tide-highway': [2022, 2024], 'mountain-radio': [2016, 2018, 2026, 2026]}"
+ },
+ {
+  "name": "2c 不列出目前這個系列",
+  "ok": true,
+  "detail": "{'tide-highway': {'titles': ['2022《島嶼低鳴》專輯發行', '2024《海潮》巡迴演唱會'], 'covers': 1}, 'mountain-radio': {'titles': ['2016《山線》自製卡帶', '2018《夜行採集》專輯發行', '2026《驗收系列438017》專輯發行', '2026《驗收系列438097》專輯發行'], 'covers': 1}}"
+ },
+ {
+  "name": "2d 附封面（有收藏照片的系列用照片，其餘色塊）",
+  "ok": true,
+  "detail": "{'tide-highway': 1, 'mountain-radio': 1}"
+ },
+ {
+  "name": "2e 山線電台那區筆數＝可見系列數",
+  "ok": true,
+  "detail": "(4, 4)"
+ },
+ {
+  "name": "2f 管理員隱藏系列後不列出",
+  "ok": true,
+  "detail": "(200, 3)"
+ },
+ {
+  "name": "2g 恢復後又列出",
+  "ok": true,
+  "detail": "4"
+ },
+ {
+  "name": "2h 只有一個系列的藝人不出現這區",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "3a 最多顯示 10 位",
+  "ok": true,
+  "detail": "10"
+ },
+ {
+  "name": "3b 依貢獻次數排序（收藏、品項、版本都算）",
+  "ok": true,
+  "detail": "{'shown': [('curl1', 24), ('fan434793', 22), ('fan434847', 20), ('fan434905', 18), ('audita', 16), ('auditb', 14), ('auditspoof', 12), ('a437910', 10), ('b437910', 8), ('a438017', 7)]}"
+ },
+ {
+  "name": "3c 超過 10 位顯示「等 12 位」",
+  "ok": true,
+  "detail": "['等 12 位']"
+ },
+ {
+  "name": "3d 停權帳號不顯示（他貢獻最多 40 次）",
+  "ok": true,
+  "detail": "c438017"
+ },
+ {
+  "name": "3e 第 11 位（被擠出前 10）不顯示",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "3f 停權恢復後重新出現、總數變 13",
+  "ok": true,
+  "detail": "['等 13 位']"
+ },
+ {
+  "name": "4a 未登入不能留言（401）",
+  "ok": true,
+  "detail": "401"
+ },
+ {
+  "name": "4b 未驗證 Email 不能留言（403 NOT_VERIFIED）",
+  "ok": true,
+  "detail": "{\"error\":{\"code\":\"NOT_VERIFIED\",\"message\":\"驗證 Email 後才能留言\"}}"
+ },
+ {
+  "name": "4b2 GET 回 canPost=false",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4c 501 字被擋（400 TOO_LONG）",
+  "ok": true,
+  "detail": "{\"error\":{\"code\":\"TOO_LONG\",\"message\":\"留言最多 500 字\"}}"
+ },
+ {
+  "name": "4c2 剛好 500 字可以（201）",
+  "ok": true,
+  "detail": "201"
+ },
+ {
+  "name": "4c3 500 個 emoji 以字元算，可以（201）",
+  "ok": true,
+  "detail": "201"
+ },
+ {
+  "name": "4d 含 HTML 的留言照存（201）",
+  "ok": true,
+  "detail": "201"
+ },
+ {
+  "name": "4e 含站外交易字眼不擋（201），回 warn=true",
+  "ok": true,
+  "detail": "{\"id\":4,\"at\":\"2026-09-27T05:58:47.485Z\",\"warn\":true}"
+ },
+ {
+  "name": "4e2 一般留言 warn=false",
+  "ok": true,
+  "detail": "{\"id\":5,\"at\":\"2026-09-27T05:58:47.505Z\",\"warn\":false}"
+ },
+ {
+  "name": "4e3 「https://line.me/ti/p/xx」提醒=True",
+  "ok": true,
+  "detail": "{\"id\":6,\"at\":\"2026-09-27T05:58:48.241Z\",\"warn\":true}"
+ },
+ {
+  "name": "4e3 「www.shop.tw 看看」提醒=True",
+  "ok": true,
+  "detail": "{\"id\":7,\"at\":\"2026-09-27T05:58:48.985Z\",\"warn\":true}"
+ },
+ {
+  "name": "4e3 「LINE ID: abc」提醒=True",
+  "ok": true,
+  "detail": "{\"id\":8,\"at\":\"2026-09-27T05:58:49.720Z\",\"warn\":true}"
+ },
+ {
+  "name": "4e3 「私下交易」提醒=True",
+  "ok": true,
+  "detail": "{\"id\":9,\"at\":\"2026-09-27T05:58:50.459Z\",\"warn\":true}"
+ },
+ {
+  "name": "4e3 「轉帳給我」提醒=True",
+  "ok": true,
+  "detail": "{\"id\":10,\"at\":\"2026-09-27T05:58:51.196Z\",\"warn\":true}"
+ },
+ {
+  "name": "4e3 「@mystore 私訊」提醒=True",
+  "ok": true,
+  "detail": "{\"id\":11,\"at\":\"2026-09-27T05:58:51.933Z\",\"warn\":true}"
+ },
+ {
+  "name": "4e3 「我也有這張 online 買的」提醒=False",
+  "ok": true,
+  "detail": "{\"id\":12,\"at\":\"2026-09-27T05:58:52.671Z\",\"warn\":false}"
+ },
+ {
+  "name": "4e3 「deadline 前寄出」提醒=False",
+  "ok": true,
+  "detail": "{\"id\":13,\"at\":\"2026-09-27T05:58:53.409Z\",\"warn\":false}"
+ },
+ {
+  "name": "4e3 「2018 年首批」提醒=False",
+  "ok": true,
+  "detail": "{\"id\":14,\"at\":\"2026-09-27T05:58:54.150Z\",\"warn\":false}"
+ },
+ {
+  "name": "4f 每分鐘第 4 則被擋（201,201,201,429）",
+  "ok": true,
+  "detail": "[201, 201, 201, 429]"
+ },
+ {
+  "name": "4f2 每天第 51 則被擋（429）",
+  "ok": true,
+  "detail": "{\"error\":{\"code\":\"RATE_LIMITED\",\"message\":\"今天留言太多則了，明天再來\"}}"
+ },
+ {
+  "name": "4g 海外連線（US）可以留言（201）",
+  "ok": true,
+  "detail": "201"
+ },
+ {
+  "name": "4h 非發文者、非留言者不能刪（403）",
+  "ok": true,
+  "detail": "403"
+ },
+ {
+  "name": "4h2 發文者能刪別人的留言（200）",
+  "ok": true,
+  "detail": "200"
+ },
+ {
+  "name": "4h3 留言者能刪自己的（200）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4h4 管理員能刪任何留言（200）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4h5 發文者看到每則都有刪除權",
+  "ok": true,
+  "detail": "18"
+ },
+ {
+  "name": "4h6 一般會員只有自己的留言能刪",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4i 第 3 人檢舉後自動隱藏",
+  "ok": true,
+  "detail": "[{'count': 1, 'hidden': False}, {'count': 2, 'hidden': False}, {'count': 3, 'hidden': True}]"
+ },
+ {
+  "name": "4i2 隱藏後公開列表看不到",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4i3 同一人不能重複檢舉（409）",
+  "ok": true,
+  "detail": "409"
+ },
+ {
+  "name": "4i4 不能檢舉自己的留言（403）",
+  "ok": true,
+  "detail": "403"
+ },
+ {
+  "name": "4j 後台待處理有這則、標已隱藏、人數正確",
+  "ok": true,
+  "detail": "{'id': 5, 'share': 95, 'body': '這版本的側標好漂亮 488719', 'at': '2026-09-27T05:58:47.505Z', 'by': '路人08', 'handle': 'r08', 'reports': 3, 'reasons': {'abuse': 3}, 'hidden': True, 'warn': False}"
+ },
+ {
+  "name": "4j2 儀表板佇列有被檢舉的留言數",
+  "ok": true,
+  "detail": "({'pending': 0, 'reports': 6, 'appeals': 1, 'locked': 2, 'hidden': 0, 'comments': 1, 'commentsHidden': 1}, {'total': 18, 'week': 18, 'today': 18, 'hidden': 1, 'reported': 1})"
+ },
+ {
+  "name": "4j3 管理員恢復後重新出現",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4j4 恢復過的（保留）再被檢舉不會再自動隱藏",
+  "ok": true,
+  "detail": "{\"count\":4,\"hidden\":false}"
+ },
+ {
+  "name": "4l 留言、刪除、檢舉、自動隱藏、恢復前後 content_version 不變",
+  "ok": true,
+  "detail": "(513, 513)"
+ },
+ {
+  "name": "4l2 單則頁整頁快取仍命中（HIT），HTML 裡沒有留言內文",
+  "ok": true,
+  "detail": "('HIT', 'HIT')"
+ },
+ {
+  "name": "4k 留言者停權後留言不顯示",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5a series_other 1440 無橫向溢出、console error 0",
+  "ok": true,
+  "detail": "(0, [])"
+ },
+ {
+  "name": "5a series_contrib 1440 無橫向溢出、console error 0",
+  "ok": true,
+  "detail": "(0, [])"
+ },
+ {
+  "name": "5a share_anon 1440 無橫向溢出、console error 0",
+  "ok": true,
+  "detail": "(0, [])"
+ },
+ {
+  "name": "5f 未登入沒有輸入框，顯示「登入後留言」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5a share_member 1440 無橫向溢出、console error 0",
+  "ok": true,
+  "detail": "(0, [])"
+ },
+ {
+  "name": "5b XSS：留言照原文顯示成文字",
+  "ok": true,
+  "detail": "<script>window.__yzx=1</script><img src=x onerror=\"window.__yzx=2\"> 488719"
+ },
+ {
+  "name": "5b2 XSS：留言裡沒有被插入 img／script 元素、腳本沒執行",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5c 詐騙字眼那則顯示「小心站外交易詐騙」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5c2 一般留言沒有提醒",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5c3 輸入時出現提醒但送出鈕可按",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5d 超過 500 字：計數變色、送出鈕停用",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5e 畫面送出留言後出現在列表",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5e2 別人的留言沒有刪除鈕",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5a share_owner 1440 無橫向溢出、console error 0",
+  "ok": true,
+  "detail": "(0, [])"
+ },
+ {
+  "name": "5g 發文者每則都有刪除鈕",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5a admin_comments 1440 無橫向溢出、console error 0",
+  "ok": true,
+  "detail": "(0, [])"
+ },
+ {
+  "name": "5a admin_dash 1440 無橫向溢出、console error 0",
+  "ok": true,
+  "detail": "(0, [])"
+ },
+ {
+  "name": "5a series_other 390 無橫向溢出、console error 0",
+  "ok": true,
+  "detail": "(0, [])"
+ },
+ {
+  "name": "5a series_contrib 390 無橫向溢出、console error 0",
+  "ok": true,
+  "detail": "(0, [])"
+ },
+ {
+  "name": "5a share_anon 390 無橫向溢出、console error 0",
+  "ok": true,
+  "detail": "(0, [])"
+ },
+ {
+  "name": "5a share_member 390 無橫向溢出、console error 0",
+  "ok": true,
+  "detail": "(0, [])"
+ },
+ {
+  "name": "5a share_owner 390 無橫向溢出、console error 0",
+  "ok": true,
+  "detail": "(0, [])"
+ },
+ {
+  "name": "5a admin_comments 390 無橫向溢出、console error 0",
+  "ok": true,
+  "detail": "(0, [])"
+ },
+ {
+  "name": "5a admin_dash 390 無橫向溢出、console error 0",
+  "ok": true,
+  "detail": "(0, [])"
+ }
+]

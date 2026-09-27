@@ -17,6 +17,8 @@ export async function GET(req: Request) {
     appeals: o.appeals.filter((a) => a.status === "pending").length,
     locked: o.targets.filter((t) => t.locked).length,
     hidden: o.hidden.length,
+    comments: o.comments.list.length,
+    commentsHidden: o.comments.list.filter((c) => c.hidden).length,
   };
   return json({ stats, cached, queue }, 200, { "Cache-Control": "no-store" });
 }

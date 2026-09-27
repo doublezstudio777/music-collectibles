@@ -30,6 +30,8 @@ import type { PriceSummary } from "@/lib/prices";
 import { LockBanner, ReportBox } from "@/components/report";
 import { ItemLooseWall, VersionWall } from "@/components/share-wall";
 import { IdentifyDetails } from "@/components/identify-details";
+import { SeriesTile } from "@/components/work-cover";
+import { seriesContributors } from "@/lib/server/contributors";
 
 type Props = { params: Promise<{ artist: string; no: string }>; searchParams?: Promise<{ edit?: string }> };
 
@@ -205,12 +207,13 @@ export default async function SeriesPage({ params, searchParams }: Props) {
   const wt = { kind: "series" as const, slug: series.artistSlug, no: series.no };
   const skey = `${series.artistSlug}/${series.no}`;
   const lockedShares = new Set(c.sharesOfSeries(series).filter((s) => c.toShareView(s).lock).map((s) => s.n));
-  const [page, pageLocked, edited, baseId, prices] = await Promise.all([
+  const [page, pageLocked, edited, baseId, prices, contributors] = await Promise.all([
     editing ? loadPage(wt) : null,
     editing ? isLocked(wt) : false,
     lastEdit(wt),
     editing ? latestRevisionId(`series:${skey}`) : 0,
     priceSummaries(skey, lockedShares),
+    seriesContributors(series.artistSlug, series.no),
   ]);
   const self = `/artist/${skey}`;
   const lastBy = edited ?? series.lastEdit;
@@ -219,6 +222,18 @@ export default async function SeriesPage({ params, searchParams }: Props) {
   const related = c.sharesOfSeries(series);
   const versions = series.items.flatMap((i) => i.versions);
   const owners = versions.reduce((n, v) => n + v.owners, 0);
+  // 這位藝人的其他系列：共同署名的每位各一區；隱藏、待審的系列本來就不在目錄裡。依發行年（舊到新，沒填年份的放最後）
+  const yearOf = (w: Series) => (/^\d{4}$/.test(w.year) ? Number(w.year) : 9999);
+  const coverOf = (w: Series) => c.sharesOfSeries(w).find((x) => x.thumb && !c.toShareView(x).lock)?.thumb ?? null;
+  const otherSeries = credits
+    .map((a) => ({
+      artist: a,
+      list: c
+        .mainSeriesOf(a.slug)
+        .filter((w) => seriesKey(w) !== skey)
+        .sort((x, y) => yearOf(x) - yearOf(y) || x.artistSlug.localeCompare(y.artistSlug) || x.no - y.no),
+    }))
+    .filter((g) => g.list.length > 0);
   const wanted = versions.reduce((n, v) => n + v.wanted, 0);
 
   return (
@@ -315,6 +330,45 @@ export default async function SeriesPage({ params, searchParams }: Props) {
           </section>
         );
       })}
+
+      {contributors.total ? (
+        <section className="block contributors" id="contributors" data-testid="contributors">
+          <h2 className="block-title">
+            資料貢獻者<span className="count">{contributors.total}</span>
+          </h2>
+          <p className="contrib-list">
+            {contributors.list.map((u, i) => (
+              <span key={u.handle} className="contrib" data-n={u.n}>
+                {i > 0 ? "、" : null}
+                <Link className="link" href={`/u/${u.handle}`}>
+                  {u.name}
+                </Link>
+              </span>
+            ))}
+            {contributors.total > contributors.list.length ? <span className="contrib-more">等 {contributors.total} 位</span> : null}
+          </p>
+        </section>
+      ) : null}
+
+      {otherSeries.map((g) => (
+        <section key={g.artist.slug} className="block other-series" data-testid="other-series" data-artist={g.artist.slug}>
+          <h2 className="block-title">
+            {c.artistVisible(g.artist) ? (
+              <Link className="link" href={artistHref(g.artist.slug)}>
+                {g.artist.name}
+              </Link>
+            ) : (
+              g.artist.name
+            )}
+            的其他系列
+          </h2>
+          <ul className="tiles">
+            {g.list.map((w) => (
+              <SeriesTile key={seriesKey(w)} series={w} credits={c.creditNames(w)} except={g.artist.slug} photo={coverOf(w)} />
+            ))}
+          </ul>
+        </section>
+      ))}
     </main>
   );
 }

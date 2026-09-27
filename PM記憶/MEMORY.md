@@ -30,3 +30,4 @@
 - `deploy.sh` 會用正式設定重建 `dist/`，還開著的本機 8791 建置版會變成 HTML 指到不存在的 chunk（全部 404、元件不 hydrate）；部署後要再驗本機，先重建重啟（2026-09-27）
 - 表格包 `overflow-x:auto` 仍整頁溢出：`th` 裡的 `.sr-only` 是 absolute，會逃出沒定位的捲動容器；捲動容器加 `position: relative`（2026-09-27）
 - Playwright 免走登入頁：`context.add_cookies([{"name":"yz_session","value":API登入拿到的token,"domain":"127.0.0.1","path":"/","httpOnly":True}])` 直接帶身分開頁；`purgePhotoCache` 只算「真的清掉快取的檔」，沒被請求過的檔不算在 purgedPhotos 裡，新增第三張圖時舊驗收腳本的期望值不一定要跟著變（2026-09-28）
+- 驗收用 SQL 改 users（停權、清驗證）會觸發 cv_users 讓 content_version 加 1，量「前後版本不變」要把這類準備動作放在量之前；抓 HTML 數字先去掉 React 插的 `<!-- -->`；舊輪驗收腳本複製到 scratchpad 跑，不覆寫舊輪 img（2026-09-28）

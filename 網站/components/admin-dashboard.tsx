@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/account";
 import type { DayPoint, Stats } from "@/lib/server/stats";
 
-type Queue = { pending: number; reports: number; appeals: number; locked: number; hidden: number };
+type Queue = { pending: number; reports: number; appeals: number; locked: number; hidden: number; comments?: number; commentsHidden?: number };
 type StatsRes = { stats: Stats; cached: boolean; queue: Queue };
 type Usage = {
   r2: { used: number; limit: number; free: number };
@@ -258,6 +258,10 @@ export function AdminDashboard() {
             <b className="num">{q.hidden}</b>
             <span>已下架</span>
           </Link>
+          <Link href="/admin/moderation#comments" className="queue-item" data-testid="queue-comments">
+            <b className="num">{q.comments ?? 0}</b>
+            <span>被檢舉的留言{q.commentsHidden ? `（${q.commentsHidden} 則已自動隱藏）` : ""}</span>
+          </Link>
         </div>
       </section>
 
@@ -292,6 +296,14 @@ export function AdminDashboard() {
         <div className="stats" data-testid="stats-content">
           <Tile label="炫收藏" value={n(s.content.shares)} sub={`本週 +${n(s.content.sharesWeek)}・下架中 ${n(s.content.hiddenShares)}`} testid="st-shares" />
           <Tile label="照片" value={n(s.content.photos)} sub={`本週 +${n(s.content.photosWeek)}`} testid="st-photos" />
+          {s.comments ? (
+            <Tile
+              label="留言"
+              value={n(s.comments.total)}
+              sub={`今日 +${n(s.comments.today)}・本週 +${n(s.comments.week)}・被檢舉 ${n(s.comments.reported)}・隱藏中 ${n(s.comments.hidden)}`}
+              testid="st-comments"
+            />
+          ) : null}
           <Tile label="出價" value={n(s.trade.offers)} testid="st-offers" />
           <Tile label="成交" value={n(s.trade.deals)} testid="st-deals" />
           <Tile label="成交總金額" value={`NT$${n(s.trade.amount)}`} testid="st-amount" />

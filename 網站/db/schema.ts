@@ -595,3 +595,40 @@ export const userActivity = sqliteTable(
   },
   (t) => [primaryKey({ columns: [t.userId, t.day, t.country] }), index("user_activity_day_idx").on(t.day)],
 );
+
+/* =====================================================================
+ * 單則炫收藏的留言（2026-09-28，drizzle/0007）：只新增兩張表與索引。
+ * 兩張表都不掛內容版本觸發器：留言、刪留言、檢舉留言都不會讓公開頁面的整頁快取失效，
+ * 留言由前端另外打 /api/comments 小請求載入（跟 /api/counts 讚數同一種做法）。
+ * ===================================================================== */
+
+/** 留言：純文字 500 字以內。hidden_at＝被檢舉達門檻自動隱藏；decision＝kept 表示管理員看過決定保留，不再自動隱藏 */
+export const comments = sqliteTable(
+  "comments",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    shareNo: integer("share_no").notNull(),
+    authorId: text("author_id").notNull(),
+    body: text("body").notNull(),
+    createdAt: text("created_at").notNull().default(now),
+    deletedAt: text("deleted_at"),
+    deletedBy: text("deleted_by"),
+    hiddenAt: text("hidden_at"),
+    decision: text("decision"),
+  },
+  (t) => [index("comments_share_idx").on(t.shareNo, t.id), index("comments_author_idx").on(t.authorId)],
+);
+
+/** 留言的檢舉：一人對同一則留言一次。reason：scam｜abuse｜other */
+export const commentReports = sqliteTable(
+  "comment_reports",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    commentId: integer("comment_id").notNull(),
+    reporterId: text("reporter_id").notNull(),
+    reason: text("reason").notNull(),
+    note: text("note").notNull().default(""),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("comment_reports_uq").on(t.commentId, t.reporterId), index("comment_reports_comment_idx").on(t.commentId)],
+);

@@ -563,6 +563,37 @@ a.pg:hover { border-color: var(--line); }
 .foot { border-top: 1px solid var(--line); }
 .foot-row { align-items: center; color: var(--muted); display: flex; font-size: var(--text-xs); gap: 24px; justify-content: space-between; min-height: 64px; }
 .foot-row a { color: var(--text); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.foot-note { flex: 1; font-size: var(--text-xs); line-height: 1.6; margin: 0; }
+/* 贊助：全站最不顯眼的連結，字級與顏色跟聲明一樣淡，不加粗 */
+.foot-row a.foot-sponsor { color: var(--muted); font-size: var(--text-xs); font-weight: 400; text-decoration-color: var(--line); }
+.foot-row a.foot-sponsor:hover { color: var(--text); }
+
+/* 系列頁：其他系列、資料貢獻者（2026-09-28） */
+.cover-photo { background-position: center; background-size: cover; }
+.contrib-list { font-size: var(--text-sm); line-height: 1.9; }
+.contrib-more { color: var(--muted); margin-left: 6px; }
+
+/* 單則頁留言（2026-09-28） */
+.comment-list { border-top: 1px solid var(--line); list-style: none; margin: 0; max-width: 720px; padding: 0; }
+.comment { border-bottom: 1px solid var(--line); padding: 14px 0; }
+.comment-head { align-items: baseline; display: flex; flex-wrap: wrap; gap: 10px; font-size: var(--text-sm); }
+.comment-who { font-weight: 600; }
+.comment-who:hover { text-decoration: underline; text-underline-offset: 3px; }
+.comment-when { color: var(--muted); font-size: var(--text-xs); }
+.comment-body { font-size: var(--text-base); line-height: 1.7; margin-top: 4px; overflow-wrap: anywhere; white-space: pre-wrap; }
+.comment-warn { color: var(--orange-text); font-size: var(--text-xs); font-weight: 600; margin-top: 6px; }
+.comment-acts { align-items: center; display: flex; flex-wrap: wrap; gap: 16px; }
+.comment-act { color: var(--muted); font-size: var(--text-xs); font-weight: 500; min-height: 32px; }
+.comment-act:hover { color: var(--text); }
+.comment-reported { color: var(--muted); font-size: var(--text-xs); }
+.comment-empty { color: var(--muted); font-size: var(--text-sm); }
+.comment-gate { color: var(--muted); font-size: var(--text-sm); margin-top: 16px; }
+.comment-form { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; max-width: 720px; }
+.comment-input { min-height: 88px; }
+.comment-form-foot { align-items: center; display: flex; gap: 16px; justify-content: flex-end; }
+.comment-count { color: var(--muted); font-family: var(--font-mono, "IBM Plex Mono", monospace); font-size: var(--text-xs); }
+.comment-count.over { color: var(--orange-text); font-weight: 600; }
+.comment-admin-body { display: block; max-width: 420px; overflow-wrap: anywhere; white-space: pre-wrap; }
 
 /* ============================================================
    響應式：1000（側欄收合、欄數減少）、700（單欄）
@@ -736,7 +767,7 @@ a.pg:hover { border-color: var(--line); }
   align-items: flex-end; aspect-ratio: 1; background: var(--ph1); display: inline-flex; flex: none;
   justify-content: flex-end; padding: 6px; width: 96px;
 }
-.ph-block b { color: var(--ph-fg); font-family: var(--font-mono); font-size: .6875rem; font-weight: 500; line-height: 1.3; text-align: right; }
+.ph-block b { color: var(--ph-fg); font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 500; line-height: 1.3; text-align: right; }
 .refs { align-items: center; display: flex; flex-wrap: wrap; gap: 8px 12px; margin-top: 14px; }
 .refs-label { color: var(--muted); font-size: var(--text-xs); }
 .refs-list { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -794,7 +825,7 @@ a.pg:hover { border-color: var(--line); }
 }
 @media (max-width: 700px) {
   .hot-list { grid-template-columns: minmax(0, 1fr); }
-  .flag { font-size: .6875rem; padding: 3px 6px; }
+  .flag { font-size: var(--text-xs); padding: 3px 6px; }
   .marks, .spec-list { grid-template-columns: minmax(0, 1fr); }
   .item-index { flex-direction: column; }
   .item-link + .item-link { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; }

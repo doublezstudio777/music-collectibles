@@ -50,6 +50,13 @@
       "when": 1790486969295,
       "tag": "0006_og_photo",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1790488299726,
+      "tag": "0007_comments",
+      "breakpoints": true
     }
   ]
 }

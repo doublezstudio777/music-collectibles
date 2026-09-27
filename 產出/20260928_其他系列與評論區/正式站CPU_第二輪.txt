@@ -1,0 +1,22 @@
+[browse] n=100 cpu p50=1 p90=18 max=53 >10ms=11 {'ok': 100}
+   /                            n=  8 p50=1 p90=1 max=51
+   /artist/gordon               n= 11 p50=1 p90=2 max=45
+   /artist/gordon/1             n=  7 p50=1 p90=1 max=18
+   /artist/gordon/2             n= 10 p50=1 p90=2 max=20
+   /artist/mc-hotdog            n= 11 p50=1 p90=3 max=19
+   /artist/mc-hotdog/1          n= 11 p50=1 p90=2 max=24
+   /artist/mc-hotdog/3          n=  8 p50=1 p90=1 max=20
+   /artist/wan-zhi-xuan         n=  6 p50=1 p90=2 max=21
+   /artist/zhang-zhen-yue       n=  8 p50=1 p90=2 max=53
+   /artists                     n= 10 p50=1 p90=2 max=21
+   /login                       n=  6 p50=1 p90=1 max=8
+   /share/2                     n=  4 p50=2 p90=32 max=32
+[miss] n=64 cpu p50=20 p90=43 max=74 >10ms=59 {'ok': 64}
+   /                            n=  8 p50=26 p90=34 max=43
+   /artist/gordon/2             n=  8 p50=30 p90=49 max=64
+   /artist/mc-hotdog            n=  8 p50=20 p90=24 max=29
+   /artist/mc-hotdog/1          n=  8 p50=34 p90=43 max=45
+   /artist/mc-hotdog/3          n=  8 p50=25 p90=36 max=74
+   /artist/soft-lipa/1          n=  8 p50=18 p90=20 max=51
+   /artists                     n=  8 p50=19 p90=36 max=46
+   /login                       n=  8 p50=10 p90=11 max=21

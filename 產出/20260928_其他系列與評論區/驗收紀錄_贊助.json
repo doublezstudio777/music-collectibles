@@ -1,0 +1,52 @@
+[
+ {
+  "name": "S1 / 頁尾出現贊助連結",
+  "ok": true,
+  "detail": "<a class=\"foot-sponsor\" href=\"https://example.com/yz-sponsor\" target=\"_blank\" rel=\"noopener noreferrer\" data-testid=\"sponsor\">"
+ },
+ {
+  "name": "S1 /artists 頁尾出現贊助連結",
+  "ok": true,
+  "detail": "<a class=\"foot-sponsor\" href=\"https://example.com/yz-sponsor\" target=\"_blank\" rel=\"noopener noreferrer\" data-testid=\"sponsor\">"
+ },
+ {
+  "name": "S1 /artist/tide-highway 頁尾出現贊助連結",
+  "ok": true,
+  "detail": "<a class=\"foot-sponsor\" href=\"https://example.com/yz-sponsor\" target=\"_blank\" rel=\"noopener noreferrer\" data-testid=\"sponsor\">"
+ },
+ {
+  "name": "S1 /artist/tide-highway/2 頁尾出現贊助連結",
+  "ok": true,
+  "detail": "<a class=\"foot-sponsor\" href=\"https://example.com/yz-sponsor\" target=\"_blank\" rel=\"noopener noreferrer\" data-testid=\"sponsor\">"
+ },
+ {
+  "name": "S1 /share/95 頁尾出現贊助連結",
+  "ok": true,
+  "detail": "<a class=\"foot-sponsor\" href=\"https://example.com/yz-sponsor\" target=\"_blank\" rel=\"noopener noreferrer\" data-testid=\"sponsor\">"
+ },
+ {
+  "name": "S1 /login 頁尾出現贊助連結",
+  "ok": true,
+  "detail": "<a class=\"foot-sponsor\" href=\"https://example.com/yz-sponsor\" target=\"_blank\" rel=\"noopener noreferrer\" data-testid=\"sponsor\">"
+ },
+ {
+  "name": "S1 /search?q=海 頁尾出現贊助連結",
+  "ok": true,
+  "detail": "<a class=\"foot-sponsor\" href=\"https://example.com/yz-sponsor\" target=\"_blank\" rel=\"noopener noreferrer\" data-testid=\"sponsor\">"
+ },
+ {
+  "name": "S1 /tag/%E5%B1%B1%E7%B7%9A%E9%9B%BB%E5%8F%B0 頁尾出現贊助連結",
+  "ok": true,
+  "detail": "<a class=\"foot-sponsor\" href=\"https://example.com/yz-sponsor\" target=\"_blank\" rel=\"noopener noreferrer\" data-testid=\"sponsor\">"
+ },
+ {
+  "name": "S1 /u/rin 頁尾出現贊助連結",
+  "ok": true,
+  "detail": "<a class=\"foot-sponsor\" href=\"https://example.com/yz-sponsor\" target=\"_blank\" rel=\"noopener noreferrer\" data-testid=\"sponsor\">"
+ },
+ {
+  "name": "S2 單則頁主要內容（main）沒有贊助、咖啡、奶茶按鈕",
+  "ok": true,
+  "detail": ""
+ }
+]
