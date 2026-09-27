@@ -35,3 +35,4 @@
 - 新驗收腳本建的測試資料會弄壞舊腳本：藝人別設 display='on'（上線後第一批數強制顯示）、借照片要挑主圖縮圖分開且沒有預覽圖的；`其他系列與評論區` 的 2h 本身不能重跑（每跑一次在夜貓組多一個系列）（2026-09-28）
 - D1 一句最多 100 個綁定參數：`inArray` 帶 id 清單（留言、會員）超過就 500，改 JOIN／子查詢或每 90 個分批；驗收腳本裡 `recompute()` 不帶天數會把 7 天等待期的事件打回待入帳，後面要驗已入帳分數就用 `recompute(8)`（2026-09-28）
 - 驗收連續打 `/api/auth/register` 會撞「每 IP 每小時 10 次」，每次註冊前用 SQL 清 `register:%`；舊腳本借同一張照片檔名建了上千則收藏，`/img/` 依檔名只查第一筆，要驗照片隱藏就另建一則有獨立照片的收藏；`_私人/cloudflare.txt` 是 `KEY=值` 格式，用 `set -a; . <(tr -d "\r" < 檔)` 載入，不要印出（2026-09-28）
+- 手機長按拖曳用 Playwright CDP `Input.dispatchTouchEvent`（touchStart→等 600ms→分段 touchMove→touchEnd）驗得到，頁面捲動要在元件上掛非 passive 的 touchmove 擋；上傳單張失敗用 `page.route` 對第 N 個 POST `abort()` 模擬。別對既有檔跑 `prettier --write`，會整檔重排出幾百行假 diff（2026-09-28）
