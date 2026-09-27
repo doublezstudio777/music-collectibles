@@ -37,7 +37,7 @@ export async function siteStatus(photoKey?: string) {
                       (p.r2_key = ?1 AND p.thumb_key != ?1) AS isMain, u.handle AS handle,
                       s.no AS shareFound, s.hidden_at AS shareHidden, s.deleted_at AS shareDeleted
                FROM photos p LEFT JOIN shares s ON s.no = p.share_no LEFT JOIN users u ON u.id = p.owner_id
-               WHERE p.r2_key = ?1 OR p.thumb_key = ?1 LIMIT 1`,
+               WHERE p.r2_key = ?1 OR p.thumb_key = ?1 OR p.og_key = ?1 LIMIT 1`,
             )
             .bind(photoKey),
         ]

@@ -17,6 +17,8 @@ export const STORAGE_LIMIT = 8 * 1024 ** 3;
 export const MAX_MAIN_BYTES = 1_500_000;
 /** 縮圖（長邊約 480px）單檔上限 */
 export const MAX_THUMB_BYTES = 200_000;
+/** 分享預覽圖（1200×630 JPEG，og:image 用）單檔上限 */
+export const MAX_OG_BYTES = 400_000;
 /** 每人每天最多上傳幾張（主圖＋縮圖算一張） */
 export const DAILY_UPLOADS = 30;
 
@@ -87,16 +89,24 @@ export async function releaseBytes(n: number) {
 
 export type UploadError = { status: number; code: string; message: string };
 
+/** 分享預覽圖只收 JPEG（瀏覽器端固定畫成 JPEG，浮水印已燒進去） */
+function sniffJpeg(b: Uint8Array): "image/jpeg" | null {
+  return b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff ? "image/jpeg" : null;
+}
+
 /**
- * 收一張照片（主圖＋縮圖），存 R2、記 photos 列（還沒掛到任何一則收藏）。
+ * 收一張照片（主圖＋縮圖，選配分享預覽圖），存 R2、記 photos 列（還沒掛到任何一則收藏）。
  * 檢查順序：暫停 → 格式 → 大小 → 每日上限 → 總容量。
+ * og＝1200×630 JPEG 預覽圖（浮水印已燒進去，og:image 用）；格式不對或沒帶就不存，og:image 退回縮圖，
+ * 不當成整筆上傳失敗——這張圖只是加分，不是必要條件。
  */
 export async function acceptUpload(
   ownerId: string,
   purpose: "share" | "appeal",
   main: File | null,
   thumb: File | null,
-): Promise<{ ok: true; id: string; url: string; thumbUrl: string } | { ok: false; error: UploadError }> {
+  og: File | null = null,
+): Promise<{ ok: true; id: string; url: string; thumbUrl: string; ogUrl?: string } | { ok: false; error: UploadError }> {
   const bad = (status: number, code: string, message: string) => ({ ok: false as const, error: { status, code, message } });
   if (await isPaused()) return bad(503, "UPLOAD_PAUSED", "上傳暫停");
   if (!main || !thumb) return bad(400, "BAD_REQUEST", "缺照片檔");
@@ -106,11 +116,17 @@ export async function acceptUpload(
   const type = sniff(mainBytes);
   const tType = sniff(thumbBytes);
   if (!type || !tType) return bad(415, "BAD_FORMAT", "只收 WebP 或 JPEG 照片");
+  // og 只在申訴（appeal）以外、格式對、大小對時才收；不合就當沒帶，不擋主圖上傳
+  let ogBytes: Uint8Array | null = null;
+  if (purpose === "share" && og && og.size > 0 && og.size <= MAX_OG_BYTES) {
+    const b = new Uint8Array(await og.arrayBuffer());
+    if (sniffJpeg(b)) ogBytes = b;
+  }
   const day = new Date().toISOString().slice(0, 10);
   if (!(await hit(`upload:${ownerId}:${day}`, DAILY_UPLOADS, 86400))) {
     return bad(429, "DAILY_LIMIT", `今天已經上傳 ${DAILY_UPLOADS} 張，明天再來`);
   }
-  const bytes = mainBytes.length + thumbBytes.length;
+  const bytes = mainBytes.length + thumbBytes.length + (ogBytes?.length ?? 0);
   if (!(await reserveBytes(bytes))) return bad(507, "STORAGE_FULL", "上傳暫停");
 
   const id = randomToken(12);
@@ -120,6 +136,7 @@ export async function acceptUpload(
   const dir = purpose === "appeal" ? "a" : "p";
   const key = `${dir}/${id}.${ext}`;
   const thumbKey = `${dir}/${id}_t.${tExt}`;
+  const ogKey = ogBytes ? `${dir}/${id}_og.jpg` : null;
   const bucket = env.PHOTOS;
   if (!bucket) {
     await releaseBytes(bytes);
@@ -128,13 +145,14 @@ export async function acceptUpload(
   try {
     await bucket.put(key, mainBytes, { httpMetadata: { contentType: type } });
     await bucket.put(thumbKey, thumbBytes, { httpMetadata: { contentType: tType } });
+    if (ogKey && ogBytes) await bucket.put(ogKey, ogBytes, { httpMetadata: { contentType: "image/jpeg" } });
   } catch {
     await releaseBytes(bytes);
     return bad(502, "STORAGE_ERROR", "照片存不進去，再試一次");
   }
   const { width, height } = dimensions(mainBytes, type);
-  await getDb().insert(photos).values({ id, ownerId, purpose, r2Key: key, thumbKey, contentType: type, bytes, width, height });
-  return { ok: true, id, url: `/img/${key}`, thumbUrl: `/img/${thumbKey}` };
+  await getDb().insert(photos).values({ id, ownerId, purpose, r2Key: key, thumbKey, ogKey, contentType: type, bytes, width, height });
+  return { ok: true, id, url: `/img/${key}`, thumbUrl: `/img/${thumbKey}`, ...(ogKey ? { ogUrl: `/img/${ogKey}` } : {}) };
 }
 
 /** 自己上傳、還沒掛到收藏或申訴的照片 */
@@ -167,8 +185,8 @@ export async function purgePhotoCache(origin: string, keys: string[]) {
 
 /** 某則炫收藏的所有照片（主圖＋縮圖）從快取清掉；回傳清掉幾個 */
 export async function purgeSharePhotos(origin: string, shareNo: number) {
-  const rows = await getDb().select({ a: photos.r2Key, b: photos.thumbKey }).from(photos).where(eq(photos.shareNo, shareNo));
-  return purgePhotoCache(origin, rows.flatMap((r) => [r.a, r.b]));
+  const rows = await getDb().select({ a: photos.r2Key, b: photos.thumbKey, c: photos.ogKey }).from(photos).where(eq(photos.shareNo, shareNo));
+  return purgePhotoCache(origin, rows.flatMap((r) => [r.a, r.b, ...(r.c ? [r.c] : [])]));
 }
 
 export { defaultCache as photoCache };

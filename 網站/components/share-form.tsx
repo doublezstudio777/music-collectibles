@@ -229,7 +229,7 @@ export function ShareForm({ options }: { options: FormOptions }) {
       setUploading(true);
       setErrors((x) => ({ ...x, photo: "" }));
       try {
-        const r = await uploadImage(file, "share");
+        const r = await uploadImage(file, "share", acc.me?.handle);
         if (r.ok) setPhoto({ id: r.data.id, preview: r.data.thumbUrl });
         else if (r.error.code === "STORAGE_FULL" || r.error.code === "UPLOAD_PAUSED") setPaused(true);
         else setErrors((x) => ({ ...x, photo: r.error.message }));

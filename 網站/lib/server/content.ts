@@ -238,6 +238,7 @@ async function build(): Promise<Catalog> {
         color: s.color,
         ...(p ? { image: photoUrl(p.r2Key), thumb: photoUrl(p.thumbKey) } : {}),
         ...(p && p.width > 0 && p.height > 0 ? { imageSize: { w: p.width, h: p.height } } : {}),
+        ...(p?.ogKey ? { og: photoUrl(p.ogKey) } : {}),
         ...(s.seriesKey
           ? { link: { series: s.seriesKey, ...(s.itemId ? { item: s.itemId } : {}), ...(s.versionId ? { version: s.versionId } : {}) } }
           : {}),

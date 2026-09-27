@@ -371,10 +371,11 @@ export class Catalog {
 export type FormOptions = ReturnType<Catalog["formOptions"]>;
 
 /**
- * 連結預覽用縮圖（長邊 480px）：大圖要登入才看得到（防盜版批次 2026-09-28），FB／LINE 的爬蟲沒有登入。
- * 尺寸由主圖尺寸等比例換算（縮圖上傳時就是長邊 480px）。
+ * 連結預覽用照片：有分享預覽圖（1200×630 JPEG，浮水印已燒進去，上線後雜項 2026-09-28）優先用那張；
+ * 沒有的舊收藏退回縮圖（長邊 480px，尺寸由主圖尺寸等比例換算，大圖要登入才看得到，FB／LINE 的爬蟲沒有登入）。
  */
-export function ogPhoto(s: Pick<Share, "thumb" | "image" | "imageSize">) {
+export function ogPhoto(s: Pick<Share, "og" | "thumb" | "image" | "imageSize">) {
+  if (s.og) return { url: s.og, size: { w: 1200, h: 630 }, type: "image/jpeg" as const };
   const url = s.thumb ?? s.image;
   if (!url) return null;
   const size = s.imageSize;

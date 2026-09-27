@@ -20,6 +20,7 @@
 //   yz_test_country cookie 模擬，沒帶就用 GEO_DEFAULT（預設 TW）。頁面本身不因國家而異，整頁快取不受影響
 import handler from "vinext/server/fetch-handler";
 import { take, tooMany, weight } from "./lib/edge/limiter";
+import { cleanupOldRecords } from "./lib/server/cleanup";
 
 type Env = { DB: D1Database; CF_VERSION_METADATA?: { id: string }; LOCAL_TEST?: string; GEO_DEFAULT?: string };
 type Handler = { fetch(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> };
@@ -132,6 +133,16 @@ const worker = {
     const out = new Response(a, res);
     out.headers.set("x-yz-cache", "MISS");
     return out;
+  },
+
+  // 每天一次（wrangler.production.jsonc 的 triggers.crons）：國家與活動紀錄、限流計數保存 90 天，
+  // 超過就清掉（lib/server/cleanup.ts）。失敗只記 console，不影響下一次排程。
+  async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
+    ctx.waitUntil(
+      cleanupOldRecords().catch((e) => {
+        console.error("[音藏排程] 清理過期紀錄失敗", e);
+      }),
+    );
   },
 };
 

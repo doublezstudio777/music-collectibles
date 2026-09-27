@@ -29,3 +29,4 @@
 - 本機 Miniflare：POST 沒把 body 讀完就回應（例如提早回 403），同一條 keep-alive 連線的下一個請求會 503「worker restarted mid-request」；API 一律先 readBody 再判斷（2026-09-27）
 - `deploy.sh` 會用正式設定重建 `dist/`，還開著的本機 8791 建置版會變成 HTML 指到不存在的 chunk（全部 404、元件不 hydrate）；部署後要再驗本機，先重建重啟（2026-09-27）
 - 表格包 `overflow-x:auto` 仍整頁溢出：`th` 裡的 `.sr-only` 是 absolute，會逃出沒定位的捲動容器；捲動容器加 `position: relative`（2026-09-27）
+- Playwright 免走登入頁：`context.add_cookies([{"name":"yz_session","value":API登入拿到的token,"domain":"127.0.0.1","path":"/","httpOnly":True}])` 直接帶身分開頁；`purgePhotoCache` 只算「真的清掉快取的檔」，沒被請求過的檔不算在 purgedPhotos 裡，新增第三張圖時舊驗收腳本的期望值不一定要跟著變（2026-09-28）

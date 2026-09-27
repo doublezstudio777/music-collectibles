@@ -330,6 +330,8 @@ export const photos = sqliteTable(
     shareNo: integer("share_no"),
     r2Key: text("r2_key").notNull(),
     thumbKey: text("thumb_key").notNull(),
+    /** 分享預覽圖（1200×630 JPEG，浮水印已燒進去）；og:image 用，沒有就退回縮圖。舊資料沒有 */
+    ogKey: text("og_key"),
     contentType: text("content_type").notNull(),
     bytes: integer("bytes").notNull(),
     width: integer("width").notNull().default(0),

@@ -23,6 +23,9 @@ def admin(path, body): return requests.post(B + path, json=body, headers=H)
 
 # ---------- 1. 照片快取 ----------
 # 2026-09-28 起大圖要登入：照片請求一律帶管理員的 Bearer（H）
+# 2026-09-28 上線後雜項起：photos 多了 og_key（分享預覽圖），但這裡只實際請求過主圖、縮圖兩個檔，
+# purgePhotoCache 只算「真的清掉快取的那幾個」（cache.delete 找不到就不計），og 沒被請求過就不會被快取，
+# purgedPhotos 期望值維持 2 不變
 row = sql("SELECT p.share_no n, p.r2_key a, p.thumb_key b FROM photos p JOIN shares s ON s.no=p.share_no WHERE s.hidden_at IS NULL AND s.deleted_at IS NULL AND p.deleted_at IS NULL AND p.r2_key != p.thumb_key ORDER BY p.share_no DESC LIMIT 1")[0]
 urls = [f"{B}/img/{row['a']}", f"{B}/img/{row['b']}"]
 first = [requests.get(u, headers=H) for u in urls]; second = [requests.get(u, headers=H) for u in urls]

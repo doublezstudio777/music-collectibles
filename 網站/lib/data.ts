@@ -171,6 +171,8 @@ export type Share = {
   imageSize?: { w: number; h: number };
   /** 縮圖網址；D1 讀出來的才有 */
   thumb?: string;
+  /** 分享預覽圖網址（1200×630 JPEG，浮水印已燒進去；og:image 用）；沒有就退回縮圖，舊收藏都沒有這欄 */
+  og?: string;
   /** 作者顯示名稱；D1 讀出來的才有 */
   authorName?: string;
   link?: { series: string; item?: string; version?: string };

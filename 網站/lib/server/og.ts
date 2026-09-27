@@ -6,9 +6,14 @@
 import type { Metadata } from "next";
 import { SITE_NAME } from "@/lib/data";
 
-export const OG_DEFAULT = { url: "/og-default.png", size: { w: 1200, h: 630 } };
+type ImgType = "image/jpeg" | "image/webp" | "image/png";
+export const OG_DEFAULT: { url: string; size: { w: number; h: number }; type?: ImgType } = {
+  url: "/og-default.png",
+  size: { w: 1200, h: 630 },
+  type: "image/png",
+};
 
-type Photo = { url: string; size?: { w: number; h: number } } | null;
+type Photo = { url: string; size?: { w: number; h: number }; type?: ImgType } | null;
 
 export function ogMeta({
   origin,
@@ -30,6 +35,7 @@ export function ogMeta({
   const image = {
     url: `${origin}${img.url}`,
     ...(img.size ? { width: img.size.w, height: img.size.h } : {}),
+    ...(img.type ? { type: img.type } : {}),
     alt: photo ? title : SITE_NAME,
   };
   return {

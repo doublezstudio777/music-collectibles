@@ -89,8 +89,8 @@ export function wrap(ctx: CanvasRenderingContext2D, text: string, maxW: number, 
   return out;
 }
 
-/** 照片 cover 裁切進框 */
-function drawCover(ctx: CanvasRenderingContext2D, img: HTMLImageElement, x: number, y: number, w: number, h: number) {
+/** 照片 cover 裁切進框（分享圖、og 預覽圖共用） */
+export function drawCover(ctx: CanvasRenderingContext2D, img: HTMLImageElement, x: number, y: number, w: number, h: number) {
   const iw = img.naturalWidth;
   const ih = img.naturalHeight;
   const s = Math.max(w / iw, h / ih);
@@ -99,8 +99,8 @@ function drawCover(ctx: CanvasRenderingContext2D, img: HTMLImageElement, x: numb
   ctx.drawImage(img, (iw - sw) / 2, (ih - sh) / 2, sw, sh, x, y, w, h);
 }
 
-/** 浮水印：右下角白字加深色陰影，中間再疊一個斜的淡字（跟網頁上的 CSS 浮水印同一個樣子） */
-function drawWatermark(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, w: number, h: number) {
+/** 浮水印：右下角白字加深色陰影，中間再疊一個斜的淡字（跟網頁上的 CSS 浮水印同一個樣子；分享圖、og 預覽圖共用） */
+export function drawWatermark(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, w: number, h: number) {
   ctx.save();
   ctx.font = `500 34px ${SANS}`;
   ctx.textAlign = "right";

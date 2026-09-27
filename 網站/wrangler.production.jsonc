@@ -21,6 +21,10 @@
     }
   ],
   "r2_buckets": [{ "binding": "PHOTOS", "bucket_name": "yinzang-photos" }],
+  // 每天一次，資料保存期限清理（上線後雜項，2026-09-28）：user_activity／user_geo／rate_limits 超過 90 天的列清掉
+  // （lib/server/cleanup.ts、worker.ts 的 scheduled）。18:00 UTC＝台灣時間凌晨 2 點，流量低。
+  // Cron Trigger 免費方案可用（同一個 Worker 最多 5 條），不用升級。
+  "triggers": { "crons": ["0 18 * * *"] },
   "vars": {
     "TURNSTILE_SITE_KEY": "0x4AAAAAAFEx6pj-sHlnKx92",
     "ADMIN_EMAILS": "zukawork0312@gmail.com",

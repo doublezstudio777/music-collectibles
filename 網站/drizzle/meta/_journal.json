@@ -43,6 +43,13 @@
       "when": 1790479967064,
       "tag": "0005_guard_admin",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1790486969295,
+      "tag": "0006_og_photo",
+      "breakpoints": true
     }
   ]
 }
