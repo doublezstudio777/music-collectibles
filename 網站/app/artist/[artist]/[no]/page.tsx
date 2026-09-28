@@ -376,7 +376,7 @@ export default async function SeriesPage({ params, searchParams }: Props) {
   const owners = versions.reduce((n, v) => n + v.owners, 0);
   // 這位藝人的其他系列：共同署名的每位各一區；隱藏、待審的系列本來就不在目錄裡。依發行年（舊到新，沒填年份的放最後）
   const yearOf = (w: Series) => (/^\d{4}$/.test(w.year) ? Number(w.year) : 9999);
-  const coverOf = (w: Series) => c.sharesOfSeries(w).find((x) => x.thumb && !c.toShareView(x).lock)?.thumb ?? null;
+  const selfCover = c.seriesCover(series);
   const otherSeries = credits
     .map((a) => ({
       artist: a,
@@ -397,7 +397,11 @@ export default async function SeriesPage({ params, searchParams }: Props) {
   return (
     <main className="wrap page">
       <header className="work-head">
-        <span className="cover cover-lg" aria-hidden="true" />
+        {selfCover ? (
+          <span className="cover cover-lg cover-photo" aria-hidden="true" style={{ backgroundImage: `url(${selfCover})` }} />
+        ) : (
+          <span className="cover cover-lg" aria-hidden="true" />
+        )}
         <div className="work-head-text">
           <p className="credits">
             {credits.map((a, i) => (
@@ -549,7 +553,7 @@ export default async function SeriesPage({ params, searchParams }: Props) {
           </h2>
           <ul className="tiles">
             {g.list.map((w) => (
-              <SeriesTile key={seriesKey(w)} series={w} credits={c.creditNames(w)} except={g.artist.slug} photo={coverOf(w)} />
+              <SeriesTile key={seriesKey(w)} series={w} credits={c.creditNames(w)} except={g.artist.slug} photo={c.seriesCover(w)} />
             ))}
           </ul>
         </section>

@@ -90,7 +90,7 @@ export default async function ArtistPage({ params, searchParams }: Props) {
           <h2 className="block-title">系列</h2>
           <ul className="tiles">
             {main.map((w) => (
-              <SeriesTile key={`${w.artistSlug}/${w.no}`} series={w} credits={c.creditNames(w)} except={artist.slug} />
+              <SeriesTile key={`${w.artistSlug}/${w.no}`} series={w} credits={c.creditNames(w)} except={artist.slug} photo={c.seriesCover(w)} />
             ))}
           </ul>
         </section>

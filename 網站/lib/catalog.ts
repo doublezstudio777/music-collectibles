@@ -169,6 +169,25 @@ export class Catalog {
 
   sharesOfSeries = (w: Series) => this.shares.filter((s) => s.link?.series === seriesKey(w));
 
+  /**
+   * 系列卡片封面（2026-09-29）：該系列底下所有品項、所有版本的收藏裡挑一張縮圖，沒被鎖定的才算
+   * （隱藏、刪除的收藏本來就不在 this.shares 裡）。優先序照精選排序：已確認版本 → 讚數 → 時間新舊。
+   * 藝人頁「系列」、系列頁「其他系列」、系列頁頂部封面都呼叫這支，沒有任何收藏的系列回 null（維持灰色方塊）。
+   */
+  seriesCover = (w: Series): string | null => {
+    const list = this.sharesOfSeries(w).filter((s) => s.thumb && !this.toShareView(s).lock);
+    if (!list.length) return null;
+    const confirmedRank = (s: Share) => {
+      const item = s.link?.item ? getItem(w, s.link.item) : undefined;
+      const v = item && s.link?.version ? item.versions.find((x) => x.id === s.link?.version) : undefined;
+      return v?.status === "已確認" ? 1 : 0;
+    };
+    const best = [...list].sort(
+      (a, b) => confirmedRank(b) - confirmedRank(a) || b.likes - a.likes || b.order - a.order,
+    )[0];
+    return best.thumb ?? null;
+  };
+
   creditNames = (w: Series) => w.credits.map((slug) => this.getArtist(slug)).filter((a): a is Artist => Boolean(a));
 
   /** 這則跟哪些藝人有關（跟誰有關＋標籤撞名） */
