@@ -36,6 +36,8 @@ step "2. 建置（正式設定）"
 rm -rf dist
 YINZANG_DEPLOY=production npm run build
 if grep -q "LOCAL_TEST" dist/server/wrangler.json; then echo "建置結果帶了 LOCAL_TEST，停止"; exit 1; fi
+# 上一版的 JS／CSS 保留 7 天一起部署：新版本傳開前，舊版本回的舊 HTML 還指著舊檔（理由見 scripts/keep-assets.mjs 開頭）
+node scripts/keep-assets.mjs merge
 
 if [[ $FIRST -eq 0 ]]; then
   step "3. 遷移前站外備份"
@@ -50,7 +52,10 @@ PENDING=$("${W[@]}" d1 migrations list DB --remote --config "$CFG" 2>&1 || true)
 if ! grep -q "No migrations to apply" <<<"$PENDING"; then echo "遷移沒有全部套用：$PENDING"; exit 1; fi
 
 step "5. 部署程式"
-"${W[@]}" deploy --config dist/server/wrangler.json
+"${W[@]}" deploy --config dist/server/wrangler.json | tee .wrangler/deploy-output.txt
+VID=$(grep -oE 'Current Version ID: [0-9a-f-]+' .wrangler/deploy-output.txt | awk '{print $4}')
+[[ -n "$VID" ]] || { echo "抓不到這次的版本號"; exit 1; }
+node scripts/keep-assets.mjs save
 
 step "6. 煙霧測試"
 URL="https://yinzang.dblzm.workers.dev"
@@ -63,6 +68,9 @@ grep -q '<meta name="robots" content="noindex"' <<<"$BODY" || { echo "煙霧測�
 ROBOTS=$(curl -fsS "$URL/robots.txt")
 grep -q "Disallow: /admin" <<<"$ROBOTS" || { echo "煙霧測試失敗：robots.txt 正常"; exit 1; }; echo "robots.txt 正常"
 # 瀏覽器步驟（2026-09-28 加）：curl 看不出連結點了沒反應，要真的開瀏覽器點一次；失敗整個腳本失敗
+# 等新版本傳開（首頁由新版本回、引用的資產全部 200）才做瀏覽器測試；過渡期看到的 404 逐筆印出（理由見 scripts/wait-live.py）
+step "6b. 等新版本 $VID 生效"
+python3 scripts/wait-live.py "$URL" "$VID" || { echo "新版本 90 秒內沒有穩定生效"; exit 1; }
 step "7. 瀏覽器煙霧測試（Playwright：點連結換頁、console error 0）"
 python3 scripts/smoke-browser.py "$URL" || { echo "煙霧測試失敗：瀏覽器步驟（程式已部署，要回復見部署手冊第八節）"; exit 1; }
 echo "部署完成。接著照部署手冊跑「部署後檢查」。"

@@ -325,8 +325,17 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
     return () => clearTimeout(t);
   }, [aboutDraft]);
   const q = aboutDraft.trim().toLowerCase();
+  // 建議最多 5 個：完全相同 → 開頭相同 → 包含（found 是歷次搜尋累積的，順序不代表相關程度；2026-09-28 修：
+  // 同字首的藝人超過 5 位時，打出完整名字的那位原本可能被擠出清單、選不到）
+  const sugRank = (a: FormArtist) =>
+    Math.min(...[a.name, ...a.aliases].map((x) => x.toLowerCase()).map((n) => (n === q ? 0 : n.startsWith(q) ? 1 : n.includes(q) ? 2 : 3)));
   const suggestions = q
-    ? found.filter((a) => !about.includes(a.name) && (a.name.toLowerCase().includes(q) || a.aliases.some((x) => x.toLowerCase().includes(q)))).slice(0, 5)
+    ? found
+        .filter((a) => !about.includes(a.name) && sugRank(a) < 3)
+        .map((a, i) => ({ a, r: sugRank(a), i }))
+        .sort((x, y) => x.r - y.r || x.i - y.i)
+        .map((x) => x.a)
+        .slice(0, 5)
     : [];
   const settled = searchedQuery === q;
   const exact = q ? resolveArtist(aboutDraft) : undefined;

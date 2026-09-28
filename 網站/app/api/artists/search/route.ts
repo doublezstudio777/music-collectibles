@@ -11,8 +11,14 @@ export async function GET(req: Request) {
   const q = norm(new URL(req.url).searchParams.get("q") ?? "");
   if (!q) return json({ artists: [] });
   const c = await getCatalog();
+  // 排序：名稱或別名完全相同 → 開頭相同 → 包含（2026-09-28：同字首的藝人很多時，打完整名字的那位要排得進前 20）
+  const rank = (a: { name: string; aliases: string[] }) =>
+    Math.min(...[a.name, ...a.aliases].map(norm).map((n) => (n === q ? 0 : n.startsWith(q) ? 1 : n.includes(q) ? 2 : 3)));
   const artists = c.artists
     .filter((a) => norm(a.name).includes(q) || a.aliases.some((x) => norm(x).includes(q)))
+    .map((a, i) => ({ a, r: rank(a), i }))
+    .sort((x, y) => x.r - y.r || x.i - y.i)
+    .map((x) => x.a)
     .slice(0, 20)
     .map((a) => ({ slug: a.slug, name: a.name, aliases: a.aliases, kind: a.kind, gender: a.gender ?? null, region: a.region ?? null }));
   return json({ artists });

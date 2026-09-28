@@ -50,3 +50,6 @@ next-env.d.ts
 
 # MusicBrainz 匯入快取（scripts/import-musicbrainz.mjs）
 /.cache/
+
+# 部署時保留上一版前端資產的存檔（scripts/keep-assets.mjs）
+/.deploy-assets/

@@ -13,6 +13,8 @@
 // - 回應有 Set-Cookie 不存；版本號讀不到（-1）一律不快取
 // - 快取最多存 5 分鐘（頁面上「3 小時前」這類相對時間最多舊 5 分鐘）
 //
+// - 整頁快取的頁面（HIT、MISS 都是）帶 x-yz-build（部署版本前 8 碼，本機是開機亂數）：部署後判斷回應來自新版本還是還沒退場的舊版本（2026-09-28 部署快取批次）
+//
 // 2026-09-28 防盜版批次，另外兩件事也在這裡做（都在查快取之前，都不碰 D1）：
 // - IP 限流（lib/edge/limiter.ts）：記憶體計數，超過回 429
 // - 連線國家：把 Cloudflare 判定的 request.cf.country 放進 x-yz-country 表頭給 API 用（交易只限台灣）。
@@ -111,11 +113,14 @@ const worker = {
     const v = await version(env);
     if (v < 0) return app.fetch(req, env, ctx);
     const cache = (caches as unknown as { default: Cache }).default;
-    const key = await cacheKey(req, url, v, env.CF_VERSION_METADATA?.id ?? bootId());
+    const deploy = env.CF_VERSION_METADATA?.id ?? bootId();
+    const build = deploy.slice(0, 8);
+    const key = await cacheKey(req, url, v, deploy);
     const hit = await cache.match(key);
     if (hit) {
       const res = new Response(hit.body, hit);
       res.headers.set("x-yz-cache", "HIT");
+      res.headers.set("x-yz-build", build);
       res.headers.delete("age");
       restore(res.headers, "cache-control");
       restore(res.headers, "vary");
@@ -133,6 +138,7 @@ const worker = {
     ctx.waitUntil(cache.put(key, stored).catch(() => {}));
     const out = new Response(a, res);
     out.headers.set("x-yz-cache", "MISS");
+    out.headers.set("x-yz-build", build);
     return out;
   },
 
