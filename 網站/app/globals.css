@@ -232,7 +232,13 @@ ul { list-style: none; margin: 0; padding: 0; }
 .block-head .link { font-size: var(--text-xs); }
 
 .prose { max-width: 72ch; }
-.prose p { font-size: var(--text-md); line-height: 1.8; overflow-wrap: anywhere; }
+.prose p {
+  font-size: var(--text-md); line-height: 1.8; overflow-wrap: anywhere;
+  /* 中文正文左右對齊：標點禁則會讓行尾參差，手機上右側像缺一塊 */
+  text-align: justify; text-justify: inter-character;
+  /* 連續全形標點（如「），」）壓成半格；Safari 行尾標點可懸掛 */
+  font-feature-settings: "chws"; text-spacing-trim: trim-start; hanging-punctuation: allow-end;
+}
 .prose p + p { margin-top: 1em; }
 .prose .edit-line { color: var(--muted); font-size: var(--text-xs); margin-top: 16px; }
 
