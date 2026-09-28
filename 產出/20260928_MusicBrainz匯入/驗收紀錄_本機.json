@@ -1,0 +1,112 @@
+{
+ "at": "2026-09-28T11:21:56.747Z",
+ "pass": 21,
+ "total": 21,
+ "results": [
+  {
+   "name": "A1 遷移：versions 有 mbid／source／release_date／track_list，series 有 mbid／source，artists 有 mbid",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A2 有匯入資料（系列、版本、合併版本、藝人 MBID）",
+   "ok": true,
+   "detail": "{'s': 33, 'v': 42, 'vm': 17, 'a': 14}"
+  },
+  {
+   "name": "A3 範圍：新建系列都掛在對應成功的 24 位藝人底下",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "name": "A4 沒有數位發行被建成版本",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "name": "A5 腳本重跑一次：新增、合併、曲目增加都是 0",
+   "ok": true,
+   "detail": "{'新系列': 0, '新品項': 0, '新版本': 0, '合併系列': 0, '合併版本': 0, '有曲目的版本增加': 0}"
+  },
+  {
+   "name": "B1 系列頁有主要曲目區塊，註明依哪個版本",
+   "ok": true,
+   "detail": "依CD「2009 CD」（最早的實體版本）"
+  },
+  {
+   "name": "B2 版本比較表有「曲目差異」列，標出再版多的曲目",
+   "ok": true,
+   "detail": "['比較基準', '多了第 14～16 首〈噓..〉〈稍安勿躁〉〈你不覺得有事情要發生了嗎？〉', '多了〈嘶! Bamboo Holla〉〈給你一個吻 (interlude)〉〈煙霧瀰漫 軟嘴唇 (remix)〉等 4 首；少了〈Bamboo Holla〉〈给你一个吻 (skit)〉〈烟雾弥漫 (JAZZ remix)〉等 4 首']"
+  },
+  {
+   "name": "B3 來源標示：MusicBrainz 連到 release 頁",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B4 條碼不出現在公開頁面（辨識細節只給登入會員）",
+   "ok": true,
+   "detail": "4715122009737"
+  },
+  {
+   "name": "B5 登入會員從 /api/details 拿得到條碼",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "B6 版本的曲目預設收合、點開可展開，多碟分開列",
+   "ok": true,
+   "detail": "closed=True opened=True discs=2"
+  },
+  {
+   "name": "B7 空白版本顯示「補上曲目」，補上後存進版本（3 首）",
+   "ok": true,
+   "detail": "補上曲目 [\"1. 驗收歌一 (3:01)\",\"2. 驗收歌二 (4:02)\",\"3. 驗收歌三\"] 3 首"
+  },
+  {
+   "name": "B8 補空白曲目記一筆補缺漏資料（fill +10）",
+   "ok": true,
+   "detail": "[{'kind': 'fill', 'points': 10, 'source': 'fill:version:242:trackList'}]"
+  },
+  {
+   "name": "B9 人工補上的曲目顯示修改者",
+   "ok": true,
+   "detail": "曲目a594459 修改於 2026-09-28·編輯曲目·歷史"
+  },
+  {
+   "name": "B10 曲目歷史頁列出這次修改",
+   "ok": true,
+   "detail": "2011《補年1》專輯發行的曲目的編輯歷史｜樂迷藏"
+  },
+  {
+   "name": "B11 修改匯入的曲目：先存初始版本（取自 MusicBrainz），再存修改，記一筆編輯事件",
+   "ok": true,
+   "detail": "201 [{'author_id': None, 'summary': '初始版本（取自 MusicBrainz）'}, {'author_id': 'u-mb594459', 'summary': '修正最後一首歌名'}] [{'kind': 'edit', 'detail': '{\"target\":\"tracks:chen-xian-jing/2#cd-v1\",\"base\":4339,\"first\":4340,\"last\":4340,\"lastAt\":\"2026-09-28T11:21:34.398Z\",\"chars\":4}'}]"
+  },
+  {
+   "name": "B12 人工修改過的 MusicBrainz 曲目：同時顯示來源與修改者",
+   "ok": true,
+   "detail": "MusicBrainz  ·  曲目b594459  修改於 2026-09-28 ·  編輯曲目  ·  歷史  "
+  },
+  {
+   "name": "B13 受影響頁面 320／390／1440 無橫向溢出",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "C1 /share/new 照片上傳框 320／360／375／390／414：左右緣在畫面內、與正文左右緣差 2px 內、左右都是虛線",
+   "ok": true,
+   "detail": "[(320, 18, 302, 18, 302), (360, 18, 342, 18, 342), (375, 18, 357, 18, 357), (390, 18, 372, 18, 372), (414, 18, 396, 18, 396)]"
+  },
+  {
+   "name": "C2 單則頁「編輯照片」的上傳框：左右緣在畫面內、撐滿編輯框內緣",
+   "ok": true,
+   "detail": "[(320, 35, 285, 35, 285), (390, 35, 355, 35, 355)]"
+  },
+  {
+   "name": "D1 以上頁面 console error 0",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

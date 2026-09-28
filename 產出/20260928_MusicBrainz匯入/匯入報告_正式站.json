@@ -1,0 +1,317 @@
+{
+  "環境": "remote",
+  "藝人": {
+    "名單": 24,
+    "對應成功": 14,
+    "對應不到": [
+      {
+        "藝人": "萬志軒",
+        "識別碼": "wan-zhi-xuan",
+        "原因": "MusicBrainz 查無同名藝人",
+        "候選": []
+      },
+      {
+        "藝人": "DJ MR.GIN",
+        "識別碼": "dj-mr-gin",
+        "原因": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集",
+        "候選": [
+          "DJ MR.GIN｜TW｜Person｜a492819d-81ae-4f04-81a7-61845eabbe08"
+        ]
+      },
+      {
+        "藝人": "方品融",
+        "識別碼": "fang-pin-rong",
+        "原因": "MusicBrainz 查無同名藝人",
+        "候選": []
+      },
+      {
+        "藝人": "三小湯",
+        "識別碼": "san-xiao-tang",
+        "原因": "MusicBrainz 查無同名藝人",
+        "候選": []
+      },
+      {
+        "藝人": "SOWUT",
+        "識別碼": "sowut",
+        "原因": "名稱、國家、類型相符，但沒有已知作品、團員關係或顏社／本色發行可交叉比對",
+        "候選": [
+          "SOWUT｜TW｜Person｜e989112a-f617-4896-834c-08abc22b4851"
+        ]
+      },
+      {
+        "藝人": "雞腿飯",
+        "識別碼": "ji-tui-fan",
+        "原因": "MusicBrainz 查無同名藝人",
+        "候選": []
+      },
+      {
+        "藝人": "葛仲珊",
+        "識別碼": "miss-ko",
+        "原因": "名稱相符，但國家或類型對不上",
+        "候選": [
+          "Miss Ko｜US｜Person｜a9400a25-2c3e-4594-95ea-79849dbd5ae7",
+          "Christine Ko｜國家未標｜Person｜b450d80e-3e29-41ec-8a66-141000e2695c"
+        ]
+      },
+      {
+        "藝人": "呆寶靜",
+        "識別碼": "double-j",
+        "原因": "名稱、國家、類型相符，但沒有已知作品、團員關係或顏社／本色發行可交叉比對",
+        "候選": [
+          "呆宝静｜國家未標｜Person｜0b849773-ce19-44a9-b5df-2d4fda9d88a0",
+          "江靜｜TW｜Person｜eff2e455-53e9-4006-be4c-2f550f3fd8b2",
+          "Double J｜US｜Person｜2b33b62d-e77d-41c5-800b-756ee652d735",
+          "Double J.｜DE｜Person｜f841134f-cc99-4715-b884-4e22528e342b",
+          "Double J｜AD｜類型未標｜ba6c7ed6-57b2-4403-9f4e-1bef58d196ff"
+        ]
+      },
+      {
+        "藝人": "大淵MUTA",
+        "識別碼": "muta",
+        "原因": "名稱相符，但國家或類型對不上",
+        "候選": [
+          "Muta｜Denver｜Person｜2b87a926-85b7-46c6-a5b5-b0f179caa319",
+          "MUTA｜Buenos Aires｜Person｜9c622131-a80b-4e99-85f6-6f87a6746a4e",
+          "Muta｜國家未標｜Group｜83e9390c-5e60-4001-a17f-7adef4e79765",
+          "Muta｜國家未標｜Person｜bd3a4bf2-7c80-41c8-bdf6-1b12d2d61449",
+          "Muta｜國家未標｜Person｜2978556a-7d74-4049-9e05-7392883afeaf"
+        ]
+      },
+      {
+        "藝人": "兄弟本色",
+        "識別碼": "guts",
+        "原因": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集",
+        "候選": [
+          "GUTS.｜Lincoln｜Group｜e454252d-b7e0-4343-abdf-a2c2beb7c30d",
+          "Guts!｜BE｜Group｜30834496-0a08-4530-af84-9453e09bc4f5",
+          "兄弟本色｜TW｜Group｜f77e7cd4-1e57-45ee-9a6f-dbb203bba4fa",
+          "Guts｜FR｜Person｜a1f8f29c-4163-48d1-9469-35f74e61ee4e",
+          "Guts｜Turku｜Group｜63432cc6-f9e0-408f-ae04-e5abc8657ccc"
+        ]
+      }
+    ],
+    "對應成功清單": [
+      {
+        "藝人": "國蛋",
+        "識別碼": "gordon",
+        "mbid": "31f791b9-7403-462e-99a3-711042fc13ed",
+        "依據": "名稱相符、台灣、類型相符，佐證：Dr. Paper Vol.3 - Sunday Night Slow Jams、SOUR、菠蘿包"
+      },
+      {
+        "藝人": "李權哲",
+        "識別碼": "li-quan-zhe",
+        "mbid": "9d8ea9f2-342b-4d05-bf47-ec0483199f34",
+        "依據": "名稱相符、台灣、類型相符，佐證：愛情一陣風"
+      },
+      {
+        "藝人": "春艷",
+        "識別碼": "chunyan",
+        "mbid": "22a2e32d-cbc1-40ca-84cd-a0e45d020d12",
+        "依據": "名稱相符、台灣、類型相符，佐證：關係：member of band 夜貓組"
+      },
+      {
+        "藝人": "趙翊帆",
+        "識別碼": "zhao-yi-fan",
+        "mbid": "9b85ca7f-95d7-400c-955f-074eda55bf02",
+        "依據": "名稱相符、台灣、類型相符，佐證：發行廠牌：顏社"
+      },
+      {
+        "藝人": "陳嫺靜",
+        "識別碼": "chen-xian-jing",
+        "mbid": "c3f98554-2ffa-426e-a8db-b9389d992405",
+        "依據": "名稱相符、台灣、類型相符，佐證：如果每天都可以 happy happy 誰想要sad:)) - 一起去度假"
+      },
+      {
+        "藝人": "夜貓組",
+        "識別碼": "yeemao",
+        "mbid": "6f50a51d-2867-46c8-84bf-89d7abbbb600",
+        "依據": "名稱相符、台灣、類型相符，佐證：健康歌曲"
+      },
+      {
+        "藝人": "蛋堡",
+        "識別碼": "soft-lipa",
+        "mbid": "7e4448d1-4ee1-40fa-9f81-38fa6caa131e",
+        "依據": "名稱相符、台灣、類型相符，佐證：收斂水、踩腳踏車、家常音樂"
+      },
+      {
+        "藝人": "李英宏",
+        "識別碼": "li-ying-hong",
+        "mbid": "bef9d994-7df9-484d-acd9-3d26a37161d1",
+        "依據": "名稱相符、台灣、類型相符，佐證：台北直直撞"
+      },
+      {
+        "藝人": "Leo王",
+        "識別碼": "leo",
+        "mbid": "acf92994-57ba-4b36-9a04-28a943db5cba",
+        "依據": "名稱相符、台灣、類型相符，佐證：無病呻吟有情抒情"
+      },
+      {
+        "藝人": "頑童MJ116",
+        "識別碼": "mj116",
+        "mbid": "5fbab346-06f9-4b98-a916-02d08ebb7257",
+        "依據": "名稱相符、台灣、類型相符，佐證：Big Thing、OGS、董 DON"
+      },
+      {
+        "藝人": "小春",
+        "識別碼": "kenzy",
+        "mbid": "13415872-6e61-4428-83ce-ba2f5a540cd0",
+        "依據": "名稱相符、台灣、類型相符，佐證：關係：member of band 頑童MJ116"
+      },
+      {
+        "藝人": "瘦子E.SO",
+        "識別碼": "e-so",
+        "mbid": "b7726f24-00fd-48e7-be31-afb644af9003",
+        "依據": "名稱相符、台灣、類型相符，佐證：關係：member of band 頑童MJ116"
+      },
+      {
+        "藝人": "MC HotDog",
+        "識別碼": "mc-hotdog",
+        "mbid": "69905894-f909-4583-b76c-5dcc24b70932",
+        "依據": "名稱相符、台灣、類型相符，佐證：Wake Up、姚中二、脏艺术家"
+      },
+      {
+        "藝人": "張震嶽",
+        "識別碼": "zhang-zhen-yue",
+        "mbid": "6eba638e-ae15-405d-99ec-ec66ff3f0361",
+        "依據": "名稱相符、台灣、類型相符，佐證：OK、我是海雅谷慕、跟著感覺走"
+      }
+    ]
+  },
+  "MusicBrainz": {
+    "release": 120,
+    "收錄的release_group": 49,
+    "跳過": {
+      "數位發行": 58,
+      "非正式發行": 1,
+      "類型不收": 1,
+      "格式不明": 1
+    },
+    "跳過明細": [
+      {
+        "release": "212f02bf-f9de-4aef-8879-088f2bf79e42",
+        "title": "哈狗帮",
+        "原因": "狀態 Bootleg"
+      },
+      {
+        "releaseGroup": "1443c93d-c768-4a3e-9e88-3f88cd9f5ae6",
+        "title": "Dr.Paper Vol.2 - Blue Dream",
+        "原因": "類型未標，也對不到既有系列"
+      }
+    ]
+  },
+  "計畫": {
+    "新系列": 33,
+    "合併系列": 15,
+    "新品項": 33,
+    "新版本": 42,
+    "合併版本": 16,
+    "帶曲目的版本": 58,
+    "明細": {
+      "新系列": [
+        "zhang-zhen-yue《就是喜歡你》1993",
+        "zhang-zhen-yue《花開了沒有》1994",
+        "zhang-zhen-yue《這個下午很無聊》1997",
+        "zhang-zhen-yue《秘密基地》1998",
+        "zhang-zhen-yue《有問題》2000",
+        "mc-hotdog《MC HotDog》2001",
+        "mc-hotdog《犬》2001",
+        "zhang-zhen-yue《Orange》2001",
+        "mc-hotdog《哈狗帮》2001",
+        "zhang-zhen-yue《Orange 2》2001",
+        "mc-hotdog《九局下半》2001",
+        "zhang-zhen-yue《等我有一天》2002",
+        "zhang-zhen-yue《滾石香港黃金十年: 張震嶽精選》2003",
+        "zhang-zhen-yue《阿嶽正傳》2004",
+        "zhang-zhen-yue《馬拉桑》2005",
+        "zhang-zhen-yue《再見》2005",
+        "zhang-zhen-yue《岳慢岳快》2008",
+        "zhang-zhen-yue《兩手空空》2011",
+        "zhang-zhen-yue《我想要的感觉》2011",
+        "zhang-zhen-yue《我是海雅谷慕》2013",
+        "li-ying-hong《台北直直撞》2016",
+        "yeemao《健康歌曲》2017",
+        "leo《無病呻吟有情抒情》2018",
+        "zhang-zhen-yue《远走高飞》2019",
+        "soft-lipa《家常音樂》2020",
+        "li-ying-hong《水哥 2020》2020",
+        "chunyan《感恩的心》2020",
+        "zhang-zhen-yue《張震嶽精選》2021",
+        "gordon《SOUR》2022",
+        "zhao-yi-fan《LUNARFACE》2024",
+        "gordon《菠蘿包２》2024",
+        "chen-xian-jing《如果每天都可以 happy happy 誰想要 sad:＊ – 合作的秘密》2025",
+        "zhang-zhen-yue《跟著感覺走》2025"
+      ],
+      "合併系列": [
+        "mc-hotdog/1《Wake Up》← Wake Up（6ab1859d-8fef-415d-a951-528ea5b7ed8b）",
+        "zhang-zhen-yue/1《OK》← OK（45937ae8-e018-3bd9-a0e2-655aadf220e0）",
+        "mc-hotdog/2《差不多先生》← Mr. Almost（28ab0f04-28e5-359f-be40-ff450744fc70）",
+        "soft-lipa/2《收斂水》← 收斂水（0164d77e-0e07-42e4-9f28-c03b39a8ece5）",
+        "soft-lipa/3《Winter Sweet》← Winter Sweet（e6e030f0-07a7-429f-82e8-4ea22bea4ce4）",
+        "gordon/2《Dr. Paper Vol.1》← Dr.Paper Vol.1（b14a08e9-7d80-400f-bfcb-493b264615e1）",
+        "soft-lipa/7《踩．腳．踏．車》← 踩腳踏車（12936847-334b-4851-bd25-d4c7889d5037）",
+        "soft-lipa/9《你所不知道的杜振熙之內部整修》← 你所不知道的杜振熙之内部整修（f1bf800c-8948-4113-bec2-fa0be2dcae58）",
+        "gordon/4《GDN Express》← GDN Express（6f8dbd5d-242f-4e1d-bd87-b95bed4e1e4a）",
+        "gordon/5《Dr. Paper Vol.3 Sunday Night Slow Jams》← Dr. Paper Vol.3 - Sunday Night Slow Jams（0f42117e-86bb-47d9-9d1f-5231df5640cb）",
+        "gordon/6《Later That Night》← Later That Night（add17b9e-fc67-4a1c-9cd9-9471c06d8a80）",
+        "mc-hotdog/4《廢物》← 廢物（cad5d487-7d38-4ff7-948e-3636a687cbff）",
+        "gordon/7《Earlier This Morning》← Earlier This Morning（effd0255-9092-4b62-be36-d0954e79c94c）",
+        "mc-hotdog/5《姚中二》← 姚中二（889823ff-2621-4633-909e-8ce104170c36）",
+        "gordon/9《Pineapple Bun 菠蘿包》← 菠蘿包（34a0fd31-b8bd-4dca-9b62-c4e6b89d5cf9）"
+      ],
+      "併入同名系列": [
+        "mc-hotdog《犬》2001：88240912-afe4-4719-946f-e03680044a49、cf9e2722-68c7-48d6-a5ac-bd512d12580b",
+        "mc-hotdog《哈狗帮》2001：8c7740fb-bec0-30cb-a325-3db1c6952e74、24f59192-1a46-4cda-8d6b-3d772f75c35b"
+      ],
+      "新品項": 33,
+      "新版本": 42,
+      "合併版本": [
+        "版本 id 33「2006 CD」← 9a3bd76b-5b37-4be7-8371-4359e81c592c",
+        "版本 id 45「2007 CD」← 4c43880b-194a-4f91-9423-34387b2a5024",
+        "版本 id 34「標準版」← 5a00aa57-1a35-4fc4-b71c-2d6fd31f01dd",
+        "版本 id 35「豪華限定版」← 85cb79c1-5667-463f-b602-e1575b6f22df",
+        "版本 id 2「2009 CD」← 145751be-24a8-40b1-ba5a-ced85351458b",
+        "版本 id 3「2015 再版」← 10b5584f-26d1-4b8f-8694-e7a22bc48c6e",
+        "版本 id 4「2009 CD」← 1cc15994-b603-4a0d-85f0-0b13d2f139d7",
+        "版本 id 12「2011 CD」← 243683dc-4589-479e-92ee-b311b9e5d3cd",
+        "版本 id 8「2011 CD」← 8df658e1-f083-4728-82b3-9801d5ac8e58",
+        "版本 id 10「2013 CD」← c5511a65-b414-4d4d-ad4f-91e6fde445c7",
+        "版本 id 14「USB 隨身碟版」← d47dde35-9c46-4e58-9c0b-013d48a546ca",
+        "版本 id 17「2018 CD」← 70437a9c-e13d-4f2b-89bb-c03d868863b3",
+        "版本 id 38「標準版」← ace92abd-5ea5-4feb-b197-d19acbee7591",
+        "版本 id 18「2019 CD」← 3584b69e-2361-40f8-a2e6-c4ea7e8a9b2e",
+        "版本 id 40「2022 CD」← 6159563b-0cbc-42fd-b8af-f16329097c97",
+        "版本 id 20「2022 CD」← b13cfca2-41da-4516-b9a5-2e3e9125c6c1"
+      ],
+      "帶曲目版本": 58,
+      "受保護略過": [
+        "版本 id 16「2016 CD」對上 084cfff3-62e8-45bd-8aeb-d089f5ecc84c，整列不動（第 3 則收藏）"
+      ]
+    }
+  },
+  "匯入前": {
+    "s": 0,
+    "i": 0,
+    "v": 0,
+    "sm": 0,
+    "vm": 0,
+    "vt": 0
+  },
+  "受保護版本id": 16,
+  "匯入後": {
+    "s": 33,
+    "i": 33,
+    "v": 42,
+    "sm": 15,
+    "vm": 16,
+    "vt": 58
+  },
+  "本次實際變化": {
+    "新系列": 33,
+    "新品項": 33,
+    "新版本": 42,
+    "合併系列": 15,
+    "合併版本": 16,
+    "有曲目的版本增加": 58
+  }
+}

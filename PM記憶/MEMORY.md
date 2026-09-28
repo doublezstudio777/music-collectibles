@@ -43,3 +43,5 @@
 - 中西文夾雜的段落（中文句子裡插英文名/括號註記）右側常出現大段異常空白：瀏覽器把括號＋英文當成不可斷字整體，行尾空間不夠就整串推下一行；`.prose p` 之類正文區塊統一加 `overflow-wrap: anywhere` 解決，量測時用 Range rect 逐行量右緣才看得出來，`getBoundingClientRect()` 量整個段落容器只會顯示容器本身是滿版、看不出行內空白（2026-09-28）
 - 部署腳本第 7 步瀏覽器煙霧測試偶爾在部署剛完成瞬間抓到 console 404（CDN 邊緣快取還沒同步新版 chunk 對照的競態），手動重跑 `scripts/smoke-browser.py` 立刻乾淨；判斷是暫時性而非回歸前，先獨立重跑一次確認，不要直接回退部署（2026-09-28）
 - 改了炫收藏表單的操作順序，舊驗收腳本（等級與稱號、預覽圖與紀錄保存）會卡在舊 testid：只在 scratchpad 複本改點擊順序，判定不動、舊資料夾不動，README 註明；驗收要調全域檢舉門檻時，重算分數要在改回門檻「之前」跑，不然鎖定判斷用回原門檻、檢舉成立事件出不來（2026-09-28）
+- WSL 裡 Node 的 fetch 連外站（MusicBrainz）會 ETIMEDOUT，curl 卻正常：Node 雙棧競速 250ms 內 IPv4 還沒連上就放棄，腳本開頭 `dns.setDefaultResultOrder("ipv4first")`＋`net.setDefaultAutoSelectFamily(false)`。MusicBrainz 網頁（非 API）有 JS 算力驗證，curl 拿不到內容，逐首比對要用 Playwright 開（2026-09-28）
+- 大量匯入正式站前，先用最新站外備份 `restore.mjs` 還原到 scratchpad 的 `--persist-to`、套遷移、跑匯入＋重跑一次當彩排，數字跟正式站會完全一樣；受保護資料（第 3 則）在彩排裡先逐欄比對（2026-09-28）
