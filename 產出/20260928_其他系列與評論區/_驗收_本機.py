@@ -71,7 +71,7 @@ AH = {"Authorization": f"Bearer {admin['tok']}"}
 for p in PAGES:
     h = requests.get(B + p).text
     check(f"1a {p} 找不到「贊助」", "贊助" not in h, "有" if "贊助" in h else "")
-    check(f"1b {p} 有版權聲明", "照片著作權屬於上傳者；專輯封面、藝人名稱等屬於原權利人。" in h)
+    check(f"1b {p} 有版權聲明", "照片著作權屬上傳者，封面與藝人名稱屬原權利人。" in h)
 share95 = requests.get(B + "/share/95").text
 check("1c 單則頁沒有咖啡、奶茶字樣", not re.search("咖啡|奶茶", share95))
 

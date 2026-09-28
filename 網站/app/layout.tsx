@@ -38,7 +38,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <footer className="foot">
           <div className="wrap foot-row">
             <span>{SITE_NAME}</span>
-            <p className="foot-note">照片著作權屬於上傳者；專輯封面、藝人名稱等屬於原權利人。</p>
+            <p className="foot-note">照片著作權屬上傳者，封面與藝人名稱屬原權利人。</p>
             <nav className="foot-links" aria-label="法務">
               <Link href="/privacy">隱私權政策</Link>
               <Link href="/terms">使用條款</Link>
