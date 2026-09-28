@@ -47,6 +47,7 @@ export function HistoryView({
   wikiUrl,
   a,
   b,
+  query = "",
 }: {
   title: string;
   backHref: string;
@@ -56,6 +57,8 @@ export function HistoryView({
   wikiUrl: string | null;
   a?: string;
   b?: string;
+  /** 比對連結要保留的其他參數（曲目歷史的 tracks=…），以 & 開頭 */
+  query?: string;
 }) {
   const byId = (id?: string) => revisions.find((r) => String(r.id) === id);
   const newer = byId(b) ?? revisions[0];
@@ -164,7 +167,7 @@ export function HistoryView({
                 </span>
                 <span className="rev-acts">
                   {prev ? (
-                    <Link className="btn-text" href={`?a=${prev.id}&b=${r.id}`}>
+                    <Link className="btn-text" href={`?a=${prev.id}&b=${r.id}${query}`}>
                       與上一版比較
                     </Link>
                   ) : null}

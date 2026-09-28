@@ -145,6 +145,10 @@ export type Version = {
   packaging: string;
   contents: string;
   tracks: string;
+  /** 發行日期（YYYY、YYYY-MM 或 YYYY-MM-DD；空字串＝未填） */
+  releaseDate: string;
+  /** MusicBrainz release MBID（匯入建立或合併過才有） */
+  mbid?: string;
   /** 辨識特徵，比較表第一列 */
   identifyBy: string;
   /** 正版辨識：逐項特徵，photo 是照片說明（示範用灰色塊代替） */
@@ -197,6 +201,8 @@ export type Series = {
   compilation: { artistSlug: string; track: string }[];
   items: Item[];
   lastEdit: { by: string; date: string };
+  /** MusicBrainz release-group MBID */
+  mbid?: string;
 };
 
 /** 出售狀態：純分享（預設）／開放出價／定價出售／已售出。錢貨不經過平台，成交後雙方自己約 */

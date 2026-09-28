@@ -417,7 +417,8 @@ ul { list-style: none; margin: 0; padding: 0; }
 
 .drop {
   align-items: center; aspect-ratio: 4 / 3; background: var(--surface) center / cover no-repeat;
-  border: 1.5px dashed var(--muted); cursor: pointer; display: flex; justify-content: center; max-width: 360px;
+  border: 1.5px dashed var(--muted); box-sizing: border-box; cursor: pointer; display: flex; justify-content: center;
+  max-width: 360px; min-width: 0; width: 100%;
 }
 .drop:hover { border-color: var(--text); }
 .drop:focus-within { outline: 2px solid var(--text); outline-offset: 2px; }
@@ -651,6 +652,8 @@ a.pg:hover { border-color: var(--line); }
 @media (max-width: 700px) {
   .wrap { padding: 0 18px; }
   .page { padding: 24px 18px 72px; }
+  /* 照片上傳框（2026-09-28 手機虛線被切）：手機上撐滿正文寬度，左右緣對齊正文；寬度明確給 100%，不靠 aspect-ratio 反推 */
+  .drop, .drop.drop-more { max-width: none; }
   .nav-row { gap: 12px; }
   .nav-search { display: none; }
   .nav-icon { align-items: center; display: inline-flex; height: 44px; justify-content: center; width: 44px; }
@@ -1313,3 +1316,29 @@ a.title-chip:hover { background: var(--line); }
 .report-evidence { display: grid; font-size: var(--text-xs); gap: 6px; list-style: none; margin: 6px 0 0; padding: 0; }
 .report-evidence li { align-items: center; display: flex; gap: 8px; }
 .report-evidence img { height: 48px; object-fit: cover; width: 48px; }
+
+/* ============================================================
+   曲目（2026-09-28 MusicBrainz 匯入）：系列頁代表曲目、版本區塊可收合的曲目
+   ============================================================ */
+.tracks { border-top: 1px solid var(--line); margin-top: 16px; }
+.tracks > summary {
+  align-items: center; cursor: pointer; display: flex; font-size: var(--text-sm); font-weight: 600; gap: 6px;
+  list-style: none; min-height: 44px;
+}
+.tracks > summary::-webkit-details-marker { display: none; }
+.tracks > summary::after { color: var(--muted); content: "＋"; margin-left: auto; }
+.tracks[open] > summary::after { content: "－"; }
+.tracks .tracks-none { display: inline; }
+.tracks .edit-line { color: var(--muted); font-size: var(--text-xs); margin: 10px 0 4px; }
+.tracks .wiki-form { margin-bottom: 8px; }
+.tracks-basis { margin: -8px 0 12px; }
+.tracklist-wrap { max-width: 640px; }
+.disc-title { color: var(--muted); font-size: var(--text-xs); font-weight: 600; margin: 14px 0 4px; }
+.disc:first-child .disc-title { margin-top: 0; }
+.tracklist { list-style: none; margin: 0; padding: 0; }
+.tracklist li {
+  border-bottom: 1px solid var(--line); display: grid; font-size: var(--text-sm); gap: 10px;
+  grid-template-columns: 2.4em minmax(0, 1fr) auto; padding: 7px 0;
+}
+.tracklist .t-no, .tracklist .t-len { color: var(--muted); font-variant-numeric: tabular-nums; }
+.tracklist .t-title { overflow-wrap: anywhere; }

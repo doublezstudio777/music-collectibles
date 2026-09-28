@@ -18,6 +18,7 @@ export function WikiEditor({
   locked,
   closeHref,
   label,
+  lines = false,
 }: {
   target: string;
   paras: string[];
@@ -25,10 +26,12 @@ export function WikiEditor({
   locked: boolean;
   closeHref: string;
   label: string;
+  /** 一行一筆（曲目）：不空行分段，一行就是一首 */
+  lines?: boolean;
 }) {
   const router = useRouter();
   const { me, ready } = useAppState();
-  const [text, setText] = useState(paras.join("\n\n"));
+  const [text, setText] = useState(paras.join(lines ? "\n" : "\n\n"));
   const [summary, setSummary] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -70,7 +73,7 @@ export function WikiEditor({
     }
     setBusy(true);
     setError("");
-    const r = await api<{ id: number }>("/api/revisions", { body: { target, content: toParas(text), summary, baseId } });
+    const r = await api<{ id: number }>("/api/revisions", { body: { target, content: lines ? text.split("\n").map((x) => x.trim()).filter(Boolean) : toParas(text), summary, baseId } });
     setBusy(false);
     if (!r.ok) {
       setError(r.error.message);
@@ -85,8 +88,8 @@ export function WikiEditor({
       <label className="field-label" htmlFor="wiki-text">
         {label}
       </label>
-      <textarea id="wiki-text" className="input wiki-text" rows={10} value={text} onChange={(e) => setText(e.target.value)} />
-      <span className="sub">空一行分段</span>
+      <textarea id="wiki-text" className="input wiki-text" rows={lines ? 14 : 10} value={text} onChange={(e) => setText(e.target.value)} />
+      <span className="sub">{lines ? "一行一首，例：1. 歌名 (3:45)；多碟另起一行寫【第 2 碟 CD】" : "空一行分段"}</span>
       <label className="field-label" htmlFor="wiki-summary">
         修改說明
       </label>
@@ -95,7 +98,7 @@ export function WikiEditor({
         className="input"
         maxLength={200}
         value={summary}
-        placeholder="例：補上發行日期、修正錯字"
+        placeholder={lines ? "例：補上曲目、修正歌名" : "例：補上發行日期、修正錯字"}
         onChange={(e) => setSummary(e.target.value)}
         aria-invalid={error === "寫一句修改說明" ? true : undefined}
       />

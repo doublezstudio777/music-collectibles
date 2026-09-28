@@ -145,6 +145,7 @@ const V = (v: Partial<Version> & Pick<Version, "id" | "edition" | "year">): Vers
   packaging: "",
   contents: "",
   tracks: "",
+  releaseDate: "",
   identifyBy: "",
   status: "已確認",
   owners: 0,

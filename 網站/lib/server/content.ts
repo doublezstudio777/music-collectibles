@@ -7,7 +7,7 @@
 // 前端用 lib/counts.ts 以「拿到這份總數時自己按了沒」扣回去再疊上現在的狀態。
 
 import { cache } from "react";
-import { and, count, eq, inArray, isNull } from "drizzle-orm";
+import { and, count, eq, getTableColumns, inArray, isNull } from "drizzle-orm";
 import { getDb } from "@/db";
 import {
   artists as tArtists,
@@ -59,6 +59,8 @@ export const parseJson = <T,>(raw: string | null | undefined, fallback: T): T =>
 
 export const photoUrl = (key: string) => `/img/${key}`;
 const day = (iso: string) => iso.slice(0, 10);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- 拿掉曲目欄，其餘照舊
+const { trackList: _omitTracks, ...VERSION_COLS } = getTableColumns(tVersions);
 
 /* ---------- 鎖定（頁面與 API 共用 data.ts 的 lockFor） ---------- */
 
@@ -109,7 +111,8 @@ async function build(): Promise<Catalog> {
     db.select().from(tArtists).where(and(eq(tArtists.status, "approved"), isNull(tArtists.deletedAt), isNull(tArtists.hiddenAt))),
     db.select().from(tSeries).where(and(eq(tSeries.status, "approved"), isNull(tSeries.deletedAt), isNull(tSeries.hiddenAt))),
     db.select().from(tItems).where(and(eq(tItems.status, "approved"), isNull(tItems.deletedAt), isNull(tItems.hiddenAt))),
-    db.select().from(tVersions).where(and(eq(tVersions.status, "approved"), isNull(tVersions.deletedAt), isNull(tVersions.hiddenAt))),
+    // 曲目（track_list）不進目錄：整張目錄每次重建都要讀，曲目只有系列頁用，由 lib/server/tracks.ts 另外查
+    db.select(VERSION_COLS).from(tVersions).where(and(eq(tVersions.status, "approved"), isNull(tVersions.deletedAt), isNull(tVersions.hiddenAt))),
     db.select().from(versionMarks).where(isNull(versionMarks.deletedAt)),
     db.select().from(versionFakes).where(isNull(versionFakes.deletedAt)),
     db.select().from(tShares).where(and(isNull(tShares.deletedAt), isNull(tShares.hiddenAt))),
@@ -174,6 +177,7 @@ async function build(): Promise<Catalog> {
         compilation: parseJson(w.compilation, []),
         items: [],
         lastEdit: { by: nameOf(w.lastEditBy ?? w.createdBy) || SITE_NAME, date: day(w.updatedAt) },
+        ...(w.mbid ? { mbid: w.mbid } : {}),
       };
       seriesById.set(w.id, s);
       return s;
@@ -202,6 +206,8 @@ async function build(): Promise<Catalog> {
       packaging: v.packaging,
       contents: v.contents,
       tracks: v.tracks,
+      releaseDate: v.releaseDate,
+      ...(v.mbid ? { mbid: v.mbid } : {}),
       identifyBy: v.identifyBy,
       ...(marksBy.get(v.id) ? { marks: marksBy.get(v.id) } : {}),
       ...(fakes?.length ? { fakes } : {}),

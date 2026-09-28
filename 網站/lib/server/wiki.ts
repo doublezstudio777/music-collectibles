@@ -1,4 +1,4 @@
-// 維基式編輯（2c）：系列頁正文、藝人簡介。
+// 維基式編輯（2c）：系列頁正文、藝人簡介；2026-09-28 加版本曲目（target＝tracks:{藝人}/{流水號}#{品項}-{版本}，一行一首）。
 //
 // - 認證帳號（已驗證 Email）都能編輯與還原，必填一句修改說明
 // - 每次修改存一筆 revisions（整份內容），差異在歷史頁即時算；還原＝新增一筆，不刪任何紀錄
@@ -8,10 +8,12 @@
 
 import { and, desc, eq, isNull } from "drizzle-orm";
 import { getDb } from "@/db";
+import { env } from "cloudflare:workers";
 import { adminLog, artists, pageLocks, revisions, series } from "@/db/schema";
 import { isAdmin, type User } from "@/lib/server/auth";
 import { parseJson, userNames } from "@/lib/server/content";
-import { recordEdit } from "@/lib/server/scores";
+import { recordEdit, recordFill } from "@/lib/server/scores";
+import { trackCount } from "@/lib/tracks";
 import { hit } from "@/lib/server/services";
 import { HttpError } from "@/lib/server/trade";
 import { SITE_NAME } from "@/lib/data";
@@ -20,7 +22,12 @@ export const WIKI_LICENSE = "CC BY-SA 4.0";
 const MAX_CHARS = 20_000;
 const MAX_PARAS = 80;
 
-export type WikiTarget = { kind: "artist"; slug: string } | { kind: "series"; slug: string; no: number };
+export type WikiTarget =
+  | { kind: "artist"; slug: string }
+  | { kind: "series"; slug: string; no: number }
+  | { kind: "tracks"; slug: string; no: number; item: string; version: string };
+/** 曲目一行一首：行數上限比正文段落寬 */
+const MAX_TRACK_LINES = 400;
 
 export function parseWikiTarget(v: unknown): WikiTarget | null {
   if (typeof v !== "string" || v.length > 100) return null;
@@ -28,13 +35,28 @@ export function parseWikiTarget(v: unknown): WikiTarget | null {
   if (m) return { kind: "artist", slug: m[1] };
   m = v.match(/^series:([a-z0-9-]{1,60})\/(\d{1,6})$/);
   if (m) return { kind: "series", slug: m[1], no: Number(m[2]) };
+  m = v.match(/^tracks:([a-z0-9-]{1,60})\/(\d{1,6})#([^#-]{1,40})-([^#-]{1,40})$/);
+  if (m) return { kind: "tracks", slug: m[1], no: Number(m[2]), item: m[3], version: m[4] };
   return null;
 }
 
-export const targetKey = (t: WikiTarget) => (t.kind === "artist" ? `artist:${t.slug}` : `series:${t.slug}/${t.no}`);
-export const fieldOf = (t: WikiTarget) => (t.kind === "artist" ? "intro" : "body");
+export const targetKey = (t: WikiTarget) =>
+  t.kind === "artist" ? `artist:${t.slug}` : t.kind === "series" ? `series:${t.slug}/${t.no}` : `tracks:${t.slug}/${t.no}#${t.item}-${t.version}`;
+export const fieldOf = (t: WikiTarget) => (t.kind === "artist" ? "intro" : t.kind === "series" ? "body" : "tracks");
 
-type Page = { content: string[]; license: string | null; createdBy: string | null; createdAt: string; wikiUrl: string | null };
+type Page = {
+  content: string[];
+  license: string | null;
+  createdBy: string | null;
+  createdAt: string;
+  wikiUrl: string | null;
+  /** 初始版本的說明（沒給就依授權判斷） */
+  baseSummary?: string;
+  /** 曲目：版本列 id 與建立者（補空白曲目算補資料分數，補自己建的版本不算） */
+  versionId?: number;
+  versionBy?: string | null;
+};
+const baseSummary = (p: Page) => p.baseSummary ?? (p.license ? "初始版本（取自維基百科）" : "初始版本");
 
 /** 讀頁面目前內容（只算前台看得到的：已核准、沒刪、沒隱藏） */
 export async function loadPage(t: WikiTarget): Promise<Page | null> {
@@ -51,6 +73,30 @@ export async function loadPage(t: WikiTarget): Promise<Page | null> {
       createdBy: a.createdBy,
       createdAt: a.createdAt,
       wikiUrl: a.wikiUrl,
+    };
+  }
+  if (t.kind === "tracks") {
+    const v = await env
+      .DB!.prepare(
+        `SELECT v.id, v.track_list AS trackList, v.created_by AS createdBy, v.created_at AS createdAt, v.mbid FROM versions v
+         JOIN items i ON i.id = v.item_ref JOIN series w ON w.id = i.series_id
+         WHERE w.artist_slug = ?1 AND w.no = ?2 AND i.item_id = ?3 AND v.version_id = ?4
+           AND w.status = 'approved' AND i.status = 'approved' AND v.status = 'approved'
+           AND w.deleted_at IS NULL AND w.hidden_at IS NULL AND i.deleted_at IS NULL AND i.hidden_at IS NULL AND v.deleted_at IS NULL AND v.hidden_at IS NULL`,
+      )
+      .bind(t.slug, t.no, t.item, t.version)
+      .first<{ id: number; trackList: string; createdBy: string | null; createdAt: string; mbid: string | null }>();
+    if (!v) return null;
+    const content = parseJson<string[]>(v.trackList, []);
+    return {
+      content,
+      license: null,
+      createdBy: v.mbid && content.length ? null : v.createdBy,
+      createdAt: v.createdAt,
+      wikiUrl: null,
+      baseSummary: v.mbid && content.length ? "初始版本（取自 MusicBrainz）" : "初始版本",
+      versionId: v.id,
+      versionBy: v.createdBy,
     };
   }
   const [w] = await db
@@ -91,7 +137,7 @@ export async function history(t: WikiTarget, page: Page): Promise<RevisionView[]
         id: 0,
         no: 1,
         content: page.content,
-        summary: page.license ? "初始版本（取自維基百科）" : "初始版本",
+        summary: baseSummary(page),
         author: page.createdBy ? (names.get(page.createdBy) ?? null) : null,
         revertedFrom: null,
         license: page.license,
@@ -139,7 +185,7 @@ async function ensureBaseline(t: WikiTarget, page: Page) {
     target: targetKey(t),
     field: fieldOf(t),
     content: JSON.stringify(page.content),
-    summary: page.license ? "初始版本（取自維基百科）" : "初始版本",
+    summary: baseSummary(page),
     authorId: page.createdBy,
     license: page.license,
     createdAt: page.createdAt,
@@ -157,13 +203,13 @@ async function assertCanEdit(u: User, t: WikiTarget) {
   if (!(await hit(`edit:${u.id}`, 60, 86400))) throw new HttpError(429, "RATE_LIMITED", "今天編輯太多次了，明天再來");
 }
 
-function cleanParas(v: unknown) {
+function cleanParas(v: unknown, maxParas = MAX_PARAS) {
   if (!Array.isArray(v)) throw new HttpError(400, "BAD_REQUEST", "參數不對");
   const paras = v
     .filter((x): x is string => typeof x === "string")
     .map((x) => x.replace(/\s+/g, " ").trim())
     .filter(Boolean);
-  if (paras.length > MAX_PARAS || paras.reduce((n, p) => n + p.length, 0) > MAX_CHARS) {
+  if (paras.length > maxParas || paras.reduce((n, p) => n + p.length, 0) > MAX_CHARS) {
     throw new HttpError(413, "TOO_LONG", `內容太長（上限 ${MAX_CHARS.toLocaleString("en-US")} 字）`);
   }
   return paras;
@@ -194,6 +240,13 @@ async function write(u: User, t: WikiTarget, page: Page, paras: string[], summar
     .returning({ id: revisions.id });
   if (t.kind === "artist") {
     await db.update(artists).set({ intro: JSON.stringify(paras), lastEditBy: u.id, updatedAt: at }).where(eq(artists.slug, t.slug));
+  } else if (t.kind === "tracks") {
+    // 曲目數（比較表那一列）跟著曲目清單走
+    const n = trackCount(paras);
+    await env
+      .DB!.prepare(`UPDATE versions SET track_list = ?1, tracks = COALESCE(?2, tracks) WHERE id = ?3`)
+      .bind(JSON.stringify(paras), n > 0 ? `${n} 首` : null, page.versionId)
+      .run();
   } else {
     await db
       .update(series)
@@ -212,15 +265,21 @@ export async function edit(u: User, rawTarget: unknown, rawContent: unknown, raw
   const page = await loadPage(t);
   if (!page) throw new HttpError(404, "NOT_FOUND", "找不到這個頁面");
   await assertCanEdit(u, t);
-  const paras = cleanParas(rawContent);
+  const paras = cleanParas(rawContent, t.kind === "tracks" ? MAX_TRACK_LINES : MAX_PARAS);
   const summary = cleanSummary(rawSummary);
   if (typeof baseId === "number" && baseId !== (await latestId(t))) {
     throw new HttpError(409, "EDIT_CONFLICT", "你編輯的時候有人先改了，重新整理看最新內容再改");
   }
   if (same(paras, page.content)) throw new HttpError(409, "NO_CHANGE", "內容沒有變");
   const id = await write(u, t, page, paras, summary, null);
-  // 計分：記一筆 7 天後入帳的編輯事件（還原不記）
-  await recordEdit(u.id, targetKey(t), id, paras, new Date().toISOString());
+  const at = new Date().toISOString();
+  if (t.kind === "tracks" && !page.content.length) {
+    // 補上空白的曲目＝補缺漏資料（+10，跟補其他空白欄位同一套；補自己建的版本不算）
+    if (page.versionBy !== u.id) await recordFill(u, `fill:version:${page.versionId}:trackList`, at, { version: page.versionId, field: "trackList", value: JSON.stringify(paras) });
+  } else {
+    // 計分：記一筆 7 天後入帳的編輯事件（還原不記）
+    await recordEdit(u.id, targetKey(t), id, paras, at);
+  }
   return { id };
 }
 

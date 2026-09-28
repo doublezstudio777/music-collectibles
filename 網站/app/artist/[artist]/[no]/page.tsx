@@ -26,7 +26,9 @@ import { HoldingButtons, OwnersCount } from "@/components/holding-buttons";
 import { PriceHistory } from "@/components/price-history";
 import { WikiEditor } from "@/components/wiki-editor";
 import { priceSummaries } from "@/lib/server/prices";
-import { isLocked, lastEdit, latestRevisionId, loadPage } from "@/lib/server/wiki";
+import { isLocked, lastEdit, latestRevisionId, loadPage, targetKey, type WikiTarget } from "@/lib/server/wiki";
+import { seriesTracks, type VersionTracks } from "@/lib/server/tracks";
+import { diffText, diffTracks, parseTracks, REGULAR_EDITION, trackCount } from "@/lib/tracks";
 import type { PriceSummary } from "@/lib/prices";
 import { LockBanner, ReportBox } from "@/components/report";
 import { ItemLooseWall, VersionWall } from "@/components/share-wall";
@@ -45,6 +47,7 @@ type Props = { params: Promise<{ artist: string; no: string }>; searchParams?: P
 // 不放進公開頁面（整頁快取訪客與會員同一份），改由 IdentifyDetails 從 /api/details 取
 const ROWS: { label: string; get: (v: Version) => string; mono?: boolean }[] = [
   { label: "發行年", get: (v) => v.year, mono: true },
+  { label: "發行日期", get: (v) => (v.releaseDate && v.releaseDate !== v.year ? v.releaseDate : ""), mono: true },
   { label: "地區", get: (v) => v.region },
   { label: "發行", get: (v) => v.label },
   { label: "包裝", get: (v) => v.packaging },
@@ -53,10 +56,50 @@ const ROWS: { label: string; get: (v: Version) => string; mono?: boolean }[] = [
   { label: "資料狀態", get: (v) => v.status },
 ];
 
-/** 公開頁面上可以補的空白欄位（目錄號、辨識特徵在登入後的辨識細節補） */
+/** 公開頁面上可以補的空白欄位（目錄號、辨識特徵在登入後的辨識細節補；曲目改在版本的「曲目」區塊逐首補，2026-09-28） */
 const PUBLIC_FILL = (Object.keys(FILL_FIELDS) as FillField[]).filter(
-  (k): k is "year" | "region" | "label" | "packaging" | "contents" | "tracks" => FILL_FIELDS[k].public,
+  (k): k is "year" | "region" | "label" | "packaging" | "contents" => FILL_FIELDS[k].public && k !== "tracks",
 );
+
+type Tracks = Map<string, VersionTracks>;
+const linesOf = (tracks: Tracks, item: Item, v: Version) => tracks.get(versionAnchor(item, v))?.lines ?? [];
+
+/**
+ * 系列的代表曲目：一般版（版本名稱有「一般版／標準版」）的曲目；判斷不出來就用最早的實體版本（依發行日期、年份）。
+ * 只看有曲目的版本
+ */
+function mainTracks(series: Series, tracks: Tracks) {
+  const all = series.items
+    .flatMap((it) => it.versions.map((v, i) => ({ it, v, i, lines: linesOf(tracks, it, v) })))
+    .filter((x) => x.lines.length);
+  const regular = all.find((x) => REGULAR_EDITION.test(x.v.edition));
+  if (regular) return { ...regular, regular: true };
+  const when = (v: Version) => v.releaseDate || v.year || "9999";
+  const first = [...all].sort((a, b) => when(a.v).localeCompare(when(b.v)))[0];
+  return first ? { ...first, regular: false } : null;
+}
+
+function TrackList({ lines }: { lines: string[] }) {
+  const discs = parseTracks(lines);
+  return (
+    <div className="tracklist-wrap">
+      {discs.map((d, i) => (
+        <div key={i} className="disc">
+          {discs.length > 1 || d.title ? <p className="disc-title">{d.title || `第 ${i + 1} 碟`}</p> : null}
+          <ol className="tracklist">
+            {d.tracks.map((t, j) => (
+              <li key={j}>
+                <span className="t-no">{t.no}</span>
+                <span className="t-title">{t.title}</span>
+                <span className="t-len">{t.length}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 /** 單一版本不比較，只列有值的欄位 */
 const hasValue = (x: string) => x && x !== "—" && x !== "待查證" && x !== "無條碼";
@@ -81,7 +124,16 @@ export async function generateMetadata({ params }: Props) {
   });
 }
 
-function Compare({ series, item }: { series: Series; item: Item }) {
+function Compare({ series, item, tracks, base }: { series: Series; item: Item; tracks: Tracks; base: Version | null }) {
+  const baseLines = base ? (series.items.flatMap((it) => it.versions.map((v) => ({ v, l: linesOf(tracks, it, v) }))).find((x) => x.v === base)?.l ?? []) : [];
+  const trackDiffs = item.versions.map((v) => {
+    const l = linesOf(tracks, item, v);
+    if (!l.length || !baseLines.length) return { text: "—", same: true };
+    if (v === base) return { text: "比較基準", same: true };
+    const d = diffTracks(baseLines, l);
+    return { text: diffText(d), same: d.same };
+  });
+  const showDiff = baseLines.length > 0 && item.versions.some((v) => linesOf(tracks, item, v).length);
   return (
     <div className="compare-scroll-wrap">
       {item.versions.length > 2 ? (
@@ -126,6 +178,18 @@ function Compare({ series, item }: { series: Series; item: Item }) {
               </tr>
             );
           })}
+          {showDiff ? (
+            <tr className={trackDiffs.some((d) => !d.same) ? "diff" : undefined} data-testid="track-diff-row">
+              <th scope="row" className="compare-key">
+                曲目差異
+              </th>
+              {trackDiffs.map((d, i) => (
+                <td key={item.versions[i].id} data-testid="track-diff">
+                  {d.text}
+                </td>
+              ))}
+            </tr>
+          ) : null}
         </tbody>
       </table>
       </div>
@@ -158,6 +222,8 @@ function VersionBlock({
   view,
   locks,
   price,
+  tracks,
+  editor,
 }: {
   series: Series;
   item: Item;
@@ -166,6 +232,9 @@ function VersionBlock({
   view: (s: Share) => ShareView;
   locks: LockData;
   price?: PriceSummary;
+  tracks?: VersionTracks;
+  /** 這個版本的曲目正在編輯（?edit=tracks:{錨點}） */
+  editor?: { baseId: number; locked: boolean } | null;
 }) {
   const list = related.filter((s) => s.link?.version === v.id);
   // 正版辨識照片：只列管理員標為「辨識參考」的（2026-09-28 起會員不能自己勾）
@@ -182,6 +251,8 @@ function VersionBlock({
       <FieldFill vkey={vkey} fields={PUBLIC_FILL.filter((f) => isBlank(f, v[f]))} />
 
       {price ? <PriceHistory summary={price} /> : null}
+
+      <VersionTracksBlock series={series} anchor={versionAnchor(item, v)} vkey={vkey} t={tracks} editor={editor ?? null} />
 
       <IdentifyDetails skey={seriesKey(series)} vkey={vkey} anchor={versionAnchor(item, v)} hasFakes={Boolean(v.fakes?.length)} />
       {refs.length ? (
@@ -208,21 +279,94 @@ function VersionBlock({
   );
 }
 
+/** 版本的曲目：可收合，多碟分開列；來源與修改者；編輯走維基式編輯（target＝tracks:{版本鍵}） */
+function VersionTracksBlock({
+  series,
+  anchor,
+  vkey,
+  t,
+  editor,
+}: {
+  series: Series;
+  anchor: string;
+  vkey: string;
+  t?: VersionTracks;
+  editor: { baseId: number; locked: boolean } | null;
+}) {
+  const lines = t?.lines ?? [];
+  const n = trackCount(lines);
+  const self = `/artist/${seriesKey(series)}`;
+  return (
+    <details className="tracks" data-testid="version-tracks" open={editor ? true : undefined}>
+      <summary>
+        曲目
+        {n ? <span className="count">{n}</span> : <span className="sub tracks-none">還沒有</span>}
+      </summary>
+      {editor ? (
+        <WikiEditor target={`tracks:${vkey}`} paras={lines} baseId={editor.baseId} locked={editor.locked} closeHref={`${self}#${anchor}`} label="曲目" lines />
+      ) : lines.length ? (
+        <TrackList lines={lines} />
+      ) : (
+        <p className="sub tracks-empty">還沒有人補上曲目</p>
+      )}
+      <p className="edit-line tracks-src" data-testid="tracks-source">
+        {t?.mbid && lines.length ? (
+          <>
+            來源：
+            <a className="link" href={`https://musicbrainz.org/release/${t.mbid}`} target="_blank" rel="noopener noreferrer">
+              MusicBrainz
+            </a>
+            <span className="dot" aria-hidden="true">·</span>
+          </>
+        ) : null}
+        {t?.editedBy ? (
+          <>
+            {t.editedBy.handle ? (
+              <Link className="link" href={`/u/${t.editedBy.handle}`}>
+                {t.editedBy.name}
+              </Link>
+            ) : (
+              t.editedBy.name
+            )}{" "}
+            修改於 {t.editedBy.date}
+            <span className="dot" aria-hidden="true">·</span>
+          </>
+        ) : null}
+        <Link className="link" href={`${self}?edit=${encodeURIComponent(`tracks:${anchor}`)}#${anchor}`} data-testid="tracks-edit">
+          {lines.length ? "編輯曲目" : "補上曲目"}
+        </Link>
+        <span className="dot" aria-hidden="true">·</span>
+        <Link className="link" href={`${self}/history?tracks=${encodeURIComponent(anchor)}`}>
+          歷史
+        </Link>
+      </p>
+    </details>
+  );
+}
+
 export default async function SeriesPage({ params, searchParams }: Props) {
   const { c, series } = await load(params);
   if (!series) notFound();
-  const editing = (await searchParams)?.edit === "1";
+  const editParam = (await searchParams)?.edit ?? "";
+  const editing = editParam === "1";
+  // 曲目編輯：?edit=tracks:{品項}-{版本}
+  const tm = editParam.match(/^tracks:([^#-]{1,40})-([^#-]{1,40})$/);
+  const tt: WikiTarget | null = tm ? { kind: "tracks", slug: series.artistSlug, no: series.no, item: tm[1], version: tm[2] } : null;
   const wt = { kind: "series" as const, slug: series.artistSlug, no: series.no };
   const skey = `${series.artistSlug}/${series.no}`;
   const lockedShares = new Set(c.sharesOfSeries(series).filter((s) => c.toShareView(s).lock).map((s) => s.n));
-  const [page, pageLocked, edited, baseId, prices, contributors] = await Promise.all([
+  const [page, pageLocked, edited, baseId, prices, contributors, tracks, tracksLocked, tracksBase] = await Promise.all([
     editing ? loadPage(wt) : null,
     editing ? isLocked(wt) : false,
     lastEdit(wt),
     editing ? latestRevisionId(`series:${skey}`) : 0,
     priceSummaries(skey, lockedShares),
     seriesContributors(series.artistSlug, series.no),
+    seriesTracks(series.artistSlug, series.no),
+    tt ? isLocked(tt) : false,
+    tt ? latestRevisionId(targetKey(tt)) : 0,
   ]);
+  const main = mainTracks(series, tracks);
   const self = `/artist/${skey}`;
   const lastBy = edited ?? series.lastEdit;
 
@@ -322,6 +466,18 @@ export default async function SeriesPage({ params, searchParams }: Props) {
         </p>
       </section>
 
+      {main ? (
+        <section className="block tracks-main" id="tracks" data-testid="main-tracks">
+          <h2 className="block-title">
+            曲目<span className="count">{trackCount(main.lines)}</span>
+          </h2>
+          <p className="sub tracks-basis" data-testid="main-tracks-basis">
+            依{main.it.kind}「{main.v.edition}」{main.regular ? "" : "（最早的實體版本）"}
+          </p>
+          <TrackList lines={main.lines} />
+        </section>
+      ) : null}
+
       {series.items.map((it) => {
         const inItem = related.filter((s) => s.link?.item === it.id);
         const loose = inItem.filter((s) => !s.link?.version);
@@ -330,7 +486,7 @@ export default async function SeriesPage({ params, searchParams }: Props) {
             <h2 className="item-title">{it.kind}</h2>
             <LockBanner target={itemTarget(itemKey(series, it))} locked={isTargetLocked(c.lockData, itemTarget(itemKey(series, it)))} />
             {it.versions.length > 1 ? (
-              <Compare series={series} item={it} />
+              <Compare series={series} item={it} tracks={tracks} base={main?.v ?? null} />
             ) : it.versions.length === 1 ? (
               <Spec series={series} item={it} v={it.versions[0]} />
             ) : (
@@ -348,6 +504,8 @@ export default async function SeriesPage({ params, searchParams }: Props) {
                 view={c.toShareView}
                 locks={c.lockData}
                 price={prices.get(versionKey(series, it, v))}
+                tracks={tracks.get(versionAnchor(it, v))}
+                editor={tt && tm && tm[1] === it.id && tm[2] === v.id ? { baseId: tracksBase, locked: tracksLocked } : null}
               />
             ))}
             <ItemLooseWall shares={loose.map(c.toShareView)} />

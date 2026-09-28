@@ -182,6 +182,8 @@ export const artists = sqliteTable(
     hiddenAt: text("hidden_at"),
     /** 2c：藝人頁顯示。auto＝有系列或收藏才顯示；on＝強制顯示；off＝強制不顯示 */
     display: text("display").notNull().default("auto"),
+    /** MusicBrainz 藝人 MBID（2026-09-28 匯入時對應成功才有） */
+    mbid: text("mbid"),
   },
   (t) => [index("artists_status_idx").on(t.status)],
 );
@@ -215,9 +217,14 @@ export const series = sqliteTable(
     updatedAt: text("updated_at").notNull().default(now),
     deletedAt: text("deleted_at"),
     hiddenAt: text("hidden_at"),
+    /** MusicBrainz release-group MBID（匯入建立或去重合併時寫入） */
+    mbid: text("mbid"),
+    /** 資料來源：musicbrainz＝MusicBrainz 匯入建立；NULL＝站內建立或研究匯入 */
+    source: text("source"),
   },
   (t) => [
     uniqueIndex("series_artist_no_uq").on(t.artistSlug, t.no),
+    index("series_mbid_idx").on(t.mbid),
     index("series_status_idx").on(t.status),
     // 每位藝人最多一個「周邊與其他」（懶建立時兩個請求同時進來也不會建出兩個）
     uniqueIndex("series_misc_uq").on(t.artistSlug).where(sql`kind = 'misc'`),
@@ -238,6 +245,8 @@ export const items = sqliteTable(
     createdAt: text("created_at").notNull().default(now),
     deletedAt: text("deleted_at"),
     hiddenAt: text("hidden_at"),
+    /** musicbrainz＝MusicBrainz 匯入建立 */
+    source: text("source"),
   },
   (t) => [uniqueIndex("items_series_item_uq").on(t.seriesId, t.itemId)],
 );
@@ -268,8 +277,19 @@ export const versions = sqliteTable(
     createdAt: text("created_at").notNull().default(now),
     deletedAt: text("deleted_at"),
     hiddenAt: text("hidden_at"),
+    /** MusicBrainz release MBID（匯入建立或去重合併時寫入） */
+    mbid: text("mbid"),
+    /** musicbrainz＝MusicBrainz 匯入建立 */
+    source: text("source"),
+    /** 發行日期（YYYY、YYYY-MM 或 YYYY-MM-DD） */
+    releaseDate: text("release_date").notNull().default(""),
+    /**
+     * 曲目（2026-09-28）：JSON string[]，一行一首「序. 歌名 (m:ss)」，多碟用「【第 2 碟 CD】」分段（lib/tracks.ts 解析）。
+     * 之後的修改走維基式編輯（revisions target＝tracks:{系列}#{品項}-{版本}），這欄是目前版本
+     */
+    trackList: text("track_list").notNull().default("[]"),
   },
-  (t) => [uniqueIndex("versions_item_version_uq").on(t.itemRef, t.versionId)],
+  (t) => [uniqueIndex("versions_item_version_uq").on(t.itemRef, t.versionId), index("versions_mbid_idx").on(t.mbid)],
 );
 
 /** 正版辨識：版本的逐項特徵 */

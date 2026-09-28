@@ -47,3 +47,6 @@ next-env.d.ts
 
 # typescript
 *.tsbuildinfo
+
+# MusicBrainz 匯入快取（scripts/import-musicbrainz.mjs）
+/.cache/

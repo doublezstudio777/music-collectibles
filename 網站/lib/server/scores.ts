@@ -179,7 +179,7 @@ const yearOk = (year: string) => {
   if (!/^\d{4}$/.test(year) || Number(year) < 1900 || Number(year) > max) throw new HttpError(400, "INVALID", `填 1900～${max} 的西元年`);
 };
 
-async function recordFill(u: User, source: string, at: string, detail: Record<string, unknown>) {
+export async function recordFill(u: User, source: string, at: string, detail: Record<string, unknown>) {
   await getDb()
     .insert(scoreEvents)
     .values({ userId: u.id, kind: "fill", source, points: POINTS.fill, occurredAt: at, availableAt: addDays(at, HOLD_DAYS), detail: JSON.stringify(detail) })
@@ -376,7 +376,7 @@ const BASE_REASON = `CASE e.kind
     THEN (SELECT CASE WHEN v.deleted_at IS NOT NULL OR v.hidden_at IS NOT NULL THEN 'hidden'
         WHEN e.state != 'credited' AND CASE ${J("field")} ${Object.entries(FILL_FIELDS)
           .map(([k, f]) => `WHEN '${k}' THEN v.${f.col}`)
-          .join(" ")} END IS NOT ${J("value")} THEN 'changed' END FROM versions v WHERE v.id = ${J("version")})
+          .join(" ")} WHEN 'trackList' THEN v.track_list END IS NOT ${J("value")} THEN 'changed' END FROM versions v WHERE v.id = ${J("version")})
     ELSE (SELECT CASE WHEN w.deleted_at IS NOT NULL OR w.hidden_at IS NOT NULL THEN 'hidden'
       WHEN e.state != 'credited' AND w.year != ${J("value")} THEN 'changed' END FROM series w WHERE w.id = ${J("series")}) END
 END`;
