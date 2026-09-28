@@ -1,0 +1,74 @@
+PASS 0a 遷移：series 有 kind 欄、error_reports 表、shares.pending_series_id、reports.photo_id 
+PASS 0b 既有系列回填類型：專輯→album、EP→ep、單曲→single、巡迴／演唱會→tour {'專輯發行': 'album', '自製發行': 'album', 'EP 發行': 'ep', '巡迴演唱會': 'tour', '巡迴演出': 'tour', '影像發行': 'album', 'EP 宣傳': 'ep', '音樂祭': 'tour', '單曲發行': 'single', '演唱會巡迴': 'tour', '自有品牌': 'brand'}
+PASS 0c 沒有替全部藝人預先建「周邊與其他」（只有用過的藝人才有） 
+FAIL 1a 周邊類「屬於哪裡」分三組，依序：演唱會／巡迴、隨專輯發行的周邊、藝人自有品牌或周邊 ['演唱會', '專輯的周邊', '藝人自己出的']
+PASS 1b 隨專輯發行組列出這位藝人的專輯；自有品牌組有「周邊與其他」；有「不確定」 (1, 'misc:qa603496')
+FAIL 1c 管理員新增演唱會立即生效，而且直接選好 ('2024\n驗收巡迴603496\n巡迴', 'qa603496/2')
+PASS 1d 新系列 kind=tour、status=approved、年份 2024 {'id': 680, 'artist_slug': 'qa603496', 'no': 2, 'title': '驗收巡迴603496', 'name': '2024《驗收巡迴603496》演唱會巡迴', 'series_type': '演唱會巡迴', 'credits': '["qa603496"]', 'year': '2024', 'body': '[]', 'guests': '[]', 'compilation': '[]', 'status': 'approved', 'created_by': 'd
+PASS 1e 毛巾掛在這場演唱會：series_key 對、品項自動建成 towel、版本不確定 {'series_key': 'qa603496/2', 'item_id': 'towel', 'version_id': None, 'kind': '毛巾', 'what': '驗收巡迴603496・毛巾'}
+PASS 1f 標題「系列・品項」 驗收巡迴603496・毛巾
+PASS 1g 系列頁標出類型「巡迴」、列出毛巾品項（還沒有版本）、看得到這則 巡迴
+PASS 2a 第一次用到才建「周邊與其他」：一個、直接生效、沒有年份 [{'id': 681, 'artist_slug': 'qa603496', 'no': 3, 'title': '周邊與其他', 'name': '周邊與其他', 'series_type': '周邊與其他', 'credits': '["qa603496"]', 'year': '', 'body': '[]', 'guests': '[]', 'compilation': '[]', 'status': 'approved', 'created_by': 'u-qm603496', 'last_edit_b
+PASS 2b T 恤掛在「周邊與其他」、品項 tshirt {'series_key': 'qa603496/3', 'item_id': 'tshirt', 'what': '周邊與其他・T 恤'}
+PASS 2c 已經建好的「周邊與其他」表單改用真的系列鍵 qa603496/3
+PASS 2d 第二則沿用同一個「周邊與其他」 
+PASS 2e 四個請求同時建同一位藝人的「周邊與其他」：全部成功、只有一個系列 [201, 201, 201, 201]
+PASS 2f 藝人頁「周邊與其他」排最後，每張卡標出類型 (['2024《驗收巡迴603496》演唱會巡迴', '2020《驗收專輯》專輯發行', '周邊與其他'], ['巡迴', '專輯', '周邊'])
+PASS 2g「周邊與其他」系列頁標「周邊」、不出現補年份 
+PASS 2h「周邊與其他」API 也不能補年份 {"error":{"code":"BAD_REQUEST","message":"「周邊與其他」沒有發行年"}}
+FAIL 3a 會員新增系列 → 提示審核中、這則先放「不確定」 新表單沒有這個操作：不能新增自有品牌系列，新增系列改事後審（上傳表單改版定案）
+FAIL 3b 系列待審（kind=brand、沒有年份）；收藏掛不確定並記著等哪個系列 新表單沒有這個操作：不能新增自有品牌系列，新增系列改事後審（上傳表單改版定案）
+FAIL 3c 待審系列前台看不到 新表單沒有這個操作：不能新增自有品牌系列，新增系列改事後審（上傳表單改版定案）
+FAIL 3d 編輯頁也看得到「審核中、先放不確定」 新表單沒有這個操作：不能新增自有品牌系列，新增系列改事後審（上傳表單改版定案）
+FAIL 3e 管理員核准 → 回報改掛 1 則；收藏自動改掛到新系列、品項 poster、標題重組 新表單沒有這個操作：不能新增自有品牌系列，新增系列改事後審（上傳表單改版定案）
+FAIL 3f 新系列頁出現、標「自有品牌」、看得到這則 新表單沒有這個操作：不能新增自有品牌系列，新增系列改事後審（上傳表單改版定案）
+FAIL 3g 系列被退回：收藏維持不確定、等待標記清掉 發收藏 400 {"error":{"code":"INVALID","message":"新增的系列找不到或已經審核過了，重新選一次"}}；新增系列回應 {"type":"series","key":"qa603496/4","id":683,"series":{"key":"qa603496/4","name":"2023《驗收退回603496》演唱會巡迴","title":"驗收退回60
+PASS 3h 不能掛到別人新增的待審系列 {"error":{"code":"INVALID","message":"新增的系列找不到或已經審核過了，重新選一次"}}
+FAIL 4a 唱片類只列專輯／EP／單曲，外加不確定（不列巡迴、周邊與其他） ['2020 驗收專輯 專輯', '不確定，先跳過']
+PASS 4b CD 掛專輯＞CD＞首版 {'series_key': 'qa603496/1', 'item_id': 'cd', 'version_id': 'v1', 'what': '驗收專輯・CD・首版'}
+PASS 4c 舊版 API 寫法（只帶系列＋品項＋版本、不帶 kind）照樣收 {"n":2542}
+PASS 4d 品項跟類型對不上會擋（毛巾＋CD 品項） {"error":{"code":"INVALID","message":"品項跟選的類型不一樣"}}
+PASS 4e 不確定（不選系列）照樣可以發 
+PASS 4f 其他周邊沒寫是什麼會擋，而且不會先建出任何東西 {"error":{"code":"INVALID","message":"寫一下是什麼周邊"}}
+PASS 5a 編輯頁帶入目前的品項與屬於哪裡 ('T 恤', 'qa603496/3')
+PASS 5b 改成毛巾＋演唱會：沿用既有的 towel 品項 {'series_key': 'qa603496/2', 'item_id': 'towel', 'kind': '毛巾'}
+PASS 6a 資料有誤、不是這位藝人、重複發文、其他 → 錯誤回報 {'wrong_info': (201, 'error'), 'not_artist': (201, 'error'), 'duplicate': (201, 'error'), 'other': (201, 'error')}
+PASS 6b 四筆錯誤回報只進 error_reports，reports 沒有多 
+PASS 6c 門檻暫調成 2，四筆錯誤回報後仍未鎖定 
+PASS 6d 錯誤回報不擋交易（未鎖定時出價不回 423） 409
+PASS 6e 疑似盜版仿冒、疑似詐騙、照片或文字不妥 → 檢舉 {'fake': (201, 'report'), 'scam': (201, 'report'), 'improper': (201, 'report')}
+PASS 6f 三筆檢舉進 reports、達門檻（2）鎖定 
+PASS 6g 同一則每人只能檢舉一次（409） {"error":{"code":"ALREADY_REPORTED","message":"已經檢舉過了"}}
+PASS 6h 未驗證 Email：檢舉不收（403），錯誤回報照收 (403, 201)
+PASS 6i 同一人同一則錯誤回報第二次：回已收到、不多一筆 
+PASS 6j 補充說明超過 500 字截到 500 
+PASS 6k 不能檢舉自己的收藏 
+PASS 6m 分數規則照舊：檢舉成立的有 report_ok，錯誤回報的沒有 
+PASS 6l 門檻改回原值 10
+PASS 7a 單則頁最下方一行小字「對這則收藏有疑問嗎？」；原本的「檢舉這則」不在了 
+PASS 7b 對話框：七個原因單選 ['疑似盜版或仿冒品', '資料有誤（版本、年份、藝人寫錯）', '其實不是這位藝人的東西', '重複發文', '疑似詐騙（例如要求私下匯款、站外交易）', '照片或文字不妥', '其他']
+PASS 7c 送出後顯示「已收到，謝謝你的回報」 
+PASS 7d 錯誤回報帶著補充說明與比對照片（照片不公開） [{'id': 38, 'share_no': 2534, 'reporter_id': 'u-qd603496', 'reason': 'wrong_info', 'note': '年份應該是 2023', 'photo_id': 'Zybr30ENbmXKO9Y9', 'status': 'open', 'handled_by': None, 'handled_at': None, 'created_at': '2026-09-28T13:52:34.305Z'}]
+PASS 7e 比對照片訪客打不開（只有本人與管理員） 
+PASS 7f Esc 關掉對話框 
+PASS 7g 從對話框送檢舉（疑似詐騙）→ 進 reports 
+PASS 7h 發文者自己看不到這一行 
+PASS 7i 留言的檢舉照舊（有留言時的檢舉按鈕由留言元件負責，這裡確認元件還在） 
+PASS 8a 沒登入點了先跳登入 
+PASS 8b 登入後留在原頁並直接打開對話框 http://127.0.0.1:8791/share/2534
+PASS 8c 登入後送出成功 
+PASS 8d 在別處登入後回到原頁：對話框自動打開（sessionStorage 記號） 
+PASS 9a 手機面板貼齊螢幕底部、滿版寬 {'x': 0, 'y': 101.28125, 'width': 390, 'height': 742.71875}
+PASS 9b 面板內沒有元素超出螢幕 []
+PASS 9c 送出鈕在可見範圍、夠大好點（高 ≥ 40） {'x': 18, 'y': 799.34375, 'width': 310, 'height': 44}
+PASS 9d 手機送出成功 
+PASS 10a 後台「錯誤回報」列出全部待處理 (30, 30)
+PASS 10b 回報附的說明與比對照片看得到 
+PASS 10c 標記已修正、不處理，寫進操作紀錄 
+PASS 10d 儀表板待處理有「錯誤回報」數量，等於待處理筆數 28
+PASS 10e 儀表板上看得到「錯誤回報」格 
+PASS 10f 審核頁的檢舉列顯示檢舉附的說明 第 2534 則	收藏	疑似詐騙 1
+PASS 10g 非管理員打不到後台錯誤回報 API 403
+PASS 11a 受影響頁面 320／390／1440 無水平溢出（表單展開新增演唱會、單則、巡迴系列頁、藝人頁、後台錯誤回報） []
+PASS 12 全程 console error 0 []
+63/73 通過

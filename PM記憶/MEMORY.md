@@ -46,3 +46,5 @@
 - WSL 裡 Node 的 fetch 連外站（MusicBrainz）會 ETIMEDOUT，curl 卻正常：Node 雙棧競速 250ms 內 IPv4 還沒連上就放棄，腳本開頭 `dns.setDefaultResultOrder("ipv4first")`＋`net.setDefaultAutoSelectFamily(false)`。MusicBrainz 網頁（非 API）有 JS 算力驗證，curl 拿不到內容，逐首比對要用 Playwright 開（2026-09-28）
 - 大量匯入正式站前，先用最新站外備份 `restore.mjs` 還原到 scratchpad 的 `--persist-to`、套遷移、跑匯入＋重跑一次當彩排，數字跟正式站會完全一樣；受保護資料（第 3 則）在彩排裡先逐欄比對（2026-09-28）
 - 驗收發文後等跳頁用 `wait_for_url(re.compile(r"/share/\d+$"))`，glob `**/share/*` 會直接比對到 `/share/new` 假通過；攔 `/api/me` 模擬登入要連 `state` 一起給，只給 `user` 前端當沒登入；`手機版切版修正/_檢查.py` 截圖路徑寫死在舊資料夾，重跑完要 `git restore` 那個 img/；改表單會讓舊驗收大量卡在舊 testid，排工時預留改寫舊腳本的量（2026-09-28）
+- 部署後煙霧測試 14～16 筆 404 的真因：新版本上線後舊版本還會回舊 HTML 幾十秒，舊 chunk 卻一切換就 404（快取鍵本來就含部署版本，不是快取）。`deploy.sh` 已改成保留 7 天舊資產（`.deploy-assets/`，只在執行部署那台）＋等 `x-yz-build` 變新版才跑煙霧測試；看回應是哪一版查 `x-yz-build` 表頭。D1 一次 `--command` 多句＝一個交易，失敗整批不生效，資料搬移用這個做（2026-09-28）
+- 舊驗收腳本改操作時，選項清單有上限（表單藝人建議只列 5 個），打前綴會被本機累積的同名測試資料擠掉，改打完整名字＋用 `data-slug` 點；自己剛新增的系列，答案黑框的「改」是改名框，要按 `rename-series-cancel` 才回清單（2026-09-28）

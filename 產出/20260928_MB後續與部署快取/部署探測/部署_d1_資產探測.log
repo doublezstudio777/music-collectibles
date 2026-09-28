@@ -1,0 +1,9 @@
+21:14:33 HTML 200 cache HIT build None old-html cur-assets-bad 0/21 old-only-bad 0/0
+21:14:45 HTML 200 cache MISS build None new-html cur-assets-bad 0/21 old-only-bad 15/17
+21:15:04 HTML 200 cache HIT build None new-html cur-assets-bad 0/21 old-only-bad 17/17
+21:15:23 HTML 200 cache HIT build None new-html cur-assets-bad 0/21 old-only-bad 17/17
+21:15:43 HTML 200 cache HIT build None new-html cur-assets-bad 0/21 old-only-bad 17/17
+21:16:03 HTML 200 cache HIT build None new-html cur-assets-bad 0/21 old-only-bad 17/17
+21:16:21 HTML 200 cache HIT build None new-html cur-assets-bad 0/21 old-only-bad 17/17
+21:16:40 HTML 200 cache HIT build None new-html cur-assets-bad 0/21 old-only-bad 17/17
+21:16:58 HTML 200 cache HIT build None new-html cur-assets-bad 0/21 old-only-bad 17/17

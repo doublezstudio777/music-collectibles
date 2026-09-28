@@ -1,0 +1,26 @@
+PASS 1 隱藏藝人（沒收藏也不是廠牌）不在頁面原始回應裡（含 RSC payload） 
+PASS 1 隱藏藝人打字搜尋找得到 {'artists': [{'slug': 'fap-hidden-602883', 'name': '表單隱藏藝人602883', 'aliases': [], 'kind': '藝人', 'gender': None, 'region': None}]}
+FAIL 1 頁面有「更多」按鈕（池子超過 10 位） 
+FAIL 1 頁面帶「找不到？打字搜尋全部藝人」提示 
+PASS 1 沒按「更多」前，畫面上實際渲染剛好 10 個藝人按鈕 10
+FAIL 1 按「更多」後展開出其餘池子藝人（這次跑的 12 位都看得到） 10
+PASS 2 會員自己分享過的藝人排在池子藝人前面 ([94], -1)
+PASS 3 疑似重複清單抓到這組（名稱前綴／後綴包含關係） {'pairKey': 'dupbase602883|dupext602883', 'reason': '名稱前綴／後綴包含關係', 'a': {'slug': 'dupbase602883', 'name': '疊字測試602883', 'aliases': [], 'kind': '藝人', 'gender': None, 'region': None, 'hasWiki': False, 'seriesCount': 0, 'shareCount': 0}, 'b': {'slug': 'dupext6028
+PASS 3 預覽合併算出會搬 1 個系列、1 則收藏 {'keep': 'dupbase602883', 'lose': 'dupext602883', 'series': 1, 'shares': 1, 'holdings': 0, 'deals': 0, 'follows': 0, 'dismissals': 0, 'revisions': 0, 'decisions': 0, 'locks': 0}
+PASS 3 合併成功回傳搬動筆數 {'keep': 'dupbase602883', 'lose': 'dupext602883', 'series': 1, 'shares': 1, 'holdings': 0, 'deals': 0, 'follows': 0, 'dismissals': 0, 'revisions': 0, 'decisions': 0, 'locks': 0}
+PASS 3 合併只搬動不增減：系列、收藏總數合併前後一致 (633, 633, 2379, 2379)
+PASS 3 系列搬到保留者底下、換了新流水號 [{'artist_slug': 'dupbase602883', 'no': 1}]
+PASS 3 收藏的 series_key 換成新鍵 dupbase602883/1
+PASS 3 lose 的識別碼寫進轉址表 [{'new_slug': 'dupbase602883'}]
+PASS 3 lose 那位藝人軟刪除 [{'deleted_at': '2026-09-28T13:42:03.135Z'}]
+PASS 3 lose 的名稱併進 keep 的別名 ['疊字測試602883加場版']
+PASS 3 舊網址 301 轉址到保留者 (301, '/artist/dupbase602883/1')
+PASS 3 標記前這組會出現 {'pairKey': 'disa602883|disb602883', 'reason': '名稱前綴／後綴包含關係', 'a': {'slug': 'disa602883', 'name': '不重複測試602883', 'aliases': [], 'kind': '藝人', 'gender': None, 'region': None, 'hasWiki': False, 'seriesCount': 0, 'shareCount': 0}, 'b': {'slug': 'disb602883', 'nam
+PASS 3 標記「不是重複」後不再出現 None
+PASS 4 新藝人不在預設按鈕裡 
+PASS 4 打字搜尋選到後變成 chip 
+PASS 4 發布成功、跳到單則頁 http://127.0.0.1:8791/share/2409
+PASS 4 藝人頁出現剛剛那則收藏 
+PASS 4 這位藝人現在自然出現在預設清單裡 
+PASS 4 全程 console error 0 
+22/25 通過

@@ -1,0 +1,71 @@
+{
+ "v16": {
+  "欄位數": 25,
+  "有變的欄位": {
+   "tracks": [
+    "",
+    "8 首"
+   ],
+   "track_list": [
+    "[]",
+    "[\"1. Time to Roll\",\"2. 1, 2, 1, 2\",\"3. 入口\",\"4. Hotbox\",\"5. 療程\",\"6. 就Lay Back\",\"7. Never Say No\",\"8. 還沒睡\"]"
+   ]
+  },
+  "沒變的欄位": [
+   "id",
+   "item_ref",
+   "version_id",
+   "edition",
+   "year",
+   "region",
+   "label",
+   "catalog",
+   "barcode",
+   "packaging",
+   "contents",
+   "identify_by",
+   "data_status",
+   "color",
+   "sort",
+   "status",
+   "created_by",
+   "created_at",
+   "deleted_at",
+   "hidden_at",
+   "mbid",
+   "source",
+   "release_date"
+  ]
+ },
+ "s3": {
+  "欄位數": 25,
+  "有變的欄位": {},
+  "沒變的欄位": [
+   "no",
+   "author_id",
+   "what",
+   "kind",
+   "kind_note",
+   "story",
+   "about",
+   "tags",
+   "series_key",
+   "item_id",
+   "version_id",
+   "ref_photo",
+   "color",
+   "sale_state",
+   "price",
+   "sold_price",
+   "sold_to",
+   "sold_at",
+   "created_at",
+   "updated_at",
+   "deleted_at",
+   "hidden_at",
+   "edited_at",
+   "pending_series_id",
+   "custom_what"
+  ]
+ }
+}

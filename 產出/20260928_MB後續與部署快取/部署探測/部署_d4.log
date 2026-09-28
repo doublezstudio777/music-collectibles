@@ -1,0 +1,25 @@
+== 0. 設定檢查 ==
+== 1. 型別、lint、遷移檔檢查 ==
+== 2. 建置（正式設定） ==
+保留舊資產：這次建置 58 個檔，補進 7 天內的舊檔 160 個（存檔共 165 個）
+== 3. 遷移前站外備份 ==
+== 4. 套用遷移（雲端 D1） ==
+== 5. 部署程式 ==
+Uploaded 17 of 52 assets
+Uploaded 34 of 52 assets
+Uploaded 52 of 52 assets
+✨ Success! Uploaded 52 files (173 already uploaded) (1.53 sec)
+Current Version ID: 315b5413-7979-400c-a756-0afb8a44558e
+存檔這次建置 58 個檔；超過 7 天移除 0 個；存檔共 218 個
+== 6. 煙霧測試 ==
+首頁 200
+== 6b. 等新版本 315b5413-7979-400c-a756-0afb8a44558e 生效 ==
+新版本 315b5413 已生效：33 秒，首頁引用 21 個資產全部 200
+== 7. 瀏覽器煙霧測試（Playwright：點連結換頁、console error 0） ==
+首頁 HTML：x-yz-cache=HIT x-yz-build=315b5413 cf-cache-status=HIT
+首頁載入：https://yinzang.dblzm.workers.dev/
+點 logo 回首頁：https://yinzang.dblzm.workers.dev/
+console error：0
+HTTP 錯誤回應／失敗請求：0
+瀏覽器煙霧測試通過
+DEPLOY_EXIT 0

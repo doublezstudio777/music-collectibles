@@ -1,0 +1,166 @@
+PASS 1a 編輯 API 成功 (201, 201, '{"id":4918}')
+PASS 1b A 在系列四連續 12 次編輯都成功 12
+PASS 1c C 還原系列三 API 成功 {"id":4942}
+PASS 1d 重算不讓 content_version 增加 (25656, 25656)
+PASS 1e A 在系列一連續兩次編輯合併成一筆 1
+PASS 1f 合併後改動 200 字以上＝30 分 {'target': 'series:lvart603258/1', 'base': 4917, 'first': 4918, 'last': 4919, 'lastAt': '2026-09-28T13:48:10.039Z', 'chars': 259}
+PASS 1g 編輯 7 天內是待入帳（pending），總分 0 (0, 310)
+PASS 1h 系列四 12 次編輯＝12 筆，每筆 20 分（不設每日上限） [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+PASS 1i 只改標點空白＋5 個字＝極小修改 0 分（void／minor） (0, 'minor', 4)
+PASS 1j 7 天內被還原＝不給分（reverted） ('void', 'reverted')
+PASS 1k 還原本身不給分（C 沒有系列三的事件） 
+PASS 1l A 待入帳 30＋20＋240＋20＝310 310
+FAIL 2a 會員送審：待審（approved=false） ('{"type":"series","key":"lvart603258/5","id":676,"series":{"key":"lvart603258/5","name":"《D送審603258》專輯發行","title":"D送審603', '{"type":"item","key":"lvart603258/1#towel","approved":false}')
+PASS 2b 送審時選「不記得」＝年份空白、名稱沒有年份 {'id': 676, 'year': '', 'name': '《D送審603258》專輯發行', 'status': 'approved'}
+FAIL 2c 待審的新增不給分（not_approved） [('series:676', None), ('item:234', 'not_approved')]
+PASS 2d 核准後系列、品項各 +15 {'series:676': ('credited', None, 15), 'item:234': ('credited', None, 15), 'version:337': ('void', 'not_approved', 15)}
+PASS 2e 品項連帶的第一個版本不另外算 {'series:676': ('credited', None, 15), 'item:234': ('credited', None, 15), 'version:337': ('void', 'not_approved', 15)}
+PASS 2f 被退回的版本不給分 (201, [{'id': 337}], {'series:676': ('credited', None, 15), 'item:234': ('credited', None, 15), 'version:337': ('void', 'not_approved', 15)})
+PASS 2g 管理員新增系列直接生效（approved=true、status=approved） ('{"type":"series","key":"lvart603258/6","id":677,"series":{"key":"lvart603258/6","name":"2025《館長新增603258》專輯發行","title":"館', {'id': 677, 'no': 6, 'status': 'approved'})
+PASS 2h 不在審核佇列 22
+PASS 2i 前台看得到（系列頁 200） 
+FAIL 2j 管理員新增的品項、版本、藝人也直接生效 {'it': 'approved', 'vs': 'approved,approved', 'ar': None}
+PASS 2k 管理員免審核寫操作紀錄（4 筆） 4
+PASS 3a 今天 7 則：5 則有分、2 則超過每日上限 [('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('void', 'daily_cap'), ('void', 'daily_cap')]
+PASS 3b 勾辨識參考不再給分（不產生 ref 事件，2026-09-28 規則拿掉） {}
+PASS 3c 管理員下架一則有分的收藏：扣回 10 分，超過上限的那則不遞補 (86, 76)
+PASS 4a 按讚、取消讚不讓 content_version 增加 (25673, 25673)
+PASS 4b E 今天讚 12 則：10 則有分、2 則超過每日上限、取消的那則作廢 [('credited', None), ('credited', None), ('credited', None), ('credited', None), ('void', 'removed'), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('void', 'daily_cap'), ('void', 'daily_cap')]
+PASS 4c 讚自己的收藏沒有事件 
+PASS 4d 同一則收到 53 個讚，只計 50 (53, 50)
+PASS 4e X 收到讚合計 60（第 1 則 50＋其他 10 則，取消的那個不算） 60
+PASS 4f X 總分＝收藏 120＋收到讚 60＋收到留言 7＝187 (187, 0)
+PASS 4g 互讚合計 25 次只計 20：P1 給 10、P2 給 10 (10, 10)
+PASS 4h 互讚的收到讚同樣只計 20：P1 收 10、P2 收 10 (10, 10)
+PASS 5a F 今天 12 則：10 則有分、2 則超過每日上限 [('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('credited', None), ('void', 'daily_cap'), ('void', 'daily_cap')]
+PASS 5b 在自己收藏底下的留言沒有事件 12
+PASS 5c 互留言合計 12 則只計 10：P1 7 則 14 分、P2 3 則 6 分 (14, 6)
+PASS 5d 留言、刪留言不讓 content_version 增加 (200, 201, 25673, 25673)
+PASS 5e 刪掉一則有分的留言：扣回 2 分，超過上限的不遞補（今天第 13 則也不給） (18, [('credited', None), ('void', 'daily_cap'), ('void', 'daily_cap'), ('void', 'daily_cap')])
+PASS 6a 同一對買賣 3 筆成交只計 2 筆：賣家 +10、買家 +10 (10, 10)
+PASS 6b 作廢的成交不給分 
+PASS 7a 管理員維持鎖定＝檢舉成立 +10，7 天內待入帳 ((0, 50), [('pending', None), ('pending', None), ('pending', None), ('pending', None), ('pending', None)])
+PASS 7b 管理員解鎖＝檢舉不成立 -5（總分 10－5＝5） (5, 0)
+PASS 7c 達門檻（10 人）＝前 10 位檢舉成立（待入帳） 
+PASS 7d 達門檻後才跟上的第 11 位不給分 []
+PASS 7e 被檢舉成立的收藏扣回（Y 5 則 reported） [('share:2521', 'reported'), ('share:2522', 'reported'), ('share:2523', 'reported'), ('share:2524', 'reported'), ('share:2525', 'reported'), ('share:2526', 'daily_cap')]
+PASS 7f 達門檻被鎖的收藏扣回 [('share:2527', 'reported')]
+PASS 7g 留言被 3 人檢舉自動隱藏＝檢舉成立（待入帳）；留言者那則作廢 ([201, 201, 201], [('rok:633', 'pending'), ('crok:180', 'pending')])
+PASS 7h 7 天後檢舉成立入帳：H 50 分 (50, 0)
+PASS 7i 被翻案：原本成立的 +10 作廢（overturned）、改 -5 [('report_ok', 'void', 'overturned'), ('report_bad', 'credited', None)]
+PASS 7j 第 11 位也 -5（總分最低 0） (0, 0)
+PASS 7k 翻案後 Y2 的收藏分數回來 
+PASS 8a 補發行年 API 都成功 [200, 200, 200, 200, 200, 200, 200]
+PASS 8b 已經有年份不能再補（409） 409
+PASS 8c 年份格式不對 400 400
+PASS 8d 補上後系列名稱帶年份 2011《補年1》專輯發行
+PASS 8e K 補 6 則別人的：5 則待入帳、1 則超過每日上限；補自己新增的沒有事件 [('series:673', 'credited', None), ('fill:series:667:year', 'pending', None), ('fill:series:668:year', 'pending', None), ('fill:series:669:year', 'pending', None), ('fill:series:670:year', 'pending', None), ('fill:series:671:year', 'pending', None), ('fill:ser
+PASS 8f 7 天內被改掉的不給分（changed） [('void', 'changed')]
+PASS 8g 7 天後入帳：K 補資料 50 分 50
+PASS 9a 停權前 I 10 分、P3 11 分（收藏＋L1 的讚） ((10, 0), (11, 0))
+PASS 9b 停權後 I 分數保留 10（不歸零） (10, 0)
+PASS 9c 按讚者 L1 被停權（原因：其他），他之前給的讚照算：P3 仍 11 (11, 0)
+PASS 9e 停權期間收到的讚不計（suspended） [('share', 'credited', None), ('like_recv', 'void', 'suspended')]
+PASS 9d 恢復後照常：I 10＋恢復後收到的讚 1＝11；停權期間那個讚仍不計 (11, 0)
+PASS 9f 停權紀錄一筆、恢復時填上結束時間 [{'reason': 'other', 'note': '等級驗收', 'ended_at': '2026-09-28T13:49:27.999Z'}]
+PASS 9g 停權必填原因：沒選 400、選「其他」沒寫說明 400、不在選單內 400 ('{"error":{"code":"INVALID","message":"選一個停權原因"}}', '{"error":{"code":"INVALID","message":"原因選「其他」要寫說明"}}', '{"error":{"code":"INVALID","message":"選一個停權原因"}}')
+PASS 9h 按讚者因「分身刷分」停權：不再有特例，他給的讚照算，P3 仍 11、沒有 peer_sockpuppet 這個 reason (11, 0)
+PASS 9i admin_log 記下原因代碼與說明 [{'detail': '{"reason":"分身刷分：驗收分身","code":"sockpuppet","note":"驗收分身"}'}]
+PASS 9j 會員列表顯示停權原因 分身刷分：驗收分身
+PASS 10a 7 天後 A 編輯入帳 310 分 (310, 0)
+PASS 10b 過了 7 天才被還原，不影響（仍 credited） ('credited', None)
+PASS 10c B 的極小修改與被還原的編輯 7 天後仍是 0 分 (0, 0)
+PASS 10d D 總分＝收藏 50＋新增 30＋收到留言 6＝86（2026-09-28 拿掉辨識參考 +5） ((86, 0), [('share', 'credited', None), ('share', 'credited', None), ('share', 'credited', None), ('share', 'credited', None), ('share', 'credited', None), ('comment_recv', 'credited', None), ('comment_recv', 'credited', None), ('comment_recv', 'credited', Non
+PASS 10e P1＝收藏 100＋給讚 10＋收讚 10＋留言 14＋收到留言 3＝137；P2＝150＋10＋10＋6＋7＝183 (137, 183)
+PASS 10f E＝收藏 10＋給讚 9＝19；F＝收藏 10＋留言 18＝28 ((19, 0), (28, 0))
+PASS 11a 打假先鋒：H 檢舉成立 5 次 [('fakebuster', '')]
+PASS 11b 檢舉成立 1 次的不給（R01） []
+PASS 11c 頭號樂迷：A 是等級藝人的頭號樂迷（14 次有效編輯） [('topfan', 'lvart603258'), ('topfan', 'lvartc603258')]
+PASS 11d 同分（A、C 各 1 次）取先達到的 A ([('topfan', 'lvart603258'), ('topfan', 'lvartc603258')], [])
+PASS 11e 每位藝人只有一位頭號樂迷 1
+PASS 11f C 超過 A：頭號樂迷換人 ([('topfan', 'lvart603258')], [('topfan', 'lvartc603258')])
+PASS 11g 打假先鋒被翻案剩 4 次：稱號拿掉 []
+PASS 11h 恢復成立：稱號回來 [('fakebuster', '')]
+PASS 12a 個人頁：暱稱旁等級（310 分＝專業樂迷 Lv.2，門檻 280） ['專業樂迷 Lv.2']
+PASS 12b 個人頁：目前分數 310 310
+PASS 12c 個人頁：離專業樂迷 Lv.3（380）還差 70 分 ('離 專業樂迷 Lv.3 還差 ', '70')
+PASS 12d 個人頁：顯示「分數統計於」時間 分數統計於 2026-10-06 21:52（每天統計一次）
+PASS 12e 個人頁：稱號「等級藝人頭號樂迷」，連到藝人頁 
+PASS 12f H 個人頁顯示「打假先鋒」 
+PASS 12g 管理員個人頁：固定顯示「館長」、不顯示分數 ['館長']
+PASS 12h 留言帶等級：F＝新晉樂迷 Lv.2（28 分，門檻 20）、管理員＝館長 {'lv603258f': '新晉樂迷 Lv.2', 'yzadmin': '館長'}
+PASS 12i 出價列表：每位出價者旁有等級 (2, 2)
+PASS 12j 資料貢獻者名單：每人旁有等級（A＝專業樂迷 Lv.2） [('lv603258a', '專業樂迷 Lv.2'), ('lv603258b', '新晉樂迷 Lv.1'), ('lv603258d', '新晉樂迷 Lv.3')]
+PASS 17a 同一則收藏收到 52 則留言，只計 50（share_cap 2） (50, 2)
+PASS 17b 在自己收藏底下留言不算（X2 沒有自己的留言事件） 52
+PASS 17c X2 總分＝收藏 10＋收到留言 50＝60 (60, 0)
+PASS 17d 互留言上限一起算：12 則只計 10，P2 收到 7、P1 收到 3（超過的 2 則兩邊都不給） (7, 3)
+PASS 17e 留言被刪除：作者的收到留言扣回（deleted） [{'state': 'void', 'reason': 'deleted'}]
+PASS 17f 留言被隱藏：作者的收到留言扣回（hidden） ([{'id': 2662}], [{'state': 'void', 'reason': 'hidden'}])
+PASS 17g 60 分＝新晉樂迷 Lv.3（門檻 50），離新晉樂迷 Lv.4（90）還差 30 ('新晉樂迷 Lv.4', '30')
+PASS 18a 版本的發行年、地區、發行、目錄號、辨識特徵、包裝、曲目都能補（200） [200, 200, 200, 200, 200, 200, 200]
+PASS 18b 已經有值的不能再補（409） 
+PASS 18c 條碼不在清單、年份格式不對、空白 → 400 [400, 400, 400]
+PASS 18d 補上的值寫進版本 {'year': '2011', 'region': '台灣', 'label': '驗收唱片', 'catalog': 'LV-001', 'identify_by': '側標印紅字'}
+PASS 18e G 補別人的 6 筆：5 筆待入帳、1 筆超過每日上限；補自己新增的版本沒有事件 [('fill:version:340:year', 'pending', None), ('fill:version:340:region', 'pending', None), ('fill:version:340:label', 'pending', None), ('fill:version:340:catalog', 'pending', None), ('fill:version:340:identifyBy', 'pending', None), ('fill:version:341:packagin
+PASS 18f 7 天內被改掉的不給分（changed） [('fill:version:340:year', None), ('fill:version:340:region', 'changed'), ('fill:version:340:label', None), ('fill:version:340:catalog', None), ('fill:version:340:identifyBy', None), ('fill:version:341:packaging', 'daily_cap'), ('version:342', None)]
+PASS 18g 7 天後入帳：G 補資料 40 分（5 筆有分、1 筆被改掉） 40
+PASS 18h 系列頁：還有空白欄位的版本出現「待補」與可補的欄位 3
+PASS 19a 指定等級必填原因（400）、等級超出 1～25（400） ('{"error":{"code":"INVALID","message":"寫一下指定等級的原因"}}', '{"error":{"code":"INVALID","message":"等級不對"}}')
+PASS 19b 指定 A 為資深樂迷 Lv.3（第 13 級）成功 {"ok":true,"level":13}
+PASS 19c 個人頁顯示指定的等級，不標示「指定」 ['資深樂迷 Lv.3']
+PASS 19d 分數照常累計（仍 310），離資深樂迷 Lv.4（1,550）還差 1,240 ((310, 0), ('資深樂迷 Lv.4', '1,240'))
+PASS 19e 後台會員列表：等級＝資深樂迷 Lv.3、標示指定與原因 {'level': '資深樂迷 Lv.3', 'override': 13, 'overrideReason': '驗收：資深貢獻', 'score': 310}
+PASS 19f 資料貢獻者名單也顯示指定的等級 
+PASS 19g admin_log 記下指定等級（等級、原因） [{'action': '指定等級', 'detail': '{"reason":"驗收：資深貢獻","level":13,"label":"資深樂迷 Lv.3"}'}]
+PASS 19h 管理員固定館長，不能指定（403） 403
+PASS 19i 取消指定：回到計算值專業樂迷 Lv.2，留紀錄 ('{"ok":true,"level":null}', ['專業樂迷 Lv.2'])
+PASS 19j 指定、取消指定不讓 content_version 增加 (25730, 25730)
+PASS 19k 兩張新表沒有內容版本觸發器 []
+PASS 20a 門檻換成降低版（25 級） [0, 20, 50, 90, 140, 200, 280, 380, 500, 650, 800, 1000, 1250, 1550, 1900, 2300, 2800, 3400, 4100, 5000, 6000, 7200, 8600, 10200, 12000]
+PASS 13a 按讚、留言、重算分數、看個人頁：content_version 不變 (25730, 25730)
+PASS 13b 單則頁整頁快取前後都是 HIT ('MISS', 'HIT', 'HIT')
+PASS 13c 三張計分表與 counters 都沒有內容版本觸發器 []
+PASS 14a 藝人頁系列：新的在前、年份不明排最後（2024、2021、2019、待補） ['2025《館長新增603258》專輯發行', '2024《系列三603258》專輯發行', '2021《系列四603258》專輯發行', '2019《系列一603258》專輯發行', '《D送審603258》專輯發行', '《系列二603258》專輯發行']
+PASS 14b 全部系列（含送審、館長新增）也照同一規則 [2025, 2024, 2021, 2019, -1, -1]
+PASS 14c 年份空白的系列頁有「發行年待補」 
+PASS 14d 有年份的系列頁沒有這行 
+PASS 15a 成交總金額 1440：Range 量每個字都在框內、沒有省略號 {'ok': True, 'text': 'NT$643,150', 'lines': 2, 'rightMax': 1258.328125, 'innerRight': 1271.5, 'font': '22px', 'overflow': 'visible', 'textOverflow': 'clip', 'bad': 0}
+PASS 15b 成交總金額 1440：顯示完整金額 NT$643,150 ('NT$643,150', 643150)
+PASS 15c 金額九位數 1440：仍不截斷（放不下時換行，行數 4） {'ok': True, 'text': 'NT$123,456,789', 'lines': 4, 'rightMax': 1260.328125, 'innerRight': 1271.5, 'font': '22px', 'overflow': 'visible', 'textOverflow': 'clip', 'bad': 0}
+PASS 15d 留言畫面 1440：每則留言都有等級（2/2） (2, 2)
+PASS 15a 成交總金額 390：Range 量每個字都在框內、沒有省略號 {'ok': True, 'text': 'NT$643,150', 'lines': 2, 'rightMax': 171, 'innerRight': 355.5, 'font': '22px', 'overflow': 'visible', 'textOverflow': 'clip', 'bad': 0}
+PASS 15b 成交總金額 390：顯示完整金額 NT$643,150 ('NT$643,150', 643150)
+PASS 15c 金額九位數 390：仍不截斷（放不下時換行，行數 2） {'ok': True, 'text': 'NT$123,456,789', 'lines': 2, 'rightMax': 219, 'innerRight': 355.5, 'font': '22px', 'overflow': 'visible', 'textOverflow': 'clip', 'bad': 0}
+PASS 15d 留言畫面 390：每則留言都有等級（2/2） (2, 2)
+PASS 15e 畫面上補發行年：補完後「發行年待補」消失、標題帶 2017 
+PASS 15f 補上 2017 後系列二排到 2019 之後 ['2025《館長新增603258》專輯發行', '2024《系列三603258》專輯發行', '2021《系列四603258》專輯發行', '2019《系列一603258》專輯發行', '2017《系列二603258》專輯發行', '《D送審603258》專輯發行']
+PASS 15g K2 畫面補的那筆算「補上缺漏資料」（待入帳） [('fill:series:674:year', 'void'), ('fill:series:664:year', 'pending')]
+FAIL 15h 新增系列：沒填年份也沒勾不記得 → 提示 
+PASS 15i 勾「不記得」後年份欄停用 
+FAIL 15j 送出後：待審、年份空白 [{'year': '', 'status': 'approved'}]
+PASS 21a 後台停權：沒選原因會提示；選「洗版或騷擾」加說明後停權，列表顯示原因 ('選一個停權原因', '洗版或騷擾：畫面驗收')
+PASS 21b 後台指定等級：新晉樂迷 Lv.5 → 取消指定回到計算值 ('新晉樂迷 Lv.5', '新晉樂迷 Lv.1')
+PASS 21c 系列頁畫面補版本地區：寫進資料、顯示謝謝；登入後辨識細節也有目錄號待補 ('香港', 1)
+PASS 16 admin_dash 1440：無橫向溢出、console error 0 (0, [])
+PASS 16 profile_a 1440：無橫向溢出、console error 0 (0, [])
+PASS 16 profile_h 1440：無橫向溢出、console error 0 (0, [])
+PASS 16 profile_admin 1440：無橫向溢出、console error 0 (0, [])
+PASS 16 share_comments 1440：無橫向溢出、console error 0 (0, [])
+PASS 16 share_offers 1440：無橫向溢出、console error 0 (0, [])
+PASS 16 series_contrib 1440：無橫向溢出、console error 0 (0, [])
+PASS 16 artist_sort 1440：無橫向溢出、console error 0 (0, [])
+PASS 16 admin_dash 390：無橫向溢出、console error 0 (0, [])
+PASS 16 profile_a 390：無橫向溢出、console error 0 (0, [])
+PASS 16 profile_h 390：無橫向溢出、console error 0 (0, [])
+PASS 16 profile_admin 390：無橫向溢出、console error 0 (0, [])
+PASS 16 share_comments 390：無橫向溢出、console error 0 (0, [])
+PASS 16 share_offers 390：無橫向溢出、console error 0 (0, [])
+PASS 16 series_contrib 390：無橫向溢出、console error 0 (0, [])
+PASS 16 artist_sort 390：無橫向溢出、console error 0 (0, [])
+PASS 16 year_fill 390：無橫向溢出、console error 0 (0, [])
+PASS 16 submit_series 1440：無橫向溢出、console error 0 (0, [])
+PASS 16 admin_members_new 1440：無橫向溢出、console error 0 (0, [])
+PASS 16 field_fill 1440：無橫向溢出、console error 0 (0, [])
+PASS 16 field_fill 390：無橫向溢出、console error 0 (0, [])
+160/165

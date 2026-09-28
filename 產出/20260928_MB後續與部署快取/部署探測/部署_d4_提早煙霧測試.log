@@ -1,0 +1,8 @@
+首頁 HTML：x-yz-cache=HIT x-yz-build=315b5413 cf-cache-status=HIT
+首頁載入：https://yinzang.dblzm.workers.dev/
+點連結換頁：https://yinzang.dblzm.workers.dev/messages
+點 logo 回首頁：https://yinzang.dblzm.workers.dev/
+console error：0
+HTTP 錯誤回應／失敗請求：1
+  請求失敗 fetch https://yinzang.dblzm.workers.dev/?_rsc：net::ERR_ABORTED
+瀏覽器煙霧測試通過

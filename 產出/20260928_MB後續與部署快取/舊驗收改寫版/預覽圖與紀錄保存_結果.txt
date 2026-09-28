@@ -1,0 +1,27 @@
+PASS 1a 頁面 console error 0（發布流程） []
+PASS 1b 有產生分享預覽圖（og_key 不是 null） {'og': 'p/iP7rLUXWiXcPRKf-_og.jpg', 'r2': 'p/iP7rLUXWiXcPRKf-.webp', 't': 'p/iP7rLUXWiXcPRKf-_t.webp', 'w': 1600, 'h': 1067, 'b': 24214}
+PASS 1c 預覽圖 200，Content-Type image/jpeg (200, 'image/jpeg')
+PASS 1d 預覽圖尺寸 1200x630 (1200, 630)
+PASS 1e 浮水印：右下角有文字（非純色） 
+PASS 1f 浮水印：中央斜字有文字（非純色） 
+PASS 1g 縮圖沒有燒浮水印（角落雜訊跟其他區塊同量級） (0.0, 0.48257223636927754)
+PASS 1g2 對照：og 預覽圖角落雜訊明顯偏高（真的有浮水印） (38.10909223933171, 0.0)
+PASS 1h bytes 欄含三張檔案大小（容量計入 8GB） 
+PASS 1i og:image 指到預覽圖 http://127.0.0.1:8791/img/p/iP7rLUXWiXcPRKf-_og.jpg
+PASS 1j og:image:width=1200 <re.Match object; span=(3560, 3600), match='property="og:image:width" content="1200"'>
+PASS 1k og:image:height=630 <re.Match object; span=(3608, 3648), match='property="og:image:height" content="630"'>
+PASS 1l og:image:type=image/jpeg <re.Match object; span=(3656, 3701), match='property="og:image:type" content="image/jpeg"'>
+PASS 1m facebookexternalhit UA 抓得到單則頁（200） 
+PASS 2a 隱藏後預覽圖 404 404
+PASS 2b 隱藏 API 回報有清快取（purgedPhotos） {'target': 'share:2410', 'hidden': True, 'purgedPhotos': 3}
+PASS 2c 恢復後預覽圖 200 200
+PASS 3a 未登入拿不到大圖（401） 401
+PASS 3b 未登入可拿到分享預覽圖（200，公開） 200
+PASS 4a 塞資料前確認兩筆都在 2
+PASS 4b 清理 API 200 {"ok":true,"retentionDays":90,"userActivity":1,"userGeo":1,"rateLimits":1}
+PASS 4c 回傳 retentionDays=90 {'ok': True, 'retentionDays': 90, 'userActivity': 1, 'userGeo': 1, 'rateLimits': 1}
+PASS 4d 91 天前的活動紀錄被清掉、89 天前的保留 ['2026-07-01']
+PASS 4e 過期限流計數被清掉、未過期的保留 ['verify_test_keep']
+PASS 4f 90 天沒登入的地區紀錄被清掉、活躍的保留 ['geo-test-keep']
+PASS 4g 清理有寫操作紀錄（admin_log） {'action': '清理過期紀錄', 'target': 'retention', 'detail': '{"retentionDays":90,"cutoff":"2026-06-30","userActivity":1,"userGeo":1,"rateLimits":1}'}
+26/26 過
