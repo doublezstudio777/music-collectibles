@@ -12,6 +12,12 @@
 // 去重：既有系列用「藝人＋標題＋年份」比對（研究匯入的 47 筆與會員建的都算）；既有版本用「品項＋年份」比對，
 //       對上的只補空白欄位，不覆蓋已有值。用戶本人第 3 則收藏掛的版本整列不碰。
 // 每一筆寫入的都標 source='musicbrainz' 與 MBID；可重跑，MBID 已存在就不再建。
+//
+// 手動設定（2026-09-28 MusicBrainz 後續）：scripts/musicbrainz-manual.json（或 --manual <檔>）
+//   artists：{ 識別碼: { mbid, evidence } }，自動規則擋下但人工確認是本人的藝人，直接指定 MBID；
+//            也可用參數 --mbid 識別碼=MBID（可重複，evidence 寫「參數指定」）。指定的 MBID 會先向 MusicBrainz 查一次確認存在
+//   protectedShare.fillBlank：第 3 則收藏掛的版本，只補這幾個「原本空白」的欄位，其他欄位（含 mbid）照舊不碰
+//   mergeSeries：[{ from, into, title }]，同一作品被拆成兩個系列時併成一個（見 import-musicbrainz-db.mjs 的 mergeSeries）
 
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -32,6 +38,18 @@ const persist = opt("--persist-to", ".wrangler/state");
 const dry = argv.includes("--dry-run");
 /** 用戶本人收藏（正式站第 3 則）掛的版本：整列不碰 */
 const PROTECTED_SHARE = 3;
+const manualFile = opt("--manual", join(root, "scripts", "musicbrainz-manual.json"));
+const manual = JSON.parse(readFileSync(manualFile, "utf8"));
+manual.artists ??= {};
+for (let i = 0; i < argv.length; i++) {
+  if (argv[i] !== "--mbid") continue;
+  const [slug, mbid] = String(argv[i + 1] ?? "").split("=");
+  if (!slug || !/^[0-9a-f-]{36}$/.test(mbid ?? "")) {
+    console.error(`--mbid 格式是 識別碼=MBID：${argv[i + 1]}`);
+    process.exit(2);
+  }
+  manual.artists[slug] = { mbid, evidence: "參數指定" };
+}
 
 /* ---------- CSV ---------- */
 
@@ -91,7 +109,13 @@ for (const p of people) p.peers = people.filter((x) => x !== p).flatMap((x) => [
 console.log(`== 藝人對應（${people.length} 位） ==`);
 const mapping = [];
 for (const p of people) {
-  const m = await matchArtist(p);
+  let m = await matchArtist(p);
+  const pin = manual.artists[p.slug];
+  if (pin) {
+    // 手動指定：先確認 MBID 在 MusicBrainz 上真的存在（查不到會丟錯停下），自動對應的候選照樣留在報告裡
+    const a = await mb(`artist/${pin.mbid}`);
+    m = { status: "ok", mbid: pin.mbid, manual: true, candidates: m.candidates, reason: `手動指定「${a.name}」（${a.country ?? "國家未標"}｜${a.type ?? "類型未標"}）：${pin.evidence}；自動規則原判：${m.reason}` };
+  }
   mapping.push({ slug: p.slug, name: p.name, label: p.label, ...m });
   console.log(`  ${m.status === "ok" ? "✓" : "✗"} ${p.name}（${p.slug}）${m.mbid ?? ""}：${m.reason}`);
 }
@@ -108,4 +132,4 @@ console.log(`MusicBrainz 請求：網路 ${stats.network}、快取 ${stats.cache
 if (fetchOnly) process.exit(0);
 
 // 以下在 --local／--remote 時執行（資料庫部分另見本檔後半）
-await import("./import-musicbrainz-db.mjs").then((m) => m.run({ argv, remote, persist, dry, mapping, releases, people, releaseRows, PROTECTED_SHARE, mb, norm, titleHit }));
+await import("./import-musicbrainz-db.mjs").then((m) => m.run({ argv, remote, persist, dry, mapping, releases, people, releaseRows, PROTECTED_SHARE, manual, mb, norm, titleHit }));

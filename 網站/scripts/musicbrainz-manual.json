@@ -1,0 +1,22 @@
+{
+  "_說明": "import-musicbrainz.mjs 的手動設定（2026-09-28 MusicBrainz 後續，使用者核准）。artists：自動規則擋下、但人工確認是本人／本團的藝人，直接指定 MBID（evidence 寫確認依據）；protectedShare：第 3 則收藏掛的版本只補哪些空白欄位；mergeSeries：同一作品被拆成兩個系列時，from 併進 into（品項、版本搬過去，from 軟刪除並寫 301 轉址）",
+  "artists": {
+    "miss-ko": {
+      "mbid": "a9400a25-2c3e-4594-95ea-79849dbd5ae7",
+      "evidence": "MusicBrainz「Miss Ko」別名含「葛仲珊」、出生地 Queens（維基：出生並成長於美國）、Wikidata Q15914430 與中文維基「葛仲珊」條目相同；自動規則只因國家登記 US 擋下。另一候選 Christine Ko（b450d80e）是同一人的本名條目（is person 關係），沒有任何發行"
+    },
+    "guts": {
+      "mbid": "f77e7cd4-1e57-45ee-9a6f-dbb203bba4fa",
+      "evidence": "MusicBrainz「兄弟本色」排序名 G.U.T.S、國家 TW、類型 Group、成立 2015，Wikidata Q28418093 與中文維基「兄弟本色」條目相同；自動規則只因研究的《台北小巨蛋日落黑趴》MusicBrainz 沒登錄、作品沒有交集而擋下"
+    }
+  },
+  "protectedShare": { "fillBlank": ["track_list", "tracks"] },
+  "mergeSeries": [
+    {
+      "from": "yeemao/1",
+      "into": "yeemao/2",
+      "title": "健康歌曲",
+      "reason": "使用者 9/28：2024 年又出了黑膠版本，跟 2017 CD 是同一個作品"
+    }
+  ]
+}

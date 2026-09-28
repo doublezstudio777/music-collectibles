@@ -616,6 +616,23 @@ export const artistRedirects = sqliteTable(
 );
 
 /* =====================================================================
+ * MusicBrainz 後續（2026-09-28，drizzle/0017）：系列轉址。只新增這一張表。
+ * 兩個系列合併（同一作品被拆成兩個系列）後，被併掉的系列鍵寫一筆 舊 → 新；
+ * /artist/{藝人}/{號}（含底下歷史頁）一律 301 到新系列。連續合併時舊紀錄一併改指到最新的，只轉一次。
+ * ===================================================================== */
+export const seriesRedirects = sqliteTable(
+  "series_redirects",
+  {
+    /** `{藝人}/{號}` */
+    oldKey: text("old_key").primaryKey(),
+    newKey: text("new_key").notNull(),
+    createdBy: text("created_by"),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [index("series_redirects_new_idx").on(t.newKey)],
+);
+
+/* =====================================================================
  * 表單藝人預設（2026-09-28）：疑似重複藝人。只新增這一張表。
  * 兩個 slug 排序後用 `|` 接成 pair_key，管理員標「不是重複」才寫一筆，之後偵測到這組就跳過。
  * 合併不寫在這張表：合併完其中一個 slug 就不在 artists 裡了（會透過 artist_redirects 轉址），

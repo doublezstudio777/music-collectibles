@@ -22,6 +22,22 @@ export async function redirectTarget(slug: string) {
   return r?.s ?? null;
 }
 
+/**
+ * 舊網址 → 新網址路徑（proxy.ts 用）：藝人識別碼轉址、系列合併轉址（2026-09-28 MusicBrainz 後續）一次查完，
+ * 只有一個 D1 請求。seriesNo 有值時才查系列；系列轉址優先（併掉的系列要整段換成新系列）。沒有轉址回 null
+ */
+export async function redirectPath(slug: string, seriesNo: string | null, rest: string) {
+  if (!env.DB) return null;
+  const r = await env.DB.prepare(
+    `SELECT (SELECT new_slug FROM artist_redirects WHERE old_slug = ?1) AS a, (SELECT new_key FROM series_redirects WHERE old_key = ?2) AS s`,
+  )
+    .bind(slug, seriesNo ? `${slug}/${seriesNo}` : "")
+    .first<{ a: string | null; s: string | null }>();
+  if (r?.s) return `/artist/${r.s}${rest}`;
+  if (r?.a) return `/artist/${r.a}${seriesNo ? `/${seriesNo}` : ""}${rest}`;
+  return null;
+}
+
 /** 目標鍵的幾種前綴（reports、appeals、target_decisions、page_locks、revisions 共用） */
 const TARGET_PREFIXES = ["artist:", "series:", "item:", "version:"];
 

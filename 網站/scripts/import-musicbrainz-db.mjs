@@ -82,7 +82,7 @@ const trackTotal = (media) => media.reduce((n, m) => n + (m.tracks?.length ?? m[
 
 /* ---------- 主程式 ---------- */
 
-export async function run({ remote, persist, dry, mapping, releases, people, PROTECTED_SHARE, norm }) {
+export async function run({ remote, persist, dry, mapping, releases, people, PROTECTED_SHARE, manual = {}, norm }) {
   const wrangler = (args, capture = false) =>
     spawnSync(process.execPath, ["--import", "./scripts/sites-env.mjs", "./node_modules/wrangler/bin/wrangler.js", ...args], {
       cwd: root,
@@ -309,7 +309,7 @@ export async function run({ remote, persist, dry, mapping, releases, people, PRO
           track_list: lines_.length ? JSON.stringify(lines_) : "",
         };
 
-        const setBlank = (id) => {
+        const setBlank = (id, only = null) => {
           const conds = {
             year: `year NOT GLOB '[0-9][0-9][0-9][0-9]*'`,
             release_date: `release_date = ''`,
@@ -322,7 +322,7 @@ export async function run({ remote, persist, dry, mapping, releases, people, PRO
             tracks: `tracks IN ('', '—')`,
             track_list: `track_list = '[]' AND NOT EXISTS (SELECT 1 FROM revisions WHERE field = 'tracks' AND target LIKE 'tracks:%' AND target = (SELECT 'tracks:' || w.artist_slug || '/' || w.no || '#' || i.item_id || '-' || v2.version_id FROM versions v2 JOIN items i ON i.id = v2.item_ref JOIN series w ON w.id = i.series_id WHERE v2.id = ${id}))`,
           };
-          for (const [col, val] of Object.entries(fill)) if (val) lines.push(`UPDATE versions SET ${col} = ${q(val)} WHERE id = ${id} AND ${conds[col]};`);
+          for (const [col, val] of Object.entries(fill)) if (val && (!only || only.includes(col))) lines.push(`UPDATE versions SET ${col} = ${q(val)} WHERE id = ${id} AND ${conds[col]};`);
         };
 
         // 1) 已經匯入過（MBID 在）：只補空白
@@ -338,7 +338,12 @@ export async function run({ remote, persist, dry, mapping, releases, people, PRO
         if (pick) {
           usedV.add(pick.id);
           if (pick.id === protectedId) {
-            report.受保護略過.push(`版本 id ${pick.id}「${pick.edition}」對上 ${r.id}，整列不動（第 ${PROTECTED_SHARE} 則收藏）`);
+            // 第 3 則收藏掛的版本：預設整列不碰；手動設定 protectedShare.fillBlank 列出的欄位，原本空白才補（不寫 mbid）
+            const only = manual.protectedShare?.fillBlank ?? [];
+            if (only.length) {
+              setBlank(pick.id, only);
+              report.受保護略過.push(`版本 id ${pick.id}「${pick.edition}」對上 ${r.id}，只補空白的 ${only.join("、")}，其他欄位與 mbid 不動（第 ${PROTECTED_SHARE} 則收藏）`);
+            } else report.受保護略過.push(`版本 id ${pick.id}「${pick.edition}」對上 ${r.id}，整列不動（第 ${PROTECTED_SHARE} 則收藏）`);
             return;
           }
           report.合併版本.push(`版本 id ${pick.id}「${pick.edition}」← ${r.id}`);
@@ -406,6 +411,7 @@ export async function run({ remote, persist, dry, mapping, releases, people, PRO
 
   if (dry) {
     console.log(`--dry-run：SQL 寫在 ${out}（${lines.length} 句），沒有執行`);
+    mergeSeries({ query, wrangler, target, q, norm, manual, dry, summary, reportFile });
     return;
   }
   if (remote) {
@@ -429,4 +435,93 @@ export async function run({ remote, persist, dry, mapping, releases, people, PRO
   summary.本次實際變化 = { 新系列: delta.s, 新品項: delta.i, 新版本: delta.v, 合併系列: delta.sm, 合併版本: delta.vm, 有曲目的版本增加: delta.vt };
   writeFileSync(reportFile, JSON.stringify(summary, null, 2));
   console.log("本次實際變化：", JSON.stringify(summary.本次實際變化));
+  mergeSeries({ query, wrangler, target, q, norm, manual, dry, summary, reportFile });
+}
+
+/* ---------- 系列合併（2026-09-28 MusicBrainz 後續） ----------
+ * 同一作品被拆成兩個系列（例：夜貓組《健康歌曲》研究匯入的 2024 黑膠、MusicBrainz 匯入的 2017 CD）：
+ * - from 底下的品項（含已刪除的）整個搬到 into，版本跟著品項走，不重建、不改 id，所以版本的照片辨識、仿冒、我有等以 id 或鍵掛的資料都跟著
+ * - 引用 from 系列鍵的地方（收藏、我有／想要、成交、檢舉／申訴／裁決／鎖定／編輯紀錄）改成 into 的鍵，規則同 lib/server/duplicates.ts 的藝人合併
+ * - from 軟刪除（deleted_at），寫 series_redirects 舊 → 新（proxy.ts 301），連續合併只轉一次；寫 admin_log
+ * - 全部放在一次 d1 execute --command（D1 把同一次請求的多句當一個交易，中途失敗整批不生效）
+ * - 品項類型撞到（兩邊都有 CD）就停下不合併，要人工處理
+ * - 資料守恆：合併前後 series、items、versions 等各表總數必須相同，不同就報錯
+ * - 重跑：from 已刪除且轉址已在 → 略過
+ */
+const COUNT_TABLES = ["series", "items", "versions", "shares", "holdings", "deals", "reports", "appeals", "target_decisions", "page_locks", "revisions", "version_marks", "version_fakes", "photos", "comments"];
+function mergeSeries({ query, wrangler, target, q, norm, manual, dry, summary, reportFile }) {
+  const list = manual.mergeSeries ?? [];
+  if (!list.length) return;
+  summary.系列合併 = [];
+  const counts = () => query(`SELECT ${COUNT_TABLES.map((t) => `(SELECT COUNT(*) FROM ${t}) AS ${t}`).join(", ")}`)[0];
+  for (const m of list) {
+    const [fs, fn] = m.from.split("/");
+    const [is, inn] = m.into.split("/");
+    const [from] = query(`SELECT id, artist_slug AS slug, no, title, year, deleted_at AS del FROM series WHERE artist_slug = ${q(fs)} AND no = ${Number(fn)}`);
+    const [into] = query(`SELECT id, artist_slug AS slug, no, title, year, deleted_at AS del FROM series WHERE artist_slug = ${q(is)} AND no = ${Number(inn)}`);
+    const [redir] = query(`SELECT new_key AS k FROM series_redirects WHERE old_key = ${q(m.from)}`);
+    if (from?.del && redir?.k === m.into) {
+      console.log(`系列合併 ${m.from} → ${m.into}：已經合併過，略過`);
+      summary.系列合併.push({ ...m, 結果: "已經合併過，略過" });
+      continue;
+    }
+    if (!from || !into || from.del || into.del) throw new Error(`系列合併 ${m.from} → ${m.into}：找不到系列或已刪除`);
+    if (m.title && (norm(from.title) !== norm(m.title) || norm(into.title) !== norm(m.title))) throw new Error(`系列合併 ${m.from} → ${m.into}：標題對不上（${from.title}／${into.title}）`);
+    const fromItems = query(`SELECT id, item_id AS itemId, kind FROM items WHERE series_id = ${from.id}`);
+    const intoItems = query(`SELECT id, item_id AS itemId, kind FROM items WHERE series_id = ${into.id}`);
+    const clash = fromItems.filter((a) => intoItems.some((b) => b.itemId === a.itemId));
+    if (clash.length) throw new Error(`系列合併 ${m.from} → ${m.into}：品項撞到（${clash.map((x) => x.itemId).join("、")}），要人工處理`);
+    const moved = fromItems.length ? query(`SELECT COUNT(*) AS n FROM versions WHERE item_ref IN (${fromItems.map((i) => i.id).join(",")})`)[0].n : 0;
+
+    const oldKey = m.from;
+    const newKey = m.into;
+    const st = [];
+    const now = `strftime('%Y-%m-%dT%H:%M:%fZ','now')`;
+    st.push(`UPDATE items SET series_id = ${into.id} WHERE series_id = ${from.id}`);
+    st.push(`UPDATE shares SET series_key = ${q(newKey)} WHERE series_key = ${q(oldKey)}`);
+    for (const [table, col] of [["holdings", "target_key"], ["deals", "version_key"]]) {
+      st.push(`UPDATE ${table} SET ${col} = ${q(newKey)} WHERE ${col} = ${q(oldKey)}`);
+      st.push(`UPDATE ${table} SET ${col} = ${q(newKey + "#")} || substr(${col}, ${oldKey.length + 2}) WHERE substr(${col}, 1, ${oldKey.length + 1}) = ${q(oldKey + "#")}`);
+    }
+    for (const table of ["reports", "appeals", "target_decisions", "page_locks", "revisions"]) {
+      if (table === "target_decisions" || table === "page_locks") {
+        // 一個對象一列：into 已經有就保留 into 的，from 那列留著不動（不刪，守恆），只是不再有人查
+        st.push(`UPDATE ${table} SET target = ${q(`series:${newKey}`)} WHERE target = ${q(`series:${oldKey}`)} AND NOT EXISTS (SELECT 1 FROM ${table} WHERE target = ${q(`series:${newKey}`)})`);
+      } else st.push(`UPDATE ${table} SET target = ${q(`series:${newKey}`)} WHERE target = ${q(`series:${oldKey}`)}`);
+      for (const p of ["item:", "version:"]) {
+        const op = `${p}${oldKey}#`;
+        st.push(`UPDATE ${table} SET target = ${q(`${p}${newKey}#`)} || substr(target, ${op.length + 1}) WHERE substr(target, 1, ${op.length}) = ${q(op)}`);
+      }
+    }
+    st.push(`UPDATE series SET deleted_at = ${now}, updated_at = ${now} WHERE id = ${from.id}`);
+    st.push(`DELETE FROM series_redirects WHERE old_key = ${q(newKey)}`);
+    st.push(`UPDATE series_redirects SET new_key = ${q(newKey)} WHERE new_key = ${q(oldKey)}`);
+    st.push(`INSERT INTO series_redirects (old_key, new_key, created_by) VALUES (${q(oldKey)}, ${q(newKey)}, 'import-musicbrainz')`);
+    st.push(
+      `INSERT INTO admin_log (admin_id, action, target, detail) VALUES ('import-musicbrainz', '合併系列', ${q(`series:${newKey}`)}, ${q(JSON.stringify({ from: oldKey, into: newKey, items: fromItems.map((i) => i.itemId), versions: moved, reason: m.reason ?? "" }))})`,
+    );
+    const plan = { ...m, from系列: from, into系列: into, 搬動品項: fromItems, 搬動版本數: moved, SQL: st };
+    if (dry) {
+      console.log(`系列合併（dry-run，不執行）${oldKey}《${from.title}》${from.year} → ${newKey}《${into.title}》${into.year}：品項 ${fromItems.length}、版本 ${moved}`);
+      summary.系列合併.push({ ...plan, 結果: "dry-run" });
+      continue;
+    }
+    const before = counts();
+    const r = wrangler(["d1", "execute", "DB", ...target, "--command", st.join(";\n") + ";", ...(target.includes("--remote") ? ["--yes"] : [])], true);
+    if (r.status !== 0) {
+      console.error(r.stdout, r.stderr);
+      throw new Error(`系列合併 ${oldKey} → ${newKey} 失敗（整批不生效）`);
+    }
+    const after = counts();
+    const diff = COUNT_TABLES.filter((t) => before[t] !== after[t]);
+    const [chk] = query(
+      `SELECT (SELECT COUNT(*) FROM items WHERE series_id = ${from.id}) AS left_, (SELECT COUNT(*) FROM items WHERE series_id = ${into.id}) AS now_, (SELECT deleted_at FROM series WHERE id = ${from.id}) AS del, (SELECT new_key FROM series_redirects WHERE old_key = ${q(oldKey)}) AS redir`,
+    );
+    const ok = !diff.length && chk.left_ === 0 && chk.now_ === intoItems.length + fromItems.length && chk.del && chk.redir === newKey;
+    summary.系列合併.push({ ...plan, 合併前總數: before, 合併後總數: after, 總數有變的表: diff, 檢查: chk, 結果: ok ? "完成" : "檢查不過" });
+    writeFileSync(reportFile, JSON.stringify(summary, null, 2));
+    console.log(`系列合併 ${oldKey} → ${newKey}：品項 ${fromItems.length}、版本 ${moved}；各表總數${diff.length ? `有變：${diff.join("、")}` : "前後相同"}；轉址 ${chk.redir}`);
+    if (!ok) throw new Error(`系列合併 ${oldKey} → ${newKey} 檢查不過：${JSON.stringify({ diff, chk })}`);
+  }
+  writeFileSync(reportFile, JSON.stringify(summary, null, 2));
 }
