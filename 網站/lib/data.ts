@@ -93,13 +93,19 @@ export function itemInVersion(item: string, version: string) {
   return v.includes(i);
 }
 
-/** 標題與分享文字共用的分段：系列・品項・版本，品項已在版本名稱裡就省略 */
-export const titleSegments = (series: string, item: string, version: string) =>
-  [series, itemInVersion(item, version) ? "" : item, version].map((x) => x.trim()).filter(Boolean);
+/**
+ * 標題與分享文字共用的分段：系列・「版本 品項」（2026-09-29 用字與版本欄）。
+ * 版本名稱已含品項就只放版本（「2016 CD」）；只描述地區、批次的版本接上品項（「日版」→「日版 CD」）；沒選版本就只放品項。
+ */
+export const titleSegments = (series: string, item: string, version: string) => {
+  const v = version.trim();
+  const i = item.trim();
+  return [series.trim(), !v ? i : itemInVersion(i, v) || !i ? v : `${v} ${i}`].filter(Boolean);
+};
 
 /**
  * 炫收藏的標題（存進 shares.what）：
- * - 連到系列：「系列・品項・版本」，例「Dr. Paper Vol.3 Sunday Night Slow Jams・2016 CD」
+ * - 連到系列：「系列・版本 品項」，例「Dr. Paper Vol.3 Sunday Night Slow Jams・2016 CD」「My jinji・日版 CD」
  * - 沒連系列：「跟誰有關・類型」，例「國蛋、Dr. Paper・T 恤」
  */
 export const composeWhat = (p: { series?: string; item?: string; version?: string; about?: string[]; kind?: string }) =>
@@ -248,6 +254,8 @@ export type Share = {
   photos?: SharePhoto[];
   /** 作者顯示名稱；D1 讀出來的才有 */
   authorName?: string;
+  /** 發文者的等級小標籤（「收藏家 Lv.3」／「館長」），目錄建立時算好 */
+  authorBadge?: string;
   link?: { series: string; item?: string; version?: string };
   sale?: Sale;
   /** 管理員標為「辨識參考」的照片（2026-09-28 起改由管理員標記；shares.ref_photo 舊值不再使用） */
@@ -342,7 +350,7 @@ export type ShareView = {
   thumb?: string;
   /** 兩張以上才有：全部照片依順序，第一張是封面 */
   photos?: SharePhoto[];
-  author: { handle: string; name: string; initials: string };
+  author: { handle: string; name: string; initials: string; badge?: string };
   link?: { href: string; label: string; seriesKey: string; itemId?: string; versionId?: string };
   sale: Sale;
   /** 跟哪些藝人有關（跟誰有關＋標籤撞名），首頁「追蹤中」用 */

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import {
   composeWhat,
   isRecordKind,
+  itemInVersion,
   KINDS,
   MISC_SERIES_TITLE,
   miscSeriesRef,
@@ -34,7 +35,16 @@ function splitTags(s: string) {
 
 type FormArtist = FormOptions["defaultArtists"][number];
 type FormSeries = FormOptions["series"][number];
-export type Mine = { artists: string[]; series: string[] };
+export type Mine = { artists: string[]; series: string[]; versions?: string[] };
+/** 版本選項：品項＋版本（同一張專輯可能有兩個同類品項，版本清單攤平在一起） */
+type VOpt = { itemId: string; id: string; edition: string; year: string; region: string; key: string };
+
+/** 版本的口語名稱：「2019 台灣 一般版 CD」「日版 CD」；年份、地區、品項已在名稱裡就不重複 */
+export function versionLabel(v: Pick<VOpt, "edition" | "year" | "region">, item: string) {
+  const e = v.edition.trim();
+  const head = [v.year && !e.includes(v.year) ? v.year : "", v.region && !e.includes(v.region) ? v.region : "", e].filter(Boolean).join(" ");
+  return item && !itemInVersion(item, head) ? `${head} ${item}` : head;
+}
 
 const MEASURE: Partial<Record<Kind, string>> = { 毛巾: "條", "T 恤": "件", 海報: "張", 場刊: "本" };
 const ROWS = 6;
@@ -59,7 +69,7 @@ export type ShareEdit = {
   pendingSeries?: { id: number; title: string } | null;
 };
 
-/** 答完的題目：一條黑框，名稱＋小字，右邊「改」或「改名」 */
+/** 答完的題目：一條黑框，名稱＋小字，右邊「修改」或「改名」按鈕（有框、手機至少 44px 高） */
 function Answer({
   testid,
   title,
@@ -187,36 +197,47 @@ function NameBox({
   );
 }
 
-/** 版本「這裡沒有，我要新增」：版本仍是會員待審（只有藝人、系列改成事後審） */
-function SubmitVersion({ itemKey }: { itemKey: string }) {
-  const [open, setOpen] = useState(false);
-  const [done, setDone] = useState<"" | "pending" | "approved">("");
-  const [f, setF] = useState({ edition: "", year: "" });
+/** 新增版本的虛線框：版本名稱必填，年份、地區選填；新增後立即可用（事後審），自己新增的永遠可以改名 */
+function NewVersionBox({ onSave, onCancel }: { onSave: (f: { edition: string; year: string; region: string }) => Promise<string | null>; onCancel: () => void }) {
+  const [f, setF] = useState({ edition: "", year: "", region: "" });
   const [error, setError] = useState("");
-  if (done) return <span className="sub" role="status">{done === "approved" ? "已新增，重新整理後就能選" : "收到了，確認後會出現在這裡"}</span>;
-  if (!open)
-    return (
-      <button type="button" className="pick pick-add" onClick={() => whenLoggedIn("登入後才能新增", () => setOpen(true))}>
-        這裡沒有，我要新增
-      </button>
-    );
-  const send = async () => {
-    const r = await api<{ approved?: boolean }>("/api/catalog/submit", { body: { type: "version", itemKey, ...f } });
-    if (r.ok) setDone(r.data.approved ? "approved" : "pending");
-    else setError(r.error.message);
+  const [busy, setBusy] = useState(false);
+  const save = async () => {
+    if (!f.edition.trim()) return setError("填版本名稱");
+    if (f.year.trim() && !/^\d{4}$/.test(f.year.trim())) return setError("年份填西元四位數，不知道就空著");
+    setBusy(true);
+    const err = await onSave({ edition: f.edition.trim(), year: f.year.trim(), region: f.region.trim() });
+    setBusy(false);
+    if (err) setError(err);
   };
   return (
-    <div className="sf-box" data-testid="submit-version">
-      <div className="sf-box-row">
-        <input className="input" placeholder="例：首批、日版、再版" value={f.edition} onChange={(e) => setF({ ...f, edition: e.target.value })} aria-label="版本名稱" />
-        <input className="input" inputMode="numeric" maxLength={4} placeholder="年份" value={f.year} onChange={(e) => setF({ ...f, year: e.target.value })} aria-label="年份" />
+    <div className="sf-box" data-testid="new-version">
+      <b className="sf-box-title">新增版本</b>
+      <input
+        className="input"
+        maxLength={40}
+        placeholder="例：日版、首批限定、再版、簽名版"
+        value={f.edition}
+        onChange={(e) => setF({ ...f, edition: e.target.value })}
+        aria-label="版本名稱"
+        data-testid="new-version-name"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+            e.preventDefault();
+            void save();
+          }
+        }}
+      />
+      <div className="sf-box-row sf-box-row-half">
+        <input className="input" inputMode="numeric" maxLength={4} placeholder="年份（選填）" value={f.year} onChange={(e) => setF({ ...f, year: e.target.value.replace(/[^\d]/g, "") })} aria-label="年份" data-testid="new-version-year" />
+        <input className="input" maxLength={20} placeholder="地區（選填）" value={f.region} onChange={(e) => setF({ ...f, region: e.target.value })} aria-label="地區" data-testid="new-version-region" />
       </div>
       {error ? <p className="field-error">{error}</p> : null}
       <span className="sf-box-acts">
-        <button type="button" className="btn btn-line" onClick={send}>
-          新增
+        <button type="button" className="btn btn-line" onClick={save} disabled={busy} data-testid="new-version-save">
+          {busy ? "處理中…" : "新增並選用"}
         </button>
-        <button type="button" className="btn-text" onClick={() => setOpen(false)}>
+        <button type="button" className="btn-text" onClick={onCancel} data-testid="new-version-cancel">
           取消
         </button>
       </span>
@@ -276,7 +297,14 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
   const [pendingSeries, setPendingSeries] = useState(edit?.pendingSeries ?? null);
   const [itemPick, setItemPick] = useState<string | null>(edit?.itemId ?? null);
   const [versionPick, setVersionPick] = useState<string>(edit?.versionId ?? "unsure");
-  const [versionOpen, setVersionOpen] = useState(false);
+  /** 版本題：選好專輯後直接攤開；答過（含「不確定」）才收成一列 */
+  const [versionOpen, setVersionOpen] = useState(!edit?.versionId);
+  const [newVersion, setNewVersion] = useState(false);
+  const [renameVersion, setRenameVersion] = useState(false);
+  /** 這次在表單裡新增的版本（載入時的清單裡還沒有）；改名後的新名稱 */
+  const [extraVersions, setExtraVersions] = useState<(VOpt & { seriesKey: string; kind: string })[]>([]);
+  const [versionPatch, setVersionPatch] = useState<Record<string, Pick<VOpt, "edition" | "year" | "region">>>({});
+  const [myVersions, setMyVersions] = useState<string[]>(mine?.versions ?? []);
 
   /* ---------- 想多說一點 ---------- */
   const [story, setStory] = useState(edit?.story ?? "");
@@ -385,8 +413,17 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
   const series = where ? (seriesOptions.find((w) => w.key === where) ?? miscOptions.find((m) => m.key === where)?.series) : undefined;
   const misc = where ? miscOptions.find((m) => m.key === where) : undefined;
   const sameKind = series && kind ? series.items.filter((i) => i.kind === kind) : [];
-  const item = sameKind.length === 1 ? sameKind[0] : sameKind.find((i) => i.id === itemPick);
-  const version = item?.versions.find((v) => v.id === versionPick);
+  const vOpts: VOpt[] = [];
+  if (series && kind) {
+    for (const v of [
+      ...sameKind.flatMap((it) => it.versions.map((x) => ({ ...x, itemId: it.id }))),
+      ...extraVersions.filter((x) => x.seriesKey === series.key && x.kind === kind),
+    ])
+      if (!vOpts.some((o) => o.key === v.key)) vOpts.push({ itemId: v.itemId, id: v.id, key: v.key, ...(versionPatch[v.key] ?? { edition: v.edition, year: v.year, region: v.region }) });
+  }
+  const version = vOpts.find((v) => v.itemId === itemPick && v.id === versionPick);
+  /** 送出用的品項：選了版本就是版本所屬的品項；沒選版本、系列裡只有一個同類品項就用它 */
+  const item = version ? { id: version.itemId } : sameKind.length === 1 ? sameKind[0] : sameKind.find((i) => i.id === itemPick);
   const whereValid = where === "unsure" || Boolean(series) || Boolean(misc);
   const kindLabel = kind === "其他周邊" ? kindNote.trim() || kind : (kind ?? "");
   const whereQuestion = !kind || record ? "哪一張專輯？" : kind === "其他周邊" ? "這個周邊是哪裡出的？" : `這${MEASURE[kind] ?? "個"}${kind}是哪裡出的？`;
@@ -402,6 +439,8 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
     setKindOpen(false);
     setItemPick(null);
     setVersionPick("unsure");
+    setVersionOpen(true);
+    setNewVersion(false);
   };
   const pickWhere = (k: string) => {
     setWhere(k);
@@ -410,7 +449,9 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
     setNewBox(null);
     setItemPick(null);
     setVersionPick("unsure");
-    setVersionOpen(false);
+    setVersionOpen(true);
+    setNewVersion(false);
+    setRenameVersion(false);
     if (k !== "unsure") setPendingSeries(null);
   };
   const createSeries = async (sk: "album" | "tour", name: string, year: string) => {
@@ -436,6 +477,32 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
     setRenameSeries(false);
     return null;
   };
+  const pickVersion = (v: VOpt | null) => {
+    setItemPick(v ? v.itemId : null);
+    setVersionPick(v ? v.id : "unsure");
+    setVersionOpen(false);
+    setNewVersion(false);
+  };
+  const createVersion = async (f: { edition: string; year: string; region: string }) => {
+    if (!series || !kind) return "先選專輯";
+    const r = await api<{ itemId: string; existing?: boolean; version: Omit<VOpt, "itemId"> }>("/api/catalog/submit", {
+      body: { type: "version", seriesKey: series.key, kind, ...f },
+    });
+    if (!r.ok) return r.error.message;
+    const v = { ...r.data.version, itemId: r.data.itemId };
+    setExtraVersions((xs) => [...xs, { ...v, seriesKey: series.key, kind }]);
+    if (!r.data.existing) setMyVersions((xs) => [...xs, v.key]);
+    pickVersion(v);
+    return null;
+  };
+  const renameVersionSave = async (name: string, year: string) => {
+    if (!version) return null;
+    const r = await api<{ version: VOpt }>("/api/catalog/rename", { body: { type: "version", ref: version.key, name, year } });
+    if (!r.ok) return r.error.message;
+    setVersionPatch((m) => ({ ...m, [version.key]: { edition: r.data.version.edition, year: r.data.version.year, region: r.data.version.region } }));
+    setRenameVersion(false);
+    return null;
+  };
   const renameArtistSave = async (name: string) => {
     const a = pickedArtists.find((x) => x.slug === renameArtist);
     if (!a) return null;
@@ -451,7 +518,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
   const seriesTitle = series?.title ?? (misc ? MISC_SERIES_TITLE : "");
   const autoTitle =
     whereValid && seriesTitle && kind
-      ? composeWhat({ series: seriesTitle, item: kindLabel, version: item && version ? version.edition : "" })
+      ? composeWhat({ series: seriesTitle, item: kindLabel, version: version ? version.edition : "" })
       : pickedArtists.length || kind
         ? composeWhat({ about: pickedArtists.map((a) => a.name), kind: kindLabel })
         : "";
@@ -480,7 +547,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
   const linkBody = () => {
     const base = { kind, kindNote: kind === "其他周邊" ? kindNote.trim() : "" };
     if (!where || where === "unsure" || !whereValid) return { ...base, ...(pendingSeries ? { pendingSeriesId: pendingSeries.id } : {}) };
-    return { ...base, seriesKey: where, ...(item ? { itemId: item.id } : {}), ...(item && version ? { versionId: version.id } : {}) };
+    return { ...base, seriesKey: where, ...(item ? { itemId: item.id } : {}), ...(version ? { versionId: version.id } : {}) };
   };
 
   const submit = async (e?: React.FormEvent) => {
@@ -580,8 +647,8 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
   );
   const whereAnswer = () => {
     if (where === "unsure" || !whereValid)
-      return <Answer testid="bar-where" title="不確定" sub={pendingSeries ? `「${pendingSeries.title}」等待確認` : undefined} action="改" onAction={() => setWhereOpen(true)} />;
-    if (misc) return <Answer testid="bar-where" title={misc.title} sub="藝人自己出的" action="改" onAction={() => setWhereOpen(true)} />;
+      return <Answer testid="bar-where" title="不確定" sub={pendingSeries ? `「${pendingSeries.title}」等待確認` : undefined} action="修改" onAction={() => setWhereOpen(true)} />;
+    if (misc) return <Answer testid="bar-where" title={misc.title} sub="藝人自己出的" action="修改" onAction={() => setWhereOpen(true)} />;
     const w = series!;
     const isMine = mySeries.includes(w.key);
     return (
@@ -590,7 +657,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
         title={w.title}
         sub={[w.year.slice(0, 4) || "年份不記得", SERIES_KIND_LABEL[w.kind as keyof typeof SERIES_KIND_LABEL]].filter(Boolean).join("・")}
         isNew={isMine}
-        action={isMine ? "改名" : "改"}
+        action={isMine ? "改名" : "修改"}
         onAction={() => (isMine ? setRenameSeries(true) : setWhereOpen(true))}
       />
     );
@@ -683,7 +750,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
                   heading="改名"
                   initialName={pickedArtists.find((a) => a.slug === renameArtist)?.name ?? ""}
                   withYear={false}
-                  saveLabel="存"
+                  saveLabel="儲存"
                   cancelLabel="換成別的"
                   onSave={(n) => renameArtistSave(n)}
                   onCancel={() => {
@@ -701,7 +768,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
                       title={a.name}
                       sub={a.aliases[0]}
                       isNew={isMine}
-                      action={isMine ? "改名" : "改"}
+                      action={isMine ? "改名" : "修改"}
                       onAction={() => (isMine ? setRenameArtist(a.slug) : setAboutOpen(true))}
                     />
                   );
@@ -782,7 +849,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
               是什麼？
             </span>
             {kind && !kindOpen ? (
-              <Answer testid="bar-kind" title={kind} action="改" onAction={() => setKindOpen(true)} />
+              <Answer testid="bar-kind" title={kind} action="修改" onAction={() => setKindOpen(true)} />
             ) : (
               <div className="picks" role="group" aria-labelledby={`${id}-kind`} data-testid="pick-kind">
                 {KINDS.map((k) => (
@@ -820,7 +887,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
                     initialYear={series.year.slice(0, 4)}
                     noYearAtStart={!series.year}
                     withYear
-                    saveLabel="存"
+                    saveLabel="儲存"
                     cancelLabel="換成別的"
                     onSave={renameSeriesSave}
                     onCancel={() => {
@@ -894,46 +961,65 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
             )}
           </div>
 
-          {ready && series && kind && sameKind.length > 1 ? (
-            <div className="field">
-              <span className="field-label" id={`${id}-item`}>
-                哪一個{kind}？ <span className="opt">選填</span>
-              </span>
-              <div className="picks" role="group" aria-labelledby={`${id}-item`} data-testid="pick-item">
-                {sameKind.map((it) => (
-                  <button key={it.id} type="button" className="pick" aria-pressed={itemPick === it.id} onClick={() => (setItemPick(itemPick === it.id ? null : it.id), setVersionPick("unsure"))}>
-                    {it.versions[0]?.edition ?? it.id}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : null}
-
-          {ready && series && item && where !== null && !whereOpen ? (
-            <div className="field" data-testid="version-field">
+          {ready && series && kind && series.kind !== "misc" && where !== null && !whereOpen ? (
+            <div className="field" data-testid="version-field" id={`${id}-sec-version`}>
               <span className="field-label" id={`${id}-version`}>
                 哪個版本？ <span className="opt">選填</span>
               </span>
               {!versionOpen ? (
-                <Answer
-                  testid="bar-version"
-                  title={version?.edition ?? "不確定"}
-                  sub={item.versions.length ? `這張有 ${item.versions.length} 個版本：${item.versions.map((v) => v.edition).join("、")}` : "還沒有人補版本"}
-                  action={version ? "改" : "選版本"}
-                  onAction={() => setVersionOpen(true)}
-                />
+                renameVersion && version ? (
+                  <>
+                    <Answer testid="bar-version" title={versionLabel(version, kindLabel)} isNew action="改名" onAction={() => setRenameVersion(true)} />
+                    <NameBox
+                      testid="rename-version"
+                      heading="改版本名稱"
+                      initialName={version.edition}
+                      initialYear={version.year}
+                      noYearAtStart={!version.year}
+                      withYear
+                      saveLabel="儲存"
+                      cancelLabel="換成別的"
+                      onSave={renameVersionSave}
+                      onCancel={() => {
+                        setRenameVersion(false);
+                        setVersionOpen(true);
+                      }}
+                    />
+                  </>
+                ) : (
+                  <Answer
+                    testid="bar-version"
+                    title={version ? versionLabel(version, kindLabel) : "不確定"}
+                    isNew={Boolean(version && myVersions.includes(version.key))}
+                    action={version && myVersions.includes(version.key) ? "改名" : "修改"}
+                    onAction={() => (version && myVersions.includes(version.key) ? setRenameVersion(true) : setVersionOpen(true))}
+                  />
+                )
               ) : (
-                <div className="picks" role="group" aria-labelledby={`${id}-version`} data-testid="pick-version">
-                  {item.versions.map((v) => (
-                    <button key={v.id} type="button" className="pick" aria-pressed={versionPick === v.id} onClick={() => (setVersionPick(v.id), setVersionOpen(false))}>
-                      {v.edition}
+                <>
+                  <div className="sf-list" role="group" aria-labelledby={`${id}-version`} data-testid="pick-version">
+                    {vOpts.map((v) => (
+                      <button
+                        key={v.key}
+                        type="button"
+                        className="sf-row"
+                        aria-pressed={version?.key === v.key}
+                        onClick={() => pickVersion(v)}
+                        data-key={v.key}
+                        data-testid="version-opt"
+                      >
+                        <span className="sf-row-name">{versionLabel(v, kindLabel)}</span>
+                      </button>
+                    ))}
+                    <button type="button" className="sf-row sf-row-skip" aria-pressed={!version} onClick={() => pickVersion(null)} data-testid="version-unsure">
+                      不確定
                     </button>
-                  ))}
-                  <button type="button" className="pick" aria-pressed={versionPick === "unsure"} onClick={() => (setVersionPick("unsure"), setVersionOpen(false))}>
-                    不確定
-                  </button>
-                  <SubmitVersion itemKey={`${series.key}#${item.id}`} />
-                </div>
+                    <button type="button" className="sf-row sf-row-add" onClick={() => whenLoggedIn("登入後才能新增", () => setNewVersion(true))} data-testid="version-new">
+                      <b>新增版本</b>
+                    </button>
+                  </div>
+                  {newVersion ? <NewVersionBox onSave={createVersion} onCancel={() => setNewVersion(false)} /> : null}
+                </>
               )}
             </div>
           ) : null}
@@ -981,7 +1067,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
                 ) : null}
               </>
             ) : (
-              <Answer testid="bar-title" title={autoTitle || "標題會照你選的自動組好"} action="改" onAction={() => setTitleOpen(true)} />
+              <Answer testid="bar-title" title={autoTitle || "標題會照你選的自動組好"} action="修改" onAction={() => setTitleOpen(true)} />
             )}
           </div>
 

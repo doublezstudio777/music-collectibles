@@ -1,0 +1,459 @@
+{
+ "share": 2641,
+ "edition": [
+  "日版9720",
+  "日本版9720"
+ ],
+ "results": [
+  {
+   "name": "1 單字動詞按鈕／連結 grep 結果為 0",
+   "ok": true,
+   "detail": "['TOTAL 0']"
+  },
+  {
+   "name": "2a 選好專輯後「哪個版本？」直接出現",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2b 題目寫「哪個版本？ 選填」",
+   "ok": true,
+   "detail": "哪個版本？ 選填"
+  },
+  {
+   "name": "2c 選項直接攤開，不用再點（既有版本用口語名稱）",
+   "ok": true,
+   "detail": "['2016 台灣 一般版 CD', '日本版 CD', '日本版 CD', '日本首批版 CD']"
+  },
+  {
+   "name": "2d 有「不確定」與「新增版本」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2e 新增版本輸入框附例子",
+   "ok": true,
+   "detail": "例：日版、首批限定、再版、簽名版"
+  },
+  {
+   "name": "2f 年份、地區可以選填",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2g 新增完立刻選好、標「新增」、按鈕是「改名」",
+   "ok": true,
+   "detail": "日版9720 CD新增\n改名"
+  },
+  {
+   "name": "2h 版本帶進自動標題（不重複 CD）",
+   "ok": true,
+   "detail": "My jinji・日版9720 CD"
+  },
+  {
+   "name": "2i 版本立即生效（approved）",
+   "ok": true,
+   "detail": "[{'id': 356, 'version_id': 'v5', 'edition': '日版9720', 'status': 'approved', 'item_id': 'cd'}]"
+  },
+  {
+   "name": "2j 進後台「待確認的新增」（事後審）",
+   "ok": true,
+   "detail": "[{'id': 51}]"
+  },
+  {
+   "name": "2k 390 寬「修改／改名」按鈕點擊範圍都 ≥44px 高、有框有底色",
+   "ok": true,
+   "detail": "[{'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '改名', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}]"
+  },
+  {
+   "name": "2l 390 表單沒有橫向溢出",
+   "ok": true,
+   "detail": "{'sw': 390, 'cw': 390}"
+  },
+  {
+   "name": "2m 發布後單則頁標題有版本",
+   "ok": true,
+   "detail": "My jinji・日版9720 CD"
+  },
+  {
+   "name": "2n 單則頁發文者旁有等級",
+   "ok": true,
+   "detail": "路\n路人01\n專業樂迷 Lv.3\n剛剛\n0"
+  },
+  {
+   "name": "2o console error 0",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "3a 系列頁看得到新版本",
+   "ok": true,
+   "detail": "日版9720"
+  },
+  {
+   "name": "4a 編輯頁版本題顯示目前版本",
+   "ok": true,
+   "detail": "日版9720 CD新增\n改名"
+  },
+  {
+   "name": "4a2 改名撞到既有版本名稱會擋下",
+   "ok": true,
+   "detail": "這張已經有「一般版」了，直接選它就好"
+  },
+  {
+   "name": "4b 改名框按鈕寫「儲存」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4c 改名後表單標題立刻換",
+   "ok": true,
+   "detail": "My jinji・日本版9720 CD"
+  },
+  {
+   "name": "4d 發布列按鈕寫「儲存」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4e 單則頁標題換成新名稱",
+   "ok": true,
+   "detail": "My jinji・日本版9720 CD"
+  },
+  {
+   "name": "4f 改名留紀錄",
+   "ok": true,
+   "detail": "[{'from_name': '日版9720', 'to_name': '日本版9720'}]"
+  },
+  {
+   "name": "4g 編輯時可以改成別的版本，標題跟著換",
+   "ok": true,
+   "detail": "My jinji・一般版 CD"
+  },
+  {
+   "name": "4h 既有版本的按鈕是「修改」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4i 儲存後單則頁標題",
+   "ok": true,
+   "detail": "My jinji・一般版 CD"
+  },
+  {
+   "name": "4j 改回新增的版本",
+   "ok": true,
+   "detail": "My jinji・日本版9720 CD"
+  },
+  {
+   "name": "4k console error 0（4a2 故意撞名的 409 除外）",
+   "ok": true,
+   "detail": "['Failed to load resource: the server responded with a status of 409 (Conflict)']"
+  },
+  {
+   "name": "4l 系列頁（訪客）版本名稱已換",
+   "ok": true,
+   "detail": "日本版9720"
+  },
+  {
+   "name": "5 320 /share/new 無橫向溢出",
+   "ok": true,
+   "detail": "{'sw': 320, 'cw': 320}"
+  },
+  {
+   "name": "5 320 /share/new 修改按鈕 ≥44px 高",
+   "ok": true,
+   "detail": "[{'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}]"
+  },
+  {
+   "name": "5 320 /share/2641/edit 無橫向溢出",
+   "ok": true,
+   "detail": "{'sw': 320, 'cw': 320}"
+  },
+  {
+   "name": "5 320 /share/2641/edit 修改按鈕 ≥44px 高",
+   "ok": true,
+   "detail": "[{'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '改名', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}]"
+  },
+  {
+   "name": "5 390 /share/new 無橫向溢出",
+   "ok": true,
+   "detail": "{'sw': 390, 'cw': 390}"
+  },
+  {
+   "name": "5 390 /share/new 修改按鈕 ≥44px 高",
+   "ok": true,
+   "detail": "[{'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}]"
+  },
+  {
+   "name": "5 390 /share/2641/edit 無橫向溢出",
+   "ok": true,
+   "detail": "{'sw': 390, 'cw': 390}"
+  },
+  {
+   "name": "5 390 /share/2641/edit 修改按鈕 ≥44px 高",
+   "ok": true,
+   "detail": "[{'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '改名', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}]"
+  },
+  {
+   "name": "5 1440 /share/new 無橫向溢出",
+   "ok": true,
+   "detail": "{'sw': 1440, 'cw': 1440}"
+  },
+  {
+   "name": "5 1440 /share/new 修改按鈕 ≥44px 高",
+   "ok": true,
+   "detail": "[{'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}]"
+  },
+  {
+   "name": "5 1440 /share/2641/edit 無橫向溢出",
+   "ok": true,
+   "detail": "{'sw': 1440, 'cw': 1440}"
+  },
+  {
+   "name": "5 1440 /share/2641/edit 修改按鈕 ≥44px 高",
+   "ok": true,
+   "detail": "[{'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '改名', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}, {'text': '修改', 'h': 44, 'w': 72, 'border': '1px rgb(17, 17, 17)', 'bg': 'rgb(245, 245, 245)'}]"
+  },
+  {
+   "name": "6 390 / 同列標題／標籤／發佈人列差距 ≤1px、發佈人列貼底（12 列）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 390 / 每張卡片都有等級標籤",
+   "ok": true,
+   "detail": "['專業樂迷', '專業樂迷', '專業樂迷', '專業樂迷', '專業樂迷', '專業樂迷']"
+  },
+  {
+   "name": "6 390 / 窄卡片只顯示稱號（沒有 Lv 數字）",
+   "ok": true,
+   "detail": "['專業樂迷', '新晉樂迷', '館長']"
+  },
+  {
+   "name": "6 390 / 名字與等級都沒被截斷",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 390 /artist/gordon 同列標題／標籤／發佈人列差距 ≤1px、發佈人列貼底（12 列）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 390 /artist/gordon 每張卡片都有等級標籤",
+   "ok": true,
+   "detail": "['專業樂迷', '專業樂迷', '專業樂迷', '專業樂迷', '專業樂迷', '專業樂迷']"
+  },
+  {
+   "name": "6 390 /artist/gordon 窄卡片只顯示稱號（沒有 Lv 數字）",
+   "ok": true,
+   "detail": "['專業樂迷', '新晉樂迷']"
+  },
+  {
+   "name": "6 390 /artist/gordon 名字與等級都沒被截斷",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 390 /tag/簽名 同列標題／標籤／發佈人列差距 ≤1px、發佈人列貼底（12 列）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 390 /tag/簽名 每張卡片都有等級標籤",
+   "ok": true,
+   "detail": "['專業樂迷', '專業樂迷', '專業樂迷', '專業樂迷', '專業樂迷', '專業樂迷']"
+  },
+  {
+   "name": "6 390 /tag/簽名 窄卡片只顯示稱號（沒有 Lv 數字）",
+   "ok": true,
+   "detail": "['專業樂迷', '新晉樂迷']"
+  },
+  {
+   "name": "6 390 /tag/簽名 名字與等級都沒被截斷",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 390 /u/r01 同列標題／標籤／發佈人列差距 ≤1px、發佈人列貼底（12 列）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 390 /u/r01 每張卡片都有等級標籤",
+   "ok": true,
+   "detail": "['專業樂迷', '專業樂迷', '專業樂迷', '專業樂迷', '專業樂迷', '專業樂迷']"
+  },
+  {
+   "name": "6 390 /u/r01 窄卡片只顯示稱號（沒有 Lv 數字）",
+   "ok": true,
+   "detail": "['專業樂迷']"
+  },
+  {
+   "name": "6 390 /u/r01 名字與等級都沒被截斷",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 390 /u/yzadmin 同列標題／標籤／發佈人列差距 ≤1px、發佈人列貼底（12 列）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 390 /u/yzadmin 每張卡片都有等級標籤",
+   "ok": true,
+   "detail": "['館長', '館長', '館長', '館長', '館長', '館長']"
+  },
+  {
+   "name": "6 390 /u/yzadmin 窄卡片只顯示稱號（沒有 Lv 數字）",
+   "ok": true,
+   "detail": "['館長']"
+  },
+  {
+   "name": "6 390 /u/yzadmin 名字與等級都沒被截斷",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 390 管理員的卡片固定顯示「館長」",
+   "ok": true,
+   "detail": "['館長']"
+  },
+  {
+   "name": "6 390 單則頁發文者旁有等級（訪客）",
+   "ok": true,
+   "detail": "路\n路人01\n專業樂迷 Lv.3\n剛剛\n0"
+  },
+  {
+   "name": "6 390 單則頁沒有為等級多發請求",
+   "ok": true,
+   "detail": "['http://127.0.0.1:8791/api/me', 'http://127.0.0.1:8791/api/comments?share=2641', 'http://127.0.0.1:8791/api/counts?s=2641&s=2640&s=2545&s=2544']"
+  },
+  {
+   "name": "6 1440 / 同列標題／標籤／發佈人列差距 ≤1px、發佈人列貼底（8 列）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 1440 / 每張卡片都有等級標籤",
+   "ok": true,
+   "detail": "['專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3']"
+  },
+  {
+   "name": "6 1440 / 寬卡片顯示完整標籤（稱號＋Lv 或館長）",
+   "ok": true,
+   "detail": "['專業樂迷 Lv.3', '新晉樂迷 Lv.1', '新晉樂迷 Lv.5', '館長']"
+  },
+  {
+   "name": "6 1440 / 名字與等級都沒被截斷",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 1440 /artist/gordon 同列標題／標籤／發佈人列差距 ≤1px、發佈人列貼底（8 列）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 1440 /artist/gordon 每張卡片都有等級標籤",
+   "ok": true,
+   "detail": "['專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3']"
+  },
+  {
+   "name": "6 1440 /artist/gordon 寬卡片顯示完整標籤（稱號＋Lv 或館長）",
+   "ok": true,
+   "detail": "['專業樂迷 Lv.3', '新晉樂迷 Lv.1', '新晉樂迷 Lv.2']"
+  },
+  {
+   "name": "6 1440 /artist/gordon 名字與等級都沒被截斷",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 1440 /tag/簽名 同列標題／標籤／發佈人列差距 ≤1px、發佈人列貼底（8 列）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 1440 /tag/簽名 每張卡片都有等級標籤",
+   "ok": true,
+   "detail": "['專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3']"
+  },
+  {
+   "name": "6 1440 /tag/簽名 寬卡片顯示完整標籤（稱號＋Lv 或館長）",
+   "ok": true,
+   "detail": "['專業樂迷 Lv.3', '新晉樂迷 Lv.1', '新晉樂迷 Lv.2', '新晉樂迷 Lv.3']"
+  },
+  {
+   "name": "6 1440 /tag/簽名 名字與等級都沒被截斷",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 1440 /u/r01 同列標題／標籤／發佈人列差距 ≤1px、發佈人列貼底（8 列）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 1440 /u/r01 每張卡片都有等級標籤",
+   "ok": true,
+   "detail": "['專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3', '專業樂迷 Lv.3']"
+  },
+  {
+   "name": "6 1440 /u/r01 寬卡片顯示完整標籤（稱號＋Lv 或館長）",
+   "ok": true,
+   "detail": "['專業樂迷 Lv.3']"
+  },
+  {
+   "name": "6 1440 /u/r01 名字與等級都沒被截斷",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 1440 /u/yzadmin 同列標題／標籤／發佈人列差距 ≤1px、發佈人列貼底（8 列）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 1440 /u/yzadmin 每張卡片都有等級標籤",
+   "ok": true,
+   "detail": "['館長', '館長', '館長', '館長', '館長', '館長']"
+  },
+  {
+   "name": "6 1440 /u/yzadmin 寬卡片顯示完整標籤（稱號＋Lv 或館長）",
+   "ok": true,
+   "detail": "['館長']"
+  },
+  {
+   "name": "6 1440 /u/yzadmin 名字與等級都沒被截斷",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "6 1440 管理員的卡片固定顯示「館長」",
+   "ok": true,
+   "detail": "['館長']"
+  },
+  {
+   "name": "6 1440 單則頁發文者旁有等級（訪客）",
+   "ok": true,
+   "detail": "路\n路人01\n專業樂迷 Lv.3\n剛剛\n0"
+  },
+  {
+   "name": "6 1440 單則頁沒有為等級多發請求",
+   "ok": true,
+   "detail": "['http://127.0.0.1:8791/api/me', 'http://127.0.0.1:8791/api/comments?share=2641', 'http://127.0.0.1:8791/api/counts?s=2641&s=2640&s=2545&s=2544']"
+  },
+  {
+   "name": "7 單則頁訪客 HTML 快取命中、HTML 裡就帶等級標籤",
+   "ok": true,
+   "detail": "('HIT', 'HIT')"
+  },
+  {
+   "name": "7 首頁快取的 HTML 內嵌資料就帶等級",
+   "ok": true,
+   "detail": "HIT"
+  }
+ ]
+}

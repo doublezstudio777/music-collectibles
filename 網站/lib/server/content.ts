@@ -21,12 +21,16 @@ import {
   settings,
   shares as tShares,
   targetDecisions,
+  levelOverrides,
+  userScores,
   users,
   versionFakes,
   versionMarks,
   versions as tVersions,
 } from "@/db/schema";
 import { Catalog } from "@/lib/catalog";
+import { badgeText } from "@/lib/levels";
+import { isAdmin } from "@/lib/server/auth";
 import {
   SITE_NAME,
   asSeriesKind,
@@ -116,7 +120,13 @@ async function build(): Promise<Catalog> {
     db.select().from(versionMarks).where(isNull(versionMarks.deletedAt)),
     db.select().from(versionFakes).where(isNull(versionFakes.deletedAt)),
     db.select().from(tShares).where(and(isNull(tShares.deletedAt), isNull(tShares.hiddenAt))),
-    db.select({ id: users.id, handle: users.handle, name: users.name }).from(users),
+    // 等級小標籤跟著目錄一起算（2026-09-29）：卡片、單則頁從快取的 HTML 直接帶，不另外發請求；
+    // user_scores 沒有內容版本觸發器，分數變了等下一次內容變動才換，不為等級讓整頁快取失效
+    db
+      .select({ id: users.id, handle: users.handle, name: users.name, email: users.email, emailVerifiedAt: users.emailVerifiedAt, score: userScores.score, override: levelOverrides.level })
+      .from(users)
+      .leftJoin(userScores, eq(userScores.userId, users.id))
+      .leftJoin(levelOverrides, eq(levelOverrides.userId, users.id)),
     db.select().from(photos).where(and(eq(photos.purpose, "share"), isNull(photos.deletedAt))),
     db.select({ n: likes.shareNo, c: count() }).from(likes).groupBy(likes.shareNo),
     db.select({ key: holdings.targetKey, kind: holdings.kind, c: count() }).from(holdings).groupBy(holdings.targetKey, holdings.kind),
@@ -125,6 +135,10 @@ async function build(): Promise<Catalog> {
   const userById = new Map(uRows.map((u) => [u.id, u]));
   const handleOf = (id: string | null) => (id ? (userById.get(id)?.handle ?? "") : "");
   const nameOf = (id: string | null) => (id ? (userById.get(id)?.name ?? "") : "");
+  const badgeOf = (id: string | null) => {
+    const u = id ? userById.get(id) : undefined;
+    return u ? badgeText(u.score ?? 0, isAdmin(u), u.override) : "";
+  };
   const likeCount = new Map(likeRows.map((x) => [x.n, x.c]));
   const holdCount = new Map(holdRows.map((x) => [`${x.kind}:${x.key}`, x.c]));
   const others = (key: string) => holdCount.get(key) ?? 0;
@@ -253,6 +267,7 @@ async function build(): Promise<Catalog> {
         n: s.no,
         author: handleOf(s.authorId),
         authorName: nameOf(s.authorId),
+        authorBadge: badgeOf(s.authorId),
         time: relTime(s.createdAt, now),
         order: Date.parse(s.createdAt) || s.no,
         what: s.customWhat || s.what,

@@ -27,7 +27,7 @@ function Row({ r, done }: { r: AdminAddition; done: () => void }) {
     <li className="er-item" data-testid="add-item" data-id={r.id} data-type={r.type} data-ref={r.ref} data-confirmed={r.confirmedAt ? "1" : "0"}>
       <div className="er-meta">
         <div>
-          <b>{r.type === "artist" ? "藝人" : "系列"}</b>{" "}
+          <b>{r.type === "artist" ? "藝人" : r.type === "version" ? "版本" : "系列"}</b>{" "}
           {r.gone || !r.href ? (
             <span>{r.name}（已不在）</span>
           ) : (
@@ -36,6 +36,7 @@ function Row({ r, done }: { r: AdminAddition; done: () => void }) {
             </Link>
           )}
           {r.type === "series" ? <span className="sub-inline">　{r.year || "年份不記得"}・{r.artist?.name}</span> : null}
+          {r.type === "version" ? <span className="sub-inline">　{r.year || "年份不記得"}・{r.artist?.name}・{r.series}</span> : null}
           <span className="sub-inline">　識別碼 {r.ref}・{r.used} 則收藏在用</span>
         </div>
         <span className="sub">
@@ -54,11 +55,11 @@ function Row({ r, done }: { r: AdminAddition; done: () => void }) {
         {mode === "rename" ? (
           <div className="add-form">
             <input className="input input-sm" value={name} onChange={(e) => setName(e.target.value)} aria-label="名稱" data-testid="add-rename-name" />
-            {r.type === "series" ? (
+            {r.type !== "artist" ? (
               <input className="input input-sm add-year" value={year} onChange={(e) => setYear(e.target.value)} aria-label="年份" placeholder="年份" inputMode="numeric" maxLength={4} />
             ) : null}
             <button type="button" className="btn btn-line" disabled={busy} onClick={() => run({ action: "rename", type: r.type, ref: r.ref, name, year })} data-testid="add-rename-save">
-              存
+              儲存
             </button>
             <button type="button" className="btn-text" onClick={() => setMode("")}>
               取消
@@ -71,7 +72,7 @@ function Row({ r, done }: { r: AdminAddition; done: () => void }) {
               value={into}
               onChange={(e) => setInto(e.target.value)}
               aria-label="併進哪一筆"
-              placeholder={r.type === "artist" ? "既有藝人識別碼，例：gordon" : "既有系列，例：gordon/3"}
+              placeholder={r.type === "artist" ? "既有藝人識別碼，例：gordon" : r.type === "version" ? `同品項的版本，例：${r.ref.replace(/-v\d+$/, "-v1")}` : "既有系列，例：gordon/3"}
               data-testid="add-merge-into"
             />
             <button type="button" className="btn btn-line" disabled={busy || !into.trim()} onClick={() => run({ action: "merge", into })} data-testid="add-merge-save">
@@ -95,7 +96,7 @@ function Row({ r, done }: { r: AdminAddition; done: () => void }) {
             {!r.gone ? (
               <>
                 <button type="button" className="btn-text" onClick={() => setMode("rename")} data-testid="add-rename">
-                  修名
+                  修改名稱
                 </button>
                 <button type="button" className="btn-text" onClick={() => setMode("merge")} data-testid="add-merge">
                   合併到既有的

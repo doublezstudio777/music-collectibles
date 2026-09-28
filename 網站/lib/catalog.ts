@@ -231,7 +231,7 @@ export class Catalog {
       color: s.color,
       ...(s.image ? { image: s.image } : {}),
       ...(s.thumb ? { thumb: s.thumb } : {}),
-      author: { handle: s.author, name, initials: Array.from(name)[0] ?? "?" },
+      author: { handle: s.author, name, initials: Array.from(name)[0] ?? "?", ...(s.authorBadge ? { badge: s.authorBadge } : {}) },
       ...(link ? { link } : {}),
       sale: s.sale ?? { state: "share" },
       aboutSlugs: this.aboutSlugs(s),
@@ -496,7 +496,7 @@ export class Catalog {
         items: w.items.map((it) => ({
           id: it.id,
           kind: it.kind,
-          versions: it.versions.map((v) => ({ id: v.id, edition: v.edition, key: versionKey(w, it, v) })),
+          versions: it.versions.map((v) => ({ id: v.id, edition: v.edition, year: v.year, region: v.region, key: versionKey(w, it, v) })),
         })),
       })),
     };

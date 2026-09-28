@@ -25,6 +25,7 @@ import {
   isTargetLocked,
   KINDS,
   MISC_SERIES_TITLE,
+  norm,
   reasonsFor,
   SERIES_KIND_TYPE,
   targetLevel,
@@ -35,7 +36,7 @@ import {
   type TargetKey,
 } from "@/lib/data";
 import { autoSlug, recordAddition, sameNameArtist } from "@/lib/server/additions";
-import { ITEM_SLUG, moveWaitingShares, nextSeriesNo, releaseWaitingShares } from "@/lib/server/series-link";
+import { ensureItem, ITEM_SLUG, moveWaitingShares, nextSeriesNo, releaseWaitingShares } from "@/lib/server/series-link";
 import { loadLockData, parseJson, photoUrl, threshold, userNames } from "@/lib/server/content";
 import { contentKeyExists, parseContentKey, shareExists } from "@/lib/server/me";
 import { STORAGE_LIMIT, storageUsed, unattachedPhotos } from "@/lib/server/photos";
@@ -261,7 +262,7 @@ export type SubmitKind = "artist" | "series" | "item" | "version";
  */
 export async function submitContent(u: User, type: unknown, b: Record<string, unknown>) {
   const admin = isAdmin(u);
-  const direct = admin || type === "artist" || type === "series";
+  const direct = admin || type === "artist" || type === "series" || type === "version";
   const r = await submitInner(u, type, b, direct ? "approved" : "pending", admin);
   if (admin) await log(u.id, "新增（免審核）", `${r.type}:${r.key}`, {});
   return { ...r, approved: direct };
@@ -357,40 +358,83 @@ async function submitInner(u: User, type: unknown, b: Record<string, unknown>, s
     return { type, key: `${seriesKey}#${itemId}` };
   }
   if (type === "version") {
-    const itemKey = s80(b.itemKey);
+    // 版本（2026-09-29 用字與版本欄）：跟新增藝人、系列一樣事後審，新增當下就能選、能帶進標題；
+    // 新增者永遠可以改名（additions.ts renameAddition），後台「待確認的新增」事後確認。
+    // 兩種指定方式：itemKey（系列#品項）；或 seriesKey＋kind（系列裡還沒有這種品項時自動建品項）。
     const edition = s80(b.edition, 40);
-    if (!edition) throw new HttpError(400, "INVALID", "填版本名稱（例：首批、日版、再版）");
-    const k = parseContentKey(itemKey);
-    if (!k?.itemId || k.versionId) throw new HttpError(400, "BAD_REQUEST", "參數不對");
-    const [row] = await db
-      .select({ id: items.id })
-      .from(items)
-      .innerJoin(series, eq(series.id, items.seriesId))
-      .where(
-        and(
-          eq(series.artistSlug, k.artist),
-          eq(series.no, k.no),
-          eq(items.itemId, k.itemId),
-          eq(items.status, "approved"),
-          isNull(items.deletedAt),
-        ),
-      );
-    if (!row) throw new HttpError(404, "NOT_FOUND", "找不到這個品項");
+    if (!edition) throw new HttpError(400, "INVALID", "填版本名稱（例：日版、首批限定、再版）");
+    const year = /^\d{4}$/.test(s80(b.year)) ? s80(b.year) : "";
+    const region = s80(b.region, 20);
+    let itemRef: number | null = null;
+    let itemKey = s80(b.itemKey);
+    if (itemKey) {
+      const k = parseContentKey(itemKey);
+      if (!k?.itemId || k.versionId) throw new HttpError(400, "BAD_REQUEST", "參數不對");
+      const [row] = await db
+        .select({ id: items.id })
+        .from(items)
+        .innerJoin(series, eq(series.id, items.seriesId))
+        .where(
+          and(
+            eq(series.artistSlug, k.artist),
+            eq(series.no, k.no),
+            eq(series.status, "approved"),
+            isNull(series.deletedAt),
+            eq(items.itemId, k.itemId),
+            eq(items.status, "approved"),
+            isNull(items.deletedAt),
+          ),
+        );
+      if (!row) throw new HttpError(404, "NOT_FOUND", "找不到這個品項");
+      itemRef = row.id;
+    } else {
+      const seriesKey = s80(b.seriesKey);
+      const kind = (KINDS as readonly string[]).includes(String(b.kind)) ? (b.kind as Kind) : null;
+      const k = parseContentKey(seriesKey);
+      if (!kind || !k || k.itemId) throw new HttpError(400, "BAD_REQUEST", "參數不對");
+      const [w] = await db
+        .select({ id: series.id })
+        .from(series)
+        .where(and(eq(series.artistSlug, k.artist), eq(series.no, k.no), eq(series.status, "approved"), isNull(series.deletedAt), isNull(series.hiddenAt)));
+      if (!w) throw new HttpError(404, "NOT_FOUND", "找不到這個系列");
+      const itemId = await ensureItem(w.id, kind, u.id);
+      const [it] = await db.select({ id: items.id }).from(items).where(and(eq(items.seriesId, w.id), eq(items.itemId, itemId)));
+      itemRef = it.id;
+      itemKey = `${seriesKey}#${itemId}`;
+    }
+    // 同一個品項已經有同名版本（不分大小寫、空白）：直接用那個，不重複建
+    const vids = await db
+      .select({ id: versions.id, v: versions.versionId, edition: versions.edition, year: versions.year, region: versions.region, status: versions.status, deletedAt: versions.deletedAt, hiddenAt: versions.hiddenAt })
+      .from(versions)
+      .where(eq(versions.itemRef, itemRef));
+    const same = vids.find((x) => x.status === "approved" && !x.deletedAt && !x.hiddenAt && norm(x.edition) === norm(edition) && (!year || !x.year || x.year === year));
+    const out = (versionId: string, e: string, y: string, r: string) => ({
+      type,
+      key: `${itemKey}-${versionId}`,
+      itemId: itemKey.split("#")[1],
+      version: { id: versionId, edition: e, year: y, region: r, key: `${itemKey}-${versionId}` },
+    });
+    if (same) return { ...out(same.v, same.edition, same.year, same.region), existing: true };
     // 用最大號＋1（不用筆數），永久刪除過版本也不會撞號
-    const vids = await db.select({ v: versions.versionId }).from(versions).where(eq(versions.itemRef, row.id));
     const top = vids.reduce((n, x) => Math.max(n, Number(x.v.replace(/^v/, "")) || 0), 0);
     const versionId = `v${top + 1}`;
-    await db.insert(versions).values({
-      itemRef: row.id,
-      versionId,
-      edition,
-      year: /^\d{4}$/.test(s80(b.year)) ? s80(b.year) : "",
-      catalog: s80(b.catalog, 40) || "待查證",
-      barcode: s80(b.barcode, 40) || "無條碼",
-      status,
-      createdBy: u.id,
-    });
-    return { type, key: `${itemKey}-${versionId}` };
+    const [row] = await db
+      .insert(versions)
+      .values({
+        itemRef,
+        versionId,
+        edition,
+        year,
+        region,
+        catalog: s80(b.catalog, 40) || "待查證",
+        barcode: s80(b.barcode, 40) || "無條碼",
+        sort: vids.length,
+        status,
+        createdBy: u.id,
+      })
+      .returning({ id: versions.id });
+    await recordAddition("version", String(row.id), u);
+    return out(versionId, edition, year, region);
   }
   throw new HttpError(400, "BAD_REQUEST", "參數不對");
 }

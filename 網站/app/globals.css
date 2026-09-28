@@ -283,7 +283,7 @@ ul { list-style: none; margin: 0; padding: 0; }
 
 .card-foot { align-items: center; color: var(--muted); display: flex; font-size: var(--text-xs); gap: 10px; margin-top: 6px; }
 .who { align-items: center; color: var(--text); display: inline-flex; gap: 8px; font-weight: 500; }
-.who:hover span:last-child { text-decoration: underline; text-underline-offset: 3px; }
+.who:hover .who-name { text-decoration: underline; text-underline-offset: 3px; }
 .card-foot .like { margin-left: auto; }
 
 .like {
@@ -672,7 +672,14 @@ a.pg:hover { border-color: var(--line); }
   /* 窄欄：暱稱獨佔第一行、時間與愛心放第二行，兩者都不截斷 */
   .card-foot { flex-wrap: wrap; row-gap: 4px; }
   .card-foot .who { flex: 1 0 100%; gap: 6px; min-width: 0; }
-  .card-foot .who span:last-child { overflow-wrap: anywhere; }
+  /* 窄卡片（2026-09-29 等級標籤）：第一行頭像＋暱稱，第二行稱號＋時間＋愛心。
+     .who 攤平（display: contents）讓稱號可以換到第二行，暱稱行不會因為多了標籤而變兩行、破壞同列對齊 */
+  .card-foot .who { display: contents; }
+  .card-foot .who .ava { flex: none; }
+  .card-foot .who-name { color: var(--text); flex: 1 0 calc(100% - 30px); font-weight: 500; min-width: 0; overflow-wrap: anywhere; }
+  .card-foot .lv-card { margin-left: 0; }
+  /* 只留稱號（「收藏家」），Lv 數字藏起來 */
+  .lv-card .lv-num { display: none; }
   .card-foot .when { white-space: nowrap; }
   .card-foot .like { min-width: 32px; gap: 4px; font-size: .75rem; }
   .slot { font-size: .75rem; padding: 6px 8px; }
@@ -1110,6 +1117,10 @@ body.has-modal { overflow: hidden; }
 .page-title .lv-tag { margin-left: 8px; }
 .contrib .lv-tag { margin-left: 4px; }
 .comment-head .lv-tag, .offer-who .lv-tag { margin-left: 0; }
+/* 收藏卡片、單則頁發文者：名字後面緊接著標籤（.who 本身有 gap） */
+.who .lv-tag { margin-left: 0; }
+.card-foot .who { min-width: 0; }
+.card-foot .lv-card { flex: none; font-size: 11px; font-weight: 600; padding: 0 5px; }
 .score-box { margin-top: 4px; }
 .score-box .page-meta { margin: 2px 0 0; }
 .score-at { color: var(--muted); font-size: var(--text-xs); margin: 2px 0 0; }
@@ -1365,8 +1376,13 @@ a.title-chip:hover { background: var(--line); }
 .sf-answer-text b { font-size: var(--text-base); overflow-wrap: anywhere; }
 .sf-answer-sub { color: var(--muted); font-size: var(--text-xs); overflow-wrap: anywhere; }
 .sf-new { border: 1px solid var(--text); font-size: 11px; font-weight: 600; margin-left: 6px; padding: 0 4px; vertical-align: 2px; }
-.sf-change { background: var(--bg); border: 1px solid var(--line); flex: none; font-size: var(--text-sm); min-height: 36px; min-width: 40px; padding: 0 10px; }
-.sf-change:hover { background: var(--surface); }
+/* 「修改」「改名」要一眼看得出是按鈕（2026-09-29 用字與版本欄）：黑框、灰底、粗字，點擊範圍至少 44px 高 */
+.sf-change {
+  align-items: center; background: var(--surface); border: 1px solid var(--text); color: var(--text); display: inline-flex; flex: none;
+  font-size: var(--text-sm); font-weight: 600; justify-content: center; min-height: 44px; min-width: 72px; padding: 0 14px;
+}
+.sf-change:hover { background: var(--surface2); }
+.sf-change:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
 .sf-list { border-top: 1px solid var(--line); display: grid; }
 .sf-suggest { margin-top: 0; }
 .sf-list-tail { margin-top: 0; }
@@ -1389,6 +1405,7 @@ button.sf-row:hover, .sf-row[aria-pressed="true"] { background: var(--surface); 
 .sf-box-title { font-size: var(--text-sm); }
 .sf-box-row { display: grid; gap: 8px; grid-template-columns: minmax(0, 1fr) 110px; }
 .sf-box-row.one { grid-template-columns: minmax(0, 1fr); }
+.sf-box-row.sf-box-row-half { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .sf-box .input { background: var(--bg); }
 .sf-box-acts { align-items: center; display: flex; flex-wrap: wrap; gap: 12px; }
 .sf-noyear { font-size: var(--text-xs); }

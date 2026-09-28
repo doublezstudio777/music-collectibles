@@ -684,7 +684,7 @@ function OfferList({
               <div className="offer-who">
                 <Link className="who" href={userHref(o.buyer.handle)}>
                   <Ava name={o.buyer.name} src={o.buyer.avatar} />
-                  <span>{o.buyer.name}</span>
+                  <span className="who-name">{o.buyer.name}</span>
                 </Link>
                 <LevelTag badge={o.badge} />
                 {o.region ? <span className="region-tag" title="所在地區">{o.region}</span> : null}
@@ -767,7 +767,8 @@ export function ShareDetail({
             <span className="ava ava-sm" aria-hidden="true">
               {share.author.initials}
             </span>
-            <span>{share.author.name}</span>
+            <span className="who-name">{share.author.name}</span>
+            <LevelTag badge={share.author.badge} />
           </Link>
           <span className="when">{share.time}</span>
           <LikeButton n={share.n} base={share.likes} large />

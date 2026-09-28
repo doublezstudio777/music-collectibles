@@ -1,0 +1,122 @@
+[
+ {
+  "name": "1 正式站連續瀏覽 100 次，503 為 0",
+  "ok": true,
+  "detail": "{200: 100}"
+ },
+ {
+  "name": "3 390 / 同列三列差距 ≤1px、發佈人列貼底（1 列）",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "3 390 / 每張卡片都有等級",
+  "ok": true,
+  "detail": "['館長']"
+ },
+ {
+  "name": "3 390 / 窄卡片只留稱號",
+  "ok": true,
+  "detail": "['館長']"
+ },
+ {
+  "name": "3 390 / 名字與等級不截斷",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "3 390 /artist/gordon 每張卡片都有等級",
+  "ok": true,
+  "detail": "['館長']"
+ },
+ {
+  "name": "3 390 /artist/gordon 窄卡片只留稱號",
+  "ok": true,
+  "detail": "['館長']"
+ },
+ {
+  "name": "3 390 /artist/gordon 名字與等級不截斷",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "4 390 單則頁發文者旁有等級",
+  "ok": true,
+  "detail": "民 民生鄰居 館長 4 小時前 0"
+ },
+ {
+  "name": "2 390 正式站選好 My jinji 版本題直接出現（不確定、新增版本）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "2 390 正式站修改按鈕寫「修改」且 ≥44px",
+  "ok": true,
+  "detail": "[['修改', 44], ['修改', 44], ['修改', 44], ['修改', 44]]"
+ },
+ {
+  "name": "5 390 console error 0",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "3 1440 / 同列三列差距 ≤1px、發佈人列貼底（1 列）",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "3 1440 / 每張卡片都有等級",
+  "ok": true,
+  "detail": "['館長']"
+ },
+ {
+  "name": "3 1440 / 寬卡片完整標籤",
+  "ok": true,
+  "detail": "['館長']"
+ },
+ {
+  "name": "3 1440 / 名字與等級不截斷",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "3 1440 /artist/gordon 每張卡片都有等級",
+  "ok": true,
+  "detail": "['館長']"
+ },
+ {
+  "name": "3 1440 /artist/gordon 寬卡片完整標籤",
+  "ok": true,
+  "detail": "['館長']"
+ },
+ {
+  "name": "3 1440 /artist/gordon 名字與等級不截斷",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "4 1440 單則頁發文者旁有等級",
+  "ok": true,
+  "detail": "民 民生鄰居 館長 4 小時前 0"
+ },
+ {
+  "name": "2 1440 正式站選好 My jinji 版本題直接出現（不確定、新增版本）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "2 1440 正式站修改按鈕寫「修改」且 ≥44px",
+  "ok": true,
+  "detail": "[['修改', 44], ['修改', 44], ['修改', 44], ['修改', 44]]"
+ },
+ {
+  "name": "5 1440 console error 0",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "4 單則頁快取命中、HTML 就帶等級",
+  "ok": true,
+  "detail": "('HIT', 'HIT', '85295525')"
+ }
+]

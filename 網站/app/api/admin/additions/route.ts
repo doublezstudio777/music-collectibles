@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       await confirmAddition(s.user, id, action === "confirm");
       return json({ ok: true });
     }
-    if (action === "rename") return json(await renameAddition(s.user, b.type, b.ref, b.name, b.year));
+    if (action === "rename") return json(await renameAddition(s.user, b.type, b.ref, b.name, b.year, b.region));
     if (action === "merge") return json(await mergeAddition(s.user, id, b.into));
     return fail(400, "BAD_REQUEST", "參數不對");
   });

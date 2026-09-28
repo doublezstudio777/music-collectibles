@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { priceText, shareHref, tagHref, userHref, watermarkText, type Lock, type Sale, type ShareView } from "@/lib/data";
 import { LikeButton } from "@/components/like-button";
+import { LevelTag } from "@/components/level-tag";
 
 /** 封面左下的狀態槽位：四種狀態同一個位子；被鎖時改成「交易暫停」 */
 export function SaleSlots({ sale, locked = false }: { sale: Sale; locked?: boolean }) {
@@ -172,7 +173,8 @@ export function ShareCard({ share }: { share: ShareView }) {
           <span className="ava ava-sm" aria-hidden="true">
             {share.author.initials}
           </span>
-          <span>{share.author.name}</span>
+          <span className="who-name">{share.author.name}</span>
+          <LevelTag badge={share.author.badge} card />
         </Link>
         <span className="when">{share.time}</span>
         <LikeButton n={share.n} base={share.likes} />
