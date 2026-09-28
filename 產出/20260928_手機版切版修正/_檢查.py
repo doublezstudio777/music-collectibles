@@ -14,24 +14,42 @@ OUT = "/home/dz/AboutAI/專案/music-collectibles/產出/20260928_手機版切�
 JS_CHECK = """
 () => {
   const results = [];
-  // 1. 整頁是否橫向溢出
   const html = document.documentElement;
-  const bodyOverflow = html.scrollWidth - window.innerWidth;
-  results.push({ type: 'page-overflow', diff: bodyOverflow });
+  results.push({ type: 'page-overflow', diff: html.scrollWidth - window.innerWidth });
 
-  // 2. 逐一檢查會排卡片/清單的容器：容器本身內容是否溢出容器可視寬度（非刻意的橫向捲動）
-  const NO_SCROLL_CONTAINERS = ['.tiles', '.hot-list', '.wall', '.item-index'];
+  // 不該是捲動容器的：容器本身內容不能溢出可視寬度
+  const NO_SCROLL_CONTAINERS = ['.hot-list', '.wall', '.item-index'];
   for (const sel of NO_SCROLL_CONTAINERS) {
     document.querySelectorAll(sel).forEach((el, i) => {
       const cs = getComputedStyle(el);
-      if (cs.overflowX === 'auto' || cs.overflowX === 'scroll') return; // 這幾個現在都不該是捲動容器
+      if (cs.overflowX === 'auto' || cs.overflowX === 'scroll') return;
       const diff = el.scrollWidth - el.clientWidth;
       if (diff > 2) results.push({ type: 'container-overflow', sel, index: i, diff });
     });
   }
 
-  // 3. Range rect 檢查文字是否被截斷（比對文字實際渲染寬度 vs 容器可視寬度）
-  const TEXT_SELECTORS = ['.tile-title', '.hot-name', '.item-link b', '.card-title', '.compare-ver .ver-name', '.contrib-who span:last-child'];
+  // .tiles：刻意的橫向捲動（系列、其他系列），左緣要對齊正文左緣，右側出血到螢幕邊緣
+  const page = document.querySelector('main.page');
+  document.querySelectorAll('.tiles').forEach((el, i) => {
+    const cs = getComputedStyle(el);
+    const box = el.getBoundingClientRect();
+    const pageBox = page ? page.getBoundingClientRect() : null;
+    const w = window.innerWidth;
+    if (cs.display === 'flex' && (cs.overflowX === 'auto' || cs.overflowX === 'scroll')) {
+      // 行動版捲動模式：左緣對正文左緣（<=2px）、右緣貼視窗邊緣（出血，容許 <=2px）
+      const leftGap = pageBox ? Math.abs(box.left - (pageBox.left + 18)) : 0;
+      if (leftGap > 2) results.push({ type: 'tiles-left-misaligned', index: i, leftGap: Math.round(leftGap) });
+      const rightGap = w - box.right;
+      if (Math.abs(rightGap) > 2) results.push({ type: 'tiles-not-bled-to-edge', index: i, rightGap: Math.round(rightGap) });
+    } else {
+      // 桌機格狀模式：不應該有橫向溢出
+      const diff = el.scrollWidth - el.clientWidth;
+      if (diff > 2) results.push({ type: 'tiles-grid-overflow', index: i, diff });
+    }
+  });
+
+  // Range rect 檢查文字是否被截斷
+  const TEXT_SELECTORS = ['.tile-title', '.hot-name', '.item-link b', '.card-title', '.compare-ver .ver-name', '.contrib-who span:last-child', '.prose p'];
   for (const sel of TEXT_SELECTORS) {
     document.querySelectorAll(sel).forEach((el, i) => {
       const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
@@ -45,12 +63,22 @@ JS_CHECK = """
       const box = el.getBoundingClientRect();
       const cs = getComputedStyle(el);
       const clampLines = cs.webkitLineClamp;
-      // line-clamp 元素會刻意省略號截斷，不算 bug（card-title 目前設計如此）
       if (clampLines && clampLines !== 'none') return;
+      // .tile 在捲動模式下容器右緣可能在視窗外（出血），改比對「元素自己的內距框」是否溢出自己
       const overflowAmt = maxRight - box.right;
       if (overflowAmt > 1) results.push({ type: 'text-clipped', sel, index: i, overflowAmt: Math.round(overflowAmt), text: el.textContent.trim().slice(0,30) });
     });
   }
+
+  // 正文區塊（.prose）左右邊距要對稱、跟同一欄其他區塊左緣一致
+  document.querySelectorAll('.prose').forEach((el, i) => {
+    const box = el.getBoundingClientRect();
+    const pageBox = page ? page.getBoundingClientRect() : null;
+    if (!pageBox) return;
+    const leftGap = Math.abs(box.left - (pageBox.left + parseFloat(getComputedStyle(page).paddingLeft)));
+    if (leftGap > 2) results.push({ type: 'prose-left-misaligned', index: i, leftGap: Math.round(leftGap) });
+  });
+
   return results;
 }
 """
@@ -70,8 +98,9 @@ def run():
                 findings = page.evaluate(JS_CHECK)
                 shot = f"{OUT}/{pname}_{w}.jpg"
                 page.screenshot(path=shot, full_page=True, type="jpeg", quality=80)
-                if findings:
-                    all_findings.append({"page": pname, "width": w, "findings": findings})
+                real_findings = [f for f in findings if f["type"] != "page-overflow"]
+                if real_findings:
+                    all_findings.append({"page": pname, "width": w, "findings": real_findings})
                 if console_errors:
                     all_findings.append({"page": pname, "width": w, "console_errors": console_errors})
                 page.close()

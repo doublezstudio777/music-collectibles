@@ -232,7 +232,7 @@ ul { list-style: none; margin: 0; padding: 0; }
 .block-head .link { font-size: var(--text-xs); }
 
 .prose { max-width: 72ch; }
-.prose p { font-size: var(--text-md); line-height: 1.8; }
+.prose p { font-size: var(--text-md); line-height: 1.8; overflow-wrap: anywhere; }
 .prose p + p { margin-top: 1em; }
 .prose .edit-line { color: var(--muted); font-size: var(--text-xs); margin-top: 16px; }
 
@@ -655,7 +655,13 @@ a.pg:hover { border-color: var(--line); }
   .card-foot .who span:last-child, .card-foot .when { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .card-foot .like { min-width: 32px; gap: 4px; font-size: .75rem; }
   .slot { font-size: .75rem; padding: 6px 8px; }
-  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 16px; }
+  /* 系列卡片：手機維持橫向捲動（左緣對齊正文、右側出血到螢幕邊緣露出下一張當提示），
+     scroll-snap 讓手指放開後停在卡片邊緣，滑到底留一段跟左緣等寬的呼吸空間 */
+  .tiles {
+    display: flex; gap: 16px; overflow-x: auto; padding: 0 18px 8px 0; margin: 0 -18px 8px 0;
+    scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+  }
+  .tile { flex: 0 0 156px; scroll-snap-align: start; }
   .work-head { grid-template-columns: 96px minmax(0, 1fr); gap: 16px; }
   .work-head .head-actions { grid-column: 1 / -1; }
   .cover-lg { height: 96px; width: 96px; }
