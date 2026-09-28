@@ -704,6 +704,8 @@ a.pg:hover { border-color: var(--line); }
   .composer-offer { grid-template-columns: minmax(0, 1fr) auto; }
   .composer-offer .btn-line { grid-column: 1 / -1; }
   .foot-row { flex-direction: column; align-items: flex-start; gap: 8px; justify-content: center; padding-block: 16px; }
+  /* 直排時子項目會縮成內容寬，聲明文字提早換行；撐滿整列並左右對齊 */
+  .foot-note { align-self: stretch; width: 100%; text-align: justify; text-justify: inter-character; }
 }
 
 @media (prefers-reduced-motion: reduce) {
