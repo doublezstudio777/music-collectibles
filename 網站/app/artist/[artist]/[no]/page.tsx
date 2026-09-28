@@ -82,7 +82,13 @@ export async function generateMetadata({ params }: Props) {
 
 function Compare({ series, item }: { series: Series; item: Item }) {
   return (
-    <div className="compare-scroll">
+    <div className="compare-scroll-wrap">
+      {item.versions.length > 2 ? (
+        <p className="compare-hint" aria-hidden="true">
+          左右滑動看更多版本 →
+        </p>
+      ) : null}
+      <div className="compare-scroll">
       <table className="compare" style={{ "--cols": item.versions.length } as React.CSSProperties}>
         <thead>
           <tr>
@@ -121,6 +127,7 @@ function Compare({ series, item }: { series: Series; item: Item }) {
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

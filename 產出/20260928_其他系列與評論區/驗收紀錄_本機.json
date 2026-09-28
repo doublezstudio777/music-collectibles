@@ -131,8 +131,8 @@
  },
  {
   "name": "2h 只有一個系列的藝人不出現這區",
-  "ok": true,
-  "detail": "[]"
+  "ok": false,
+  "detail": "['yeemao']"
  },
  {
   "name": "3a 最多顯示 10 位",
@@ -202,57 +202,57 @@
  {
   "name": "4e 含站外交易字眼不擋（201），回 warn=true",
   "ok": true,
-  "detail": "{\"id\":4,\"at\":\"2026-09-27T05:58:47.485Z\",\"warn\":true}"
+  "detail": "{\"id\":1863,\"at\":\"2026-09-28T01:10:42.436Z\",\"warn\":true}"
  },
  {
   "name": "4e2 一般留言 warn=false",
   "ok": true,
-  "detail": "{\"id\":5,\"at\":\"2026-09-27T05:58:47.505Z\",\"warn\":false}"
+  "detail": "{\"id\":1864,\"at\":\"2026-09-28T01:10:42.451Z\",\"warn\":false}"
  },
  {
   "name": "4e3 「https://line.me/ti/p/xx」提醒=True",
   "ok": true,
-  "detail": "{\"id\":6,\"at\":\"2026-09-27T05:58:48.241Z\",\"warn\":true}"
+  "detail": "{\"id\":1865,\"at\":\"2026-09-28T01:10:43.190Z\",\"warn\":true}"
  },
  {
   "name": "4e3 「www.shop.tw 看看」提醒=True",
   "ok": true,
-  "detail": "{\"id\":7,\"at\":\"2026-09-27T05:58:48.985Z\",\"warn\":true}"
+  "detail": "{\"id\":1866,\"at\":\"2026-09-28T01:10:43.927Z\",\"warn\":true}"
  },
  {
   "name": "4e3 「LINE ID: abc」提醒=True",
   "ok": true,
-  "detail": "{\"id\":8,\"at\":\"2026-09-27T05:58:49.720Z\",\"warn\":true}"
+  "detail": "{\"id\":1867,\"at\":\"2026-09-28T01:10:44.663Z\",\"warn\":true}"
  },
  {
   "name": "4e3 「私下交易」提醒=True",
   "ok": true,
-  "detail": "{\"id\":9,\"at\":\"2026-09-27T05:58:50.459Z\",\"warn\":true}"
+  "detail": "{\"id\":1868,\"at\":\"2026-09-28T01:10:45.407Z\",\"warn\":true}"
  },
  {
   "name": "4e3 「轉帳給我」提醒=True",
   "ok": true,
-  "detail": "{\"id\":10,\"at\":\"2026-09-27T05:58:51.196Z\",\"warn\":true}"
+  "detail": "{\"id\":1869,\"at\":\"2026-09-28T01:10:46.140Z\",\"warn\":true}"
  },
  {
   "name": "4e3 「@mystore 私訊」提醒=True",
   "ok": true,
-  "detail": "{\"id\":11,\"at\":\"2026-09-27T05:58:51.933Z\",\"warn\":true}"
+  "detail": "{\"id\":1870,\"at\":\"2026-09-28T01:10:46.896Z\",\"warn\":true}"
  },
  {
   "name": "4e3 「我也有這張 online 買的」提醒=False",
   "ok": true,
-  "detail": "{\"id\":12,\"at\":\"2026-09-27T05:58:52.671Z\",\"warn\":false}"
+  "detail": "{\"id\":1871,\"at\":\"2026-09-28T01:10:47.637Z\",\"warn\":false}"
  },
  {
   "name": "4e3 「deadline 前寄出」提醒=False",
   "ok": true,
-  "detail": "{\"id\":13,\"at\":\"2026-09-27T05:58:53.409Z\",\"warn\":false}"
+  "detail": "{\"id\":1872,\"at\":\"2026-09-28T01:10:48.366Z\",\"warn\":false}"
  },
  {
   "name": "4e3 「2018 年首批」提醒=False",
   "ok": true,
-  "detail": "{\"id\":14,\"at\":\"2026-09-27T05:58:54.150Z\",\"warn\":false}"
+  "detail": "{\"id\":1873,\"at\":\"2026-09-28T01:10:49.092Z\",\"warn\":false}"
  },
  {
   "name": "4f 每分鐘第 4 則被擋（201,201,201,429）",
@@ -292,7 +292,7 @@
  {
   "name": "4h5 發文者看到每則都有刪除權",
   "ok": true,
-  "detail": "18"
+  "detail": "200"
  },
  {
   "name": "4h6 一般會員只有自己的留言能刪",
@@ -322,12 +322,12 @@
  {
   "name": "4j 後台待處理有這則、標已隱藏、人數正確",
   "ok": true,
-  "detail": "{'id': 5, 'share': 95, 'body': '這版本的側標好漂亮 488719', 'at': '2026-09-27T05:58:47.505Z', 'by': '路人08', 'handle': 'r08', 'reports': 3, 'reasons': {'abuse': 3}, 'hidden': True, 'warn': False}"
+  "detail": "{'id': 1864, 'share': 95, 'body': '這版本的側標好漂亮 557834', 'at': '2026-09-28T01:10:42.451Z', 'by': '路人08', 'handle': 'r08', 'reports': 3, 'reasons': {'abuse': 3}, 'hidden': True, 'warn': False}"
  },
  {
   "name": "4j2 儀表板佇列有被檢舉的留言數",
   "ok": true,
-  "detail": "({'pending': 0, 'reports': 6, 'appeals': 1, 'locked': 2, 'hidden': 0, 'comments': 1, 'commentsHidden': 1}, {'total': 18, 'week': 18, 'today': 18, 'hidden': 1, 'reported': 1})"
+  "detail": "({'pending': 20, 'reports': 6, 'appeals': 1, 'locked': 112, 'hidden': 18, 'comments': 23, 'commentsHidden': 23, 'duplicates': 20, 'avatars': 0, 'deletions': 0, 'artistPhotos': 6}, {'total': 1817, 'week': 128, 'today': 128, 'hidden': 23, 'reported': 36})"
  },
  {
   "name": "4j3 管理員恢復後重新出現",
@@ -342,7 +342,7 @@
  {
   "name": "4l 留言、刪除、檢舉、自動隱藏、恢復前後 content_version 不變",
   "ok": true,
-  "detail": "(513, 513)"
+  "detail": "(18517, 18517)"
  },
  {
   "name": "4l2 單則頁整頁快取仍命中（HIT），HTML 裡沒有留言內文",
@@ -382,7 +382,7 @@
  {
   "name": "5b XSS：留言照原文顯示成文字",
   "ok": true,
-  "detail": "<script>window.__yzx=1</script><img src=x onerror=\"window.__yzx=2\"> 488719"
+  "detail": "<script>window.__yzx=1</script><img src=x onerror=\"window.__yzx=2\"> 557834"
  },
  {
   "name": "5b2 XSS：留言裡沒有被插入 img／script 元素、腳本沒執行",
