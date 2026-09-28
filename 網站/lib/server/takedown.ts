@@ -7,7 +7,7 @@
 // - 每次操作寫 admin_log；永久刪除把整列內容存進紀錄，必要時可以手動補回
 
 import { env } from "cloudflare:workers";
-import { and, desc, eq, isNotNull, ne } from "drizzle-orm";
+import { and, desc, eq, isNotNull, ne, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { adminLog, artists, items, series, shares, versions } from "@/db/schema";
 import { parseJson } from "@/lib/server/content";
@@ -228,7 +228,7 @@ export async function hiddenList() {
       .innerJoin(items, eq(items.id, versions.itemRef))
       .innerJoin(series, eq(series.id, items.seriesId))
       .where(isNotNull(versions.hiddenAt)),
-    db.select({ no: shares.no, what: shares.what, at: shares.hiddenAt }).from(shares).where(isNotNull(shares.hiddenAt)),
+    db.select({ no: shares.no, what: sql<string>`coalesce(${shares.customWhat}, ${shares.what})`, at: shares.hiddenAt }).from(shares).where(isNotNull(shares.hiddenAt)),
     db.select({ slug: artists.slug, name: artists.name, display: artists.display }).from(artists).where(ne(artists.display, "auto")),
   ]);
   return {

@@ -4,8 +4,9 @@ import { shareHref } from "@/lib/data";
 import { getViewer, pageData } from "@/lib/server/viewer";
 import { ShareForm } from "@/components/share-form";
 import { pendingSeriesOf } from "@/lib/server/series-link";
+import { myAdditions } from "@/lib/server/additions";
 
-export const metadata = { title: "編輯炫收藏" };
+export const metadata = { title: "編輯收藏" };
 
 type Props = { params: Promise<{ n: string }> };
 
@@ -50,10 +51,11 @@ export default async function EditSharePage({ params }: Props) {
     );
   }
   return (
-    <main className="wrap page page-narrow">
-      <h1 className="page-title">編輯炫收藏</h1>
+    <main className="wrap page sf-page">
+      <h1 className="page-title">編輯收藏</h1>
       <ShareForm
         options={c.formOptions(viewer.handle)}
+        mine={await myAdditions(viewer.id)}
         edit={{
           n,
           about: share.about,
@@ -62,6 +64,7 @@ export default async function EditSharePage({ params }: Props) {
           kindNote: view.kindNote ?? "",
           story: share.story,
           tags: share.tags,
+          customTitle: share.autoWhat ? share.what : "",
           sale: { state: view.sale.state, ...(view.sale.price ? { price: view.sale.price } : {}) },
           artists: c.formArtistsFor(share.about),
           pendingSeries: await pendingSeriesOf(n),

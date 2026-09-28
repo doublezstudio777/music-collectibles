@@ -9,7 +9,7 @@
 import { env } from "cloudflare:workers";
 
 export type QuotaKind = "detail" | "photo";
-export const DEFAULT_QUOTA: Record<QuotaKind, number> = { detail: 100, photo: 300 };
+export const DEFAULT_QUOTA: Record<QuotaKind, number> = { detail: 100, photo: 1000 };
 export const QUOTA_SETTING: Record<QuotaKind, string> = { detail: "daily_detail_limit", photo: "daily_photo_limit" };
 export const QUOTA_MESSAGE: Record<QuotaKind, string> = {
   detail: "今天看辨識細節的次數已達上限，明天再來",

@@ -78,6 +78,9 @@ export function Photo({
   small = false,
   src: override,
   large = false,
+  hires = false,
+  under,
+  onError,
 }: {
   share: ShareView;
   sizes: string;
@@ -89,13 +92,31 @@ export function Photo({
   src?: string;
   /** 浮水印多疊一個中間的 */
   large?: boolean;
+  /** 單則頁登入者：這張是高清大圖（驗收用 data-hires） */
+  hires?: boolean;
+  /** 高清圖載入前先墊在底下的縮圖（換圖時不會空白一下） */
+  under?: string;
+  onError?: () => void;
 }) {
   // 公開頁面一律先給縮圖（大圖要登入，/img/ 伺服器端檢查）
   const src = override ?? (small ? (share.thumb ?? share.image) : (share.thumb ?? share.image));
   return (
     <span className="photo">
       <span className={`photo-fill ph-${share.n % 4}`}>
-        {src ? <Image src={src} alt={share.what} fill sizes={sizes} unoptimized={src.startsWith("/img/")} /> : null}
+        {src && under && under !== src ? <Image src={under} alt="" aria-hidden="true" fill sizes={sizes} unoptimized={under.startsWith("/img/")} /> : null}
+        {src ? (
+          <Image
+            key={src}
+            src={src}
+            alt={share.what}
+            fill
+            sizes={sizes}
+            unoptimized={src.startsWith("/img/")}
+            onError={onError}
+            data-hires={hires ? "1" : undefined}
+            {...(hires ? { loading: "eager" as const } : {})}
+          />
+        ) : null}
         {!src && share.kind ? <b className="photo-kind">{share.kind}</b> : null}
         {src ? <Watermark handle={share.author.handle} large={large} /> : null}
       </span>

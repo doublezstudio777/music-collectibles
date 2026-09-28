@@ -362,6 +362,8 @@ export const shares = sqliteTable(
     editedAt: text("edited_at"),
     /** 會員新增的系列還在審核：這則先掛「不確定」，核准後自動改掛過去（series.id）；退回就清掉 */
     pendingSeriesId: integer("pending_series_id"),
+    /** 發文者自己改的標題（2026-09-28 上傳表單改版）；NULL＝用自動組的 what。系統重組標題只動 what，不動這欄 */
+    customWhat: text("custom_what"),
   },
   (t) => [
     index("shares_author_idx").on(t.authorId),
@@ -910,4 +912,39 @@ export const errorReports = sqliteTable(
     uniqueIndex("error_reports_share_reporter_uq").on(t.shareNo, t.reporterId),
     index("error_reports_status_idx").on(t.status, t.id),
   ],
+);
+
+/**
+ * 會員在炫收藏表單就地新增的藝人、系列（2026-09-28 上傳表單改版：改成事後審）。
+ * 新增當下就是 approved、立即可用；這張表是後台「待確認的新增」清單。confirmed_at 有值＝管理員確認過。
+ * ref：藝人是 slug，系列是 series.id（字串）。管理員自己新增的也記，但直接算確認過。
+ */
+export const catalogAdditions = sqliteTable(
+  "catalog_additions",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    type: text("type").notNull(),
+    ref: text("ref").notNull(),
+    createdBy: text("created_by").notNull(),
+    createdAt: text("created_at").notNull().default(now),
+    confirmedAt: text("confirmed_at"),
+    confirmedBy: text("confirmed_by"),
+  },
+  (t) => [uniqueIndex("catalog_additions_ref_uq").on(t.type, t.ref), index("catalog_additions_by_idx").on(t.createdBy)],
+);
+
+/** 自己新增的名稱改名紀錄（新增者永遠可以改，每次改都留一筆；管理員修名也記在這裡） */
+export const catalogAdditionEdits = sqliteTable(
+  "catalog_addition_edits",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    additionId: integer("addition_id").notNull(),
+    byId: text("by_id").notNull(),
+    fromName: text("from_name").notNull(),
+    toName: text("to_name").notNull(),
+    fromYear: text("from_year").notNull().default(""),
+    toYear: text("to_year").notNull().default(""),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [index("catalog_addition_edits_addition_idx").on(t.additionId)],
 );

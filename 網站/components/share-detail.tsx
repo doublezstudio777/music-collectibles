@@ -14,8 +14,6 @@ import { LikeButton } from "@/components/like-button";
 import { Photo, TagList, Watermark } from "@/components/share-card";
 import { ShareActions, type ShareInfo } from "@/components/share-actions";
 import { LevelTag } from "@/components/level-tag";
-import { PhotoPicker, usePhotoPicker, type PickedPhoto } from "@/components/photo-picker";
-import { uploadCoverOg } from "@/lib/image";
 
 /** 金額輸入：只收正整數 */
 export function parsePrice(raw: string) {
@@ -195,18 +193,32 @@ function DetailPhoto({
   const [big, setBig] = useState<number | null>(null);
   const [cur, setCur] = useState(0);
   const track = useRef<HTMLDivElement>(null);
-  const { me } = useAppState();
+  const { me, ready } = useAppState();
+  /**
+   * 登入者預設看高清（2026-09-28）：伺服器輸出與 hydration 第一次一律是縮圖（整頁快取的 HTML 只有縮圖網址），
+   * 瀏覽器確認登入（/api/me）後才換成長邊 1600px；載入失敗（到每日上限 429 等）退回縮圖。
+   */
+  const hi = ready && Boolean(me);
+  const [failed, setFailed] = useState<string[]>([]);
+  const pick = (image: string | undefined, thumb: string | undefined) =>
+    hi && image && image !== thumb && !failed.includes(image) ? image : thumb;
+  const onFail = (src: string | undefined) => src && setFailed((xs) => (xs.includes(src) ? xs : [...xs, src]));
   const close = useCallback(() => setBig(null), []);
   const list = share.photos ?? [];
   if (list.length < 2) {
     const main =
       share.image && share.image !== share.thumb ? share.image : null;
+    const src = pick(share.image, share.thumb);
     const photo = (
       <Photo
         share={share}
         sale={sale}
         lock={lock}
         large
+        src={src}
+        hires={src !== share.thumb}
+        under={share.thumb}
+        onError={() => src !== share.thumb && onFail(src)}
         sizes="(max-width: 1000px) 100vw, 640px"
       />
     );
@@ -275,7 +287,10 @@ function DetailPhoto({
                   sale={sale}
                   lock={lock}
                   large
-                  src={p.thumb}
+                  src={pick(p.image, p.thumb)}
+                  hires={pick(p.image, p.thumb) !== p.thumb}
+                  under={p.thumb}
+                  onError={() => pick(p.image, p.thumb) !== p.thumb && onFail(p.image)}
                   sizes="(max-width: 1000px) 100vw, 640px"
                 />
               </button>
@@ -376,139 +391,6 @@ function RefPhotoAdmin({ share }: { share: ShareView }) {
   );
 }
 
-/** 作者編輯照片：補、刪、換封面、調順序。存檔後封面換了才重畫預覽圖 */
-function PhotoEditor({
-  share,
-  onClose,
-}: {
-  share: ShareView;
-  onClose: () => void;
-}) {
-  const router = useRouter();
-  const { me } = useAppState();
-  const [loaded, setLoaded] = useState<PickedPhoto[] | null>(null);
-  const [error, setError] = useState("");
-  useEffect(() => {
-    void api<{ photos: { id: string; url: string; thumbUrl: string }[] }>(
-      `/api/shares/${share.n}/photos`,
-    ).then((r) => {
-      if (!r.ok) return setError(r.error.message);
-      setLoaded(
-        r.data.photos.map((p) => ({
-          key: p.id,
-          id: p.id,
-          preview: p.thumbUrl,
-          url: p.url,
-          status: "done",
-          attached: true,
-        })),
-      );
-    });
-  }, [share.n]);
-  if (!loaded)
-    return (
-      <div className="photo-edit">
-        {error ? (
-          <p className="field-error">{error}</p>
-        ) : (
-          <p role="status">讀取中</p>
-        )}
-      </div>
-    );
-  return (
-    <PhotoEditorForm
-      share={share}
-      initial={loaded}
-      handle={me?.handle ?? share.author.handle}
-      onClose={onClose}
-      onSaved={() => router.refresh()}
-    />
-  );
-}
-
-function PhotoEditorForm({
-  share,
-  initial,
-  handle,
-  onClose,
-  onSaved,
-}: {
-  share: ShareView;
-  initial: PickedPhoto[];
-  handle: string;
-  onClose: () => void;
-  onSaved: () => void;
-}) {
-  const [paused, setPaused] = useState(false);
-  const picker = usePhotoPicker(initial, () => setPaused(true));
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const save = async () => {
-    if (!picker.items.length) return setError("至少放一張照片");
-    if (picker.pending) return setError("照片還在上傳，等一下");
-    if (picker.failed) return setError("有照片沒傳上去，按重試或刪掉那張");
-    setBusy(true);
-    setError("");
-    const r = await api<{ coverChanged: boolean; needOg: boolean }>(
-      `/api/shares/${share.n}/photos`,
-      {
-        method: "PUT",
-        body: { photoIds: picker.items.map((x) => x.id) },
-      },
-    );
-    if (!r.ok) {
-      setBusy(false);
-      return setError(r.error.message);
-    }
-    const cover = picker.items[0];
-    if (r.data.needOg && cover?.id)
-      await uploadCoverOg(
-        cover.id,
-        cover.file ?? cover.url ?? "",
-        handle,
-      ).catch(() => null);
-    setBusy(false);
-    onSaved();
-    onClose();
-  };
-  return (
-    <div className="photo-edit" data-testid="photo-edit">
-      <p className="photo-edit-title" id={`pe-${share.n}`}>
-        編輯照片
-      </p>
-      <PhotoPicker
-        picker={picker}
-        labelId={`pe-${share.n}`}
-        paused={paused}
-        disabled={busy}
-      />
-      {error ? <p className="field-error">{error}</p> : null}
-      <div className="pp-actions">
-        <button
-          type="button"
-          className="btn btn-p"
-          onClick={save}
-          disabled={busy || picker.pending > 0}
-          data-testid="pe-save"
-        >
-          {busy ? "存檔中…" : "存檔"}
-        </button>
-        <button
-          type="button"
-          className="btn btn-line"
-          disabled={busy}
-          onClick={() => {
-            picker.discardNew();
-            onClose();
-          }}
-        >
-          取消
-        </button>
-      </div>
-    </div>
-  );
-}
-
 /** 海外連線：交易按鈕的位置改顯示這一行（真正的擋在 API） */
 export function RegionNote() {
   return (
@@ -526,108 +408,118 @@ const STATUS_TEXT = {
   sold: "成交",
 } as const;
 
-/** 賣家自己看：出售狀態三段切換＋定價 */
-function SellerBar({ share, sale }: { share: ShareView; sale: Sale }) {
+/**
+ * 發文者的操作盒（2026-09-28 上傳表單改版，線框 #s9）：手機在照片下方、桌機在右欄最上面。
+ * 左邊「你的收藏」＋目前狀態，右邊一顆「編輯」（編輯頁就是同一張表單，照片也在裡面）。
+ * 出售的快改留在盒子裡、不收進選單：純分享只露一個「我想賣」，出售中直接展開三段切換與價格，已售出是「改回出售中」。
+ */
+function OwnerPanel({ share, sale, offers, canEdit }: { share: ShareView; sale: Sale; offers: PublicOffer[]; canEdit: boolean }) {
   const act = useAction();
   const { canTrade } = useAppState();
+  const [open, setOpen] = useState(sale.state === "offer" || sale.state === "sale");
   const [draft, setDraft] = useState<SaleState | null>(null);
   const [price, setPrice] = useState(sale.price ? String(sale.price) : "");
   const [error, setError] = useState("");
   const shown = draft ?? sale.state;
-
-  if (sale.state === "sold") {
-    return (
-      <div className="seller-bar">
-        <p className="seller-row">
-          <b>已售出</b>
-          {sale.soldTo ? <span>成交給 {sale.soldTo}</span> : null}
-          {sale.soldAt ? <span className="deal-note">{sale.soldAt}</span> : null}
-          {canTrade ? (
-            <button
-              type="button"
-              className="btn btn-line"
-              onClick={async () => {
-                const r = await act(`/api/shares/${share.n}/reopen`, { body: {} });
-                if (!r.ok) setError(r.error.message);
-              }}
-            >
-              改回出售中
-            </button>
-          ) : null}
-        </p>
-        {!canTrade ? <RegionNote /> : null}
-        {error ? <p className="field-error">{error}</p> : null}
-      </div>
-    );
-  }
-
-  const pick = (s: SaleState) => {
-    setError("");
-    if (s === "sale") {
-      setDraft("sale");
-      return;
-    }
-    setDraft(null);
-    void save(s);
-  };
-
+  const n = offers.length;
+  const status =
+    sale.state === "sold"
+      ? ["已售出", sale.soldTo ? `成交給 ${sale.soldTo}` : "", sale.soldAt ?? ""].filter(Boolean).join("・")
+      : sale.state === "sale"
+        ? `定價出售 ${priceText(sale.price ?? 0)}${n ? `・${n} 筆出價` : ""}`
+        : sale.state === "offer"
+          ? `開放出價${n ? `・${n} 筆出價` : ""}`
+          : "純分享";
   const save = async (state: SaleState, p?: number) => {
     const r = await act(`/api/shares/${share.n}`, { method: "PATCH", body: { state, ...(p ? { price: p } : {}) } });
     if (!r.ok) setError(r.error.message);
   };
-
+  const pick = (st: SaleState) => {
+    setError("");
+    if (st === "sale") return setDraft("sale");
+    setDraft(null);
+    void save(st);
+  };
   const applyPrice = () => {
     const p = parsePrice(price);
-    if (!p) {
-      setError("填一個整數金額");
-      return;
-    }
+    if (!p) return setError("填一個整數金額");
     setError("");
     setDraft(null);
     void save("sale", p);
   };
-
-  if (!canTrade) {
-    return (
-      <div className="seller-bar" data-testid="seller-bar">
-        <RegionNote />
-        {sale.state !== "share" ? (
-          <p className="seller-row">
-            <button type="button" className="btn btn-line" onClick={() => void save("share")}>
+  return (
+    <div className="owner-box" data-testid="owner-box" data-state={sale.state}>
+      <div className="owner-top">
+        <span className="owner-status">
+          <span className="sub">你的收藏</span>
+          <b data-testid="owner-status">{status}</b>
+        </span>
+        {canEdit ? (
+          <Link className="btn btn-line" href={`/share/${share.n}/edit`} data-testid="share-edit-open">
+            編輯
+          </Link>
+        ) : null}
+      </div>
+      {sale.state === "sold" ? (
+        canTrade ? (
+          <button
+            type="button"
+            className="btn-text owner-link"
+            onClick={async () => {
+              const r = await act(`/api/shares/${share.n}/reopen`, { body: {} });
+              if (!r.ok) setError(r.error.message);
+            }}
+            data-testid="owner-reopen"
+          >
+            改回出售中
+          </button>
+        ) : (
+          <RegionNote />
+        )
+      ) : !canTrade ? (
+        <>
+          <RegionNote />
+          {sale.state !== "share" ? (
+            <button type="button" className="btn-text owner-link" onClick={() => void save("share")}>
               改回純分享
             </button>
-          </p>
-        ) : null}
-        {error ? <p className="field-error">{error}</p> : null}
-      </div>
-    );
-  }
-
-  return (
-    <div className="seller-bar" data-testid="seller-bar">
-      <div className="seg" role="group" aria-label="要不要賣">
-        {(
-          [
-            ["share", "純分享"],
-            ["offer", "開放出價"],
-            ["sale", "定價出售"],
-          ] as const
-        ).map(([k, label]) => (
-          <button key={k} type="button" aria-pressed={shown === k} onClick={() => pick(k)}>
-            {label}
-          </button>
-        ))}
-      </div>
-      {shown === "sale" ? (
-        <div className="seller-row">
-          <MoneyInput id="seller-price" value={price} onChange={setPrice} label="定價" />
-          <button type="button" className="btn btn-line btn-lg" onClick={applyPrice}>
-            {sale.state === "sale" ? "改價格" : "開始出售"}
-          </button>
-          {error ? <p className="field-error">{error}</p> : null}
+          ) : null}
+        </>
+      ) : !open ? (
+        <button type="button" className="btn-text owner-link" onClick={() => setOpen(true)} data-testid="owner-want-sell">
+          我想賣
+        </button>
+      ) : (
+        <div className="seller-bar" data-testid="seller-bar">
+          <div className="seg" role="group" aria-label="要不要賣">
+            {(
+              [
+                ["share", "純分享"],
+                ["offer", "開放出價"],
+                ["sale", "定價出售"],
+              ] as const
+            ).map(([k, label]) => (
+              <button key={k} type="button" aria-pressed={shown === k} onClick={() => pick(k)}>
+                {label}
+              </button>
+            ))}
+          </div>
+          {shown === "sale" ? (
+            <div className="seller-row">
+              <MoneyInput id="seller-price" value={price} onChange={setPrice} label="定價" />
+              <button type="button" className="btn btn-line" onClick={applyPrice} data-testid="owner-price">
+                {sale.state === "sale" ? "改價格" : "開始出售"}
+              </button>
+            </div>
+          ) : null}
         </div>
+      )}
+      {n && sale.state !== "share" && sale.state !== "sold" ? (
+        <Link className="link owner-link" href="/messages">
+          看私訊
+        </Link>
       ) : null}
-      {error && shown !== "sale" ? <p className="field-error">{error}</p> : null}
+      {error ? <p className="field-error">{error}</p> : null}
     </div>
   );
 }
@@ -728,26 +620,6 @@ function SoldBox({ sale }: { sale: Sale }) {
         <b>已售出</b>
         {shown ? <span className="deal-strike">{priceText(shown)}</span> : null}
         {sale.soldAt ? <span className="deal-note">{sale.soldAt}</span> : null}
-      </div>
-    </div>
-  );
-}
-
-/** 賣家自己看的交易區：價格＋幾筆出價，沒有買的按鈕 */
-function OwnerBox({ sale, offers }: { sale: Sale; offers: PublicOffer[] }) {
-  if (sale.state === "share") return null;
-  if (sale.state === "sold") return <SoldBox sale={sale} />;
-  return (
-    <div className="deal">
-      <div className="deal-top">
-        {sale.state === "sale" ? (
-          <strong className="deal-price">{priceText(sale.price ?? 0)}</strong>
-        ) : (
-          <b>開放出價</b>
-        )}
-        <span className="deal-note">
-          {offers.length} 筆出價 · <Link href="/messages">看私訊</Link>
-        </span>
       </div>
     </div>
   );
@@ -874,7 +746,6 @@ export function ShareDetail({
   const lock = share.lock;
   const frozen = Boolean(lock) && sale.state !== "sold";
   const fake = share.hasFakes;
-  const [editing, setEditing] = useState(false);
 
   return (
     <div className="detail" data-sale={sale.state}>
@@ -889,7 +760,7 @@ export function ShareDetail({
           </div>
         ) : null}
         {lock && mine ? <AppealBox target={lock.target} /> : null}
-        {mine && ready && !frozen ? <SellerBar key={sale.state + (sale.price ?? "")} share={share} sale={sale} /> : null}
+        {mine && ready && !frozen ? <OwnerPanel key={sale.state + (sale.price ?? "")} share={share} sale={sale} offers={offers} canEdit={!lock} /> : null}
         <h1 className="page-title">{share.what}</h1>
         <div className="detail-by">
           <Link className="who" href={userHref(share.author.handle)}>
@@ -906,32 +777,11 @@ export function ShareDetail({
             最後編輯於 <EditedTime iso={share.editedAt} />
           </p>
         ) : null}
-        {mine && ready && !lock ? (
-          editing ? (
-            <PhotoEditor share={share} onClose={() => setEditing(false)} />
-          ) : (
-            <p className="pp-actions">
-              <Link className="btn btn-p" href={`/share/${share.n}/edit`} data-testid="share-edit-open">
-                編輯
-              </Link>
-              <button
-                type="button"
-                className="btn btn-line"
-                onClick={() => setEditing(true)}
-                data-testid="photo-edit-open"
-              >
-                編輯照片
-              </button>
-            </p>
-          )
-        ) : null}
         {me?.admin && ready ? <RefPhotoAdmin share={share} /> : null}
         {shareInfo && !lock ? <ShareActions info={shareInfo} /> : null}
         {frozen && sale.state !== "share" ? (
           <FrozenBox sale={sale} offers={offers} />
-        ) : mine ? (
-          <OwnerBox sale={sale} offers={offers} />
-        ) : sale.state === "sold" ? (
+        ) : mine ? null : sale.state === "sold" ? (
           <SoldBox sale={sale} />
         ) : (
           <BuyBox share={share} sale={sale} offers={offers} />
@@ -952,10 +802,10 @@ export function ShareDetail({
               {share.link.label}
             </Link>
           </p>
-        ) : mine && !lock ? (
+        ) : mine && ready && !lock ? (
           <p className="detail-link">
-            <Link className="btn btn-line" href={`/share/${share.n}/edit`}>
-              補上系列或品項
+            <Link className="link" href={`/share/${share.n}/edit#share-form-sec-where`} data-testid="fill-where">
+              補上是哪一張
             </Link>
           </p>
         ) : null}

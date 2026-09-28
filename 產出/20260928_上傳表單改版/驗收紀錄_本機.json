@@ -1,0 +1,574 @@
+{
+ "results": [
+  {
+   "name": "A1440_CD 搜尋框在第一屏內",
+   "ok": true,
+   "detail": "{'vh': 900, 'docH': 1711, 'sw': 1440, 'cw': 1440, 'searchY': 606, 'kindY': 828, 'sumTop': 167, 'sumBottom': 585, 'sumPos': 'sticky'}"
+  },
+  {
+   "name": "A1440_CD 發布列位置（手機黏底／桌機右欄）",
+   "ok": true,
+   "detail": "{'vh': 900, 'docH': 1711, 'sw': 1440, 'cw': 1440, 'searchY': 606, 'kindY': 828, 'sumTop': 167, 'sumBottom': 585, 'sumPos': 'sticky'}"
+  },
+  {
+   "name": "A1440_CD 沒有性別地區篩選",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A1440_CD 沒有網址欄",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A1440_CD 空送出出現三個錯誤",
+   "ok": true,
+   "detail": "['放一張照片', '選一位，或在框裡打名字', '點一個']"
+  },
+  {
+   "name": "A1440_CD 發布列寫還差 3 題",
+   "ok": true,
+   "detail": "還差 3 題：照片、誰的東西、是什麼"
+  },
+  {
+   "name": "A1440_CD 放照片後照片錯誤立刻消失",
+   "ok": true,
+   "detail": "['選一位，或在框裡打名字', '點一個']"
+  },
+  {
+   "name": "A1440_CD 選了藝人「至少要選」立刻消失（沒再按發布）",
+   "ok": true,
+   "detail": "['點一個']"
+  },
+  {
+   "name": "A1440_CD 藝人收成黑框",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A1440_CD 選了 CD 錯誤立刻消失",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "A1440_CD 專輯清單先列 6 張＋還有 N 張",
+   "ok": true,
+   "detail": "6"
+  },
+  {
+   "name": "A1440_CD 專輯收成黑框",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A1440_CD 即時標題",
+   "ok": true,
+   "detail": "Dr. Paper Vol.3 Sunday Night Slow Jams・CD"
+  },
+  {
+   "name": "A1440_CD 自訂標題即時反映",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A1440_CD 還原成自動標題",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A1440_CD 發布列寫可以發布了",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A1440_CD 表單沒有橫向溢出",
+   "ok": true,
+   "detail": "{'vh': 900, 'docH': 1687, 'sw': 1440, 'cw': 1440, 'searchY': None, 'kindY': None, 'sumTop': 72, 'sumBottom': 547, 'sumPos': 'sticky'}"
+  },
+  {
+   "name": "A1440_CD 發布後標題",
+   "ok": true,
+   "detail": "Dr. Paper Vol.3 Sunday Night Slow Jams・CD"
+  },
+  {
+   "name": "A1440_CD 操作盒：純分享＋一顆編輯＋我想賣",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A1440_CD 沒有編輯照片鈕",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A1440_CD 操作盒位置（手機照片下方、桌機右欄上方）",
+   "ok": true,
+   "detail": "{'box': {'x': 781.953125, 'y': 40, 'width': 506.03125, 'height': 128.1875}, 'photo': {'x': 152, 'y': 40, 'width': 581.953125, 'height': 581.953125}, 'title': {'x': 781.953125, 'y': 188.1875, 'width': 506.03125, 'height': 72.78125}}"
+  },
+  {
+   "name": "A1440_CD console error 0",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "A1440_毛巾 周邊題目帶品項名",
+   "ok": true,
+   "detail": "這條毛巾是哪裡出的？"
+  },
+  {
+   "name": "A1440_毛巾 三組都在（演唱會、專輯的周邊、藝人自己出的）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A1440_毛巾 藝人自己出的有周邊與其他",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A1440_毛巾 新增演唱會立刻選好、標題立刻用上",
+   "ok": true,
+   "detail": "GDNA 巡迴98113_毛巾・毛巾"
+  },
+  {
+   "name": "A1440_毛巾 改名後標題跟著換",
+   "ok": true,
+   "detail": "GDNA 巡迴演唱會 台北場98113_毛巾・毛巾"
+  },
+  {
+   "name": "A1440_毛巾 發出去就是改好的名字、立即可用（不用等審核）",
+   "ok": true,
+   "detail": "GDNA 巡迴演唱會 台北場98113_毛巾・毛巾"
+  },
+  {
+   "name": "A1440_毛巾 單則頁連到新演唱會系列頁",
+   "ok": true,
+   "detail": "/artist/gordon/17#towel"
+  },
+  {
+   "name": "A1440_毛巾 新系列頁公開可看",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A1440_毛巾 console error 0",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "B390_CD 搜尋框在第一屏內",
+   "ok": true,
+   "detail": "{'vh': 844, 'docH': 1968, 'sw': 390, 'cw': 390, 'searchY': 572, 'kindY': 938, 'sumTop': 776, 'sumBottom': 844, 'sumPos': 'fixed'}"
+  },
+  {
+   "name": "B390_CD 發布列位置（手機黏底／桌機右欄）",
+   "ok": true,
+   "detail": "{'vh': 844, 'docH': 1968, 'sw': 390, 'cw': 390, 'searchY': 572, 'kindY': 938, 'sumTop': 776, 'sumBottom': 844, 'sumPos': 'fixed'}"
+  },
+  {
+   "name": "B390_CD 沒有性別地區篩選",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B390_CD 沒有網址欄",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B390_CD 空送出出現三個錯誤",
+   "ok": true,
+   "detail": "['放一張照片', '選一位，或在框裡打名字', '點一個']"
+  },
+  {
+   "name": "B390_CD 發布列寫還差 3 題",
+   "ok": true,
+   "detail": "還差 3 題：照片、誰的東西、是什麼"
+  },
+  {
+   "name": "B390_CD 放照片後照片錯誤立刻消失",
+   "ok": true,
+   "detail": "['選一位，或在框裡打名字', '點一個']"
+  },
+  {
+   "name": "B390_CD 選了藝人「至少要選」立刻消失（沒再按發布）",
+   "ok": true,
+   "detail": "['點一個']"
+  },
+  {
+   "name": "B390_CD 藝人收成黑框",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B390_CD 選了 CD 錯誤立刻消失",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "B390_CD 專輯清單先列 6 張＋還有 N 張",
+   "ok": true,
+   "detail": "6"
+  },
+  {
+   "name": "B390_CD 專輯收成黑框",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B390_CD 即時標題",
+   "ok": true,
+   "detail": "Dr. Paper Vol.3 Sunday Night Slow Jams・CD"
+  },
+  {
+   "name": "B390_CD 自訂標題即時反映",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B390_CD 還原成自動標題",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B390_CD 發布列寫可以發布了",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B390_CD 表單沒有橫向溢出",
+   "ok": true,
+   "detail": "{'vh': 844, 'docH': 1787, 'sw': 390, 'cw': 390, 'searchY': None, 'kindY': None, 'sumTop': 776, 'sumBottom': 844, 'sumPos': 'fixed'}"
+  },
+  {
+   "name": "B390_CD 發布後標題",
+   "ok": true,
+   "detail": "Dr. Paper Vol.3 Sunday Night Slow Jams・CD"
+  },
+  {
+   "name": "B390_CD 操作盒：純分享＋一顆編輯＋我想賣",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B390_CD 沒有編輯照片鈕",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B390_CD 操作盒位置（手機照片下方、桌機右欄上方）",
+   "ok": true,
+   "detail": "{'box': {'x': 18, 'y': 360, 'width': 354, 'height': 128.1875}, 'photo': {'x': 18, 'y': -22, 'width': 354, 'height': 354}, 'title': {'x': 18, 'y': 508.1875, 'width': 354, 'height': 57.1875}}"
+  },
+  {
+   "name": "B390_CD console error 0",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "B390_毛巾 周邊題目帶品項名",
+   "ok": true,
+   "detail": "這條毛巾是哪裡出的？"
+  },
+  {
+   "name": "B390_毛巾 三組都在（演唱會、專輯的周邊、藝人自己出的）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B390_毛巾 藝人自己出的有周邊與其他",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B390_毛巾 新增演唱會立刻選好、標題立刻用上",
+   "ok": true,
+   "detail": "GDNA 巡迴98113_毛巾・毛巾"
+  },
+  {
+   "name": "B390_毛巾 改名後標題跟著換",
+   "ok": true,
+   "detail": "GDNA 巡迴演唱會 台北場98113_毛巾・毛巾"
+  },
+  {
+   "name": "B390_毛巾 發出去就是改好的名字、立即可用（不用等審核）",
+   "ok": true,
+   "detail": "GDNA 巡迴演唱會 台北場98113_毛巾・毛巾"
+  },
+  {
+   "name": "B390_毛巾 單則頁連到新演唱會系列頁",
+   "ok": true,
+   "detail": "/artist/gordon/18#towel"
+  },
+  {
+   "name": "B390_毛巾 新系列頁公開可看",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "B390_毛巾 console error 0",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "C1440_新藝人 新增藝人立刻選好（標新增、按鈕是改名）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "C1440_新藝人 藝人打錯字能改",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "C1440_新藝人 新增專輯年份不記得",
+   "ok": true,
+   "detail": "第一張新增\n年份不記得・專輯\n改名"
+  },
+  {
+   "name": "C1440_新藝人 新藝人新專輯直接發文",
+   "ok": true,
+   "detail": "第一張・CD"
+  },
+  {
+   "name": "C1440_新藝人 識別碼自動產生、狀態 approved",
+   "ok": true,
+   "detail": "[{'slug': 'a-yblj', 'status': 'approved'}]"
+  },
+  {
+   "name": "C1440_新藝人 改名留紀錄",
+   "ok": true,
+   "detail": "[{'from_name': '測式樂團98113', 'to_name': '測試樂團98113'}]"
+  },
+  {
+   "name": "C1440_新藝人 console error 0",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "F1440_編輯 編輯頁照片在裡面、題目全部收成黑框",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "F1440_編輯 換藝人後原專輯清掉、改列新藝人的專輯",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "F1440_編輯 改藝人",
+   "ok": true,
+   "detail": "['山線電台']"
+  },
+  {
+   "name": "F1440_編輯 改專輯",
+   "ok": true,
+   "detail": "('驗收系列438017・CD', '驗收系列438017')"
+  },
+  {
+   "name": "F1440_編輯 改價格",
+   "ok": true,
+   "detail": "{'state': 'sale', 'price': 1200}"
+  },
+  {
+   "name": "F1440_編輯 改照片（多一張）",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "name": "F1440_編輯 操作盒：定價出售＋改價格就地展開",
+   "ok": true,
+   "detail": "定價出售 NT$ 1,200"
+  },
+  {
+   "name": "F1440_編輯 console error 0",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "登入者單則頁載入高清圖（長邊 1600）",
+   "ok": true,
+   "detail": "[{'src': '/img/p/ybzpA9F6c23QOpdq_t.webp', 'hires': '', 'w': 480}, {'src': 'http://127.0.0.1:8791/img/p/ybzpA9F6c23QOpdq.webp', 'hires': '1', 'w': 1600}, {'src': '/img/p/9kP1rXWm5g9x5lD7_t.webp', 'hires': '', 'w': 480}, {'src': 'http://127.0.0.1:8791/img/p/9kP1rXWm5g9x5lD7.webp', 'hires': '1', 'w': 1600}, {'src': '/img/p/ybzpA9F6c23QOpdq_t.webp', 'hires': '', 'w': 480}, {'src': '/img/p/9kP1rXWm5g9"
+  },
+  {
+   "name": "訪客單則頁只有縮圖",
+   "ok": true,
+   "detail": "[{'src': 'http://127.0.0.1:8791/img/p/ybzpA9F6c23QOpdq_t.webp', 'hires': '', 'w': 480}, {'src': 'http://127.0.0.1:8791/img/p/9kP1rXWm5g9x5lD7_t.webp', 'hires': '', 'w': 480}, {'src': '/img/p/ybzpA9F6c23QOpdq_t.webp', 'hires': '', 'w': 480}, {'src': '/img/p/9kP1rXWm5g9x5lD7_t.webp', 'hires': '', 'w': 480}]"
+  },
+  {
+   "name": "訪客 HTML 的 <img> 只有縮圖網址",
+   "ok": true,
+   "detail": "['/img/p/ybzpA9F6c23QOpdq_t.webp', '/img/p/9kP1rXWm5g9x5lD7_t.webp', '/img/p/ybzpA9F6c23QOpdq_t.webp', '/img/p/9kP1rXWm5g9x5lD7_t.webp']"
+  },
+  {
+   "name": "整頁快取仍命中 /",
+   "ok": true,
+   "detail": "['MISS', 'HIT', 'HIT']"
+  },
+  {
+   "name": "整頁快取仍命中 /share/2226",
+   "ok": true,
+   "detail": "['HIT', 'HIT', 'HIT']"
+  },
+  {
+   "name": "收藏牆維持小圖 /",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "name": "收藏牆維持小圖 /artist/gordon",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "name": "收藏牆維持小圖 /artist/gordon/5",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "name": "後台列出新藝人、看得到改名紀錄",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "name": "管理員按「沒問題」移到已確認",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "320 /share/new 無溢出、console 0",
+   "ok": true,
+   "detail": "{'sw': 320, 'cw': 320, 'bad': [], 'cerr': []}"
+  },
+  {
+   "name": "320 /share/2226 無溢出、console 0",
+   "ok": true,
+   "detail": "{'sw': 320, 'cw': 320, 'bad': [], 'cerr': []}"
+  },
+  {
+   "name": "320 /share/2226/edit 無溢出、console 0",
+   "ok": true,
+   "detail": "{'sw': 320, 'cw': 320, 'bad': [], 'cerr': []}"
+  },
+  {
+   "name": "320 /share/2229 無溢出、console 0",
+   "ok": true,
+   "detail": "{'sw': 320, 'cw': 320, 'bad': [], 'cerr': []}"
+  },
+  {
+   "name": "390 /share/new 無溢出、console 0",
+   "ok": true,
+   "detail": "{'sw': 390, 'cw': 390, 'bad': [], 'cerr': []}"
+  },
+  {
+   "name": "390 /share/2226 無溢出、console 0",
+   "ok": true,
+   "detail": "{'sw': 390, 'cw': 390, 'bad': [], 'cerr': []}"
+  },
+  {
+   "name": "390 /share/2226/edit 無溢出、console 0",
+   "ok": true,
+   "detail": "{'sw': 390, 'cw': 390, 'bad': [], 'cerr': []}"
+  },
+  {
+   "name": "390 /share/2229 無溢出、console 0",
+   "ok": true,
+   "detail": "{'sw': 390, 'cw': 390, 'bad': [], 'cerr': []}"
+  },
+  {
+   "name": "1440 /share/new 無溢出、console 0",
+   "ok": true,
+   "detail": "{'sw': 1440, 'cw': 1440, 'bad': [], 'cerr': []}"
+  },
+  {
+   "name": "1440 /share/2226 無溢出、console 0",
+   "ok": true,
+   "detail": "{'sw': 1440, 'cw': 1440, 'bad': [], 'cerr': []}"
+  },
+  {
+   "name": "1440 /share/2226/edit 無溢出、console 0",
+   "ok": true,
+   "detail": "{'sw': 1440, 'cw': 1440, 'bad': [], 'cerr': []}"
+  },
+  {
+   "name": "1440 /share/2229 無溢出、console 0",
+   "ok": true,
+   "detail": "{'sw': 1440, 'cw': 1440, 'bad': [], 'cerr': []}"
+  },
+  {
+   "name": "320 /admin/additions 無溢出、console 0",
+   "ok": true,
+   "detail": "{'sw': 320, 'cw': 320, 'bad': [], 'cerr': []}"
+  },
+  {
+   "name": "390 /admin/additions 無溢出、console 0",
+   "ok": true,
+   "detail": "{'sw': 390, 'cw': 390, 'bad': [], 'cerr': []}"
+  },
+  {
+   "name": "1440 /admin/additions 無溢出、console 0",
+   "ok": true,
+   "detail": "{'sw': 1440, 'cw': 1440, 'bad': [], 'cerr': []}"
+  }
+ ],
+ "steps": [
+  {
+   "vh": 900,
+   "docH": 1711,
+   "sw": 1440,
+   "cw": 1440,
+   "searchY": 606,
+   "kindY": 828,
+   "sumTop": 167,
+   "sumBottom": 585,
+   "sumPos": "sticky",
+   "step": "A1440_CD 進表單"
+  },
+  {
+   "shown": true,
+   "text": "不確定\n這張有 1 個版本：2016 CD\n選版本",
+   "step": "A1440_CD 版本題"
+  },
+  {
+   "vh": 900,
+   "docH": 1687,
+   "sw": 1440,
+   "cw": 1440,
+   "searchY": null,
+   "kindY": null,
+   "sumTop": 72,
+   "sumBottom": 547,
+   "sumPos": "sticky",
+   "step": "A1440_CD 發布前"
+  },
+  {
+   "vh": 844,
+   "docH": 1968,
+   "sw": 390,
+   "cw": 390,
+   "searchY": 572,
+   "kindY": 938,
+   "sumTop": 776,
+   "sumBottom": 844,
+   "sumPos": "fixed",
+   "step": "B390_CD 進表單"
+  },
+  {
+   "shown": true,
+   "text": "不確定\n這張有 1 個版本：2016 CD\n選版本",
+   "step": "B390_CD 版本題"
+  },
+  {
+   "vh": 844,
+   "docH": 1787,
+   "sw": 390,
+   "cw": 390,
+   "searchY": null,
+   "kindY": null,
+   "sumTop": 776,
+   "sumBottom": 844,
+   "sumPos": "fixed",
+   "step": "B390_CD 發布前"
+  }
+ ]
+}

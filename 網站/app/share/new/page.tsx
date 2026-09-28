@@ -1,5 +1,6 @@
 import { getViewer, pageData } from "@/lib/server/viewer";
 import { ShareForm } from "@/components/share-form";
+import { myAdditions } from "@/lib/server/additions";
 
 export const metadata = { title: "炫收藏" };
 
@@ -11,9 +12,9 @@ export default async function NewSharePage() {
   const { c } = await pageData();
   const viewer = await getViewer();
   return (
-    <main className="wrap page page-narrow">
+    <main className="wrap page sf-page">
       <h1 className="page-title">炫收藏</h1>
-      <ShareForm options={c.formOptions(viewer?.handle)} />
+      <ShareForm options={c.formOptions(viewer?.handle)} mine={viewer ? await myAdditions(viewer.id) : undefined} />
     </main>
   );
 }

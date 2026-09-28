@@ -1,0 +1,260 @@
+// 炫收藏表單就地新增的藝人、系列（2026-09-28 上傳表單改版：事前審 → 事後審）。
+//
+// - 新增當下就是 approved、立即能掛、立即出現在標題；後台「待確認的新增」由管理員事後確認、修名或合併
+// - 介面上不出現網址識別碼：藝人 slug 由名稱自動產生（名稱有英數就轉小寫連字號，沒有就用隨機碼），管理員事後可改
+// - 新增者永遠可以改自己新增的名稱（不限確認前），每次改都寫 catalog_addition_edits
+// - 藝人改名：跟誰有關（shares.about）存的是名稱，同名的一起換；系列改名：掛這個系列的收藏標題重組
+
+import { and, desc, eq, inArray, isNull } from "drizzle-orm";
+import { getDb } from "@/db";
+import { adminLog, artists, catalogAdditionEdits, catalogAdditions, items, series, shares, versions } from "@/db/schema";
+import { composeWhat, KINDS, norm, SERIES_KIND_TYPE, type Kind, type SeriesKind } from "@/lib/data";
+import { isAdmin, type User } from "@/lib/server/auth";
+import { parseJson, userNames } from "@/lib/server/content";
+import { ensureItem } from "@/lib/server/series-link";
+import { mergeArtists } from "@/lib/server/duplicates";
+import { HttpError } from "@/lib/server/trade";
+
+export type AdditionType = "artist" | "series";
+const nowIso = () => new Date().toISOString();
+
+/** 名稱轉網址識別碼：有英數字就用（小寫、連字號），不夠長或全中文就用 a-隨機碼 */
+export function autoSlug(name: string) {
+  const ascii = name
+    .normalize("NFKD")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40)
+    .replace(/-+$/, "");
+  const rand = Array.from(crypto.getRandomValues(new Uint8Array(4)), (b) => (b % 36).toString(36)).join("");
+  return ascii.length >= 2 && /[a-z]/.test(ascii) ? ascii : `a-${rand}`;
+}
+
+export async function recordAddition(type: AdditionType, ref: string, u: User) {
+  const admin = isAdmin(u);
+  await getDb()
+    .insert(catalogAdditions)
+    .values({ type, ref, createdBy: u.id, ...(admin ? { confirmedAt: nowIso(), confirmedBy: u.id } : {}) })
+    .onConflictDoNothing();
+}
+
+/** 表單用：這位會員自己新增過的（藝人 slug、系列鍵），這些在表單上是「改名」不是「改」 */
+export async function myAdditions(userId: string) {
+  const db = getDb();
+  const rows = await db.select().from(catalogAdditions).where(eq(catalogAdditions.createdBy, userId));
+  const sIds = rows.filter((r) => r.type === "series").map((r) => Number(r.ref));
+  const sRows = sIds.length
+    ? await db.select({ id: series.id, a: series.artistSlug, no: series.no }).from(series).where(inArray(series.id, sIds.slice(0, 90)))
+    : [];
+  return {
+    artists: rows.filter((r) => r.type === "artist").map((r) => r.ref),
+    series: sRows.map((w) => `${w.a}/${w.no}`),
+  };
+}
+
+async function additionFor(type: AdditionType, ref: string) {
+  const [row] = await getDb()
+    .select()
+    .from(catalogAdditions)
+    .where(and(eq(catalogAdditions.type, type), eq(catalogAdditions.ref, ref)));
+  return row;
+}
+
+/** 重組掛某系列的收藏標題（what 是自動標題；發文者自訂的 custom_what 不動） */
+async function recomposeSeriesShares(seriesId: number, key: string, title: string) {
+  const db = getDb();
+  const rows = await db
+    .select({ no: shares.no, kind: shares.kind, kindNote: shares.kindNote, itemId: shares.itemId, versionId: shares.versionId })
+    .from(shares)
+    .where(eq(shares.seriesKey, key));
+  for (const s of rows) {
+    let edition = "";
+    if (s.itemId && s.versionId) {
+      const [v] = await db
+        .select({ e: versions.edition })
+        .from(versions)
+        .innerJoin(items, eq(items.id, versions.itemRef))
+        .where(and(eq(items.seriesId, seriesId), eq(items.itemId, s.itemId), eq(versions.versionId, s.versionId)));
+      edition = v?.e ?? "";
+    }
+    const label = s.kind === "其他周邊" ? (s.kindNote ?? s.kind) : s.kind;
+    await db.update(shares).set({ what: composeWhat({ series: title, item: label, version: edition }) }).where(eq(shares.no, s.no));
+  }
+}
+
+/**
+ * 改名：{ type, ref, name, year? }。系列的 ref 可以是 series.id 或「藝人/流水號」。
+ * 權限：新增者本人或管理員。回傳新的顯示資料給表單。
+ */
+export async function renameAddition(u: User, rawType: unknown, rawRef: unknown, rawName: unknown, rawYear: unknown) {
+  const type = rawType === "artist" || rawType === "series" ? rawType : null;
+  const name = typeof rawName === "string" ? rawName.trim().slice(0, 60) : "";
+  if (!type || typeof rawRef !== "string" && typeof rawRef !== "number") throw new HttpError(400, "BAD_REQUEST", "參數不對");
+  if (!name) throw new HttpError(400, "INVALID", "名稱不能空白");
+  const db = getDb();
+  let ref = String(rawRef);
+  let seriesRow: typeof series.$inferSelect | undefined;
+  if (type === "series") {
+    const m = /^([a-z0-9-]+)\/(\d+)$/.exec(ref);
+    [seriesRow] = m
+      ? await db.select().from(series).where(and(eq(series.artistSlug, m[1]), eq(series.no, Number(m[2]))))
+      : await db.select().from(series).where(eq(series.id, Number(ref)));
+    if (!seriesRow) throw new HttpError(404, "NOT_FOUND", "找不到這筆");
+    ref = String(seriesRow.id);
+  }
+  const add = await additionFor(type, ref);
+  if (!add) throw new HttpError(404, "NOT_FOUND", "這筆不是從表單新增的，請用頁面上的編輯");
+  if (add.createdBy !== u.id && !isAdmin(u)) throw new HttpError(403, "FORBIDDEN", "只有新增的人可以改名");
+  const at = nowIso();
+
+  if (type === "artist") {
+    const [a] = await db.select().from(artists).where(eq(artists.slug, ref));
+    if (!a || a.deletedAt) throw new HttpError(404, "NOT_FOUND", "找不到這位藝人");
+    if (a.name !== name) {
+      await db.update(artists).set({ name, updatedAt: at, lastEditBy: u.id }).where(eq(artists.slug, ref));
+      // 跟誰有關存名稱：含舊名的收藏一起換（JSON 陣列逐一比對，不用字串取代，避免換到別的名字的一部分）
+      const hits = await db.select({ no: shares.no, about: shares.about }).from(shares).where(isNull(shares.deletedAt));
+      for (const s of hits) {
+        const list = parseJson<string[]>(s.about, []);
+        if (!list.includes(a.name)) continue;
+        const next = Array.from(new Set(list.map((x) => (x === a.name ? name : x))));
+        await db.update(shares).set({ about: JSON.stringify(next) }).where(eq(shares.no, s.no));
+      }
+      await db.insert(catalogAdditionEdits).values({ additionId: add.id, byId: u.id, fromName: a.name, toName: name });
+    }
+    return { type, slug: ref, name };
+  }
+
+  const w = seriesRow!;
+  const year = typeof rawYear === "string" && /^\d{4}$/.test(rawYear.trim()) ? rawYear.trim() : "";
+  if (w.title !== name || w.year !== year) {
+    const seriesType = w.seriesType || SERIES_KIND_TYPE[(w.kind as Exclude<SeriesKind, "misc">) ?? "album"] || "";
+    const full = `${year}《${name}》${seriesType}`;
+    await db.update(series).set({ title: name, year, name: full, updatedAt: at, lastEditBy: u.id }).where(eq(series.id, w.id));
+    await recomposeSeriesShares(w.id, `${w.artistSlug}/${w.no}`, name);
+    await db.insert(catalogAdditionEdits).values({ additionId: add.id, byId: u.id, fromName: w.title, toName: name, fromYear: w.year, toYear: year });
+  }
+  return { type, key: `${w.artistSlug}/${w.no}`, title: name, year, name: `${year}《${name}》${w.seriesType}` };
+}
+
+/* ---------- 後台「待確認的新增」 ---------- */
+
+export type AdminAddition = {
+  id: number;
+  type: AdditionType;
+  ref: string;
+  name: string;
+  year: string;
+  href: string;
+  artist?: { slug: string; name: string };
+  by: string;
+  createdAt: string;
+  confirmedAt: string | null;
+  confirmedBy: string | null;
+  used: number;
+  gone: boolean;
+  edits: { by: string; from: string; to: string; at: string }[];
+};
+
+export async function listAdditions(): Promise<AdminAddition[]> {
+  const db = getDb();
+  const rows = await db.select().from(catalogAdditions).orderBy(desc(catalogAdditions.id)).limit(300);
+  const edits = rows.length ? await db.select().from(catalogAdditionEdits).orderBy(desc(catalogAdditionEdits.id)).limit(1000) : [];
+  const aRows = await db.select({ slug: artists.slug, name: artists.name, deletedAt: artists.deletedAt }).from(artists);
+  const aBy = new Map(aRows.map((a) => [a.slug, a]));
+  const sIds = rows.filter((r) => r.type === "series").map((r) => Number(r.ref));
+  const sRows: (typeof series.$inferSelect)[] = [];
+  for (let i = 0; i < sIds.length; i += 90) sRows.push(...(await db.select().from(series).where(inArray(series.id, sIds.slice(i, i + 90)))));
+  const sBy = new Map(sRows.map((w) => [String(w.id), w]));
+  const shRows = await db.select({ about: shares.about, seriesKey: shares.seriesKey }).from(shares).where(isNull(shares.deletedAt));
+  const names = await userNames([...rows.flatMap((r) => [r.createdBy, r.confirmedBy ?? ""]), ...edits.map((e) => e.byId)]);
+  const who = (id: string | null) => (id ? (names.get(id)?.name ?? "（已刪除）") : null);
+  return rows.map((r) => {
+    const own = edits.filter((e) => e.additionId === r.id).map((e) => ({ by: who(e.byId) ?? "", from: e.fromYear || e.toYear ? `${e.fromName}（${e.fromYear || "不記得"}）` : e.fromName, to: e.fromYear || e.toYear ? `${e.toName}（${e.toYear || "不記得"}）` : e.toName, at: e.createdAt }));
+    if (r.type === "artist") {
+      const a = aBy.get(r.ref);
+      const name = a?.name ?? r.ref;
+      return {
+        id: r.id, type: "artist" as const, ref: r.ref, name, year: "", href: `/artist/${r.ref}`,
+        by: who(r.createdBy) ?? "", createdAt: r.createdAt, confirmedAt: r.confirmedAt, confirmedBy: who(r.confirmedBy),
+        used: shRows.filter((s) => parseJson<string[]>(s.about, []).includes(name)).length,
+        gone: !a || Boolean(a.deletedAt), edits: own,
+      };
+    }
+    const w = sBy.get(r.ref);
+    const key = w ? `${w.artistSlug}/${w.no}` : "";
+    const a = w ? aBy.get(w.artistSlug) : undefined;
+    return {
+      id: r.id, type: "series" as const, ref: key || r.ref, name: w?.title ?? "（已刪除）", year: w?.year ?? "", href: key ? `/artist/${key}` : "",
+      ...(w ? { artist: { slug: w.artistSlug, name: a?.name ?? w.artistSlug } } : {}),
+      by: who(r.createdBy) ?? "", createdAt: r.createdAt, confirmedAt: r.confirmedAt, confirmedBy: who(r.confirmedBy),
+      used: key ? shRows.filter((s) => s.seriesKey === key).length : 0,
+      gone: !w || Boolean(w.deletedAt), edits: own,
+    };
+  });
+}
+
+async function log(adminId: string, action: string, target: string, detail: Record<string, unknown>) {
+  await getDb().insert(adminLog).values({ adminId, action, target, detail: JSON.stringify(detail) });
+}
+
+/** 管理員：確認（沒問題）／改回待確認 */
+export async function confirmAddition(admin: User, id: number, on: boolean) {
+  const db = getDb();
+  const r = await db
+    .update(catalogAdditions)
+    .set(on ? { confirmedAt: nowIso(), confirmedBy: admin.id } : { confirmedAt: null, confirmedBy: null })
+    .where(eq(catalogAdditions.id, id))
+    .returning({ type: catalogAdditions.type, ref: catalogAdditions.ref });
+  if (!r.length) throw new HttpError(404, "NOT_FOUND", "找不到這筆");
+  await log(admin.id, on ? "確認新增" : "改回待確認", `${r[0].type}:${r[0].ref}`, {});
+}
+
+/**
+ * 管理員：把新增的合併到既有的。藝人用既有的藝人合併（系列、收藏、轉址一起搬）；
+ * 系列：收藏逐則改掛到目標系列（品項照類型找或建、版本改「不確定」），新增的系列軟刪除。
+ */
+export async function mergeAddition(admin: User, id: number, rawInto: unknown) {
+  const db = getDb();
+  const [add] = await db.select().from(catalogAdditions).where(eq(catalogAdditions.id, id));
+  if (!add) throw new HttpError(404, "NOT_FOUND", "找不到這筆");
+  const into = typeof rawInto === "string" ? rawInto.trim() : "";
+  if (add.type === "artist") {
+    if (!into || into === add.ref) throw new HttpError(400, "INVALID", "填要併進去的藝人識別碼");
+    const r = await mergeArtists(admin, into, add.ref);
+    await db.update(catalogAdditions).set({ confirmedAt: nowIso(), confirmedBy: admin.id }).where(eq(catalogAdditions.id, id));
+    return r;
+  }
+  const [lose] = await db.select().from(series).where(eq(series.id, Number(add.ref)));
+  const m = /^([a-z0-9-]+)\/(\d+)$/.exec(into);
+  const [keep] = m ? await db.select().from(series).where(and(eq(series.artistSlug, m[1]), eq(series.no, Number(m[2])), isNull(series.deletedAt))) : [];
+  if (!lose || lose.deletedAt) throw new HttpError(404, "NOT_FOUND", "這個系列已經不在了");
+  if (!keep || keep.id === lose.id) throw new HttpError(400, "INVALID", "填要併進去的系列（藝人/流水號，例：gordon/3）");
+  const loseKey = `${lose.artistSlug}/${lose.no}`;
+  const keepKey = `${keep.artistSlug}/${keep.no}`;
+  const rows = await db.select({ no: shares.no, kind: shares.kind, kindNote: shares.kindNote }).from(shares).where(eq(shares.seriesKey, loseKey));
+  for (const s of rows) {
+    const kind = (KINDS as readonly string[]).includes(s.kind) ? (s.kind as Kind) : "其他周邊";
+    const itemId = await ensureItem(keep.id, kind, admin.id);
+    const label = kind === "其他周邊" ? (s.kindNote ?? kind) : kind;
+    await db
+      .update(shares)
+      .set({ seriesKey: keepKey, itemId, versionId: null, what: composeWhat({ series: keep.title, item: label, version: "" }), updatedAt: nowIso() })
+      .where(eq(shares.no, s.no));
+  }
+  await db.update(series).set({ deletedAt: nowIso(), updatedAt: nowIso(), lastEditBy: admin.id }).where(eq(series.id, lose.id));
+  await db.update(catalogAdditions).set({ confirmedAt: nowIso(), confirmedBy: admin.id }).where(eq(catalogAdditions.id, id));
+  await log(admin.id, "合併新增的系列", `series:${loseKey}`, { into: keepKey, movedShares: rows.length });
+  return { movedShares: rows.length };
+}
+
+/** 同名（含別名）的既有藝人：新增前先比對，同名就直接用既有那位，不重複建 */
+export async function sameNameArtist(name: string) {
+  const q = norm(name);
+  const rows = await getDb()
+    .select({ slug: artists.slug, name: artists.name, aliases: artists.aliases, kind: artists.kind, gender: artists.gender, region: artists.region })
+    .from(artists)
+    .where(and(eq(artists.status, "approved"), isNull(artists.deletedAt), isNull(artists.hiddenAt)));
+  return rows.find((a) => norm(a.name) === q || parseJson<string[]>(a.aliases, []).some((x) => norm(x) === q));
+}

@@ -1,0 +1,47 @@
+[
+ {
+  "name": "整頁快取命中 /",
+  "ok": true,
+  "detail": "['MISS', 'HIT', 'HIT']"
+ },
+ {
+  "name": "整頁快取命中 /share/3",
+  "ok": true,
+  "detail": "['HIT', 'HIT', 'HIT']"
+ },
+ {
+  "name": "整頁快取命中 /share/4",
+  "ok": true,
+  "detail": "['HIT', 'HIT', 'HIT']"
+ },
+ {
+  "name": "訪客 HTML 的 <img> 只有縮圖（檔名 _t）",
+  "ok": true,
+  "detail": "['/img/p/h7Di5Oc4kIYrWoar_t.jpg', '/img/p/FYlAwDEUxVVTES_s_t.jpg', '/img/p/h7Di5Oc4kIYrWoar_t.jpg', '/img/p/FYlAwDEUxVVTES_s_t.jpg']"
+ },
+ {
+  "name": "訪客 單則頁圖",
+  "ok": true,
+  "detail": "{\"imgs\": [{\"src\": \"https://yinzang.dblzm.workers.dev/img/p/h7Di5Oc4kIYrWoar_t.jpg\", \"hires\": \"\", \"ok\": true}, {\"src\": \"https://yinzang.dblzm.workers.dev/img/p/FYlAwDEUxVVTES_s_t.jpg\", \"hires\": \"\", \"ok\": true}, {\"src\": \"/img/p/h7Di5Oc4kIYrWoar_t.jpg\", \"hires\": \"\", \"ok\": true}, {\"src\": \"/img/p/FYlAwDEUxVVTES_s_t.jpg\", \"hires\": \"\", \"ok\": true}], \"got\": [[\"p/h7Di5Oc4kIYrWoar_t.jpg\", 200], [\"p/FYlAwDEUxVVTES_s_t.jpg\", 200]]}"
+ },
+ {
+  "name": "訪客單則頁沒有要大圖",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "模擬登入 單則頁圖",
+  "ok": true,
+  "detail": "{\"imgs\": [{\"src\": \"https://yinzang.dblzm.workers.dev/img/p/h7Di5Oc4kIYrWoar_t.jpg\", \"hires\": \"\", \"ok\": true}, {\"src\": \"https://yinzang.dblzm.workers.dev/img/p/FYlAwDEUxVVTES_s_t.jpg\", \"hires\": \"\", \"ok\": true}, {\"src\": \"/img/p/h7Di5Oc4kIYrWoar_t.jpg\", \"hires\": \"\", \"ok\": true}, {\"src\": \"/img/p/FYlAwDEUxVVTES_s_t.jpg\", \"hires\": \"\", \"ok\": true}], \"got\": [[\"p/FYlAwDEUxVVTES_s_t.jpg\", 200], [\"p/h7Di5Oc4kIYrWoar_t.jpg\", 200], [\"p/FYlAwDEUxVVTES_s.jpg\", 401], [\"p/h7Di5Oc4kIYrWoar.jpg\", 401], [\"p/FYlAwDEUxVVTES_s_t.jpg\", 200], [\"p/h7Di5Oc4kIYrWoar_t.jpg\", 200]]}"
+ },
+ {
+  "name": "模擬登入會去要大圖（真登入才給，這裡 401）",
+  "ok": true,
+  "detail": "[('p/FYlAwDEUxVVTES_s_t.jpg', 200), ('p/h7Di5Oc4kIYrWoar_t.jpg', 200), ('p/FYlAwDEUxVVTES_s.jpg', 401), ('p/h7Di5Oc4kIYrWoar.jpg', 401), ('p/FYlAwDEUxVVTES_s_t.jpg', 200), ('p/h7Di5Oc4kIYrWoar_t.jpg', 200)]"
+ },
+ {
+  "name": "大圖 401 後退回縮圖、畫面沒有破圖",
+  "ok": true,
+  "detail": "[{'src': 'https://yinzang.dblzm.workers.dev/img/p/h7Di5Oc4kIYrWoar_t.jpg', 'hires': '', 'ok': True}, {'src': 'https://yinzang.dblzm.workers.dev/img/p/FYlAwDEUxVVTES_s_t.jpg', 'hires': '', 'ok': True}, {'src': '/img/p/h7Di5Oc4kIYrWoar_t.jpg', 'hires': '', 'ok': True}, {'src': '/img/p/FYlAwDEUxVVTES_s"
+ }
+]

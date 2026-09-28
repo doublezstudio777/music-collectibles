@@ -1,0 +1,22 @@
+[
+ {
+  "name": "390 / 對照組兩則在同一列",
+  "ok": true,
+  "detail": "[['My jinji 日版・CD', 'Dr. Paper Vol.3 Sunday Night Slow Jams・2016 CD']]"
+ },
+ {
+  "name": "390 / 同列標題／標籤／發佈人列頂部差距 ≤1px、發佈人列貼底",
+  "ok": true,
+  "detail": "[('My jinji 日版・CD', 656.5, None, 697.1), ('Dr. Paper Vol.', 656.5, None, 697.1)]"
+ },
+ {
+  "name": "1440 / 對照組兩則在同一列",
+  "ok": true,
+  "detail": "[['My jinji 日版・CD', 'Dr. Paper Vol.3 Sunday Night Slow Jams・2016 CD']]"
+ },
+ {
+  "name": "1440 / 同列標題／標籤／發佈人列頂部差距 ≤1px、發佈人列貼底",
+  "ok": true,
+  "detail": "[('My jinji 日版・CD', 721.8, 775.3, 799.3), ('Dr. Paper Vol.', 721.8, 775.3, 799.3)]"
+ }
+]

@@ -6,7 +6,7 @@
 // - 被鎖（檢舉達門檻、或品項／版本被鎖）時：不能改出售狀態、出價、我要買、接受、撤回、成交。
 //   判斷跟單則頁同一個 lockFor（lib/server/content.ts 的 lockForShare）
 
-import { and, asc, desc, eq, inArray, isNull, or } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, isNull, or, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { adminLog, items, messages, offers, series, shares, threadReads, threads, photos } from "@/db/schema";
 import { composeWhat, KINDS, priceText, relTime, type Kind, type SaleState } from "@/lib/data";
@@ -156,8 +156,11 @@ async function resolveContent(owner: string, body: Record<string, unknown>, erro
   const what = target
     ? composeWhat({ series: target.title, item: label, version: edition })
     : composeWhat({ about, kind: label });
+  // 自訂標題（2026-09-28）：有填、而且跟自動組的不同才存；空白＝用自動標題
+  const custom = typeof body.customTitle === "string" ? body.customTitle.replace(/\s+/g, " ").trim().slice(0, 80) : "";
   return {
     what,
+    customWhat: custom && custom !== what ? custom : null,
     kind,
     kindNote: kind === "其他周邊" ? kindNote : null,
     story,
@@ -244,10 +247,10 @@ export async function editShare(u: User, no: number, body: Record<string, unknow
       adminId: u.id,
       action: "編輯別人的炫收藏",
       target: `share:${no}`,
-      detail: JSON.stringify({ from: s.what, to: content.what }),
+      detail: JSON.stringify({ from: s.customWhat || s.what, to: content.customWhat || content.what }),
     });
   }
-  return { what: content.what, saleChanged };
+  return { what: content.customWhat || content.what, saleChanged };
 }
 
 /* ---------- 編輯照片（2026-09-28：一則最多 10 張，第一張是封面） ---------- */
@@ -555,7 +558,7 @@ export type ThreadMessage = {
 export async function myThreads(u: User) {
   const db = getDb();
   const list = await db
-    .select({ t: threads, authorId: shares.authorId, what: shares.what })
+    .select({ t: threads, authorId: shares.authorId, what: sql<string>`coalesce(${shares.customWhat}, ${shares.what})` })
     .from(threads)
     .innerJoin(shares, eq(shares.no, threads.shareNo))
     .where(or(eq(threads.buyerId, u.id), eq(shares.authorId, u.id)))

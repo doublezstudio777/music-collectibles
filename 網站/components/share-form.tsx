@@ -3,25 +3,27 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
-  GENDER_LABEL,
+  composeWhat,
   isRecordKind,
   KINDS,
   MISC_SERIES_TITLE,
   miscSeriesRef,
   norm,
-  REGION_LABEL,
   SERIES_KIND_LABEL,
-  type ArtistGender,
-  type ArtistRegion,
   type Kind,
   type SaleState,
-  type SeriesKind,
 } from "@/lib/data";
 import type { FormOptions } from "@/lib/catalog";
 import { api, useAccount, whenLoggedIn } from "@/lib/account";
 import { uploadCoverOg } from "@/lib/image";
-import { PhotoPicker, usePhotoPicker } from "@/components/photo-picker";
+import { PhotoPicker, usePhotoPicker, type PickedPhoto } from "@/components/photo-picker";
 import { MoneyInput, parsePrice } from "@/components/share-detail";
+
+// 炫收藏表單（2026-09-28 上傳表單改版，照 產出/20260928_上傳表單UX/）：
+// 單頁；照片在最上面；「這是什麼」一組（誰的東西？是什麼？哪一張專輯／哪裡出的？哪個版本？），答完收成「值＋改」；
+// 「想多說一點」一組都可以不填；發布列手機黏在底部、桌機是右欄預覽卡（同一個節點，CSS 換位置）。
+// 錯誤訊息是依目前的答案即時算的：按過一次發布才顯示，答好的那一刻就消失。
+// 新增藝人、專輯、演唱會是事後審：新增完立刻選好，自己新增的永遠可以改名。
 
 function splitTags(s: string) {
   return s
@@ -30,214 +32,14 @@ function splitTags(s: string) {
     .filter(Boolean);
 }
 
-/** 一排可點的標籤，單選或多選都用 aria-pressed */
-function PickRow<T extends string>({
-  label,
-  options,
-  value,
-  onPick,
-  testid,
-}: {
-  label: string;
-  options: { key: T; label: string }[];
-  value: (k: T) => boolean;
-  onPick: (k: T) => void;
-  testid?: string;
-}) {
-  return (
-    <div className="picks" role="group" aria-label={label} data-testid={testid}>
-      {options.map((o) => (
-        <button key={o.key} type="button" className="pick" aria-pressed={value(o.key)} onClick={() => onPick(o.key)}>
-          {o.label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-const GENDERS = (Object.keys(GENDER_LABEL) as ArtistGender[]).map((k) => ({ key: k, label: GENDER_LABEL[k] }));
-const REGIONS = (Object.keys(REGION_LABEL) as ArtistRegion[]).map((k) => ({ key: k, label: REGION_LABEL[k] }));
-
 type FormArtist = FormOptions["defaultArtists"][number];
 type FormSeries = FormOptions["series"][number];
+export type Mine = { artists: string[]; series: string[] };
 
-/**
- * 「這裡沒有，我要新增」：藝人、版本。送出後是待審核，管理員在後台核准才出現（管理員新增直接生效）。
- * parent 是上一層的鍵。系列另外用 SubmitSeries（新增完可以直接選）。
- */
-function SubmitNew({ type, parent, label }: { type: "artist" | "version"; parent?: string; label: string }) {
-  const [open, setOpen] = useState(false);
-  const [done, setDone] = useState<"" | "pending" | "approved">("");
-  const [f, setF] = useState<Record<string, string>>({});
-  const [error, setError] = useState("");
-  if (done) return <span className="sub" role="status">{done === "approved" ? "已新增，重新整理後就能選" : "已送出，等管理員審核"}</span>;
-  if (!open) {
-    return (
-      <button type="button" className="pick pick-add" onClick={() => whenLoggedIn("登入後才能新增", () => setOpen(true))}>
-        {label}
-      </button>
-    );
-  }
-  const fields: { k: string; label: string; ph?: string }[] =
-    type === "artist"
-      ? [
-          { k: "name", label: "藝人名稱" },
-          { k: "slug", label: "網址（英文名或音譯）", ph: "例：elephant-gym" },
-        ]
-      : [
-          { k: "edition", label: "版本名稱", ph: "首批、日版、再版…" },
-          { k: "year", label: "年份" },
-          { k: "catalog", label: "目錄號" },
-        ];
-  const send = async () => {
-    const body: Record<string, unknown> = { type, ...f };
-    if (type === "version") body.itemKey = parent;
-    const r = await api<{ approved?: boolean }>("/api/catalog/submit", { body });
-    if (r.ok) setDone(r.data.approved ? "approved" : "pending");
-    else setError(r.error.message);
-  };
-  return (
-    <div className="submit-new" data-testid={`submit-${type}`}>
-      {fields.map((x) => (
-        <label key={x.k} className="submit-field">
-          <span>{x.label}</span>
-          <input className="input input-sm" placeholder={x.ph} value={f[x.k] ?? ""} onChange={(e) => setF({ ...f, [x.k]: e.target.value })} />
-        </label>
-      ))}
-      {error ? <p className="field-error">{error}</p> : null}
-      <span className="report-acts">
-        <button type="button" className="btn btn-line" onClick={send}>
-          送出審核
-        </button>
-        <button type="button" className="btn-text" onClick={() => setOpen(false)}>
-          取消
-        </button>
-      </span>
-    </div>
-  );
-}
+const MEASURE: Partial<Record<Kind, string>> = { 毛巾: "條", "T 恤": "件", 海報: "張", 場刊: "本" };
+const ROWS = 6;
 
-type NewSeriesKind = Exclude<SeriesKind, "misc">;
-const NEW_SERIES_KINDS: NewSeriesKind[] = ["album", "ep", "single", "tour", "brand"];
-
-/**
- * 新增系列（2026-09-28 周邊選擇流程）：名稱、類型、年份（可勾不記得）。
- * 「新增一場演唱會／巡迴」＝類型固定巡迴。管理員新增直接生效並選好；會員新增進審核佇列，
- * 這則收藏先掛「不確定」，核准後自動改掛到新系列。
- */
-function SubmitSeries({
-  artists,
-  label,
-  fixedKind,
-  kinds = NEW_SERIES_KINDS,
-  defaultKind = "album",
-  testid,
-  onCreated,
-  onPending,
-}: {
-  artists: FormArtist[];
-  label: string;
-  fixedKind?: NewSeriesKind;
-  kinds?: NewSeriesKind[];
-  defaultKind?: NewSeriesKind;
-  testid: string;
-  onCreated: (w: FormSeries) => void;
-  onPending: (p: { id: number; title: string }) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState("");
-  const [year, setYear] = useState("");
-  const [noYear, setNoYear] = useState(false);
-  const [kind, setKind] = useState<NewSeriesKind>(fixedKind ?? defaultKind);
-  const [artist, setArtist] = useState(artists[0]?.slug ?? "");
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
-  if (!open) {
-    return (
-      <button type="button" className="pick pick-add" data-testid={testid} onClick={() => whenLoggedIn("登入後才能新增", () => setOpen(true))}>
-        {label}
-      </button>
-    );
-  }
-  const owner = artists.some((a) => a.slug === artist) ? artist : (artists[0]?.slug ?? "");
-  const send = async () => {
-    if (!title.trim()) return setError(fixedKind === "tour" ? "填演唱會或巡迴名稱" : "填系列名稱");
-    if (!noYear && !/^\d{4}$/.test(year.trim())) return setError("填年份（西元四位數），或勾「不記得」");
-    setBusy(true);
-    const r = await api<{ approved?: boolean; id: number; series: Omit<FormSeries, "items"> }>("/api/catalog/submit", {
-      body: { type: "series", artist: owner, title: title.trim(), seriesKind: kind, year: noYear ? "" : year.trim() },
-    });
-    setBusy(false);
-    if (!r.ok) return setError(r.error.message);
-    setOpen(false);
-    setTitle("");
-    setYear("");
-    if (r.data.approved) onCreated({ ...r.data.series, items: [] });
-    else onPending({ id: r.data.id, title: r.data.series.title });
-  };
-  return (
-    <div className="submit-new" data-testid={`${testid}-form`}>
-      {artists.length > 1 ? (
-        <div className="picks" role="group" aria-label="掛在哪位藝人底下">
-          {artists.map((a) => (
-            <button key={a.slug} type="button" className="pick" aria-pressed={owner === a.slug} onClick={() => setArtist(a.slug)}>
-              {a.name}
-            </button>
-          ))}
-        </div>
-      ) : null}
-      <label className="submit-field">
-        <span>{fixedKind === "tour" ? "演唱會／巡迴名稱" : "系列名稱"}</span>
-        <input
-          className="input input-sm"
-          placeholder={fixedKind === "tour" ? "例：2024 夏日巡迴" : "例：夜行採集"}
-          value={title}
-          maxLength={60}
-          onChange={(e) => setTitle(e.target.value)}
-          data-testid={`${testid}-title`}
-        />
-      </label>
-      {fixedKind ? null : (
-        <div className="picks" role="group" aria-label="類型" data-testid={`${testid}-kind`}>
-          {kinds.map((k) => (
-            <button key={k} type="button" className="pick" aria-pressed={kind === k} onClick={() => setKind(k)} data-kind={k}>
-              {SERIES_KIND_LABEL[k]}
-            </button>
-          ))}
-        </div>
-      )}
-      <div className="submit-field submit-year">
-        <label htmlFor={`${testid}-year`}>年份</label>
-        <input
-          id={`${testid}-year`}
-          className="input input-sm"
-          inputMode="numeric"
-          maxLength={4}
-          placeholder="2024"
-          disabled={noYear}
-          value={noYear ? "" : year}
-          onChange={(e) => setYear(e.target.value)}
-          data-testid={`${testid}-year`}
-        />
-        <label className="check-inline">
-          <input type="checkbox" checked={noYear} onChange={(e) => setNoYear(e.target.checked)} data-testid={`${testid}-noyear`} />
-          不記得
-        </label>
-      </div>
-      {error ? <p className="field-error">{error}</p> : null}
-      <span className="report-acts">
-        <button type="button" className="btn btn-line" onClick={send} disabled={busy} data-testid={`${testid}-send`}>
-          {busy ? "送出中…" : "新增"}
-        </button>
-        <button type="button" className="btn-text" onClick={() => setOpen(false)}>
-          取消
-        </button>
-      </span>
-    </div>
-  );
-}
-
-/** 編輯已發布的炫收藏（2026-09-28）：照片另外在單則頁「編輯照片」改，這裡只改內容與出售狀態 */
+/** 編輯已發布的炫收藏：同一張表單，照片也在裡面 */
 export type ShareEdit = {
   n: number;
   about: string[];
@@ -249,603 +51,974 @@ export type ShareEdit = {
   story: string;
   tags: string[];
   sale: { state: SaleState; price?: number };
+  /** 發文者自訂的標題；空字串＝用自動標題 */
+  customTitle: string;
   /** 這則「跟誰有關」對得到的藝人（不在預設清單裡也要能拼出系列選項） */
   artists: FormArtist[];
-  /** 這位會員新增、還在審核的系列（這則先掛「不確定」） */
+  /** 舊制（事前審）還在等審核的系列：這則先掛「不確定」 */
   pendingSeries?: { id: number; title: string } | null;
 };
 
-export function ShareForm({ options, edit }: { options: FormOptions; edit?: ShareEdit }) {
+/** 答完的題目：一條黑框，名稱＋小字，右邊「改」或「改名」 */
+function Answer({
+  testid,
+  title,
+  sub,
+  isNew,
+  action,
+  onAction,
+}: {
+  testid: string;
+  title: string;
+  sub?: string;
+  isNew?: boolean;
+  action: string;
+  onAction: () => void;
+}) {
+  return (
+    <div className="sf-answer" data-testid={testid} onClick={onAction}>
+      <span className="sf-answer-text">
+        <b>
+          {title}
+          {isNew ? <span className="sf-new">新增</span> : null}
+        </b>
+        {sub ? <span className="sf-answer-sub">{sub}</span> : null}
+      </span>
+      <button
+        type="button"
+        className="sf-change"
+        data-testid={`${testid}-change`}
+        onClick={(e) => {
+          e.stopPropagation();
+          onAction();
+        }}
+      >
+        {action}
+      </button>
+    </div>
+  );
+}
+
+/** 就地新增、改名共用的虛線框：名稱（＋年份）；年份可以勾「不記得」 */
+function NameBox({
+  testid,
+  heading,
+  initialName,
+  initialYear,
+  withYear,
+  saveLabel,
+  onSave,
+  onCancel,
+  cancelLabel,
+  noYearAtStart,
+}: {
+  noYearAtStart?: boolean;
+  testid: string;
+  heading: string;
+  initialName: string;
+  initialYear?: string;
+  withYear: boolean;
+  saveLabel: string;
+  onSave: (name: string, year: string) => Promise<string | null>;
+  onCancel: () => void;
+  cancelLabel: string;
+}) {
+  const [name, setName] = useState(initialName);
+  const [year, setYear] = useState(initialYear ?? "");
+  const [noYear, setNoYear] = useState(Boolean(noYearAtStart));
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const save = async () => {
+    if (!name.trim()) return setError("填名字");
+    if (withYear && !noYear && year.trim() && !/^\d{4}$/.test(year.trim())) return setError("年份填西元四位數，或選「不記得」");
+    setBusy(true);
+    const err = await onSave(name.trim(), withYear && !noYear ? year.trim() : "");
+    setBusy(false);
+    if (err) setError(err);
+  };
+  return (
+    <div className="sf-box" data-testid={testid}>
+      <b className="sf-box-title">{heading}</b>
+      <div className={withYear ? "sf-box-row" : "sf-box-row one"}>
+        <input
+          className="input"
+          value={name}
+          maxLength={60}
+          onChange={(e) => setName(e.target.value)}
+          aria-label="名稱"
+          data-testid={`${testid}-name`}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+              e.preventDefault();
+              void save();
+            }
+          }}
+        />
+        {withYear ? (
+          <input
+            className="input"
+            inputMode="numeric"
+            maxLength={4}
+            placeholder="年份"
+            value={noYear ? "" : year}
+            disabled={noYear}
+            onChange={(e) => setYear(e.target.value.replace(/[^\d]/g, ""))}
+            aria-label="年份"
+            data-testid={`${testid}-year`}
+          />
+        ) : null}
+      </div>
+      {withYear ? (
+        <label className="check-inline sf-noyear">
+          <input type="checkbox" checked={noYear} onChange={(e) => setNoYear(e.target.checked)} data-testid={`${testid}-noyear`} />
+          不記得年份
+        </label>
+      ) : null}
+      {error ? <p className="field-error">{error}</p> : null}
+      <span className="sf-box-acts">
+        <button type="button" className="btn btn-line" onClick={save} disabled={busy} data-testid={`${testid}-save`}>
+          {busy ? "處理中…" : saveLabel}
+        </button>
+        <button type="button" className="btn-text" onClick={onCancel} data-testid={`${testid}-cancel`}>
+          {cancelLabel}
+        </button>
+      </span>
+    </div>
+  );
+}
+
+/** 版本「這裡沒有，我要新增」：版本仍是會員待審（只有藝人、系列改成事後審） */
+function SubmitVersion({ itemKey }: { itemKey: string }) {
+  const [open, setOpen] = useState(false);
+  const [done, setDone] = useState<"" | "pending" | "approved">("");
+  const [f, setF] = useState({ edition: "", year: "" });
+  const [error, setError] = useState("");
+  if (done) return <span className="sub" role="status">{done === "approved" ? "已新增，重新整理後就能選" : "收到了，確認後會出現在這裡"}</span>;
+  if (!open)
+    return (
+      <button type="button" className="pick pick-add" onClick={() => whenLoggedIn("登入後才能新增", () => setOpen(true))}>
+        這裡沒有，我要新增
+      </button>
+    );
+  const send = async () => {
+    const r = await api<{ approved?: boolean }>("/api/catalog/submit", { body: { type: "version", itemKey, ...f } });
+    if (r.ok) setDone(r.data.approved ? "approved" : "pending");
+    else setError(r.error.message);
+  };
+  return (
+    <div className="sf-box" data-testid="submit-version">
+      <div className="sf-box-row">
+        <input className="input" placeholder="例：首批、日版、再版" value={f.edition} onChange={(e) => setF({ ...f, edition: e.target.value })} aria-label="版本名稱" />
+        <input className="input" inputMode="numeric" maxLength={4} placeholder="年份" value={f.year} onChange={(e) => setF({ ...f, year: e.target.value })} aria-label="年份" />
+      </div>
+      {error ? <p className="field-error">{error}</p> : null}
+      <span className="sf-box-acts">
+        <button type="button" className="btn btn-line" onClick={send}>
+          新增
+        </button>
+        <button type="button" className="btn-text" onClick={() => setOpen(false)}>
+          取消
+        </button>
+      </span>
+    </div>
+  );
+}
+
+export function ShareForm({ options, edit, mine }: { options: FormOptions; edit?: ShareEdit; mine?: Mine }) {
+  const [initial, setInitial] = useState<PickedPhoto[] | null>(edit ? null : []);
+  const [loadError, setLoadError] = useState("");
+  useEffect(() => {
+    if (!edit) return;
+    void api<{ photos: { id: string; url: string; thumbUrl: string }[] }>(`/api/shares/${edit.n}/photos`).then((r) => {
+      if (!r.ok) return setLoadError(r.error.message);
+      setInitial(r.data.photos.map((p) => ({ key: p.id, id: p.id, preview: p.thumbUrl, url: p.url, status: "done", attached: true })));
+    });
+  }, [edit]);
+  if (loadError) return <p className="field-error">{loadError}</p>;
+  if (!initial) return <p role="status">讀取中</p>;
+  return <FormBody options={options} edit={edit} mine={mine} initial={initial} />;
+}
+
+function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit?: ShareEdit; mine?: Mine; initial: PickedPhoto[] }) {
   const router = useRouter();
   const acc = useAccount();
   const id = "share-form";
   const [paused, setPaused] = useState(false);
-  const picker = usePhotoPicker([], () => setPaused(true));
-  const [gender, setGender] = useState<ArtistGender | null>(null);
-  const [region, setRegion] = useState<ArtistRegion | null>(null);
+  const picker = usePhotoPicker(initial, () => setPaused(true));
+
+  /* ---------- 誰的東西 ---------- */
   const [about, setAbout] = useState<string[]>(edit?.about ?? []);
+  const [aboutOpen, setAboutOpen] = useState(!edit?.about.length);
   const [aboutDraft, setAboutDraft] = useState("");
-  /** 「更多」按鈕：預設只列 options.defaultArtists（最多 10 位），按下去才加進 options.moreArtists */
-  const [expanded, setExpanded] = useState(false);
-  /** 打字搜尋結果（/api/artists/search），累積起來讓選過的藝人之後也查得到 slug（拼系列用） */
   const [found, setFound] = useState<FormArtist[]>(edit?.artists ?? []);
-  /** 屬於哪裡：系列鍵、「misc:{藝人}」（周邊與其他，還沒建立）、"unsure"（不確定）；null＝還沒選（送出時當不確定） */
+  const [searchedQuery, setSearchedQuery] = useState("");
+  const [myArtists, setMyArtists] = useState<string[]>(mine?.artists ?? []);
+  const [renameArtist, setRenameArtist] = useState<string | null>(null);
+
+  /* ---------- 是什麼 ---------- */
+  const [kind, setKind] = useState<Kind | null>(edit?.kind ?? null);
+  const [kindOpen, setKindOpen] = useState(!edit);
+  const [kindNote, setKindNote] = useState(edit?.kindNote ?? "");
+
+  /* ---------- 哪一張／哪裡出的 ---------- */
+  /** 系列鍵、「misc:{藝人}」、"unsure"；null＝還沒答（送出時當不確定） */
   const [where, setWhere] = useState<string | null>(edit ? (edit.seriesKey ?? "unsure") : null);
+  // 單則頁「補上是哪一張」連過來（#share-form-sec-where）直接打開那一題；編輯表單只在瀏覽器掛載（先讀照片），讀 location 不會 hydration 不一致
+  const [whereOpen, setWhereOpen] = useState(() => Boolean(edit) && typeof location !== "undefined" && location.hash === "#share-form-sec-where");
+  const [whereQ, setWhereQ] = useState("");
+  const [showAll, setShowAll] = useState(false);
+  const [newBox, setNewBox] = useState<null | { kind: "album" | "tour"; name: string }>(null);
+  const [renameSeries, setRenameSeries] = useState(false);
+  const [extraSeries, setExtraSeries] = useState<FormSeries[]>([]);
+  /** 自己新增的系列改名後的新名稱（覆蓋載入時的清單） */
+  const [seriesPatch, setSeriesPatch] = useState<Record<string, Pick<FormSeries, "title" | "year" | "name">>>({});
+  const [mySeries, setMySeries] = useState<string[]>(mine?.series ?? []);
+  const [pendingSeries, setPendingSeries] = useState(edit?.pendingSeries ?? null);
   const [itemPick, setItemPick] = useState<string | null>(edit?.itemId ?? null);
   const [versionPick, setVersionPick] = useState<string>(edit?.versionId ?? "unsure");
-  const [kind, setKind] = useState<Kind | null>(edit?.kind ?? null);
-  /** 管理員剛新增、直接生效的系列（頁面的系列清單是載入時的，要自己併進來） */
-  const [extraSeries, setExtraSeries] = useState<FormSeries[]>([]);
-  /** 會員剛新增、等審核的系列：這則先掛不確定，核准後自動改掛 */
-  const [pendingSeries, setPendingSeries] = useState<{ id: number; title: string } | null>(edit?.pendingSeries ?? null);
-  const [kindNote, setKindNote] = useState(edit?.kindNote ?? "");
+  const [versionOpen, setVersionOpen] = useState(false);
+
+  /* ---------- 想多說一點 ---------- */
   const [story, setStory] = useState(edit?.story ?? "");
   const [tags, setTags] = useState(edit?.tags.join("、") ?? "");
+  const [customTitle, setCustomTitle] = useState(edit?.customTitle ?? "");
+  const [titleOpen, setTitleOpen] = useState(false);
   const initialSale: SaleState = edit?.sale.state ?? "share";
-  const [saleState, setSaleState] = useState<SaleState>(initialSale === "sold" ? "share" : initialSale);
-  const [price, setPrice] = useState(edit?.sale.price ? String(edit.sale.price) : "");
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [busy, setBusy] = useState(false);
-  /** 編輯時：出售狀態與價格只有發文者能改，已成交的不能改 */
   const sold = initialSale === "sold";
+  const [saleState, setSaleState] = useState<SaleState>(sold ? "sale" : initialSale);
+  const [price, setPrice] = useState(edit?.sale.price ? String(edit.sale.price) : "");
+
+  const [tried, setTried] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (edit) return;
     void api<{ paused: boolean }>("/api/uploads").then((r) => r.ok && setPaused(r.data.paused));
   }, [edit]);
+  // 單則頁「補上是哪一張」連過來：直接打開那一題
+  useEffect(() => {
+    if (location.hash !== `#${id}-sec-where`) return;
+    requestAnimationFrame(() => document.getElementById(`${id}-sec-where`)?.scrollIntoView({ block: "center" }));
+  }, []);
 
-  /** 表單目前列出的藝人：預設清單，按過「更多」才加上其餘強制顯示的 */
-  const visibleArtists = expanded ? [...options.defaultArtists, ...options.moreArtists] : options.defaultArtists;
-  /** 已知的藝人（拼系列、解析打字輸入用）：目前列出的＋打字搜尋查到過的，不限於預設清單 */
   const known = [...options.defaultArtists, ...options.moreArtists, ...found];
-
-  const resolveTagArtist = (t: string): FormArtist | undefined => {
+  const resolveArtist = (t: string): FormArtist | undefined => {
     const q = norm(t);
     return known.find((a) => norm(a.name) === q || a.aliases.some((x) => norm(x) === q));
   };
 
-  const shownArtists = visibleArtists.filter((a) => {
-    if (!gender && !region) return true;
-    if (a.kind !== "藝人") return false;
-    return (!gender || a.gender === gender) && (!region || a.region === region);
-  });
-
-  /**
-   * 打字搜尋：debounce 300ms 打 /api/artists/search，查全部藝人（含還沒出現在預設清單的）。
-   * `searchedQuery` 記下「最後一次查完的字」：搜尋還沒回來前不顯示「這是新標籤」的回退選項，
-   * 避免打完整名字後立刻點到「當標籤」而不是真的那位藝人（兩顆按鈕文字這時候看起來一樣）。
-   */
-  const [searchedQuery, setSearchedQuery] = useState("");
+  // 打字搜尋：debounce 300ms 查全部藝人（含別名）
   useEffect(() => {
     const draft = aboutDraft.trim();
     if (!draft) return;
     const t = setTimeout(() => {
       void api<{ artists: FormArtist[] }>(`/api/artists/search?q=${encodeURIComponent(draft)}`).then((r) => {
+        if (r.ok)
+          setFound((prev) => {
+            const seen = new Set(prev.map((a) => a.slug));
+            return [...prev, ...r.data.artists.filter((a) => !seen.has(a.slug))];
+          });
         setSearchedQuery(draft.toLowerCase());
-        if (!r.ok) return;
-        setFound((prev) => {
-          const seen = new Set(prev.map((a) => a.slug));
-          const next = [...prev];
-          for (const a of r.data.artists) if (!seen.has(a.slug)) {
-              seen.add(a.slug);
-              next.push(a);
-            }
-          return next;
-        });
       });
     }, 300);
     return () => clearTimeout(t);
   }, [aboutDraft]);
-
   const q = aboutDraft.trim().toLowerCase();
   const suggestions = q
-    ? found.filter(
-        (a) =>
-          !about.includes(a.name) &&
-          (a.name.toLowerCase().includes(q) || a.aliases.some((x) => x.toLowerCase().includes(q))),
-      )
+    ? found.filter((a) => !about.includes(a.name) && (a.name.toLowerCase().includes(q) || a.aliases.some((x) => x.toLowerCase().includes(q)))).slice(0, 5)
     : [];
-  /** 搜尋還沒查完這個字之前，不能斷定「這裡沒有」 */
-  const searchSettled = searchedQuery === q;
+  const settled = searchedQuery === q;
+  const exact = q ? resolveArtist(aboutDraft) : undefined;
 
-  const toggleAbout = (name: string) => {
-    setAbout(about.includes(name) ? about.filter((x) => x !== name) : [...about, name]);
+  /** 換了藝人：已選的專輯／出處不屬於現在任何一位就清掉（下游只在對不上時清空） */
+  const setArtists = (names: string[], extra?: FormArtist) => {
+    setAbout(names);
+    const slugs = names.map((n) => (extra && extra.name === n ? extra : resolveArtist(n))?.slug).filter(Boolean) as string[];
+    if (!where || where === "unsure") return;
+    const owner = where.startsWith("misc:") ? [where.slice(5)] : ([...options.series, ...extraSeries].find((w) => w.key === where)?.credits ?? []);
+    if (!owner.some((x) => slugs.includes(x))) {
+      setWhere(null);
+      setItemPick(null);
+      setVersionPick("unsure");
+    }
   };
-
-  /** 點打字搜尋出來的建議：直接把整個藝人物件併進 known，不用等下一輪搜尋回來才解析得到 */
-  const pickSuggestion = (a: FormArtist) => {
+  const pickArtist = (a: FormArtist) => {
     setFound((prev) => (prev.some((x) => x.slug === a.slug) ? prev : [...prev, a]));
-    if (!about.includes(a.name)) setAbout([...about, a.name]);
+    setArtists(about.includes(a.name) ? about : [...about, a.name], a);
     setAboutDraft("");
+    setAboutOpen(false);
   };
+  const createArtist = (name: string) =>
+    whenLoggedIn("登入後才能新增", async () => {
+      const r = await api<{ key: string; existing?: boolean; artist: FormArtist }>("/api/catalog/submit", { body: { type: "artist", name } });
+      if (!r.ok) return setFormError(r.error.message);
+      if (!r.data.existing) setMyArtists((xs) => [...xs, r.data.artist.slug]);
+      pickArtist(r.data.artist);
+    });
 
-  const addAbout = (raw: string) => {
-    const t = raw.trim();
-    if (!t) return;
-    const name = resolveTagArtist(t)?.name ?? t;
-    if (!about.includes(name)) setAbout([...about, name]);
-    setAboutDraft("");
-  };
-
-  /** 選到的藝人的系列（共同署名兩邊都算，不重複），加上剛新增的 */
-  const pickedArtists = about.map((n) => resolveTagArtist(n)).filter((a): a is FormArtist => Boolean(a));
-  const allSeries = [...options.series, ...extraSeries];
+  /* ---------- 系列選項 ---------- */
+  const pickedArtists = about.map((n) => resolveArtist(n)).filter((a): a is FormArtist => Boolean(a));
+  const allSeries = [...options.series, ...extraSeries].map((w) => (seriesPatch[w.key] ? { ...w, ...seriesPatch[w.key] } : w));
   const seriesOptions: FormSeries[] = [];
-  pickedArtists.forEach((a) => {
-    allSeries
-      .filter((w) => w.credits.includes(a.slug))
-      .forEach((w) => {
-        if (!seriesOptions.some((x) => x.key === w.key)) seriesOptions.push(w);
-      });
-  });
-  // 編輯時原本掛的系列：藝人改掉了也要留著能選
+  pickedArtists.forEach((a) =>
+    allSeries.filter((w) => w.credits.includes(a.slug)).forEach((w) => !seriesOptions.some((x) => x.key === w.key) && seriesOptions.push(w)),
+  );
   const current = where && !seriesOptions.some((w) => w.key === where) ? allSeries.find((w) => w.key === where) : undefined;
   if (current) seriesOptions.push(current);
   const newest = (x: FormSeries, y: FormSeries) => (Number(y.year.slice(0, 4)) || 0) - (Number(x.year.slice(0, 4)) || 0);
-  const ofKinds = (...ks: SeriesKind[]) => seriesOptions.filter((w) => ks.includes(w.kind)).sort(newest);
-  /** 每位選到的藝人一個「周邊與其他」：已經有了用它的鍵，還沒有用 misc:{藝人}（第一次發布時才建） */
+  const ofKinds = (...ks: string[]) => seriesOptions.filter((w) => ks.includes(w.kind)).sort(newest);
   const miscOptions = pickedArtists.map((a) => {
     const w = allSeries.find((x) => x.kind === "misc" && x.credits[0] === a.slug);
-    return {
-      key: w?.key ?? miscSeriesRef(a.slug),
-      label: pickedArtists.length > 1 ? `${MISC_SERIES_TITLE}（${a.name}）` : MISC_SERIES_TITLE,
-      series: w,
-    };
+    return { key: w?.key ?? miscSeriesRef(a.slug), title: pickedArtists.length > 1 ? `${MISC_SERIES_TITLE}（${a.name}）` : MISC_SERIES_TITLE, series: w };
   });
   const record = kind ? isRecordKind(kind) : false;
   const series = where ? (seriesOptions.find((w) => w.key === where) ?? miscOptions.find((m) => m.key === where)?.series) : undefined;
-  /** 這個系列裡跟選的品項同類的品項 */
+  const misc = where ? miscOptions.find((m) => m.key === where) : undefined;
   const sameKind = series && kind ? series.items.filter((i) => i.kind === kind) : [];
   const item = sameKind.length === 1 ? sameKind[0] : sameKind.find((i) => i.id === itemPick);
   const version = item?.versions.find((v) => v.id === versionPick);
-  const whereValid = where === "unsure" || Boolean(series) || miscOptions.some((m) => m.key === where);
+  const whereValid = where === "unsure" || Boolean(series) || Boolean(misc);
+  const kindLabel = kind === "其他周邊" ? kindNote.trim() || kind : (kind ?? "");
+  const whereQuestion = !kind || record ? "哪一張專輯？" : kind === "其他周邊" ? "這個周邊是哪裡出的？" : `這${MEASURE[kind] ?? "個"}${kind}是哪裡出的？`;
+  const whereShort = !kind || record ? "哪一張專輯" : "哪裡出的";
+  const ready = pickedArtists.length > 0 && Boolean(kind);
 
   const pickKind = (k: Kind) => {
-    const next = kind === k ? null : k;
-    // 唱片類與周邊類的「屬於哪裡」清單不同，換類別就重選
-    if (!next || !kind || isRecordKind(next) !== isRecordKind(kind)) setWhere(null);
-    setKind(next);
+    // 下游只在對不上時清空：CD→黑膠專輯保留；唱片→周邊時專輯仍是合法選項（專輯的周邊），也保留
+    const s = where ? allSeries.find((w) => w.key === where) : undefined;
+    if (where?.startsWith("misc:") && isRecordKind(k)) setWhere(null);
+    if (s && (s.kind === "tour" || s.kind === "brand" || s.kind === "misc") && isRecordKind(k)) setWhere(null);
+    setKind(k);
+    setKindOpen(false);
     setItemPick(null);
     setVersionPick("unsure");
   };
   const pickWhere = (k: string) => {
-    setWhere(where === k ? null : k);
+    setWhere(k);
+    setWhereOpen(false);
+    setWhereQ("");
+    setNewBox(null);
     setItemPick(null);
     setVersionPick("unsure");
+    setVersionOpen(false);
     if (k !== "unsure") setPendingSeries(null);
   };
-  const addCreated = (w: FormSeries) => {
-    setExtraSeries((prev) => [...prev, w]);
-    setPendingSeries(null);
-    setWhere(w.key);
-    setItemPick(null);
-    setVersionPick("unsure");
+  const createSeries = async (sk: "album" | "tour", name: string, year: string) => {
+    const owner = pickedArtists[0];
+    if (!owner) return "先選誰的東西";
+    // 新增列本身已經要求登入（whenLoggedIn），這裡直接送
+    const r = await api<{ series: Omit<FormSeries, "items"> }>("/api/catalog/submit", {
+      body: { type: "series", artist: owner.slug, title: name, seriesKind: sk, year },
+    });
+    if (!r.ok) return r.error.message;
+    setExtraSeries((xs) => [...xs, { ...r.data.series, items: [] }]);
+    setMySeries((xs) => [...xs, r.data.series.key]);
+    pickWhere(r.data.series.key);
+    return null;
   };
-  const addPending = (p: { id: number; title: string }) => {
-    setPendingSeries(p);
-    setWhere("unsure");
+  const renameSeriesSave = async (name: string, year: string) => {
+    if (!series) return null;
+    const r = await api<{ key: string; title: string; year: string; name: string }>("/api/catalog/rename", {
+      body: { type: "series", ref: series.key, name, year },
+    });
+    if (!r.ok) return r.error.message;
+    setSeriesPatch((m) => ({ ...m, [r.data.key]: { title: r.data.title, year: r.data.year, name: r.data.name } }));
+    setRenameSeries(false);
+    return null;
   };
-  /** 送出用的「屬於哪裡」 */
+  const renameArtistSave = async (name: string) => {
+    const a = pickedArtists.find((x) => x.slug === renameArtist);
+    if (!a) return null;
+    const r = await api<{ slug: string; name: string }>("/api/catalog/rename", { body: { type: "artist", ref: a.slug, name } });
+    if (!r.ok) return r.error.message;
+    setFound((xs) => [{ ...a, name: r.data.name }, ...xs.filter((x) => x.slug !== a.slug)]);
+    setAbout((xs) => xs.map((x) => (x === a.name ? r.data.name : x)));
+    setRenameArtist(null);
+    return null;
+  };
+
+  /* ---------- 標題 ---------- */
+  const seriesTitle = series?.title ?? (misc ? MISC_SERIES_TITLE : "");
+  const autoTitle =
+    whereValid && seriesTitle && kind
+      ? composeWhat({ series: seriesTitle, item: kindLabel, version: item && version ? version.edition : "" })
+      : pickedArtists.length || kind
+        ? composeWhat({ about: pickedArtists.map((a) => a.name), kind: kindLabel })
+        : "";
+  const title = customTitle || autoTitle;
+
+  /* ---------- 即時錯誤與還差什麼 ---------- */
+  const errors: Record<string, string> = {};
+  if (picker.items.length === 0) errors.photo = "放一張照片";
+  else if (picker.pending) errors.photo = "照片還在上傳，等一下";
+  else if (picker.failed) errors.photo = "有照片沒傳上去，按重試或刪掉那張";
+  if (pickedArtists.length === 0) errors.about = "選一位，或在框裡打名字";
+  if (!kind) errors.kind = "點一個";
+  else if (kind === "其他周邊" && !kindNote.trim() && !item) errors.kind = "寫一下是什麼周邊";
+  const p = parsePrice(price);
+  if (!sold && acc.geo.canTrade && saleState === "sale" && !p) errors.price = "填一個整數金額";
+  const missing = [
+    ...(picker.items.length === 0 ? [["photo", "照片"]] : []),
+    ...(errors.about ? [["about", "誰的東西"]] : []),
+    ...(errors.kind ? [["kind", "是什麼"]] : []),
+    ...(errors.price ? [["sale", "定價"]] : []),
+  ] as [string, string][];
+  const optionalLeft = ready && where === null;
+  const shown = (k: string) => (tried ? errors[k] : undefined);
+  const goTo = (k: string) => document.getElementById(`${id}-sec-${k}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+
   const linkBody = () => {
     const base = { kind, kindNote: kind === "其他周邊" ? kindNote.trim() : "" };
     if (!where || where === "unsure" || !whereValid) return { ...base, ...(pendingSeries ? { pendingSeriesId: pendingSeries.id } : {}) };
-    return {
-      ...base,
-      seriesKey: where,
-      ...(item ? { itemId: item.id } : {}),
-      ...(item && version ? { versionId: version.id } : {}),
-    };
+    return { ...base, seriesKey: where, ...(item ? { itemId: item.id } : {}), ...(item && version ? { versionId: version.id } : {}) };
   };
 
-  const whereBtn = (key: string, label: string, testKind?: string) => (
-    <button key={key} type="button" className="pick" aria-pressed={where === key} onClick={() => pickWhere(key)} data-key={key} data-series-kind={testKind}>
-      {label}
-    </button>
-  );
-  const seriesBtns = (list: FormSeries[]) => list.map((w) => whereBtn(w.key, w.name, w.kind));
-  const unsureBtn = whereBtn("unsure", "不確定");
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const pending = aboutDraft.trim() ? [...about, resolveTagArtist(aboutDraft)?.name ?? aboutDraft.trim()] : about;
-    const next: Record<string, string> = {};
-    if (edit) {
-      /* 編輯不動照片 */
-    } else if (picker.items.length === 0) next.photo = "至少放一張照片";
-    else if (picker.pending) next.photo = "照片還在上傳，等一下";
-    else if (picker.failed) next.photo = "有照片沒傳上去，按重試或刪掉那張";
-    if (pending.length === 0) next.about = "至少點一位";
-    if (!kind) next.kind = "點一個品項";
-    if (kind === "其他周邊" && !kindNote.trim() && !item) next.kind = "寫一下是什麼周邊";
-    const p = parsePrice(price);
-    if (saleState === "sale" && !p && !sold) next.price = "填一個整數金額";
-    setErrors(next);
-    if (Object.keys(next).length || !kind) return;
-
+  const submit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    setTried(true);
+    setFormError("");
+    const first = Object.keys(errors)[0];
+    if (first) {
+      goTo(first === "price" ? "sale" : first);
+      return;
+    }
+    const content = {
+      about: Array.from(new Set(pickedArtists.map((a) => a.name))),
+      ...linkBody(),
+      story: story.trim(),
+      tags: splitTags(tags),
+      customTitle: customTitle.trim(),
+    };
     if (edit) {
       setBusy(true);
-      const content = {
-        about: Array.from(new Set(pending)),
-        ...linkBody(),
-        story: story.trim(),
-        tags: splitTags(tags),
-      };
-      // 出售狀態沒變就不送（海外會員改說明不會被「交易僅限台灣」擋下）
+      // 照片有變才存（補、刪、換封面、調順序）；封面換了重畫分享預覽圖
+      const ids = picker.items.map((x) => x.id);
+      if (ids.join(",") !== initial.map((x) => x.id).join(",")) {
+        const r = await api<{ coverChanged: boolean; needOg: boolean }>(`/api/shares/${edit.n}/photos`, { method: "PUT", body: { photoIds: ids } });
+        if (!r.ok) {
+          setBusy(false);
+          return setFormError(r.error.message);
+        }
+        const cover = picker.items[0];
+        if (r.data.needOg && cover?.id) await uploadCoverOg(cover.id, cover.file ?? cover.url ?? "", acc.me?.handle ?? "").catch(() => null);
+      }
       const saleNext = saleState === "sale" ? { state: "sale" as const, price: p ?? undefined } : { state: saleState };
       const saleChanged = !sold && (saleNext.state !== edit.sale.state || (saleNext.state === "sale" && saleNext.price !== edit.sale.price));
-      const r = await api<{ what: string }>(`/api/shares/${edit.n}`, {
-        method: "PUT",
-        body: { ...content, ...(saleChanged ? { sale: saleNext } : {}) },
-      });
+      const r = await api<{ what: string }>(`/api/shares/${edit.n}`, { method: "PUT", body: { ...content, ...(saleChanged ? { sale: saleNext } : {}) } });
       if (!r.ok) {
         setBusy(false);
-        setErrors({ form: r.error.message });
-        return;
+        return setFormError(r.error.message);
       }
       router.push(`/share/${edit.n}`);
       router.refresh();
       return;
     }
-
     whenLoggedIn("登入後才能炫收藏", async () => {
       setBusy(true);
-      // 分享預覽圖只替封面（第一張）畫；畫不出來不擋發文，og:image 會退回縮圖
       const cover = picker.items[0];
       if (cover?.id && acc.me?.handle) await uploadCoverOg(cover.id, cover.file ?? cover.url ?? "", acc.me.handle).catch(() => null);
       const r = await api<{ n: number }>("/api/shares", {
         body: {
           photoIds: picker.items.map((x) => x.id).filter(Boolean),
-          about: Array.from(new Set(pending)),
-          ...linkBody(),
-          story: story.trim(),
-          tags: splitTags(tags),
+          ...content,
           sale: !acc.geo.canTrade ? { state: "share" } : saleState === "sale" ? { state: "sale", price: p } : { state: saleState },
         },
       });
       if (!r.ok) {
         setBusy(false);
-        setErrors({ form: r.error.message });
-        return;
+        return setFormError(r.error.message);
       }
       router.push(`/share/${r.data.n}`);
     });
   };
 
-  return (
-    <form className="form" onSubmit={submit} noValidate data-testid={edit ? "share-edit-form" : undefined}>
-      {edit ? null : (
-      <div className="field">
-        <span className="field-label" id={`${id}-photo`}>
-          照片
-        </span>
-        <div onClickCapture={(e) => {
-            // 選照片要登入：沒登入先跳登入，不打開檔案選擇
-            if (!acc.me && (e.target as HTMLElement).closest("label.drop")) {
-              e.preventDefault();
-              whenLoggedIn("登入後才能炫收藏", () => undefined);
-            }
-          }}>
-          <PhotoPicker picker={picker} labelId={`${id}-photo`} paused={paused} disabled={busy} />
-        </div>
-        {errors.photo ? <p className="field-error">{errors.photo}</p> : null}
-      </div>
-      )}
-
-      <div className="field">
-        <span className="field-label" id={`${id}-about-l`}>
-          跟誰有關
-        </span>
-        <div className="filter-picks">
-          <PickRow
-            label="類型"
-            options={GENDERS}
-            value={(k) => gender === k}
-            onPick={(k) => setGender(gender === k ? null : k)}
-            testid="pick-gender"
-          />
-          <PickRow
-            label="地區"
-            options={REGIONS}
-            value={(k) => region === k}
-            onPick={(k) => setRegion(region === k ? null : k)}
-            testid="pick-region"
-          />
-        </div>
-        <div className="picks picks-artist" role="group" aria-labelledby={`${id}-about-l`} data-testid="pick-artist">
-          {shownArtists.map((a) => (
-            <button
-              key={a.slug}
-              type="button"
-              className="pick pick-artist"
-              aria-pressed={about.includes(a.name)}
-              onClick={() => toggleAbout(a.name)}
-            >
-              {a.name}
-            </button>
-          ))}
-          {shownArtists.length === 0 ? <span className="sub">這個分類還沒有藝人</span> : null}
-          {!expanded && options.moreArtists.length ? (
-            <button type="button" className="pick pick-more" onClick={() => setExpanded(true)} data-testid="pick-more">
-              更多
-            </button>
-          ) : null}
-          <SubmitNew type="artist" label="找不到藝人，我要新增" />
-        </div>
-        <p className="sub" data-testid="about-search-hint">
-          找不到？打字搜尋全部藝人
-        </p>
-        {about.filter((t) => !visibleArtists.some((a) => a.name === t)).length ? (
-          <div className="chip-row">
-            {about
-              .filter((t) => !visibleArtists.some((a) => a.name === t))
-              .map((t) => (
-                <span className="chip" key={t}>
-                  {t}
-                  <button type="button" aria-label={`移除 ${t}`} onClick={() => setAbout(about.filter((x) => x !== t))}>
-                    ×
-                  </button>
-                </span>
-              ))}
-          </div>
-        ) : null}
-        <label className="sr-only" htmlFor={`${id}-about`}>
-          打字找藝人
-        </label>
-        <input
-          id={`${id}-about`}
-          className="input input-sm"
-          placeholder="找不到？打字搜尋"
-          value={aboutDraft}
-          onChange={(e) => setAboutDraft(e.target.value)}
-          onKeyDown={(e) => {
-            if ((e.key === "Enter" || e.key === ",") && !e.nativeEvent.isComposing) {
-              e.preventDefault();
-              addAbout(aboutDraft);
-            }
-          }}
-          aria-invalid={Boolean(errors.about)}
-          autoComplete="off"
-        />
-        {suggestions.length || q ? (
-          <ul className="suggest">
-            {suggestions.map((a) => (
-              <li key={a.slug}>
-                <button type="button" onClick={() => pickSuggestion(a)}>
-                  <b>{a.name}</b>
-                  <span>{a.kind}</span>
-                </button>
-              </li>
-            ))}
-            {q && searchSettled && !resolveTagArtist(aboutDraft) ? (
-              <li>
-                <button type="button" onClick={() => addAbout(aboutDraft)}>
-                  <b>「{aboutDraft.trim()}」</b>
-                  <span>標籤</span>
-                </button>
-              </li>
-            ) : null}
-          </ul>
-        ) : null}
-        {errors.about ? <p className="field-error">{errors.about}</p> : null}
-      </div>
-
-      <div className="field">
-        <span className="field-label" id={`${id}-kind`}>
-          是什麼東西
-        </span>
-        <div className="picks" role="group" aria-labelledby={`${id}-kind`} data-testid="pick-kind">
-          {KINDS.map((k) => (
-            <button key={k} type="button" className="pick" aria-pressed={kind === k} onClick={() => pickKind(k)}>
-              {k}
-            </button>
-          ))}
-        </div>
-        {kind === "其他周邊" ? (
-          <div className="field-sub field-sub-wide">
-            <label className="sr-only" htmlFor={`${id}-kind-note`}>
-              是什麼周邊
-            </label>
-            <input
-              id={`${id}-kind-note`}
-              className="input"
-              placeholder="例如：手環、貼紙、票根"
-              value={kindNote}
-              onChange={(e) => setKindNote(e.target.value)}
-            />
-          </div>
-        ) : null}
-        {errors.kind ? <p className="field-error">{errors.kind}</p> : null}
-      </div>
-
-      {kind && pickedArtists.length ? (
-        <div className="field" data-testid="where">
-          <span className="field-label" id={`${id}-where`}>
-            屬於哪裡
-          </span>
-          {record ? (
-            <div className="picks" role="group" aria-labelledby={`${id}-where`} data-testid="where-record">
-              {seriesBtns(ofKinds("album", "ep", "single"))}
-              {unsureBtn}
-              <SubmitSeries
-                artists={pickedArtists}
-                label="新增一個系列"
-                kinds={["album", "ep", "single"]}
-                testid="new-series-record"
-                onCreated={addCreated}
-                onPending={addPending}
-              />
-            </div>
-          ) : (
-            <>
-              <div className="where-group" data-testid="where-tour">
-                <span className="where-title" id={`${id}-where-tour`}>
-                  演唱會／巡迴
-                </span>
-                <div className="picks" role="group" aria-labelledby={`${id}-where-tour`}>
-                  {seriesBtns(ofKinds("tour"))}
-                  <SubmitSeries
-                    artists={pickedArtists}
-                    label="新增一場演唱會／巡迴"
-                    fixedKind="tour"
-                    testid="new-tour"
-                    onCreated={addCreated}
-                    onPending={addPending}
-                  />
-                </div>
-              </div>
-              <div className="where-group" data-testid="where-album">
-                <span className="where-title" id={`${id}-where-album`}>
-                  隨專輯發行的周邊
-                </span>
-                <div className="picks" role="group" aria-labelledby={`${id}-where-album`}>
-                  {seriesBtns(ofKinds("album", "ep", "single"))}
-                  {ofKinds("album", "ep", "single").length ? null : <span className="sub">還沒有專輯</span>}
-                </div>
-              </div>
-              <div className="where-group" data-testid="where-brand">
-                <span className="where-title" id={`${id}-where-brand`}>
-                  藝人自有品牌或周邊
-                </span>
-                <div className="picks" role="group" aria-labelledby={`${id}-where-brand`}>
-                  {seriesBtns(ofKinds("brand"))}
-                  {miscOptions.map((m) => whereBtn(m.key, m.label, "misc"))}
-                  <SubmitSeries
-                    artists={pickedArtists}
-                    label="新增一個系列"
-                    defaultKind="brand"
-                    testid="new-series"
-                    onCreated={addCreated}
-                    onPending={addPending}
-                  />
-                </div>
-              </div>
-              <div className="picks where-unsure" role="group" aria-label="不確定">
-                {unsureBtn}
-              </div>
-            </>
-          )}
-          {pendingSeries && (where === "unsure" || !where) ? (
-            <p className="sub" role="status" data-testid="pending-series-note">
-              「{pendingSeries.title}」送出審核了，這則先放在「不確定」，通過後會自動改到新系列
-            </p>
-          ) : null}
-        </div>
-      ) : null}
-
-      {series && kind && sameKind.length > 1 ? (
-        <div className="field">
-          <span className="field-label" id={`${id}-item`}>
-            哪一個{kind}
-          </span>
-          <div className="picks" role="group" aria-labelledby={`${id}-item`} data-testid="pick-item">
-            {sameKind.map((it) => (
-              <button
-                key={it.id}
-                type="button"
-                className="pick"
-                aria-pressed={itemPick === it.id}
-                onClick={() => {
-                  setItemPick(itemPick === it.id ? null : it.id);
-                  setVersionPick("unsure");
-                }}
-              >
-                {it.versions[0]?.edition ?? it.id}
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : null}
-
-      {series && item ? (
-        <div className="field">
-          <span className="field-label" id={`${id}-version`}>
-            版本
-          </span>
-          <div className="picks" role="group" aria-labelledby={`${id}-version`} data-testid="pick-version">
-            {item.versions.map((v) => (
-              <button
-                key={v.id}
-                type="button"
-                className="pick"
-                aria-pressed={versionPick === v.id}
-                onClick={() => setVersionPick(v.id)}
-              >
-                {v.edition}
-              </button>
-            ))}
-            <button type="button" className="pick" aria-pressed={versionPick === "unsure"} onClick={() => setVersionPick("unsure")}>
-              不確定
-            </button>
-            <SubmitNew type="version" parent={`${series.key}#${item.id}`} label="這裡沒有，我要新增" />
-          </div>
-        </div>
-      ) : null}
-
-      <div className="field">
-        <label className="field-label" htmlFor={`${id}-story`}>
-          想說的話 <span className="opt">選填</span>
-        </label>
-        <textarea id={`${id}-story`} className="input textarea" rows={4} value={story} onChange={(e) => setStory(e.target.value)} />
-      </div>
-
-      <div className="field">
-        <label className="field-label" htmlFor={`${id}-tags`}>
-          其他標籤 <span className="opt">選填</span>
-        </label>
-        <input id={`${id}-tags`} className="input" value={tags} onChange={(e) => setTags(e.target.value)} />
-      </div>
-
-      <div className="field">
-        <span className="field-label" id={`${id}-sale`}>
-          要不要賣
-        </span>
-        {sold ? (
-          <p className="sub" data-testid="sale-sold-note">
-            已成交，出售狀態與價格不能改
-          </p>
-        ) : !acc.geo.canTrade ? (
-          <p className="region-note" data-testid="region-note">
-            交易僅限台灣地區
-          </p>
-        ) : (
-        <div className="seg" role="group" aria-labelledby={`${id}-sale`}>
-          {(
-            [
-              ["share", "純分享"],
-              ["offer", "開放出價"],
-              ["sale", "定價出售"],
-            ] as const
-          ).map(([k, label]) => (
-            <button key={k} type="button" aria-pressed={saleState === k} onClick={() => setSaleState(k)}>
-              {label}
-            </button>
-          ))}
-        </div>
-        )}
-        {!sold && acc.geo.canTrade && saleState === "sale" ? (
-          <div className="field-sub">
-            <MoneyInput id={`${id}-price`} value={price} onChange={setPrice} label="定價" />
-            {errors.price ? <p className="field-error">{errors.price}</p> : null}
-          </div>
-        ) : null}
-      </div>
-
-      {errors.form ? (
-        <p className="field-error" role="alert">
-          {errors.form}
-        </p>
-      ) : null}
-      <div className="form-foot">
-        {acc.status === "anon" ? <span className="sub">發布前會請你登入</span> : null}
-        {edit ? (
-          <button type="button" className="btn btn-line" onClick={() => router.push(`/share/${edit.n}`)} disabled={busy}>
-            取消
+  /* ---------- 版面 ---------- */
+  const whereRows = (list: FormSeries[], testid: string, empty?: string) => {
+    const wq = norm(whereQ);
+    const hits = wq ? list.filter((w) => norm(w.title).includes(wq) || w.year.includes(wq)) : list;
+    const shownRows = wq || showAll ? hits : hits.slice(0, ROWS);
+    return (
+      <div className="sf-list" role="group" data-testid={testid}>
+        {shownRows.map((w) => (
+          <button key={w.key} type="button" className="sf-row" aria-pressed={where === w.key} onClick={() => pickWhere(w.key)} data-key={w.key} data-series-kind={w.kind} data-testid="where-opt">
+            <span className="sf-row-year">{w.year.slice(0, 4) || "—"}</span>
+            <span className="sf-row-name">{w.title}</span>
+            <span className="sf-row-kind">{SERIES_KIND_LABEL[w.kind as keyof typeof SERIES_KIND_LABEL] ?? ""}</span>
+          </button>
+        ))}
+        {!wq && !showAll && hits.length > ROWS ? (
+          <button type="button" className="sf-row sf-row-more" onClick={() => setShowAll(true)} data-testid="where-more">
+            還有 {hits.length - ROWS} 張
           </button>
         ) : null}
+        {hits.length === 0 && empty ? <p className="sf-row sf-row-empty">{empty}</p> : null}
+      </div>
+    );
+  };
+  const artistName = pickedArtists[0]?.name ?? "";
+  const albums = ofKinds("album", "ep", "single");
+  const newRow = (sk: "album" | "tour") => (
+    <button
+      key={sk}
+      type="button"
+      className="sf-row sf-row-add"
+      onClick={() => whenLoggedIn("登入後才能新增", () => setNewBox({ kind: sk, name: whereQ.trim() }))}
+      data-testid={`where-new-${sk}`}
+    >
+      找不到？<b>新增{sk === "tour" ? "演唱會" : "專輯"}{whereQ.trim() ? `「${whereQ.trim()}」` : ""}</b>
+    </button>
+  );
+  const whereAnswer = () => {
+    if (where === "unsure" || !whereValid)
+      return <Answer testid="bar-where" title="不確定" sub={pendingSeries ? `「${pendingSeries.title}」等待確認` : undefined} action="改" onAction={() => setWhereOpen(true)} />;
+    if (misc) return <Answer testid="bar-where" title={misc.title} sub="藝人自己出的" action="改" onAction={() => setWhereOpen(true)} />;
+    const w = series!;
+    const isMine = mySeries.includes(w.key);
+    return (
+      <Answer
+        testid="bar-where"
+        title={w.title}
+        sub={[w.year.slice(0, 4) || "年份不記得", SERIES_KIND_LABEL[w.kind as keyof typeof SERIES_KIND_LABEL]].filter(Boolean).join("・")}
+        isNew={isMine}
+        action={isMine ? "改名" : "改"}
+        onAction={() => (isMine ? setRenameSeries(true) : setWhereOpen(true))}
+      />
+    );
+  };
+
+  const summary = (
+    <aside className="sf-summary" data-testid="sf-summary" aria-label="發布">
+      <span className="sf-cover" aria-hidden="true">
+        {picker.items[0]?.preview ? (
+          // eslint-disable-next-line @next/next/no-img-element -- 本機預覽（blob）
+          <img src={picker.items[0].preview} alt="" />
+        ) : (
+          <span className="sf-cover-empty">還沒放照片</span>
+        )}
+      </span>
+      <span className="sf-sum-text">
+        <b className={title ? "sf-sum-title" : "sf-sum-title is-empty"} data-testid="sf-title">
+          {title || "標題會照你選的自動組好"}
+        </b>
+        {pickedArtists.length ? (
+          <span className="sf-sum-tags">
+            {pickedArtists.map((a) => (
+              <span key={a.slug} className="tag tag-about">
+                {a.name}
+              </span>
+            ))}
+          </span>
+        ) : null}
+        <span className="sf-sum-missing" data-testid="sf-missing">
+          {missing.length ? (
+            <button type="button" className="sf-missing-btn" onClick={() => goTo(missing[0][0])}>
+              還差{missing.length > 1 ? ` ${missing.length} 題` : ""}：{missing.map((m) => m[1]).join("、")}
+            </button>
+          ) : optionalLeft ? (
+            `還差：${whereShort}（可以跳過）`
+          ) : edit ? (
+            ""
+          ) : (
+            "可以發布了"
+          )}
+        </span>
+      </span>
+      <span className="sf-sum-acts">
         <button type="submit" className="btn btn-p" disabled={busy || picker.pending > 0} data-testid="share-submit">
           {busy ? (edit ? "儲存中…" : "發布中…") : edit ? "儲存" : "發布"}
         </button>
+        {edit ? (
+          <button type="button" className="btn-text sf-cancel" onClick={() => router.push(`/share/${edit.n}`)} disabled={busy}>
+            取消
+          </button>
+        ) : null}
+      </span>
+    </aside>
+  );
+
+  return (
+    <form className="sf" onSubmit={submit} noValidate data-testid={edit ? "share-edit-form" : "share-form"}>
+      <div className="sf-main">
+        <div className="field" id={`${id}-sec-photo`}>
+          <span className="field-label" id={`${id}-photo`}>
+            照片
+          </span>
+          <div
+            onClickCapture={(e) => {
+              if (!acc.me && (e.target as HTMLElement).closest("label.drop")) {
+                e.preventDefault();
+                whenLoggedIn("登入後才能炫收藏", () => undefined);
+              }
+            }}
+          >
+            <PhotoPicker picker={picker} labelId={`${id}-photo`} paused={paused} disabled={busy} />
+          </div>
+          {shown("photo") ? <p className="field-error" data-testid="err-photo">{errors.photo}</p> : null}
+        </div>
+
+        <section className="sf-group" aria-labelledby={`${id}-g1`}>
+          <div className="sf-group-head">
+            <h2 id={`${id}-g1`}>這是什麼</h2>
+            <span>前兩題必答</span>
+          </div>
+
+          <div className="field" id={`${id}-sec-about`}>
+            <span className="field-label" id={`${id}-about-l`}>
+              誰的東西？
+            </span>
+            {!aboutOpen && pickedArtists.length ? (
+              renameArtist ? (
+                <NameBox
+                  testid="rename-artist"
+                  heading="改名"
+                  initialName={pickedArtists.find((a) => a.slug === renameArtist)?.name ?? ""}
+                  withYear={false}
+                  saveLabel="存"
+                  cancelLabel="換成別的"
+                  onSave={(n) => renameArtistSave(n)}
+                  onCancel={() => {
+                    setRenameArtist(null);
+                    setAboutOpen(true);
+                  }}
+                />
+              ) : (
+                pickedArtists.map((a) => {
+                  const isMine = myArtists.includes(a.slug);
+                  return (
+                    <Answer
+                      key={a.slug}
+                      testid="bar-about"
+                      title={a.name}
+                      sub={a.aliases[0]}
+                      isNew={isMine}
+                      action={isMine ? "改名" : "改"}
+                      onAction={() => (isMine ? setRenameArtist(a.slug) : setAboutOpen(true))}
+                    />
+                  );
+                })
+              )
+            ) : (
+              <>
+                {about.length ? (
+                  <div className="chip-row">
+                    {about.map((t) => (
+                      <span className="chip" key={t}>
+                        {t}
+                        <button type="button" aria-label={`移除 ${t}`} onClick={() => setArtists(about.filter((x) => x !== t))}>
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    <button type="button" className="btn-text" onClick={() => setAboutOpen(false)}>
+                      好了
+                    </button>
+                  </div>
+                ) : null}
+                <label className="sr-only" htmlFor={`${id}-about`}>
+                  打歌手或樂團的名字
+                </label>
+                <input
+                  id={`${id}-about`}
+                  className="input"
+                  placeholder="打歌手或樂團的名字"
+                  value={aboutDraft}
+                  onChange={(e) => setAboutDraft(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+                      e.preventDefault();
+                      if (exact) pickArtist(exact);
+                      else if (suggestions[0]) pickArtist(suggestions[0]);
+                    }
+                  }}
+                  aria-invalid={Boolean(shown("about"))}
+                  autoComplete="off"
+                  data-testid="artist-search"
+                />
+                {q ? (
+                  <div className="sf-list sf-suggest" data-testid="artist-results">
+                    {suggestions.map((a) => (
+                      <button key={a.slug} type="button" className="sf-row" onClick={() => pickArtist(a)} data-testid="artist-opt" data-slug={a.slug}>
+                        <span className="sf-row-name">
+                          <b>{a.name}</b> {a.aliases[0] ? <span className="sub-inline">{a.aliases[0]}</span> : null}
+                        </span>
+                      </button>
+                    ))}
+                    {settled && !exact ? (
+                      <button type="button" className="sf-row sf-row-add" onClick={() => createArtist(aboutDraft.trim())} data-testid="artist-new">
+                        找不到？<b>新增「{aboutDraft.trim()}」</b>
+                      </button>
+                    ) : null}
+                    {!settled && !suggestions.length ? <p className="sf-row sf-row-empty">找找看…</p> : null}
+                  </div>
+                ) : (
+                  <>
+                    <span className="sf-hint">最近常發的</span>
+                    <div className="picks picks-artist" role="group" aria-labelledby={`${id}-about-l`} data-testid="pick-artist">
+                      {options.defaultArtists.map((a) => (
+                        <button key={a.slug} type="button" className="pick pick-artist" aria-pressed={about.includes(a.name)} onClick={() => pickArtist(a)}>
+                          {a.name}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+            {shown("about") ? <p className="field-error" data-testid="err-about">{errors.about}</p> : null}
+          </div>
+
+          <div className="field" id={`${id}-sec-kind`}>
+            <span className="field-label" id={`${id}-kind`}>
+              是什麼？
+            </span>
+            {kind && !kindOpen ? (
+              <Answer testid="bar-kind" title={kind} action="改" onAction={() => setKindOpen(true)} />
+            ) : (
+              <div className="picks" role="group" aria-labelledby={`${id}-kind`} data-testid="pick-kind">
+                {KINDS.map((k) => (
+                  <button key={k} type="button" className="pick" aria-pressed={kind === k} onClick={() => pickKind(k)}>
+                    {k}
+                  </button>
+                ))}
+              </div>
+            )}
+            {kind === "其他周邊" ? (
+              <div className="field-sub field-sub-wide">
+                <label className="sr-only" htmlFor={`${id}-kind-note`}>
+                  是什麼周邊
+                </label>
+                <input id={`${id}-kind-note`} className="input" placeholder="例：手環、貼紙、票根" value={kindNote} onChange={(e) => setKindNote(e.target.value)} />
+              </div>
+            ) : null}
+            {shown("kind") ? <p className="field-error" data-testid="err-kind">{errors.kind}</p> : null}
+          </div>
+
+          <div className={ready ? "field" : "field is-dim"} data-testid="where" id={`${id}-sec-where`}>
+            <span className="field-label" id={`${id}-where`}>
+              {whereQuestion}
+            </span>
+            {!ready ? (
+              <p className="sf-placeholder">先選上面兩題，這裡會列出{record || !kind ? "他的專輯" : "出處"}</p>
+            ) : where !== null && !whereOpen ? (
+              renameSeries && series ? (
+                <>
+                  {whereAnswer()}
+                  <NameBox
+                    testid="rename-series"
+                    heading="改名"
+                    initialName={series.title}
+                    initialYear={series.year.slice(0, 4)}
+                    noYearAtStart={!series.year}
+                    withYear
+                    saveLabel="存"
+                    cancelLabel="換成別的"
+                    onSave={renameSeriesSave}
+                    onCancel={() => {
+                      setRenameSeries(false);
+                      setWhereOpen(true);
+                    }}
+                  />
+                </>
+              ) : (
+                whereAnswer()
+              )
+            ) : (
+              <>
+                <input
+                  className="input"
+                  value={whereQ}
+                  onChange={(e) => setWhereQ(e.target.value)}
+                  placeholder={`打${record ? "專輯" : "演唱會或專輯"}名找${albums[0] ? `，例：${albums[0].title}` : ""}`}
+                  aria-labelledby={`${id}-where`}
+                  data-testid="where-search"
+                  autoComplete="off"
+                />
+                {record ? (
+                  whereRows(albums, "where-record", whereQ ? undefined : `${artistName}還沒有專輯資料`)
+                ) : (
+                  <>
+                    <span className="sf-sec">演唱會</span>
+                    {whereRows(ofKinds("tour"), "where-tour", `${artistName}還沒有演唱會資料`)}
+                    <span className="sf-sec">專輯的周邊</span>
+                    {whereRows(albums, "where-album", `${artistName}還沒有專輯資料`)}
+                    <span className="sf-sec">藝人自己出的</span>
+                    <div className="sf-list" data-testid="where-brand">
+                      {ofKinds("brand")
+                        .filter((w) => !whereQ || norm(w.title).includes(norm(whereQ)))
+                        .map((w) => (
+                          <button key={w.key} type="button" className="sf-row" aria-pressed={where === w.key} onClick={() => pickWhere(w.key)} data-key={w.key} data-series-kind="brand" data-testid="where-opt">
+                            <span className="sf-row-year">{w.year.slice(0, 4) || "—"}</span>
+                            <span className="sf-row-name">{w.title}</span>
+                          </button>
+                        ))}
+                      {miscOptions.map((m) => (
+                        <button key={m.key} type="button" className="sf-row" aria-pressed={where === m.key} onClick={() => pickWhere(m.key)} data-key={m.key} data-series-kind="misc" data-testid="where-opt">
+                          <span className="sf-row-year">—</span>
+                          <span className="sf-row-name">{m.title}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+                <div className="sf-list sf-list-tail">
+                  {record ? newRow("album") : [newRow("tour"), newRow("album")]}
+                  <button type="button" className="sf-row sf-row-skip" aria-pressed={where === "unsure"} onClick={() => pickWhere("unsure")} data-key="unsure" data-testid="where-unsure">
+                    不確定，先跳過
+                  </button>
+                </div>
+                {newBox ? (
+                  <NameBox
+                    key={`${newBox.kind}-${newBox.name}`}
+                    testid="new-box"
+                    heading={newBox.kind === "tour" ? "新增演唱會" : "新增專輯"}
+                    initialName={newBox.name}
+                    initialYear=""
+                    withYear
+                    saveLabel="用這個名字"
+                    cancelLabel="取消"
+                    onSave={(n, y) => createSeries(newBox.kind, n, y)}
+                    onCancel={() => setNewBox(null)}
+                  />
+                ) : null}
+              </>
+            )}
+          </div>
+
+          {ready && series && kind && sameKind.length > 1 ? (
+            <div className="field">
+              <span className="field-label" id={`${id}-item`}>
+                哪一個{kind}？ <span className="opt">選填</span>
+              </span>
+              <div className="picks" role="group" aria-labelledby={`${id}-item`} data-testid="pick-item">
+                {sameKind.map((it) => (
+                  <button key={it.id} type="button" className="pick" aria-pressed={itemPick === it.id} onClick={() => (setItemPick(itemPick === it.id ? null : it.id), setVersionPick("unsure"))}>
+                    {it.versions[0]?.edition ?? it.id}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {ready && series && item && where !== null && !whereOpen ? (
+            <div className="field" data-testid="version-field">
+              <span className="field-label" id={`${id}-version`}>
+                哪個版本？ <span className="opt">選填</span>
+              </span>
+              {!versionOpen ? (
+                <Answer
+                  testid="bar-version"
+                  title={version?.edition ?? "不確定"}
+                  sub={item.versions.length ? `這張有 ${item.versions.length} 個版本：${item.versions.map((v) => v.edition).join("、")}` : "還沒有人補版本"}
+                  action={version ? "改" : "選版本"}
+                  onAction={() => setVersionOpen(true)}
+                />
+              ) : (
+                <div className="picks" role="group" aria-labelledby={`${id}-version`} data-testid="pick-version">
+                  {item.versions.map((v) => (
+                    <button key={v.id} type="button" className="pick" aria-pressed={versionPick === v.id} onClick={() => (setVersionPick(v.id), setVersionOpen(false))}>
+                      {v.edition}
+                    </button>
+                  ))}
+                  <button type="button" className="pick" aria-pressed={versionPick === "unsure"} onClick={() => (setVersionPick("unsure"), setVersionOpen(false))}>
+                    不確定
+                  </button>
+                  <SubmitVersion itemKey={`${series.key}#${item.id}`} />
+                </div>
+              )}
+            </div>
+          ) : null}
+        </section>
+
+        <section className="sf-group" aria-labelledby={`${id}-g2`}>
+          <div className="sf-group-head">
+            <h2 id={`${id}-g2`}>想多說一點</h2>
+            <span>都可以不填</span>
+          </div>
+
+          <div className="field">
+            <label className="field-label" htmlFor={`${id}-story`}>
+              想說的話
+            </label>
+            <textarea id={`${id}-story`} className="input textarea" rows={4} placeholder="例：2016 年簽名會現場買的，側標還在" value={story} onChange={(e) => setStory(e.target.value)} />
+          </div>
+
+          <div className="field">
+            <label className="field-label" htmlFor={`${id}-tags`}>
+              標籤
+            </label>
+            <input id={`${id}-tags`} className="input" placeholder="例：簽名、初回、側標" value={tags} onChange={(e) => setTags(e.target.value)} />
+          </div>
+
+          <div className="field" data-testid="title-field">
+            <label className="field-label" htmlFor={`${id}-title`}>
+              標題
+            </label>
+            {titleOpen || customTitle ? (
+              <>
+                <input
+                  id={`${id}-title`}
+                  className="input"
+                  maxLength={80}
+                  value={customTitle || autoTitle}
+                  placeholder="標題會照你選的自動組好"
+                  onChange={(e) => setCustomTitle(e.target.value === autoTitle ? "" : e.target.value)}
+                  data-testid="title-input"
+                />
+                {customTitle ? (
+                  <button type="button" className="btn-text sf-title-reset" onClick={() => (setCustomTitle(""), setTitleOpen(false))} data-testid="title-reset">
+                    還原成自動標題{autoTitle ? `「${autoTitle}」` : ""}
+                  </button>
+                ) : null}
+              </>
+            ) : (
+              <Answer testid="bar-title" title={autoTitle || "標題會照你選的自動組好"} action="改" onAction={() => setTitleOpen(true)} />
+            )}
+          </div>
+
+          <div className="field" id={`${id}-sec-sale`}>
+            <span className="field-label" id={`${id}-sale`}>
+              要不要賣
+            </span>
+            {!acc.geo.canTrade && !sold ? (
+              <p className="region-note" data-testid="region-note">
+                交易僅限台灣地區
+              </p>
+            ) : (
+              <div className="seg" role="group" aria-labelledby={`${id}-sale`}>
+                {(
+                  [
+                    ["share", "純分享"],
+                    ["offer", "開放出價"],
+                    ["sale", "定價出售"],
+                  ] as const
+                ).map(([k, label]) => (
+                  <button key={k} type="button" aria-pressed={sold ? k === "sale" : saleState === k} disabled={sold} onClick={() => setSaleState(k)}>
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
+            {sold ? (
+              <p className="sub" data-testid="sale-sold-note">
+                已成交，出售狀態與價格不能改
+              </p>
+            ) : null}
+            {!sold && acc.geo.canTrade && saleState === "sale" ? (
+              <div className="field-sub">
+                <MoneyInput id={`${id}-price`} value={price} onChange={setPrice} label="定價" />
+                {shown("price") ? <p className="field-error" data-testid="err-price">{errors.price}</p> : null}
+              </div>
+            ) : null}
+          </div>
+          {formError ? (
+            <p className="field-error" role="alert" data-testid="form-error">
+              {formError}
+            </p>
+          ) : null}
+        </section>
       </div>
+      {summary}
     </form>
   );
 }

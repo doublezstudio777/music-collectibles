@@ -1342,3 +1342,117 @@ a.title-chip:hover { background: var(--line); }
 }
 .tracklist .t-no, .tracklist .t-len { color: var(--muted); font-variant-numeric: tabular-nums; }
 .tracklist .t-title { overflow-wrap: anywhere; }
+
+/* ---------- 炫收藏表單（2026-09-28 上傳表單改版，線框 產出/20260928_上傳表單UX/） ---------- */
+.sf-page .page-title { margin-bottom: 8px; }
+.sf { display: grid; gap: 48px; grid-template-columns: minmax(0, 1fr) 300px; align-items: start; margin-top: 24px; }
+.sf-main { min-width: 0; }
+.sf-group { border-top: 2px solid var(--text); margin-top: 8px; padding-top: 16px; }
+.sf-group-head { align-items: baseline; display: flex; justify-content: space-between; margin-bottom: 16px; }
+.sf-group-head h2 { font-size: var(--text-md); font-weight: 700; }
+.sf-group-head span { color: var(--muted); font-size: var(--text-xs); font-weight: 600; }
+.sf .field { margin-bottom: 24px; }
+.sf .field-label { font-size: var(--text-base); font-weight: 700; }
+.sf .field.is-dim .field-label { color: var(--muted); }
+.sf-placeholder { border: 1px solid var(--line); color: var(--muted); font-size: var(--text-sm); padding: 11px 12px; }
+.sf-hint { color: var(--muted); display: block; font-size: var(--text-xs); margin: 8px 0; }
+.sf-answer {
+  align-items: center; border: 1px solid var(--text); cursor: pointer; display: flex; gap: 12px;
+  justify-content: space-between; min-height: 48px; padding: 8px 8px 8px 12px;
+}
+.sf-answer + .sf-answer { margin-top: 8px; }
+.sf-answer-text { display: grid; gap: 2px; min-width: 0; }
+.sf-answer-text b { font-size: var(--text-base); overflow-wrap: anywhere; }
+.sf-answer-sub { color: var(--muted); font-size: var(--text-xs); overflow-wrap: anywhere; }
+.sf-new { border: 1px solid var(--text); font-size: 11px; font-weight: 600; margin-left: 6px; padding: 0 4px; vertical-align: 2px; }
+.sf-change { background: var(--bg); border: 1px solid var(--line); flex: none; font-size: var(--text-sm); min-height: 36px; min-width: 40px; padding: 0 10px; }
+.sf-change:hover { background: var(--surface); }
+.sf-list { border-top: 1px solid var(--line); display: grid; }
+.sf-suggest { margin-top: 0; }
+.sf-list-tail { margin-top: 0; }
+.sf-row {
+  align-items: center; background: none; border: 0; border-bottom: 1px solid var(--line); display: flex; gap: 12px;
+  font-size: var(--text-base); min-height: 48px; padding: 8px 4px; text-align: left; width: 100%;
+}
+button.sf-row:hover, .sf-row[aria-pressed="true"] { background: var(--surface); }
+.sf-row-year { color: var(--muted); flex: none; font-family: var(--font-mono); font-size: var(--text-xs); width: 40px; }
+.sf-row-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.sf-row-kind { color: var(--muted); flex: none; font-size: var(--text-xs); }
+.sf-row-more { color: var(--muted); justify-content: center; }
+.sf-row-empty { color: var(--muted); font-size: var(--text-sm); }
+.sf-row-add { color: var(--muted); }
+.sf-row-add b { color: var(--text); }
+.sf-row-skip { color: var(--muted); }
+.sf-sec { display: block; font-size: var(--text-xs); font-weight: 700; margin: 14px 0 6px; }
+.sf .input + .sf-list, .sf .input + .sf-sec { margin-top: 8px; }
+.sf-box { background: var(--surface); border: 1px dashed var(--text); display: grid; gap: 10px; margin-top: 8px; padding: 14px; }
+.sf-box-title { font-size: var(--text-sm); }
+.sf-box-row { display: grid; gap: 8px; grid-template-columns: minmax(0, 1fr) 110px; }
+.sf-box-row.one { grid-template-columns: minmax(0, 1fr); }
+.sf-box .input { background: var(--bg); }
+.sf-box-acts { align-items: center; display: flex; flex-wrap: wrap; gap: 12px; }
+.sf-noyear { font-size: var(--text-xs); }
+.sf-title-reset { display: inline-block; font-size: var(--text-xs); margin-top: 6px; text-align: left; }
+.sf .seg button:disabled { cursor: not-allowed; }
+.sf .seg button[aria-pressed="true"]:disabled { opacity: .8; }
+
+/* 發布列：桌機是右欄預覽卡，手機黏在底部（同一個節點） */
+.sf-summary { border: 1px solid var(--line); display: grid; gap: 12px; padding: 16px; position: sticky; top: calc(var(--nav-h) + 16px); }
+.sf-cover { aspect-ratio: 1; background: var(--surface); display: block; overflow: hidden; position: relative; }
+.sf-cover img { height: 100%; object-fit: cover; width: 100%; }
+.sf-cover-empty { color: var(--muted); font-size: var(--text-xs); left: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); }
+.sf-sum-text { display: grid; gap: 8px; min-width: 0; }
+.sf-sum-title { font-size: var(--text-base); overflow-wrap: anywhere; }
+.sf-sum-title.is-empty { color: var(--muted); font-weight: 600; }
+.sf-sum-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.sf-sum-missing { color: var(--muted); font-size: var(--text-xs); }
+.sf-missing-btn { background: none; border: 0; color: var(--orange-text); font-size: inherit; font-weight: 600; padding: 0; text-align: left; }
+.sf-sum-acts { display: grid; gap: 8px; }
+.sf-sum-acts .btn { width: 100%; }
+.sf-cancel { justify-self: center; }
+
+@media (max-width: 1000px) {
+  .sf { display: block; }
+  body:has(.sf-page) { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+  .sf-summary {
+    align-items: center; background: var(--bg); border: 0; border-top: 1px solid var(--text); bottom: 0; gap: 12px;
+    grid-template-columns: minmax(0, 1fr) auto; left: 0; padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    position: fixed; right: 0; top: auto; z-index: 40;
+  }
+  .sf-cover, .sf-sum-tags { display: none; }
+  .sf-sum-text { gap: 2px; }
+  .sf-sum-title { font-size: var(--text-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sf-sum-acts { align-items: center; display: flex; gap: 10px; }
+  .sf-sum-acts .btn { min-width: 76px; width: auto; }
+}
+
+/* 單則頁發文者操作盒（線框 #s9） */
+.owner-box { background: var(--surface); border: 1px solid var(--line); display: grid; gap: 10px; margin-bottom: 20px; padding: 12px 14px; }
+.owner-top { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
+.owner-status { display: grid; gap: 2px; min-width: 0; }
+.owner-status .sub { font-size: var(--text-xs); }
+.owner-status b { overflow-wrap: anywhere; }
+.owner-top .btn { background: var(--bg); flex: none; }
+.owner-link { font-size: var(--text-sm); justify-self: start; text-decoration: underline; }
+.owner-box .seller-bar { background: none; margin: 0; padding: 0; }
+.owner-box .seller-bar .money { flex: 1; min-width: 0; }
+.add-form { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.add-form .input { max-width: 280px; }
+.add-form .add-year { max-width: 90px; }
+.add-edits { margin-top: 4px; }
+.owner-box { min-width: 0; }
+.owner-box .seg { align-self: stretch; display: flex; }
+.owner-box .seg button { flex: 1; min-width: 0; padding: 0 6px; }
+.owner-box .seller-row { flex-wrap: nowrap; }
+.owner-box .seller-row .btn { flex: none; }
+.owner-box { grid-template-columns: minmax(0, 1fr); }
+.owner-box .seller-bar { min-width: 0; }
+.owner-box .seller-bar .money { width: auto; }
+
+/* 收藏卡片固定版型（2026-09-28）：同列等高；照片 → 標題（固定兩行高）→ 標籤（最多一行）→ 發佈人列貼底 */
+.wall { align-items: stretch; }
+.card { height: 100%; }
+.card-title { min-height: calc(1.45em * 2); }
+.card .tags { max-height: 24px; overflow: hidden; }
+.card .tags li { flex: none; }
+.card-foot { margin-top: auto; padding-top: 6px; }

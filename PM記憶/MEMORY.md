@@ -45,3 +45,4 @@
 - 改了炫收藏表單的操作順序，舊驗收腳本（等級與稱號、預覽圖與紀錄保存）會卡在舊 testid：只在 scratchpad 複本改點擊順序，判定不動、舊資料夾不動，README 註明；驗收要調全域檢舉門檻時，重算分數要在改回門檻「之前」跑，不然鎖定判斷用回原門檻、檢舉成立事件出不來（2026-09-28）
 - WSL 裡 Node 的 fetch 連外站（MusicBrainz）會 ETIMEDOUT，curl 卻正常：Node 雙棧競速 250ms 內 IPv4 還沒連上就放棄，腳本開頭 `dns.setDefaultResultOrder("ipv4first")`＋`net.setDefaultAutoSelectFamily(false)`。MusicBrainz 網頁（非 API）有 JS 算力驗證，curl 拿不到內容，逐首比對要用 Playwright 開（2026-09-28）
 - 大量匯入正式站前，先用最新站外備份 `restore.mjs` 還原到 scratchpad 的 `--persist-to`、套遷移、跑匯入＋重跑一次當彩排，數字跟正式站會完全一樣；受保護資料（第 3 則）在彩排裡先逐欄比對（2026-09-28）
+- 驗收發文後等跳頁用 `wait_for_url(re.compile(r"/share/\d+$"))`，glob `**/share/*` 會直接比對到 `/share/new` 假通過；攔 `/api/me` 模擬登入要連 `state` 一起給，只給 `user` 前端當沒登入；`手機版切版修正/_檢查.py` 截圖路徑寫死在舊資料夾，重跑完要 `git restore` 那個 img/；改表單會讓舊驗收大量卡在舊 testid，排工時預留改寫舊腳本的量（2026-09-28）

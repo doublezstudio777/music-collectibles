@@ -226,6 +226,8 @@ export type Share = {
   order: number;
   /** 是什麼東西（必填） */
   what: string;
+  /** 發文者自訂了標題時，系統自動組的那個（編輯頁「還原成自動標題」用） */
+  autoWhat?: string;
   /** 物件類型，自由字串，封面色塊右下角那個字 */
   kind: string;
   story: string;

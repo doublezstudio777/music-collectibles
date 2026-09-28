@@ -1,0 +1,82 @@
+[
+ {
+  "name": "390 / 對照組兩則在同一列",
+  "ok": true,
+  "detail": "[['Dr. Paper Vol.3 Sunday Night Slow Jams・2016 CD', 'My jinji 日版・CD'], ['國蛋・T 恤', '疊字測試599480・CD'], ['國蛋・T 恤', '國蛋・CD']]"
+ },
+ {
+  "name": "390 / 同列標題／標籤／發佈人列頂部差距 ≤1px、發佈人列貼底",
+  "ok": true,
+  "detail": "[('Dr. Paper Vol.', 864.1, None, 904.7), ('My jinji 日版・CD', 864.1, None, 904.7)]"
+ },
+ {
+  "name": "390 /artist/gordon 對照組兩則在同一列",
+  "ok": true,
+  "detail": "[['Dr. Paper Vol.3 Sunday Night Slow Jams・2016 CD', 'My jinji 日版・CD'], ['國蛋・T 恤', '國蛋・T 恤'], ['國蛋・CD', '國蛋、熊仔・T 恤']]"
+ },
+ {
+  "name": "390 /artist/gordon 同列標題／標籤／發佈人列頂部差距 ≤1px、發佈人列貼底",
+  "ok": true,
+  "detail": "[('Dr. Paper Vol.', 1124.5, None, 1165.1), ('My jinji 日版・CD', 1124.5, None, 1165.1)]"
+ },
+ {
+  "name": "390 /tag/卡片對照00076 對照組兩則在同一列",
+  "ok": true,
+  "detail": "[['Dr. Paper Vol.3 Sunday Night Slow Jams・2016 CD', 'My jinji 日版・CD']]"
+ },
+ {
+  "name": "390 /tag/卡片對照00076 同列標題／標籤／發佈人列頂部差距 ≤1px、發佈人列貼底",
+  "ok": true,
+  "detail": "[('Dr. Paper Vol.', 355.9, None, 396.5), ('My jinji 日版・CD', 355.9, None, 396.5)]"
+ },
+ {
+  "name": "390 /u/r01 對照組兩則在同一列",
+  "ok": true,
+  "detail": "[['Dr. Paper Vol.3 Sunday Night Slow Jams・2016 CD', 'My jinji 日版・CD'], ['山線・CD', '第一張・CD'], ['GDNA 巡迴演唱會 台北場98113_毛巾・毛巾', 'Dr. Paper Vol.3 Sunday Night Slow Jams・CD']]"
+ },
+ {
+  "name": "390 /u/r01 同列標題／標籤／發佈人列頂部差距 ≤1px、發佈人列貼底",
+  "ok": true,
+  "detail": "[('Dr. Paper Vol.', 533.9, None, 574.5), ('My jinji 日版・CD', 533.9, None, 574.5)]"
+ },
+ {
+  "name": "1440 / 對照組兩則在同一列",
+  "ok": true,
+  "detail": "[['Dr. Paper Vol.3 Sunday Night Slow Jams・2016 CD', 'My jinji 日版・CD', '國蛋・T 恤'], ['疊字測試599480・CD', '國蛋・T 恤', '國蛋・CD'], ['國蛋、熊仔・T 恤', 'BACK Again・CD', 'GDN Express・黑膠・限定版']]"
+ },
+ {
+  "name": "1440 / 同列標題／標籤／發佈人列頂部差距 ≤1px、發佈人列貼底",
+  "ok": true,
+  "detail": "[('Dr. Paper Vol.', 791, 844.5, 868.5), ('My jinji 日版・CD', 791, 844.5, 868.5), ('國蛋・T 恤', 791, 844.5, 868.5)]"
+ },
+ {
+  "name": "1440 /artist/gordon 對照組兩則在同一列",
+  "ok": true,
+  "detail": "[['Dr. Paper Vol.3 Sunday Night Slow Jams・2016 CD', 'My jinji 日版・CD', '國蛋・T 恤'], ['國蛋・T 恤', '國蛋・CD', '國蛋、熊仔・T 恤'], ['BACK Again・CD', 'GDN Express・黑膠・限定版', '國蛋・CD']]"
+ },
+ {
+  "name": "1440 /artist/gordon 同列標題／標籤／發佈人列頂部差距 ≤1px、發佈人列貼底",
+  "ok": true,
+  "detail": "[('Dr. Paper Vol.', 1814.6, 1868.1, 1892.1), ('My jinji 日版・CD', 1814.6, 1868.1, 1892.1), ('國蛋・T 恤', 1814.6, 1868.1, 1892.1)]"
+ },
+ {
+  "name": "1440 /tag/卡片對照00076 對照組兩則在同一列",
+  "ok": true,
+  "detail": "[['Dr. Paper Vol.3 Sunday Night Slow Jams・2016 CD', 'My jinji 日版・CD']]"
+ },
+ {
+  "name": "1440 /tag/卡片對照00076 同列標題／標籤／發佈人列頂部差距 ≤1px、發佈人列貼底",
+  "ok": true,
+  "detail": "[('Dr. Paper Vol.', 579.8, 633.3, 657.3), ('My jinji 日版・CD', 579.8, 633.3, 657.3)]"
+ },
+ {
+  "name": "1440 /u/r01 對照組兩則在同一列",
+  "ok": true,
+  "detail": "[['Dr. Paper Vol.3 Sunday Night Slow Jams・2016 CD', 'My jinji 日版・CD', '山線・CD'], ['第一張・CD', 'GDNA 巡迴演唱會 台北場98113_毛巾・毛巾', 'Dr. Paper Vol.3 Sunday Night Slow Jams・CD'], ['GDNA 巡迴演唱會 台北場98113_毛巾・毛巾', '驗收系列438017・CD', '第一張・CD']]"
+ },
+ {
+  "name": "1440 /u/r01 同列標題／標籤／發佈人列頂部差距 ≤1px、發佈人列貼底",
+  "ok": true,
+  "detail": "[('Dr. Paper Vol.', 704.6, 758.1, 782.1), ('My jinji 日版・CD', 704.6, 758.1, 782.1), ('山線・CD', 704.6, 758.1, 782.1)]"
+ }
+]

@@ -34,6 +34,7 @@ import {
   type SeriesKind,
   type TargetKey,
 } from "@/lib/data";
+import { autoSlug, recordAddition, sameNameArtist } from "@/lib/server/additions";
 import { ITEM_SLUG, moveWaitingShares, nextSeriesNo, releaseWaitingShares } from "@/lib/server/series-link";
 import { loadLockData, parseJson, photoUrl, threshold, userNames } from "@/lib/server/content";
 import { contentKeyExists, parseContentKey, shareExists } from "@/lib/server/me";
@@ -254,32 +255,44 @@ const s80 = (v: unknown, n = 80) => (typeof v === "string" ? v.trim().slice(0, n
 
 export type SubmitKind = "artist" | "series" | "item" | "version";
 
+/**
+ * 2026-09-28 上傳表單改版：藝人、系列改成事後審，新增當下就生效（任何人），記進 catalog_additions 給後台確認；
+ * 品項、版本維持原本規則（管理員直接生效、會員待審）。
+ */
 export async function submitContent(u: User, type: unknown, b: Record<string, unknown>) {
-  // 管理員新增的直接生效，不進審核佇列（寫 admin_log）
   const admin = isAdmin(u);
-  const r = await submitInner(u, type, b, admin ? "approved" : "pending");
+  const direct = admin || type === "artist" || type === "series";
+  const r = await submitInner(u, type, b, direct ? "approved" : "pending", admin);
   if (admin) await log(u.id, "新增（免審核）", `${r.type}:${r.key}`, {});
-  return { ...r, approved: admin };
+  return { ...r, approved: direct };
 }
 
-async function submitInner(u: User, type: unknown, b: Record<string, unknown>, status: "approved" | "pending") {
-  // 每天 20 筆的上限是擋會員灌待審佇列；管理員新增直接生效、不進佇列，不受這個限制
-  if (status === "pending" && !(await hit(`submit:${u.id}`, 20, 86400))) throw new HttpError(429, "RATE_LIMITED", "今天送出太多筆了，明天再來");
+async function submitInner(u: User, type: unknown, b: Record<string, unknown>, status: "approved" | "pending", admin: boolean) {
+  // 每天 20 筆：擋會員灌資料（事後審的藝人、系列也算）；管理員不受限
+  if (!admin && !(await hit(`submit:${u.id}`, 20, 86400))) throw new HttpError(429, "RATE_LIMITED", "今天新增太多筆了，明天再來");
   const db = getDb();
   if (type === "artist") {
     const name = s80(b.name, 60);
-    const slug = s80(b.slug, 60).toLowerCase();
     if (!name) throw new HttpError(400, "INVALID", "填藝人名稱");
-    if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) throw new HttpError(400, "INVALID", "網址用英文名或音譯，小寫英文、數字、連字號");
-    const gender = ["male", "female", "group"].includes(String(b.gender)) ? String(b.gender) : null;
-    const region = ["domestic", "overseas"].includes(String(b.region)) ? String(b.region) : null;
-    const r = await db
-      .insert(artists)
-      .values({ slug, name, gender, region, kind: b.kind === "發行單位" ? "發行單位" : "藝人", status, createdBy: u.id })
-      .onConflictDoNothing()
-      .returning({ slug: artists.slug });
-    if (!r.length) throw new HttpError(409, "TAKEN", "這個網址已經有人用了，換一個");
-    return { type, key: slug };
+    // 同名（含別名）的已經在站上：直接用那位，不重複建
+    const same = await sameNameArtist(name);
+    if (same) {
+      return { type, key: same.slug, existing: true, artist: { slug: same.slug, name: same.name, aliases: parseJson<string[]>(same.aliases, []), kind: same.kind, gender: same.gender, region: same.region } };
+    }
+    // 網址識別碼系統自動產生（介面不問）；撞到就換隨機碼再試
+    let slug = "";
+    for (let i = 0; i < 5 && !slug; i++) {
+      const cand = i === 0 ? autoSlug(name) : autoSlug("");
+      const r = await db
+        .insert(artists)
+        .values({ slug: cand, name, kind: "藝人", status, createdBy: u.id })
+        .onConflictDoNothing()
+        .returning({ slug: artists.slug });
+      if (r.length) slug = r[0].slug;
+    }
+    if (!slug) throw new HttpError(409, "TAKEN", "新增失敗，再試一次");
+    await recordAddition("artist", slug, u);
+    return { type, key: slug, artist: { slug, name, aliases: [] as string[], kind: "藝人", gender: null, region: null } };
   }
   if (type === "series") {
     const artist = s80(b.artist, 60);
@@ -315,6 +328,7 @@ async function submitInner(u: User, type: unknown, b: Record<string, unknown>, s
         createdBy: u.id,
       })
       .returning({ id: series.id });
+    await recordAddition("series", String(row.id), u);
     // 表單新增完直接選它：回傳顯示需要的欄位
     return { type, key: `${artist}/${no}`, id: row.id, series: { key: `${artist}/${no}`, name, title, kind: seriesKind, year, credits: [artist] } };
   }
