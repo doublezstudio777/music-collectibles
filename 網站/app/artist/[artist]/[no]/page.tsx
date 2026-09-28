@@ -11,6 +11,7 @@ import {
   versionKey,
   versionTarget,
   seriesKey,
+  SERIES_KIND_LABEL,
   type Item,
   type LockData,
   type Series,
@@ -238,7 +239,13 @@ export default async function SeriesPage({ params, searchParams }: Props) {
       list: c
         .mainSeriesOf(a.slug)
         .filter((w) => seriesKey(w) !== skey)
-        .sort((x, y) => yearOf(x) - yearOf(y) || x.artistSlug.localeCompare(y.artistSlug) || x.no - y.no),
+        .sort(
+          (x, y) =>
+            (x.kind === "misc" ? 1 : 0) - (y.kind === "misc" ? 1 : 0) ||
+            yearOf(x) - yearOf(y) ||
+            x.artistSlug.localeCompare(y.artistSlug) ||
+            x.no - y.no,
+        ),
     }))
     .filter((g) => g.list.length > 0);
   const wanted = versions.reduce((n, v) => n + v.wanted, 0);
@@ -263,11 +270,17 @@ export default async function SeriesPage({ params, searchParams }: Props) {
             ))}
           </p>
           <h1 className="page-title">{series.name}</h1>
+          <p className="series-kind">
+            <span className="kind-tag" data-series-kind={series.kind} data-testid="series-kind">
+              {SERIES_KIND_LABEL[series.kind]}
+            </span>
+            {series.kind === "misc" ? <span className="sub">不屬於專輯、也不屬於演唱會的周邊</span> : null}
+          </p>
           <p className="page-meta">
             <span className="num">{owners}</span> 人有 · <span className="num">{wanted}</span> 人想要 ·{" "}
             <span className="num">{related.length}</span> 則炫收藏
           </p>
-          {/^\d{4}/.test(series.year) ? null : <YearFill skey={skey} />}
+          {/^\d{4}/.test(series.year) || series.kind === "misc" ? null : <YearFill skey={skey} />}
         </div>
         <div className="head-actions">
           <CopyLink />
@@ -318,8 +331,12 @@ export default async function SeriesPage({ params, searchParams }: Props) {
             <LockBanner target={itemTarget(itemKey(series, it))} locked={isTargetLocked(c.lockData, itemTarget(itemKey(series, it)))} />
             {it.versions.length > 1 ? (
               <Compare series={series} item={it} />
-            ) : (
+            ) : it.versions.length === 1 ? (
               <Spec series={series} item={it} v={it.versions[0]} />
+            ) : (
+              <p className="sub" data-testid="item-no-version">
+                還沒有人補上版本資料
+              </p>
             )}
             {it.versions.map((v) => (
               <VersionBlock

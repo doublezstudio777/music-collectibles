@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { seriesHref, type Artist, type Series } from "@/lib/data";
+import { SERIES_KIND_LABEL, seriesHref, type Artist, type Series } from "@/lib/data";
 
 /** 系列封面：純色塊，沒有真封面前不畫假圖。photo＝收藏者拍的照片縮圖（系列頁「其他系列」用，沒有就色塊） */
 export function SeriesTile({ series, credits, except, photo }: { series: Series; credits: Artist[]; except?: string; photo?: string | null }) {
@@ -14,7 +14,12 @@ export function SeriesTile({ series, credits, except, photo }: { series: Series;
         )}
         <span className="tile-title">{series.name}</span>
       </Link>
-      <span className="sub">{series.items.map((i) => i.kind).join("・")}</span>
+      <span className="sub">
+        <span className="kind-tag" data-series-kind={series.kind}>
+          {SERIES_KIND_LABEL[series.kind]}
+        </span>
+        {series.items.map((i) => i.kind).join("・")}
+      </span>
       {others.length && except ? <span className="sub">與{others.map((a) => a.name).join("、")}共同署名</span> : null}
     </li>
   );

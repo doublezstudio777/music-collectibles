@@ -8,10 +8,11 @@
 
 import { and, asc, desc, eq, inArray, isNull, or } from "drizzle-orm";
 import { getDb } from "@/db";
-import { adminLog, items, messages, offers, series, shares, threadReads, threads, versions, photos } from "@/db/schema";
+import { adminLog, items, messages, offers, series, shares, threadReads, threads, photos } from "@/db/schema";
 import { composeWhat, KINDS, priceText, relTime, type Kind, type SaleState } from "@/lib/data";
 import { lockForShare, userNames, type ShareRow } from "@/lib/server/content";
-import { contentKeyExists, parseContentKey } from "@/lib/server/me";
+import { parseContentKey } from "@/lib/server/me";
+import { ensureItem, ensureMiscSeries, ownPendingSeries, versionEdition } from "@/lib/server/series-link";
 import { dropOgImage, MAX_SHARE_PHOTOS, removePhotoFiles, unattachedPhotos } from "@/lib/server/photos";
 import { hit } from "@/lib/server/services";
 import { fail, isAdmin, type User } from "@/lib/server/auth";
@@ -71,50 +72,90 @@ const strList = (v: unknown, max: number, len: number) =>
     : [];
 
 /**
- * 內容欄位（發布與編輯共用）：跟誰有關、系列＞品項＞版本（或自由類型）、想說的話、標籤，連同組好的標題。
- * 可以不選系列；選了系列就要選品項；版本可以「不確定」（不帶 versionId）。
+ * 內容欄位（發布與編輯共用）：跟誰有關、品項＞屬於哪裡（系列）＞版本、想說的話、標籤，連同組好的標題。
+ * 2026-09-28 周邊選擇流程：先選品項（kind 必填），再選屬於哪裡：
+ * - seriesKey＝「{藝人}/{流水號}」既有系列；或「misc:{藝人}」＝這位藝人的「周邊與其他」，第一次用到才建
+ * - 系列裡已有這種品項就掛上去（itemId 可指定，要跟品項類型一致）；沒有就自動建品項（版本等人補）
+ * - versionId 選填（不帶＝不確定）
+ * - 不選系列＝「不確定」；pendingSeriesId＝這位會員剛新增、還在審核的系列，核准後自動改掛過去
+ * 舊版表單（只帶 seriesKey＋itemId、不帶 kind）照樣收：kind 取該品項的類型。
+ * 所有驗證過了才會建「周邊與其他」與品項，驗證失敗不留下任何新資料。
  */
-async function resolveContent(body: Record<string, unknown>, errors: Record<string, string>) {
+async function resolveContent(owner: string, body: Record<string, unknown>, errors: Record<string, string>) {
   const about = strList(body.about, 10, 40);
   const tags = strList(body.tags, 10, 30);
   const story = typeof body.story === "string" ? body.story.trim().slice(0, 2000) : "";
   if (about.length === 0) errors.about = "至少點一位";
-  const seriesKey = typeof body.seriesKey === "string" && body.seriesKey ? body.seriesKey : null;
-  const itemId = typeof body.itemId === "string" && body.itemId ? body.itemId : null;
+  const rawSeries = typeof body.seriesKey === "string" && body.seriesKey ? body.seriesKey : null;
+  let itemId = typeof body.itemId === "string" && body.itemId ? body.itemId : null;
   const versionId = typeof body.versionId === "string" && body.versionId ? body.versionId : null;
-  let kind: Kind | null = null;
-  let kindNote: string | null = null;
-  let seriesTitle = "";
+  let kind: Kind | null = (KINDS as readonly string[]).includes(String(body.kind)) ? (body.kind as Kind) : null;
+  const kindNote = typeof body.kindNote === "string" ? body.kindNote.trim().slice(0, 30) || null : null;
+  const db = getDb();
+
+  /** 既有系列：{ id, title }；misc 延後到驗證全過才建 */
+  let target: { id: number; key: string; title: string } | null = null;
+  let miscArtist: string | null = null;
   let edition = "";
-  if (seriesKey) {
-    const k = parseContentKey(seriesKey);
-    if (!k || k.itemId || !(await contentKeyExists(seriesKey, "series"))) errors.kind = "找不到這個系列";
-    else if (!itemId || !(await contentKeyExists(`${seriesKey}#${itemId}`, "item"))) errors.kind = "點一個品項";
-    else if (versionId && !(await contentKeyExists(`${seriesKey}#${itemId}-${versionId}`, "version"))) errors.kind = "找不到這個版本";
+  let itemExists = false;
+  if (rawSeries?.startsWith("misc:")) {
+    miscArtist = rawSeries.slice(5);
+    if (!/^[a-z0-9-]{1,60}$/.test(miscArtist)) errors.kind = "找不到這位藝人";
+    if (itemId || versionId) errors.kind = "「周邊與其他」不用選版本";
+  } else if (rawSeries) {
+    const k = parseContentKey(rawSeries);
+    const [w] = k && !k.itemId
+      ? await db
+          .select({ id: series.id, title: series.title })
+          .from(series)
+          .where(and(eq(series.artistSlug, k.artist), eq(series.no, k.no), eq(series.status, "approved"), isNull(series.deletedAt), isNull(series.hiddenAt)))
+      : [];
+    if (!w) errors.kind = "找不到這個系列";
     else {
-      const db = getDb();
-      const [row] = await db
-        .select({ title: series.title, kind: items.kind, edition: versions.edition })
-        .from(series)
-        .innerJoin(items, and(eq(items.seriesId, series.id), eq(items.itemId, itemId)))
-        .leftJoin(versions, and(eq(versions.itemRef, items.id), eq(versions.versionId, versionId ?? "")))
-        .where(and(eq(series.artistSlug, k.artist), eq(series.no, k.no)));
-      kind = (row?.kind as Kind) ?? null;
-      seriesTitle = row?.title ?? "";
-      edition = versionId ? (row?.edition ?? "") : "";
+      target = { id: w.id, key: rawSeries, title: w.title };
+      if (itemId) {
+        const [it] = await db
+          .select({ kind: items.kind })
+          .from(items)
+          .where(and(eq(items.seriesId, w.id), eq(items.itemId, itemId), eq(items.status, "approved"), isNull(items.deletedAt), isNull(items.hiddenAt)));
+        if (!it) errors.kind = "找不到這個品項";
+        else if (kind && it.kind !== kind) errors.kind = "品項跟選的類型不一樣";
+        else {
+          kind = it.kind as Kind;
+          itemExists = true;
+        }
+      }
+      if (versionId) {
+        if (!itemId) errors.kind = "選版本前要先有品項";
+        else if (itemExists) {
+          const ed = await versionEdition(w.id, itemId, versionId);
+          if (ed === null) errors.kind = "找不到這個版本";
+          else edition = ed;
+        }
+      }
     }
-  } else {
-    kind = (KINDS as readonly string[]).includes(String(body.kind)) ? (body.kind as Kind) : null;
-    if (!kind) errors.kind = "點一個類型";
-    kindNote = typeof body.kindNote === "string" ? body.kindNote.trim().slice(0, 30) || null : null;
-    if (kind === "其他周邊" && !kindNote) errors.kind = "寫一下是什麼周邊";
   }
+  if (!kind && !errors.kind) errors.kind = "點一個品項";
+  // 其他周邊要寫是什麼（掛到系列裡既有的「其他周邊」品項時可以不寫）
+  if (kind === "其他周邊" && !kindNote && !itemExists) errors.kind = "寫一下是什麼周邊";
+  const pending = !rawSeries && body.pendingSeriesId != null ? await ownPendingSeries(owner, body.pendingSeriesId) : null;
+  if (!rawSeries && body.pendingSeriesId != null && !pending) errors.kind = "新增的系列找不到或已經審核過了，重新選一次";
   if (Object.keys(errors).length || !kind) {
     throw new HttpError(400, "INVALID", Object.values(errors)[0] ?? "有欄位沒填好");
   }
-  const what = seriesKey
-    ? composeWhat({ series: seriesTitle, item: kind, version: edition })
-    : composeWhat({ about, kind: kind === "其他周邊" ? (kindNote ?? kind) : kind });
+
+  // 驗證全過，才建「周邊與其他」與品項
+  if (miscArtist) {
+    const m = await ensureMiscSeries(miscArtist, owner);
+    if (!m) throw new HttpError(404, "NOT_FOUND", "找不到這位藝人");
+    target = m;
+  }
+  if (target && !itemExists) itemId = await ensureItem(target.id, kind, owner);
+
+  const label = kind === "其他周邊" ? (kindNote ?? kind) : kind;
+  const what = target
+    ? composeWhat({ series: target.title, item: label, version: edition })
+    : composeWhat({ about, kind: label });
   return {
     what,
     kind,
@@ -122,9 +163,10 @@ async function resolveContent(body: Record<string, unknown>, errors: Record<stri
     story,
     about: JSON.stringify(about),
     tags: JSON.stringify(tags),
-    seriesKey,
-    itemId: seriesKey ? itemId : null,
-    versionId: seriesKey ? versionId : null,
+    seriesKey: target?.key ?? null,
+    itemId: target ? itemId : null,
+    versionId: target && edition ? versionId : null,
+    pendingSeriesId: pending?.id ?? null,
   };
 }
 
@@ -140,7 +182,7 @@ export async function createShare(u: User, body: Record<string, unknown>) {
 
   const pics = await unattachedPhotos(u.id, photoIds, "share");
   if (pics.length === 0) errors.photo = "至少放一張照片";
-  const content = await resolveContent(body, errors);
+  const content = await resolveContent(u.id, body, errors);
   const day = nowIso().slice(0, 10);
   if (!(await hit(`share:${u.id}:${day}`, 30, 86400))) throw new HttpError(429, "RATE_LIMITED", "今天發太多則了，明天再來");
 
@@ -182,7 +224,7 @@ export async function editShare(u: User, no: number, body: Record<string, unknow
   const lock = await lockForShare(s);
   if (lock) throw new HttpError(423, "LOCKED", `${lock.label}，暫時不能編輯`);
   const errors: Record<string, string> = {};
-  const content = await resolveContent(body, errors);
+  const content = await resolveContent(s.authorId, body, errors);
   const sale = body.sale as { state?: unknown; price?: unknown } | undefined;
   const saleChanged =
     sale !== undefined &&

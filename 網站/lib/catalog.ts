@@ -471,6 +471,8 @@ export class Catalog {
         key: seriesKey(w),
         name: w.name,
         title: w.title,
+        kind: w.kind,
+        year: w.year,
         credits: w.credits,
         items: w.items.map((it) => ({
           id: it.id,

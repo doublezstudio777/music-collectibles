@@ -8,7 +8,8 @@ export async function POST(req: Request) {
   if (s instanceof Response) return s;
   const b = await readBody(req);
   return handle(async () => {
-    await reviewSubmission(s.user, b.type, b.id, b.approve);
-    return json({ ok: true });
+    // 系列核准時，等這個系列的收藏會自動改掛過去（movedShares＝改掛幾則）
+    const r = await reviewSubmission(s.user, b.type, b.id, b.approve);
+    return json({ ok: true, ...r });
   });
 }

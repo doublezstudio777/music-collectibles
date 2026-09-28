@@ -48,7 +48,10 @@ export default async function ArtistPage({ params, searchParams }: Props) {
 
   // 系列依發行年排序，新的在前；年份不明的排最後（同年份流水號大的在前）
   const yearOf = (w: Series) => (/^\d{4}/.test(w.year) ? Number(w.year.slice(0, 4)) : -1);
-  const newest = (x: Series, y: Series) => (yearOf(x) < 0 ? 1 : 0) - (yearOf(y) < 0 ? 1 : 0) || yearOf(y) - yearOf(x) || y.no - x.no;
+  // 「周邊與其他」（misc）一律排最後
+  const miscLast = (x: Series, y: Series) => (x.kind === "misc" ? 1 : 0) - (y.kind === "misc" ? 1 : 0);
+  const newest = (x: Series, y: Series) =>
+    miscLast(x, y) || (yearOf(x) < 0 ? 1 : 0) - (yearOf(y) < 0 ? 1 : 0) || yearOf(y) - yearOf(x) || y.no - x.no;
   const main = c.mainSeriesOf(artist.slug).sort(newest);
   const guests = c.guestSeriesOf(artist.slug).sort((x, y) => newest(x.series, y.series));
   const comps = c.compilationsOf(artist.slug).sort((x, y) => newest(x.series, y.series));

@@ -4,6 +4,7 @@ import { dashboardStats } from "@/lib/server/stats";
 import { detectDuplicatePairs } from "@/lib/server/duplicates";
 import { pendingDeletionCount } from "@/lib/server/deletion";
 import { pendingArtistPhotoCount } from "@/lib/server/artist-photos";
+import { openErrorReportCount } from "@/lib/server/moderation";
 
 /**
  * 儀表板：統計（10 分鐘快取，?fresh=1 重算）＋待處理佇列（每次即時）。只有管理員。
@@ -30,6 +31,8 @@ export async function GET(req: Request) {
     avatars: o.avatars.length,
     deletions: await pendingDeletionCount(),
     artistPhotos: await pendingArtistPhotoCount(),
+    // 錯誤回報（2026-09-28）：不計入檢舉門檻，另外一個佇列
+    errorReports: await openErrorReportCount(),
   };
   return json({ stats, cached, queue }, 200, { "Cache-Control": "no-store" });
 }

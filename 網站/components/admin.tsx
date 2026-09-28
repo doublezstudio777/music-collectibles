@@ -29,7 +29,14 @@ type Overview = {
   hidden: { type: HideType; key: string; title: string; at: string }[];
   display: { slug: string; name: string; display: keyof typeof DISPLAY_WORD }[];
   threshold: number;
-  targets: { target: string; counts: Record<string, number>; total: number; locked: boolean; decision: "unlocked" | "kept" | null }[];
+  targets: {
+    target: string;
+    counts: Record<string, number>;
+    total: number;
+    locked: boolean;
+    decision: "unlocked" | "kept" | null;
+    evidence?: { note: string; photo?: string; full?: string }[];
+  }[];
   appeals: { id: number; target: string; by: string; text: string; status: string; createdAt: string; photos: string[] }[];
   pending: { type: keyof typeof TYPE_WORD; id: string; title: string; detail: string; by: string; at: string }[];
   log: { id: number; by: string; action: string; target: string; detail: string; at: string }[];
@@ -479,6 +486,21 @@ export function Admin() {
                       <td>{d.name}</td>
                       <td>
                         {(Object.entries(r.counts) as [ReportReason, number][]).map(([k, n]) => `${reasonLabel(level, k)} ${n}`).join("、")}
+                        {r.evidence?.length ? (
+                          <ul className="report-evidence" data-testid="report-evidence">
+                            {r.evidence.map((e, i) => (
+                              <li key={i}>
+                                {e.photo ? (
+                                  <a href={e.full} target="_blank" rel="noopener">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img src={e.photo} alt="比對照片" loading="lazy" />
+                                  </a>
+                                ) : null}
+                                {e.note ? <span>{e.note}</span> : null}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : null}
                       </td>
                       <td className="num-col num">{r.total}</td>
                       <td>

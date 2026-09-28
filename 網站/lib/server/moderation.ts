@@ -5,13 +5,13 @@
 // 管理員的每個動作（解鎖、維持鎖定、調門檻、核准／退回新增）都寫 admin_log。
 
 import { env } from "cloudflare:workers";
-import { and, count, desc, eq, inArray, isNull, max } from "drizzle-orm";
+import { and, count, desc, eq, inArray, isNotNull, isNull, ne, or } from "drizzle-orm";
 import { getDb } from "@/db";
 import {
   adminLog,
   appeals,
   artists,
-  counters,
+  errorReports,
   items,
   photos,
   reports,
@@ -21,7 +21,20 @@ import {
   targetDecisions,
   versions,
 } from "@/db/schema";
-import { isTargetLocked, KINDS, reasonsFor, targetLevel, type Kind, type ReportReason, type TargetKey } from "@/lib/data";
+import {
+  isTargetLocked,
+  KINDS,
+  MISC_SERIES_TITLE,
+  reasonsFor,
+  SERIES_KIND_TYPE,
+  targetLevel,
+  type ErrorReason,
+  type Kind,
+  type ReportReason,
+  type SeriesKind,
+  type TargetKey,
+} from "@/lib/data";
+import { ITEM_SLUG, moveWaitingShares, nextSeriesNo, releaseWaitingShares } from "@/lib/server/series-link";
 import { loadLockData, parseJson, photoUrl, threshold, userNames } from "@/lib/server/content";
 import { contentKeyExists, parseContentKey, shareExists } from "@/lib/server/me";
 import { STORAGE_LIMIT, storageUsed, unattachedPhotos } from "@/lib/server/photos";
@@ -59,7 +72,7 @@ async function log(adminId: string, action: string, target: string, detail: Reco
 
 /* ---------- 檢舉 ---------- */
 
-export async function report(u: User, rawTarget: unknown, reason: unknown, note: unknown) {
+export async function report(u: User, rawTarget: unknown, reason: unknown, note: unknown, rawPhoto?: unknown) {
   if (!u.emailVerifiedAt) throw new HttpError(403, "NOT_VERIFIED", "認證後才能檢舉");
   const target = parseTarget(rawTarget);
   if (!target) throw new HttpError(400, "BAD_REQUEST", "參數不對");
@@ -78,14 +91,119 @@ export async function report(u: User, rawTarget: unknown, reason: unknown, note:
     if (st === "self") throw new HttpError(403, "FORBIDDEN", "不能檢舉自己的大頭貼");
   }
   if (!(await hit(`report:${u.id}`, 30, 86400))) throw new HttpError(429, "RATE_LIMITED", "今天檢舉太多次了");
+  const photoId = await evidencePhoto(u, rawPhoto);
   const r = await getDb()
     .insert(reports)
-    .values({ target, reporterId: u.id, reason: reason as ReportReason, note: text })
+    .values({ target, reporterId: u.id, reason: reason as ReportReason, note: text, photoId })
     .onConflictDoNothing()
     .returning({ id: reports.id });
   if (!r.length) throw new HttpError(409, "ALREADY_REPORTED", "已經檢舉過了");
   const [c] = await getDb().select({ n: count() }).from(reports).where(eq(reports.target, target));
   return { count: c?.n ?? 0 };
+}
+
+/** 比對照片（選填，最多 1 張）：跟申訴證據同一種上傳（purpose=appeal，只有本人與管理員看得到） */
+async function evidencePhoto(u: User, raw: unknown) {
+  if (typeof raw !== "string" || !raw) return null;
+  const [p] = await unattachedPhotos(u.id, [raw], "appeal");
+  if (!p) throw new HttpError(400, "BAD_REQUEST", "比對照片找不到，重新上傳一次");
+  return p.id;
+}
+
+/* ---------- 錯誤回報（2026-09-28）：不計門檻、不算分，只進後台佇列 ---------- */
+
+const ERROR_REASONS: ErrorReason[] = ["wrong_info", "not_artist", "duplicate", "other"];
+
+export async function errorReport(u: User, rawShare: unknown, reason: unknown, note: unknown, rawPhoto: unknown) {
+  const no = typeof rawShare === "number" ? rawShare : Number(rawShare);
+  if (!Number.isInteger(no) || no <= 0) throw new HttpError(400, "BAD_REQUEST", "參數不對");
+  if (!ERROR_REASONS.includes(reason as ErrorReason)) throw new HttpError(400, "BAD_REQUEST", "回報原因不對");
+  const text = typeof note === "string" ? note.trim().slice(0, 500) : "";
+  if (!(await shareExists(no))) throw new HttpError(404, "NOT_FOUND", "找不到這則收藏");
+  if (!(await hit(`error-report:${u.id}`, 30, 86400))) throw new HttpError(429, "RATE_LIMITED", "今天回報太多次了，明天再來");
+  const photoId = await evidencePhoto(u, rawPhoto);
+  const r = await getDb()
+    .insert(errorReports)
+    .values({ shareNo: no, reporterId: u.id, reason: reason as ErrorReason, note: text, photoId })
+    .onConflictDoNothing()
+    .returning({ id: errorReports.id });
+  // 同一則回報過了：一樣回「已收到」，不再多一筆
+  return { already: r.length === 0 };
+}
+
+export type AdminErrorReport = {
+  id: number;
+  share: { no: number; what: string; gone: boolean };
+  reason: ErrorReason;
+  note: string;
+  photo: { url: string; thumb: string } | null;
+  by: { handle: string; name: string } | null;
+  status: "open" | "fixed" | "ignored";
+  handledBy: string;
+  handledAt: string | null;
+  createdAt: string;
+};
+
+export async function openErrorReportCount() {
+  const [r] = await getDb().select({ n: count() }).from(errorReports).where(eq(errorReports.status, "open"));
+  return r?.n ?? 0;
+}
+
+/** 後台清單：待處理全部＋最近處理過的 50 筆 */
+export async function adminErrorReports(): Promise<AdminErrorReport[]> {
+  const db = getDb();
+  const [open, done] = await db.batch([
+    db.select().from(errorReports).where(eq(errorReports.status, "open")).orderBy(desc(errorReports.id)),
+    db.select().from(errorReports).where(inArray(errorReports.status, ["fixed", "ignored"])).orderBy(desc(errorReports.handledAt)).limit(50),
+  ]);
+  const rows = [...open, ...done];
+  const shareNos = [...new Set(rows.map((r) => r.shareNo))];
+  const photoIds = rows.map((r) => r.photoId).filter((x): x is string => Boolean(x));
+  const [sRows, pRows] = await Promise.all([
+    shareNos.length
+      ? env.DB!.prepare(`SELECT no, what, deleted_at, hidden_at FROM shares WHERE no IN (SELECT value FROM json_each(?1))`)
+          .bind(JSON.stringify(shareNos))
+          .all<{ no: number; what: string; deleted_at: string | null; hidden_at: string | null }>()
+          .then((x) => x.results ?? [])
+      : [],
+    photoIds.length
+      ? env.DB!.prepare(`SELECT id, r2_key, thumb_key FROM photos WHERE id IN (SELECT value FROM json_each(?1))`)
+          .bind(JSON.stringify(photoIds))
+          .all<{ id: string; r2_key: string; thumb_key: string }>()
+          .then((x) => x.results ?? [])
+      : [],
+  ]);
+  const names = await userNames([...rows.map((r) => r.reporterId), ...rows.map((r) => r.handledBy ?? "")].filter(Boolean));
+  return rows.map((r) => {
+    const sh = sRows.find((x) => x.no === r.shareNo);
+    const p = r.photoId ? pRows.find((x) => x.id === r.photoId) : undefined;
+    const who = names.get(r.reporterId);
+    return {
+      id: r.id,
+      share: { no: r.shareNo, what: sh?.what ?? `第 ${r.shareNo} 則`, gone: !sh || Boolean(sh.deleted_at || sh.hidden_at) },
+      reason: r.reason as ErrorReason,
+      note: r.note,
+      photo: p ? { url: photoUrl(p.r2_key), thumb: photoUrl(p.thumb_key) } : null,
+      by: who ? { handle: who.handle, name: who.name } : null,
+      status: r.status as AdminErrorReport["status"],
+      handledBy: r.handledBy ? (names.get(r.handledBy)?.name ?? "") : "",
+      handledAt: r.handledAt,
+      createdAt: r.createdAt,
+    };
+  });
+}
+
+/** 標記已修正／不處理（寫操作紀錄）；reopen 回到待處理 */
+export async function handleErrorReport(admin: User, id: number, action: unknown) {
+  if (action !== "fixed" && action !== "ignored" && action !== "reopen") throw new HttpError(400, "BAD_REQUEST", "參數不對");
+  const at = nowIso();
+  const r = await getDb()
+    .update(errorReports)
+    .set(action === "reopen" ? { status: "open", handledBy: null, handledAt: null } : { status: action, handledBy: admin.id, handledAt: at })
+    .where(eq(errorReports.id, id))
+    .returning({ shareNo: errorReports.shareNo });
+  if (!r.length) throw new HttpError(404, "NOT_FOUND", "找不到這筆回報");
+  await log(admin.id, action === "fixed" ? "錯誤回報：已修正" : action === "ignored" ? "錯誤回報：不處理" : "錯誤回報：重新打開", `share:${r[0].shareNo}`, { errorReport: id });
 }
 
 /* ---------- 申訴 ---------- */
@@ -132,18 +250,6 @@ export async function submitAppeal(u: User, rawTarget: unknown, text: unknown, p
 
 /* ---------- 使用者送出的新增（待審核） ---------- */
 
-const ITEM_SLUG: Record<Kind, string> = {
-  CD: "cd",
-  黑膠: "vinyl",
-  卡帶: "cassette",
-  "藍光／DVD": "bluray",
-  毛巾: "towel",
-  "T 恤": "tshirt",
-  海報: "poster",
-  場刊: "program",
-  其他周邊: "goods",
-};
-
 const s80 = (v: unknown, n = 80) => (typeof v === "string" ? v.trim().slice(0, n) : "");
 
 export type SubmitKind = "artist" | "series" | "item" | "version";
@@ -178,31 +284,39 @@ async function submitInner(u: User, type: unknown, b: Record<string, unknown>, s
   if (type === "series") {
     const artist = s80(b.artist, 60);
     const title = s80(b.title, 60);
-    const seriesType = s80(b.seriesType, 20) || "專輯發行";
+    // 系列類型（2026-09-28）：album｜ep｜single｜tour｜brand；misc（周邊與其他）由系統建，不能手動新增
+    const seriesKind = ["album", "ep", "single", "tour", "brand"].includes(String(b.seriesKind))
+      ? (String(b.seriesKind) as Exclude<SeriesKind, "misc">)
+      : "album";
+    const seriesType = s80(b.seriesType, 20) || SERIES_KIND_TYPE[seriesKind];
     const year = /^\d{4}$/.test(s80(b.year)) ? s80(b.year) : "";
     if (!title) throw new HttpError(400, "INVALID", "填系列名稱");
+    if (title === MISC_SERIES_TITLE) throw new HttpError(400, "INVALID", "「周邊與其他」每位藝人都有，直接選就好");
     const [a] = await db
       .select({ slug: artists.slug })
       .from(artists)
       .where(and(eq(artists.slug, artist), eq(artists.status, "approved"), isNull(artists.deletedAt)));
     if (!a) throw new HttpError(404, "NOT_FOUND", "找不到這位藝人");
-    // 流水號永不重用：待審、被退回的也算
-    const [m] = await db.select({ n: max(series.no) }).from(series).where(eq(series.artistSlug, artist));
-    // 永久刪除過的系列號也不重用（takedown.ts 記在 counters）
-    const [c] = await db.select({ v: counters.value }).from(counters).where(eq(counters.key, `series_no:${artist}`));
-    const no = Math.max(m?.n ?? 0, c?.v ?? 0) + 1;
-    await db.insert(series).values({
-      artistSlug: artist,
-      no,
-      title,
-      name: `${year}《${title}》${seriesType}`,
-      seriesType,
-      year,
-      credits: JSON.stringify([artist]),
-      status,
-      createdBy: u.id,
-    });
-    return { type, key: `${artist}/${no}` };
+    // 流水號永不重用：待審、被退回的也算；永久刪除過的系列號也不重用（takedown.ts 記在 counters）
+    const no = await nextSeriesNo(artist);
+    const name = `${year}《${title}》${seriesType}`;
+    const [row] = await db
+      .insert(series)
+      .values({
+        artistSlug: artist,
+        no,
+        title,
+        name,
+        seriesType,
+        kind: seriesKind,
+        year,
+        credits: JSON.stringify([artist]),
+        status,
+        createdBy: u.id,
+      })
+      .returning({ id: series.id });
+    // 表單新增完直接選它：回傳顯示需要的欄位
+    return { type, key: `${artist}/${no}`, id: row.id, series: { key: `${artist}/${no}`, name, title, kind: seriesKind, year, credits: [artist] } };
   }
   if (type === "item") {
     const seriesKey = s80(b.seriesKey);
@@ -327,8 +441,18 @@ export async function adminOverview(viewer: User) {
           .all<{ id: string; key: string; userId: string; handle: string; name: string }>()
       ).results ?? [])
     : [];
-  const photoIds = apRows.flatMap((a) => parseJson<string[]>(a.photoIds, []));
-  const pics = photoIds.length ? await db.select().from(photos).where(inArray(photos.id, photoIds)) : [];
+  // 檢舉附的補充說明與比對照片（2026-09-28）：每個對象最多列 5 筆
+  const evRows = await db
+    .select({ target: reports.target, note: reports.note, photoId: reports.photoId })
+    .from(reports)
+    .where(or(ne(reports.note, ""), isNotNull(reports.photoId)))
+    .orderBy(desc(reports.id))
+    .limit(500);
+  const photoIds = [...apRows.flatMap((a) => parseJson<string[]>(a.photoIds, [])), ...evRows.map((r) => r.photoId).filter((x): x is string => Boolean(x))];
+  // D1 一句最多 100 個參數：每 90 個分批
+  const pics: (typeof photos.$inferSelect)[] = [];
+  const uniqPics = [...new Set(photoIds)];
+  for (let i = 0; i < uniqPics.length; i += 90) pics.push(...(await db.select().from(photos).where(inArray(photos.id, uniqPics.slice(i, i + 90)))));
   const names = await userNames([
     ...apRows.map((a) => a.byId),
     ...logRows.map((l) => l.adminId),
@@ -347,6 +471,13 @@ export async function adminOverview(viewer: User) {
       total: counts[t] ?? 0,
       locked: isTargetLocked(lockData, t as TargetKey),
       decision: decisions[t] ?? null,
+      evidence: evRows
+        .filter((r) => r.target === t)
+        .slice(0, 5)
+        .map((r) => {
+          const p = r.photoId ? pics.find((x) => x.id === r.photoId) : undefined;
+          return { note: r.note, ...(p ? { photo: photoUrl(p.thumbKey), full: photoUrl(p.r2Key) } : {}) };
+        }),
     })),
     appeals: apRows.map((a) => ({
       id: a.id,
@@ -438,6 +569,12 @@ export async function reviewSubmission(admin: User, type: unknown, id: unknown, 
     changed = (await db.update(artists).set({ status, updatedAt: at, lastEditBy: admin.id }).where(and(eq(artists.slug, id), eq(artists.status, "pending"))).returning({ k: artists.slug })).length;
   } else if (type === "series") {
     changed = (await db.update(series).set({ status, updatedAt: at, lastEditBy: admin.id }).where(and(eq(series.id, Number(id)), eq(series.status, "pending"))).returning({ k: series.id })).length;
+    // 等這個系列的收藏：核准就改掛過去，退回就維持「不確定」
+    if (changed) {
+      const moved = approve ? await moveWaitingShares(Number(id), admin.id) : (await releaseWaitingShares(Number(id)), 0);
+      await log(admin.id, approve ? "核准新增" : "退回新增", `${type}:${id}`, { movedShares: moved });
+      return { movedShares: moved };
+    }
   } else if (type === "item") {
     changed = (await db.update(items).set({ status }).where(and(eq(items.id, Number(id)), eq(items.status, "pending"))).returning({ k: items.id })).length;
   } else if (type === "version") {
@@ -445,4 +582,5 @@ export async function reviewSubmission(admin: User, type: unknown, id: unknown, 
   } else throw new HttpError(400, "BAD_REQUEST", "參數不對");
   if (!changed) throw new HttpError(404, "NOT_FOUND", "找不到這筆待審核，或已經處理過");
   await log(admin.id, approve ? "核准新增" : "退回新增", `${type}:${id}`, {});
+  return { movedShares: 0 };
 }

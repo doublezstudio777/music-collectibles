@@ -99,6 +99,13 @@
       "when": 1790532558354,
       "tag": "0013_artist_photos",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "6",
+      "when": 1790571551696,
+      "tag": "0014_series_kind_error_reports",
+      "breakpoints": true
     }
   ]
 }

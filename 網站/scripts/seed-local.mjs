@@ -89,6 +89,7 @@ for (const w of demo.seriesList) {
       title: w.title,
       name: w.name,
       series_type: w.seriesType,
+      kind: w.kind ?? "album",
       credits: JSON.stringify(w.credits),
       year: w.year,
       body: JSON.stringify(w.body),

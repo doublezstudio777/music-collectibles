@@ -5,6 +5,7 @@ import { isAdmin } from "@/lib/server/auth";
 const TABS = [
   { href: "/admin", label: "儀表板" },
   { href: "/admin/moderation", label: "審核與下架" },
+  { href: "/admin/error-reports", label: "錯誤回報" },
   { href: "/admin/members", label: "會員" },
   { href: "/admin/duplicates", label: "疑似重複藝人" },
   { href: "/admin/artist-photos", label: "藝人照片" },

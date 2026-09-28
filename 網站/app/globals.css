@@ -1252,3 +1252,64 @@ a.title-chip:hover { background: var(--line); }
   .ap-item { grid-template-columns: 96px minmax(0, 1fr); }
   .ap-item img { width: 96px; }
 }
+
+/* ============================================================
+   2026-09-28 周邊選擇流程、回報入口
+   ============================================================ */
+
+/* 系列類型標示（系列頁、藝人頁卡片） */
+.kind-tag {
+  border: 1px solid var(--line); color: var(--muted); display: inline-block; font-size: .75rem; font-weight: 600;
+  line-height: 1.4; margin-right: 6px; padding: 1px 6px; vertical-align: 1px; white-space: nowrap;
+}
+.kind-tag[data-series-kind="tour"], .kind-tag[data-series-kind="misc"], .kind-tag[data-series-kind="brand"] { border-color: var(--text); color: var(--text); }
+.series-kind { align-items: center; display: flex; flex-wrap: wrap; gap: 4px 8px; margin: 6px 0 0; }
+.series-kind .kind-tag { margin-right: 0; }
+
+/* 炫收藏表單「屬於哪裡」：周邊類分三組 */
+.where-group { display: grid; gap: 6px; margin-bottom: 14px; }
+.where-title { color: var(--muted); font-size: var(--text-sm); font-weight: 600; }
+.where-unsure { margin-top: 2px; }
+
+/* 單則頁最下方「對這則收藏有疑問嗎？」 */
+.question { border-top: 1px solid var(--line); margin-top: 40px; padding-top: 12px; }
+.question-btn { color: var(--muted); font-size: var(--text-xs); min-height: 36px; text-decoration: underline; text-underline-offset: 3px; }
+.question-btn:hover { color: var(--text); }
+.q-layer { inset: 0; position: fixed; z-index: 70; }
+.q-backdrop { background: rgba(17, 17, 17, .45); inset: 0; position: absolute; }
+.q-dialog {
+  background: var(--bg); border: 1px solid var(--text); left: 50%; max-height: calc(100vh - 48px); max-height: calc(100dvh - 48px); max-width: calc(100vw - 32px);
+  overflow-y: auto; overscroll-behavior: contain; padding: 24px; position: absolute; top: 50%; transform: translate(-50%, -50%); width: 480px;
+}
+.q-grip { display: none; }
+.q-title { font-size: var(--text-lg); font-weight: 700; margin: 0 0 12px; }
+.q-reasons { border: 0; display: grid; gap: 2px; margin: 0 0 12px; min-width: 0; padding: 0; }
+.q-reason { align-items: flex-start; cursor: pointer; display: flex; font-size: var(--text-sm); gap: 10px; line-height: 1.45; min-height: 40px; padding: 9px 0; }
+.q-reason input { flex: none; height: 18px; margin: 1px 0 0; width: 18px; }
+.q-reason span { min-width: 0; overflow-wrap: anywhere; }
+.q-label { display: block; margin: 4px 0 6px; }
+.q-dialog textarea { width: 100%; }
+.q-count { margin: 4px 0 8px; text-align: right; }
+.q-photo { align-items: center; display: inline-flex; gap: 8px; }
+.q-acts { align-items: center; display: flex; gap: 16px; margin-top: 16px; }
+.q-done { display: grid; gap: 12px; justify-items: start; }
+@media (max-width: 640px) {
+  .q-dialog {
+    animation: q-up var(--duration) var(--ease-out); border-width: 1px 0 0; bottom: 0; left: 0; max-height: 88vh; max-height: 88dvh; max-width: none;
+    padding: 12px 18px calc(20px + env(safe-area-inset-bottom)); top: auto; transform: none; width: 100%;
+  }
+  .q-grip { background: var(--line); display: block; height: 4px; margin: 0 auto 12px; width: 40px; }
+  .q-acts .btn { flex: 1; }
+}
+@keyframes q-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .q-dialog { animation: none; } }
+
+/* 後台：錯誤回報、檢舉附的說明與照片 */
+.er-item { border-bottom: 1px solid var(--line); display: grid; gap: 12px; grid-template-columns: auto minmax(0, 1fr); padding: 12px 0; }
+.er-item:not(:has(.er-photo)) { grid-template-columns: minmax(0, 1fr); }
+.er-photo img { display: block; height: 96px; object-fit: cover; width: 96px; }
+.er-meta { display: grid; gap: 4px; min-width: 0; }
+.er-note { font-size: var(--text-sm); margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.report-evidence { display: grid; font-size: var(--text-xs); gap: 6px; list-style: none; margin: 6px 0 0; padding: 0; }
+.report-evidence li { align-items: center; display: flex; gap: 8px; }
+.report-evidence img { height: 48px; object-fit: cover; width: 48px; }

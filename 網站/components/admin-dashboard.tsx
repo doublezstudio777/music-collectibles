@@ -17,6 +17,7 @@ type Queue = {
   avatars?: number;
   deletions?: number;
   artistPhotos?: number;
+  errorReports?: number;
 };
 type StatsRes = { stats: Stats; cached: boolean; queue: Queue };
 type Usage = {
@@ -268,6 +269,10 @@ export function AdminDashboard() {
           <Link href="/admin/moderation#reports" className="queue-item">
             <b className="num">{q.reports}</b>
             <span>待裁決檢舉</span>
+          </Link>
+          <Link href="/admin/error-reports" className="queue-item" data-testid="queue-error-reports">
+            <b className="num">{q.errorReports ?? 0}</b>
+            <span>錯誤回報</span>
           </Link>
           <Link href="/admin/moderation#appeals" className="queue-item">
             <b className="num">{q.appeals}</b>

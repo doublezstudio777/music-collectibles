@@ -5,11 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { priceText, shareTarget, userHref, type Sale, type SaleState, type ShareView } from "@/lib/data";
+import { priceText, userHref, type Sale, type SaleState, type ShareView } from "@/lib/data";
 import { api, whenLoggedIn } from "@/lib/account";
 import { useAction, useAppState } from "@/lib/state";
 import type { PublicOffer } from "@/lib/server/trade";
-import { AppealBox, ReportBox } from "@/components/report";
+import { AppealBox } from "@/components/report";
 import { LikeButton } from "@/components/like-button";
 import { Photo, TagList, Watermark } from "@/components/share-card";
 import { ShareActions, type ShareInfo } from "@/components/share-actions";
@@ -964,7 +964,6 @@ export function ShareDetail({
           {share.kindNote ? <span className="sub">{share.kindNote}</span> : null}
         </p>
         <OfferList share={share} sale={sale} offers={offers} mine={mine} frozen={frozen} />
-        {!mine ? <ReportBox target={shareTarget(share.n)} label="檢舉這則" /> : null}
       </div>
     </div>
   );

@@ -1,0 +1,372 @@
+{
+ "at": "2026-09-28T05:15:12.085Z",
+ "pass": 73,
+ "total": 73,
+ "results": [
+  {
+   "name": "0a 遷移：series 有 kind 欄、error_reports 表、shares.pending_series_id、reports.photo_id",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "0b 既有系列回填類型：專輯→album、EP→ep、單曲→single、巡迴／演唱會→tour",
+   "ok": true,
+   "detail": "{'專輯發行': 'album', '自製發行': 'album', 'EP 發行': 'ep', '巡迴演唱會': 'tour', '巡迴演出': 'tour', '影像發行': 'album', 'EP 宣傳': 'ep', '音樂祭': 'tour', '單曲發行': 'single', '演唱會巡迴': 'tour', '自有品牌': 'brand'}"
+  },
+  {
+   "name": "0c 沒有替全部藝人預先建「周邊與其他」（只有用過的藝人才有）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "1a 周邊類「屬於哪裡」分三組，依序：演唱會／巡迴、隨專輯發行的周邊、藝人自有品牌或周邊",
+   "ok": true,
+   "detail": "['演唱會／巡迴', '隨專輯發行的周邊', '藝人自有品牌或周邊']"
+  },
+  {
+   "name": "1b 隨專輯發行組列出這位藝人的專輯；自有品牌組有「周邊與其他」；有「不確定」",
+   "ok": true,
+   "detail": "(1, 'misc:qa572407')"
+  },
+  {
+   "name": "1c 管理員新增演唱會立即生效，而且直接選好",
+   "ok": true,
+   "detail": "('2024《驗收巡迴572407》演唱會巡迴', 'qa572407/2')"
+  },
+  {
+   "name": "1d 新系列 kind=tour、status=approved、年份 2024",
+   "ok": true,
+   "detail": "{'id': 469, 'artist_slug': 'qa572407', 'no': 2, 'title': '驗收巡迴572407', 'name': '2024《驗收巡迴572407》演唱會巡迴', 'series_type': '演唱會巡迴', 'credits': '[\"qa572407\"]', 'year': '2024', 'body': '[]', 'guests': '[]', 'compilation': '[]', 'status': 'approved', 'created_by': 'demo-yzadmin', 'last_edit_by': None, 'created_at': '2026-09-28T05:13:42.857Z', 'updated_at': '2026-09-28T05:13:42.857Z', 'deleted_at': None, "
+  },
+  {
+   "name": "1e 毛巾掛在這場演唱會：series_key 對、品項自動建成 towel、版本不確定",
+   "ok": true,
+   "detail": "{'series_key': 'qa572407/2', 'item_id': 'towel', 'version_id': None, 'kind': '毛巾', 'what': '驗收巡迴572407・毛巾'}"
+  },
+  {
+   "name": "1f 標題「系列・品項」",
+   "ok": true,
+   "detail": "驗收巡迴572407・毛巾"
+  },
+  {
+   "name": "1g 系列頁標出類型「巡迴」、列出毛巾品項（還沒有版本）、看得到這則",
+   "ok": true,
+   "detail": "巡迴"
+  },
+  {
+   "name": "2a 第一次用到才建「周邊與其他」：一個、直接生效、沒有年份",
+   "ok": true,
+   "detail": "[{'id': 470, 'artist_slug': 'qa572407', 'no': 3, 'title': '周邊與其他', 'name': '周邊與其他', 'series_type': '周邊與其他', 'credits': '[\"qa572407\"]', 'year': '', 'body': '[]', 'guests': '[]', 'compilation': '[]', 'status': 'approved', 'created_by': 'u-qm572407', 'last_edit_by': None, 'created_at': '2026-09-28T05:13:48.583Z', 'updated_at': '2026-09-28T05:13:48.583Z', 'deleted_at': None, 'hidden_at': None, 'kind':"
+  },
+  {
+   "name": "2b T 恤掛在「周邊與其他」、品項 tshirt",
+   "ok": true,
+   "detail": "{'series_key': 'qa572407/3', 'item_id': 'tshirt', 'what': '周邊與其他・T 恤'}"
+  },
+  {
+   "name": "2c 已經建好的「周邊與其他」表單改用真的系列鍵",
+   "ok": true,
+   "detail": "qa572407/3"
+  },
+  {
+   "name": "2d 第二則沿用同一個「周邊與其他」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2e 四個請求同時建同一位藝人的「周邊與其他」：全部成功、只有一個系列",
+   "ok": true,
+   "detail": "[201, 201, 201, 201]"
+  },
+  {
+   "name": "2f 藝人頁「周邊與其他」排最後，每張卡標出類型",
+   "ok": true,
+   "detail": "(['2024《驗收巡迴572407》演唱會巡迴', '2020《驗收專輯》專輯發行', '周邊與其他'], ['巡迴', '專輯', '周邊'])"
+  },
+  {
+   "name": "2g「周邊與其他」系列頁標「周邊」、不出現補年份",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "2h「周邊與其他」API 也不能補年份",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"BAD_REQUEST\",\"message\":\"「周邊與其他」沒有發行年\"}}"
+  },
+  {
+   "name": "3a 會員新增系列 → 提示審核中、這則先放「不確定」",
+   "ok": true,
+   "detail": "「驗收品牌572407」送出審核了，這則先放在「不確定」，通過後會自動改到新系列"
+  },
+  {
+   "name": "3b 系列待審（kind=brand、沒有年份）；收藏掛不確定並記著等哪個系列",
+   "ok": true,
+   "detail": "{'status': 'pending', 'kind': 'brand', 'year': '', 'share': {'series_key': None, 'pending_series_id': 472, 'what': '驗收藝人572407・海報'}}"
+  },
+  {
+   "name": "3c 待審系列前台看不到",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "3d 編輯頁也看得到「審核中、先放不確定」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "3e 管理員核准 → 回報改掛 1 則；收藏自動改掛到新系列、品項 poster、標題重組",
+   "ok": true,
+   "detail": "('{\"ok\":true,\"movedShares\":1}', {'series_key': 'qa572407/4', 'item_id': 'poster', 'pending_series_id': None, 'what': '驗收品牌572407・海報'})"
+  },
+  {
+   "name": "3f 新系列頁出現、標「自有品牌」、看得到這則",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "3g 系列被退回：收藏維持不確定、等待標記清掉",
+   "ok": true,
+   "detail": "{'series_key': None, 'pending_series_id': None}"
+  },
+  {
+   "name": "3h 不能掛到別人新增的待審系列",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"INVALID\",\"message\":\"新增的系列找不到或已經審核過了，重新選一次\"}}"
+  },
+  {
+   "name": "4a 唱片類只列專輯／EP／單曲，外加不確定（不列巡迴、周邊與其他）",
+   "ok": true,
+   "detail": "['2020《驗收專輯》專輯發行', '不確定']"
+  },
+  {
+   "name": "4b CD 掛專輯＞CD＞首版",
+   "ok": true,
+   "detail": "{'series_key': 'qa572407/1', 'item_id': 'cd', 'version_id': 'v1', 'what': '驗收專輯・CD・首版'}"
+  },
+  {
+   "name": "4c 舊版 API 寫法（只帶系列＋品項＋版本、不帶 kind）照樣收",
+   "ok": true,
+   "detail": "{\"n\":1844}"
+  },
+  {
+   "name": "4d 品項跟類型對不上會擋（毛巾＋CD 品項）",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"INVALID\",\"message\":\"品項跟選的類型不一樣\"}}"
+  },
+  {
+   "name": "4e 不確定（不選系列）照樣可以發",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "4f 其他周邊沒寫是什麼會擋，而且不會先建出任何東西",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"INVALID\",\"message\":\"寫一下是什麼周邊\"}}"
+  },
+  {
+   "name": "5a 編輯頁帶入目前的品項與屬於哪裡",
+   "ok": true,
+   "detail": "('T 恤', 'qa572407/3')"
+  },
+  {
+   "name": "5b 改成毛巾＋演唱會：沿用既有的 towel 品項",
+   "ok": true,
+   "detail": "{'series_key': 'qa572407/2', 'item_id': 'towel', 'kind': '毛巾'}"
+  },
+  {
+   "name": "6a 資料有誤、不是這位藝人、重複發文、其他 → 錯誤回報",
+   "ok": true,
+   "detail": "{'wrong_info': (201, 'error'), 'not_artist': (201, 'error'), 'duplicate': (201, 'error'), 'other': (201, 'error')}"
+  },
+  {
+   "name": "6b 四筆錯誤回報只進 error_reports，reports 沒有多",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6c 門檻暫調成 2，四筆錯誤回報後仍未鎖定",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6d 錯誤回報不擋交易（未鎖定時出價不回 423）",
+   "ok": true,
+   "detail": "409"
+  },
+  {
+   "name": "6e 疑似盜版仿冒、疑似詐騙、照片或文字不妥 → 檢舉",
+   "ok": true,
+   "detail": "{'fake': (201, 'report'), 'scam': (201, 'report'), 'improper': (201, 'report')}"
+  },
+  {
+   "name": "6f 三筆檢舉進 reports、達門檻（2）鎖定",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6g 同一則每人只能檢舉一次（409）",
+   "ok": true,
+   "detail": "{\"error\":{\"code\":\"ALREADY_REPORTED\",\"message\":\"已經檢舉過了\"}}"
+  },
+  {
+   "name": "6h 未驗證 Email：檢舉不收（403），錯誤回報照收",
+   "ok": true,
+   "detail": "(403, 201)"
+  },
+  {
+   "name": "6i 同一人同一則錯誤回報第二次：回已收到、不多一筆",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6j 補充說明超過 500 字截到 500",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6k 不能檢舉自己的收藏",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6m 分數規則照舊：檢舉成立的有 report_ok，錯誤回報的沒有",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "6l 門檻改回原值",
+   "ok": true,
+   "detail": "10"
+  },
+  {
+   "name": "7a 單則頁最下方一行小字「對這則收藏有疑問嗎？」；原本的「檢舉這則」不在了",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "7b 對話框：七個原因單選",
+   "ok": true,
+   "detail": "['疑似盜版或仿冒品', '資料有誤（版本、年份、藝人寫錯）', '其實不是這位藝人的東西', '重複發文', '疑似詐騙（例如要求私下匯款、站外交易）', '照片或文字不妥', '其他']"
+  },
+  {
+   "name": "7c 送出後顯示「已收到，謝謝你的回報」",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "7d 錯誤回報帶著補充說明與比對照片（照片不公開）",
+   "ok": true,
+   "detail": "[{'id': 18, 'share_no': 1834, 'reporter_id': 'u-qd572407', 'reason': 'wrong_info', 'note': '年份應該是 2023', 'photo_id': '66wNu3fS2SKqFEnB', 'status': 'open', 'handled_by': None, 'handled_at': None, 'created_at': '2026-09-28T05:14:30.741Z'}]"
+  },
+  {
+   "name": "7e 比對照片訪客打不開（只有本人與管理員）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "7f Esc 關掉對話框",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "7g 從對話框送檢舉（疑似詐騙）→ 進 reports",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "7h 發文者自己看不到這一行",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "7i 留言的檢舉照舊（有留言時的檢舉按鈕由留言元件負責，這裡確認元件還在）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "8a 沒登入點了先跳登入",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "8b 登入後留在原頁並直接打開對話框",
+   "ok": true,
+   "detail": "http://127.0.0.1:8791/share/1834"
+  },
+  {
+   "name": "8c 登入後送出成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "8d 在別處登入後回到原頁：對話框自動打開（sessionStorage 記號）",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "9a 手機面板貼齊螢幕底部、滿版寬",
+   "ok": true,
+   "detail": "{'x': 0, 'y': 101.28125, 'width': 390, 'height': 742.71875}"
+  },
+  {
+   "name": "9b 面板內沒有元素超出螢幕",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "9c 送出鈕在可見範圍、夠大好點（高 ≥ 40）",
+   "ok": true,
+   "detail": "{'x': 18, 'y': 799.34375, 'width': 310, 'height': 44}"
+  },
+  {
+   "name": "9d 手機送出成功",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "10a 後台「錯誤回報」列出全部待處理",
+   "ok": true,
+   "detail": "(16, 16)"
+  },
+  {
+   "name": "10b 回報附的說明與比對照片看得到",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "10c 標記已修正、不處理，寫進操作紀錄",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "10d 儀表板待處理有「錯誤回報」數量，等於待處理筆數",
+   "ok": true,
+   "detail": "14"
+  },
+  {
+   "name": "10e 儀表板上看得到「錯誤回報」格",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "10f 審核頁的檢舉列顯示檢舉附的說明",
+   "ok": true,
+   "detail": "第 1834 則\t收藏\t疑似詐騙 1\n要求私下匯款\n\t1\t未達門檻"
+  },
+  {
+   "name": "10g 非管理員打不到後台錯誤回報 API",
+   "ok": true,
+   "detail": "403"
+  },
+  {
+   "name": "11a 受影響頁面 320／390／1440 無水平溢出（表單展開新增演唱會、單則、巡迴系列頁、藝人頁、後台錯誤回報）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "12 全程 console error 0",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

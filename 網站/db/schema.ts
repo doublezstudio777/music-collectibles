@@ -197,6 +197,8 @@ export const series = sqliteTable(
     title: text("title").notNull(),
     name: text("name").notNull(),
     seriesType: text("series_type").notNull().default(""),
+    /** 系列類型（2026-09-28 周邊選擇流程）：album｜ep｜single｜tour｜brand｜misc。misc＝每位藝人一個「周邊與其他」，第一次用到才建 */
+    kind: text("kind").notNull().default("album"),
     /** JSON string[]：共同署名 slug */
     credits: text("credits").notNull().default("[]"),
     year: text("year").notNull().default(""),
@@ -214,7 +216,12 @@ export const series = sqliteTable(
     deletedAt: text("deleted_at"),
     hiddenAt: text("hidden_at"),
   },
-  (t) => [uniqueIndex("series_artist_no_uq").on(t.artistSlug, t.no), index("series_status_idx").on(t.status)],
+  (t) => [
+    uniqueIndex("series_artist_no_uq").on(t.artistSlug, t.no),
+    index("series_status_idx").on(t.status),
+    // 每位藝人最多一個「周邊與其他」（懶建立時兩個請求同時進來也不會建出兩個）
+    uniqueIndex("series_misc_uq").on(t.artistSlug).where(sql`kind = 'misc'`),
+  ],
 );
 
 /** 品項：系列裡的一種東西（CD、毛巾…），錨點 #{item_id} */
@@ -333,8 +340,14 @@ export const shares = sqliteTable(
     hiddenAt: text("hidden_at"),
     /** 發文者最後一次編輯內容或照片（2026-09-28）；單則頁「最後編輯於」 */
     editedAt: text("edited_at"),
+    /** 會員新增的系列還在審核：這則先掛「不確定」，核准後自動改掛過去（series.id）；退回就清掉 */
+    pendingSeriesId: integer("pending_series_id"),
   },
-  (t) => [index("shares_author_idx").on(t.authorId), index("shares_series_idx").on(t.seriesKey)],
+  (t) => [
+    index("shares_author_idx").on(t.authorId),
+    index("shares_series_idx").on(t.seriesKey),
+    index("shares_pending_series_idx").on(t.pendingSeriesId),
+  ],
 );
 
 /** 照片：R2 物件（主圖＋縮圖）。bytes 是兩個檔加總，D1 累計用量看 counters.r2_bytes */
@@ -439,9 +452,11 @@ export const reports = sqliteTable(
     id: integer("id").primaryKey({ autoIncrement: true }),
     target: text("target").notNull(),
     reporterId: text("reporter_id").notNull(),
-    /** fake｜never｜other */
+    /** fake｜scam｜improper｜never｜other（share 的 other 是 2026-09-28 前的舊資料，之後改進 error_reports） */
     reason: text("reason").notNull(),
     note: text("note").notNull().default(""),
+    /** 比對照片（選填，最多 1 張；存法同申訴證據，只有本人與管理員看得到） */
+    photoId: text("photo_id"),
     createdAt: text("created_at").notNull().default(now),
   },
   (t) => [uniqueIndex("reports_target_reporter_uq").on(t.target, t.reporterId), index("reports_target_idx").on(t.target)],
@@ -849,5 +864,30 @@ export const artistPhotos = sqliteTable(
     index("artist_photos_r2key_idx").on(t.r2Key),
     index("artist_photos_thumbkey_idx").on(t.thumbKey),
     uniqueIndex("artist_photos_active_uq").on(t.artistSlug).where(sql`status = 'active'`),
+  ],
+);
+
+/* =====================================================================
+ * 錯誤回報（2026-09-28 回報入口）：單則頁「對這則收藏有疑問嗎？」選到資料有誤、不是這位藝人、
+ * 重複發文、其他。只進後台佇列，不計入鎖定門檻、不算分。一人對同一則一次。
+ * reason：wrong_info｜not_artist｜duplicate｜other；status：open｜fixed｜ignored
+ * ===================================================================== */
+export const errorReports = sqliteTable(
+  "error_reports",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    shareNo: integer("share_no").notNull(),
+    reporterId: text("reporter_id").notNull(),
+    reason: text("reason").notNull(),
+    note: text("note").notNull().default(""),
+    photoId: text("photo_id"),
+    status: text("status").notNull().default("open"),
+    handledBy: text("handled_by"),
+    handledAt: text("handled_at"),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [
+    uniqueIndex("error_reports_share_reporter_uq").on(t.shareNo, t.reporterId),
+    index("error_reports_status_idx").on(t.status, t.id),
   ],
 );

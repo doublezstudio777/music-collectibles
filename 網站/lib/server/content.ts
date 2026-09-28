@@ -29,6 +29,7 @@ import {
 import { Catalog } from "@/lib/catalog";
 import {
   SITE_NAME,
+  asSeriesKind,
   DEFAULT_THRESHOLD,
   lockFor,
   normKind,
@@ -165,6 +166,7 @@ async function build(): Promise<Catalog> {
         title: w.title,
         name: w.name,
         seriesType: w.seriesType,
+        kind: asSeriesKind(w.kind),
         credits: parseJson<string[]>(w.credits, [w.artistSlug]),
         year: w.year,
         body: parseJson<string[]>(w.body, []),
@@ -209,8 +211,14 @@ async function build(): Promise<Catalog> {
       color: v.color,
     });
   }
-  // 沒有任何版本的品項不出現（待審的版本不算）
-  seriesList.forEach((s) => (s.items = s.items.filter((i) => i.versions.length > 0)));
+  // 沒有任何版本的品項不出現（待審的版本不算）；例外：有炫收藏掛在上面的（2026-09-28 周邊選擇流程：
+  // 發毛巾掛到演唱會、系列裡還沒有毛巾這個品項時會自動建品項，版本等人補，品項要先看得到）
+  const itemsWithShares = new Set(
+    shRows.filter((s) => s.seriesKey && s.itemId).map((s) => `${s.seriesKey}#${s.itemId}`),
+  );
+  seriesList.forEach(
+    (s) => (s.items = s.items.filter((i) => i.versions.length > 0 || itemsWithShares.has(`${s.artistSlug}/${s.no}#${i.id}`))),
+  );
 
   // 一則最多 10 張，依 sort 排，第一張是封面（卡片、og:image 只用封面）
   const photoBy = new Map<number, (typeof pRows)[number]>();

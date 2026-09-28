@@ -8,6 +8,7 @@ import { publicOffers } from "@/lib/server/trade";
 import { ShareDetail } from "@/components/share-detail";
 import { ShareWall } from "@/components/share-wall";
 import { ShareComments } from "@/components/share-comments";
+import { ShareQuestion } from "@/components/share-question";
 
 type Props = { params: Promise<{ n: string }> };
 
@@ -63,6 +64,8 @@ export default async function SharePage({ params }: Props) {
           <ShareWall shares={b.items.map(c.toShareView)} />
         </section>
       ))}
+      {/* 回報入口（2026-09-28）：取代原本的「檢舉這則」，發文者自己看不到 */}
+      <ShareQuestion n={n} author={share.author} />
     </main>
   );
 }

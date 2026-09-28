@@ -30,6 +30,38 @@ export const normKind = (raw: string): { kind: Kind; note?: string } => {
   return { kind: "其他周邊", note: raw };
 };
 
+/** 唱片類／周邊類（2026-09-28 周邊選擇流程）：炫收藏表單先選品項，再依這兩類列「屬於哪裡」 */
+export const RECORD_KINDS: readonly Kind[] = ["CD", "黑膠", "卡帶", "藍光／DVD"];
+export const isRecordKind = (k: string) => (RECORD_KINDS as readonly string[]).includes(k);
+
+/**
+ * 系列類型：album｜ep｜single｜tour｜brand｜misc。
+ * misc＝每位藝人自動有一個「周邊與其他」，放不屬於專輯、也不屬於演唱會的周邊；第一次有人用到才建，藝人頁排最後。
+ */
+export const SERIES_KINDS = ["album", "ep", "single", "tour", "brand", "misc"] as const;
+export type SeriesKind = (typeof SERIES_KINDS)[number];
+export const SERIES_KIND_LABEL: Record<SeriesKind, string> = {
+  album: "專輯",
+  ep: "EP",
+  single: "單曲",
+  tour: "巡迴",
+  brand: "自有品牌",
+  misc: "周邊",
+};
+/** 新增系列時組全名用的類型字（沿用既有「年份《名稱》類型」的寫法） */
+export const SERIES_KIND_TYPE: Record<Exclude<SeriesKind, "misc">, string> = {
+  album: "專輯發行",
+  ep: "EP 發行",
+  single: "單曲發行",
+  tour: "演唱會巡迴",
+  brand: "自有品牌",
+};
+export const asSeriesKind = (v: unknown): SeriesKind =>
+  (SERIES_KINDS as readonly string[]).includes(String(v)) ? (v as SeriesKind) : "album";
+export const MISC_SERIES_TITLE = "周邊與其他";
+/** 表單送出時指「這位藝人的周邊與其他」（還沒建立也可以送，伺服器第一次用到才建） */
+export const miscSeriesRef = (artistSlug: string) => `misc:${artistSlug}`;
+
 /** og:description 沒有故事時的物件類型預設字 */
 export const KIND_LABEL_FALLBACK = "收藏";
 
@@ -153,6 +185,8 @@ export type Series = {
   name: string;
   /** 專輯發行、巡迴演唱會、音樂祭… */
   seriesType: string;
+  /** 系列類型（album｜ep｜single｜tour｜brand｜misc），頁面標示用 */
+  kind: SeriesKind;
   /** 共同署名：每位都列主要系列 */
   credits: string[];
   year: string;
@@ -340,7 +374,7 @@ export type HoldingView = {
  * - 被鎖的發文者向音藏申訴，管理者看過才解鎖，不自動解鎖
  */
 
-export type ReportReason = "fake" | "never" | "improper" | "other";
+export type ReportReason = "fake" | "scam" | "never" | "improper" | "other";
 
 /** 對象鍵：`share:8`、`item:tide-highway/3#towel`、`version:faint-signal/1#cd-v1` */
 export type TargetKey = `share:${number}` | `item:${string}` | `version:${string}` | `avatar:${string}`;
@@ -362,8 +396,11 @@ export const reasonsFor = (level: TargetLevel): { key: ReportReason; label: stri
       ]
     : level === "share"
     ? [
-        { key: "fake", label: "盜版／仿冒" },
-        { key: "other", label: "其他" },
+        // 2026-09-28 回報入口：單則頁的「檢舉」只剩這三種；資料有誤、不是這位藝人、重複、其他改走錯誤回報（不計門檻）。
+        // 舊資料裡 share 的 other 仍算檢舉，後台照舊顯示
+        { key: "fake", label: "疑似盜版或仿冒品" },
+        { key: "scam", label: "疑似詐騙" },
+        { key: "improper", label: "照片或文字不妥" },
       ]
     : [
         { key: "never", label: level === "item" ? "官方沒出過這個品項" : "官方沒出過這個版本" },
@@ -372,6 +409,30 @@ export const reasonsFor = (level: TargetLevel): { key: ReportReason; label: stri
 
 export const reasonLabel = (level: TargetLevel, r: ReportReason) =>
   reasonsFor(level).find((x) => x.key === r)?.label ?? "其他";
+
+/**
+ * 單則頁「對這則收藏有疑問嗎？」的七個原因（2026-09-28）。
+ * kind＝report 走檢舉（計門檻、只收已驗證 Email、一人一次）；kind＝error 走錯誤回報（只進後台佇列，不計門檻、不算分）。
+ */
+export type ErrorReason = "wrong_info" | "not_artist" | "duplicate" | "other";
+export const QUESTION_REASONS: (
+  | { key: "fake" | "scam" | "improper"; kind: "report"; label: string }
+  | { key: ErrorReason; kind: "error"; label: string }
+)[] = [
+  { key: "fake", kind: "report", label: "疑似盜版或仿冒品" },
+  { key: "wrong_info", kind: "error", label: "資料有誤（版本、年份、藝人寫錯）" },
+  { key: "not_artist", kind: "error", label: "其實不是這位藝人的東西" },
+  { key: "duplicate", kind: "error", label: "重複發文" },
+  { key: "scam", kind: "report", label: "疑似詐騙（例如要求私下匯款、站外交易）" },
+  { key: "improper", kind: "report", label: "照片或文字不妥" },
+  { key: "other", kind: "error", label: "其他" },
+];
+export const ERROR_REASON_LABEL: Record<ErrorReason, string> = {
+  wrong_info: "資料有誤",
+  not_artist: "不是這位藝人",
+  duplicate: "重複發文",
+  other: "其他",
+};
 
 /** 達門檻後的醒目標示 */
 export const lockLabel = (level: TargetLevel) =>

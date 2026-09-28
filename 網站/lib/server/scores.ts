@@ -198,6 +198,7 @@ export async function fillSeriesYear(u: User, rawKey: unknown, rawYear: unknown)
     .from(series)
     .where(and(eq(series.artistSlug, m[1]), eq(series.no, Number(m[2])), eq(series.status, "approved"), sql`${series.deletedAt} IS NULL`, sql`${series.hiddenAt} IS NULL`));
   if (!w) throw new HttpError(404, "NOT_FOUND", "找不到這個系列");
+  if (w.kind === "misc") throw new HttpError(400, "BAD_REQUEST", "「周邊與其他」沒有發行年");
   if (/^\d{4}$/.test(w.year)) throw new HttpError(409, "ALREADY_FILLED", "已經有人補上了");
   if (!(await hit(`fill:${u.id}`, 20, 86400))) throw new HttpError(429, "RATE_LIMITED", "今天補太多次了，明天再來");
   const at = new Date().toISOString();

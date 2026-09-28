@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { shareHref } from "@/lib/data";
 import { getViewer, pageData } from "@/lib/server/viewer";
 import { ShareForm } from "@/components/share-form";
+import { pendingSeriesOf } from "@/lib/server/series-link";
 
 export const metadata = { title: "編輯炫收藏" };
 
@@ -63,6 +64,7 @@ export default async function EditSharePage({ params }: Props) {
           tags: share.tags,
           sale: { state: view.sale.state, ...(view.sale.price ? { price: view.sale.price } : {}) },
           artists: c.formArtistsFor(share.about),
+          pendingSeries: await pendingSeriesOf(n),
         }}
       />
     </main>
