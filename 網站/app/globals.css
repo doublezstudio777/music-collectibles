@@ -657,8 +657,11 @@ a.pg:hover { border-color: var(--line); }
   .card .tags { display: none; }
   .card-title { font-size: var(--text-sm); margin-top: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .card-foot { gap: 6px; font-size: .75rem; }
-  .card-foot .who { gap: 6px; min-width: 0; }
-  .card-foot .who span:last-child, .card-foot .when { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* 窄欄：暱稱獨佔第一行、時間與愛心放第二行，兩者都不截斷 */
+  .card-foot { flex-wrap: wrap; row-gap: 4px; }
+  .card-foot .who { flex: 1 0 100%; gap: 6px; min-width: 0; }
+  .card-foot .who span:last-child { overflow-wrap: anywhere; }
+  .card-foot .when { white-space: nowrap; }
   .card-foot .like { min-width: 32px; gap: 4px; font-size: .75rem; }
   .slot { font-size: .75rem; padding: 6px 8px; }
   /* 系列卡片：手機維持橫向捲動（左緣對齊正文、右側出血到螢幕邊緣露出下一張當提示），
