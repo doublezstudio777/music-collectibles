@@ -240,6 +240,8 @@ ul { list-style: none; margin: 0; padding: 0; }
 .block-head .link { font-size: var(--text-xs); }
 
 .prose { max-width: 72ch; }
+/* 藝人頁簡介、系列頁內文：跟上方內容同寬，不留右側空白（2026-09-29 用戶指定） */
+#intro.prose, #body.prose { max-width: none; }
 .prose p {
   font-size: var(--text-md); line-height: 1.8; overflow-wrap: anywhere;
   /* 中文正文左右對齊：標點禁則會讓行尾參差，手機上右側像缺一塊 */
