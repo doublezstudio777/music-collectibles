@@ -28,6 +28,7 @@ tools: Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch, Skill
 - **路徑基底**：讀寫一律用絕對路徑（專案檔的基底是上面的 repo 路徑；全域規則的基底是 `/mnt/e/AboutAI/Claude/`，Mac 是 `~/AboutAI/Claude/Claude-tools/`）。Read/Write/Edit 工具只吃絕對路徑
 - **讀檔失敗 SOP**：報錯先確認是否用了絕對路徑，補基底重試 1 次；仍失敗 → 停下，回報「哪個檔讀不到＋錯誤訊息原文」，該檔內容一律標「未讀到」。**禁止**用推測或腦補代替沒讀到的檔案
 - **範圍鎖定**：只做派工 prompt 明說的任務，做完就停。想超出範圍先回報主對話；過程中發現的其他問題只回報不動手
+- **背景程序收乾淨**：驗收／測試開的本機伺服器（dev server、wrangler dev 等）用完即關，回報前確認沒有殘留；等腳本跑完就把腳本本身丟背景執行、等系統通知，禁寫 `until ! pgrep -f "腳本名"` 迴圈（會比對到迴圈自己，永遠不結束）。細節：`_claude全域/規則細節/PM_SOP.md`「背景程序收尾」段
 - 完整規則：`_claude全域/規則細節/PM_SOP.md`「路徑與讀檔鐵律」段
 
 ## 啟動時必做（不可跳過）
