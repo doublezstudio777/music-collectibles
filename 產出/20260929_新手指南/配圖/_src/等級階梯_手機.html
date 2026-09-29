@@ -1,0 +1,20 @@
+<!DOCTYPE html><html lang="zh-Hant-TW"><head><meta charset="UTF-8"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="base.css">
+
+<style>
+.canvas{width:750px;padding:32px}
+.stairs{border-bottom:1px solid var(--text)}
+.step{background:var(--surface);border-top:2px solid var(--text);padding:18px 20px 16px}
+.step+.step{border-top:2px solid var(--text)}
+h3{font-size:30px;font-weight:700;line-height:1.4;margin-bottom:8px}
+dl{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.cell{border-top:1px solid var(--line);padding-top:6px}
+.cell+.cell{padding-left:12px}
+dt{font-family:var(--font-mono);font-size:22px;color:var(--muted);line-height:1.5}
+dd{font-size:27px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.5;white-space:nowrap}
+</style></head><body><div class="canvas" id="c"><div class="stairs">
+<section class="step" data-title="典藏家" style="margin-left:0px"><h3>典藏家</h3><dl><div class="cell"><dt>Lv.1</dt><dd data-lv="1">6,000</dd></div><div class="cell"><dt>Lv.2</dt><dd data-lv="2">7,200</dd></div><div class="cell"><dt>Lv.3</dt><dd data-lv="3">8,600</dd></div><div class="cell"><dt>Lv.4</dt><dd data-lv="4">10,200</dd></div><div class="cell"><dt>Lv.5</dt><dd data-lv="5">12,000</dd></div></dl></section>
+<section class="step" data-title="收藏家" style="margin-left:30px"><h3>收藏家</h3><dl><div class="cell"><dt>Lv.1</dt><dd data-lv="1">2,300</dd></div><div class="cell"><dt>Lv.2</dt><dd data-lv="2">2,800</dd></div><div class="cell"><dt>Lv.3</dt><dd data-lv="3">3,400</dd></div><div class="cell"><dt>Lv.4</dt><dd data-lv="4">4,100</dd></div><div class="cell"><dt>Lv.5</dt><dd data-lv="5">5,000</dd></div></dl></section>
+<section class="step" data-title="資深樂迷" style="margin-left:60px"><h3>資深樂迷</h3><dl><div class="cell"><dt>Lv.1</dt><dd data-lv="1">800</dd></div><div class="cell"><dt>Lv.2</dt><dd data-lv="2">1,000</dd></div><div class="cell"><dt>Lv.3</dt><dd data-lv="3">1,250</dd></div><div class="cell"><dt>Lv.4</dt><dd data-lv="4">1,550</dd></div><div class="cell"><dt>Lv.5</dt><dd data-lv="5">1,900</dd></div></dl></section>
+<section class="step" data-title="專業樂迷" style="margin-left:90px"><h3>專業樂迷</h3><dl><div class="cell"><dt>Lv.1</dt><dd data-lv="1">200</dd></div><div class="cell"><dt>Lv.2</dt><dd data-lv="2">280</dd></div><div class="cell"><dt>Lv.3</dt><dd data-lv="3">380</dd></div><div class="cell"><dt>Lv.4</dt><dd data-lv="4">500</dd></div><div class="cell"><dt>Lv.5</dt><dd data-lv="5">650</dd></div></dl></section>
+<section class="step" data-title="新晉樂迷" style="margin-left:120px"><h3>新晉樂迷</h3><dl><div class="cell"><dt>Lv.1</dt><dd data-lv="1">0</dd></div><div class="cell"><dt>Lv.2</dt><dd data-lv="2">20</dd></div><div class="cell"><dt>Lv.3</dt><dd data-lv="3">50</dd></div><div class="cell"><dt>Lv.4</dt><dd data-lv="4">90</dd></div><div class="cell"><dt>Lv.5</dt><dd data-lv="5">140</dd></div></dl></section>
+</div></div></body></html>

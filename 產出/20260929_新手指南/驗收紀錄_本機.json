@@ -1,0 +1,337 @@
+[
+ {
+  "name": "1a /guide 正文與 v3 逐字相同（標題、條列、段落、表格逐列）",
+  "ok": true,
+  "detail": "(44, 44)"
+ },
+ {
+  "name": "1b 最後兩段：開發中／更多功能開發中、意見回饋／連到 /feedback",
+  "ok": true,
+  "detail": "['開發中', '更多功能開發中', '意見回饋', '問題與建議請填意見回饋表單']"
+ },
+ {
+  "name": "1c 等級表 25 個門檻與 lib/levels.ts 一致",
+  "ok": true,
+  "detail": "[['新晉樂迷', '0', '20', '50', '90', '140'], ['專業樂迷', '200', '280', '380', '500', '650'], ['資深樂迷', '800', '1,000', '1,250', '1,550', '1,900'], ['收藏家', '2,300', '2,800', '3,400', '4,100', '5,000'], ['典藏家', '6,000', '7,200', '8,600', '10,200', '12,000']]"
+ },
+ {
+  "name": "1d 得分表 11 列×3 欄與 lib/score-rules.ts 常數一致",
+  "ok": true,
+  "detail": "[['編輯藝人頁、專輯頁', '+20；單次 200 字以上 +30', '無'], ['新增藝人、專輯、版本', '+15', '無'], ['藝人照片獲採用', '+15', '無'], ['發布收藏', '+10', '5 則'], ['補上空白資料', '+10', '5 次'], ['檢舉成立', '+10', '無'], ['檢舉不成立', '−5', '無'], ['成交', '+5', '無'], ['留言', '+2', '10 則'], ['按讚', '+1', '10 次'], ['收到讚、收到留言', '+1', '每則收藏各 50']]"
+ },
+ {
+  "name": "1e 各段錨點",
+  "ok": true,
+  "detail": "['share', 'contribute', 'trade', 'report', 'levels', 'titles', 'upcoming', 'feedback']"
+ },
+ {
+  "name": "1f 圖放在對的段落",
+  "ok": true,
+  "detail": "{'howto-share': 'share', 'howto-edit': 'contribute', 'howto-report': 'report', 'levels-desktop': 'levels', 'points-desktop': 'levels', 'titles': 'levels#titles'}"
+ },
+ {
+  "name": "1g 每張圖都有 alt（圖上內容摘要）",
+  "ok": true,
+  "detail": "['操作示意：1 炫收藏、2 加照片、3 選藝人、4 選品項、5 發布', '操作示意：1 編輯、2 修改、3 儲存', '操作示意：1 對這則收藏有疑問嗎？、2 選原因、3 送出', '等級階梯：新晉樂迷 0～140 分、專業樂迷 200～650 分、資深樂迷 800～1,900 分、收藏家 2,300～5,000 分、典藏家 6,000～12,000 分', '得分方式：編輯藝人頁、專輯頁 +20；單次 200 字以上 +30、新增藝人、專輯、版本 +15、藝人照片獲採用 +15、發布收藏 +10、補上空白資料 +10、檢舉成立 +10、檢舉不成立 −5、成交 +5、留言 +2、按讚 +1、收到讚、收到留言 +1', '特別稱號：打假先鋒，檢舉成立累計 5 次；頭號樂迷，該藝人頁面有效編輯次數最多者；館長，站長帳號']"
+ },
+ {
+  "name": "1h 1440 等級階梯、得分方式載入桌機版",
+  "ok": true,
+  "detail": "{'howto-share': 'howto-share.webp', 'howto-edit': 'howto-edit.webp', 'howto-report': 'howto-report.webp', 'levels-desktop': 'levels-desktop.webp', 'points-desktop': 'points-desktop.webp', 'titles': 'titles.webp'}"
+ },
+ {
+  "name": "1i 1440 8 張圖全部載入成功",
+  "ok": true,
+  "detail": "[{'k': 'howto-share', 'src': 'howto-share.webp', 'ok': True}, {'k': 'howto-edit', 'src': 'howto-edit.webp', 'ok': True}, {'k': 'howto-report', 'src': 'howto-report.webp', 'ok': True}, {'k': 'levels-desktop', 'src': 'levels-desktop.webp', 'ok': True}, {'k': 'points-desktop', 'src': 'points-desktop.webp', 'ok': True}, {'k': 'titles', 'src': 'titles.webp', 'ok': True}]"
+ },
+ {
+  "name": "1j 1440 /guide 無橫向溢出",
+  "ok": true,
+  "detail": "{'sw': 1440, 'cw': 1440}"
+ },
+ {
+  "name": "1k 1440 /guide console error 0",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "1h 390 等級階梯、得分方式載入手機版",
+  "ok": true,
+  "detail": "{'howto-share': 'howto-share.webp', 'howto-edit': 'howto-edit.webp', 'howto-report': 'howto-report.webp', 'levels-desktop': 'levels-mobile.webp', 'points-desktop': 'points-mobile.webp', 'titles': 'titles.webp'}"
+ },
+ {
+  "name": "1i 390 8 張圖全部載入成功",
+  "ok": true,
+  "detail": "[{'k': 'howto-share', 'src': 'howto-share.webp', 'ok': True}, {'k': 'howto-edit', 'src': 'howto-edit.webp', 'ok': True}, {'k': 'howto-report', 'src': 'howto-report.webp', 'ok': True}, {'k': 'levels-desktop', 'src': 'levels-mobile.webp', 'ok': True}, {'k': 'points-desktop', 'src': 'points-mobile.webp', 'ok': True}, {'k': 'titles', 'src': 'titles.webp', 'ok': True}]"
+ },
+ {
+  "name": "1j 390 /guide 無橫向溢出",
+  "ok": true,
+  "detail": "{'sw': 390, 'cw': 390}"
+ },
+ {
+  "name": "1k 390 /guide console error 0",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "1l 320 /guide 無橫向溢出",
+  "ok": true,
+  "detail": "{'sw': 320, 'cw': 320}"
+ },
+ {
+  "name": "1l 320 /feedback 無橫向溢出",
+  "ok": true,
+  "detail": "{'sw': 320, 'cw': 320}"
+ },
+ {
+  "name": "1l 320 /ranking 無橫向溢出",
+  "ok": true,
+  "detail": "{'sw': 320, 'cw': 320}"
+ },
+ {
+  "name": "2a 首頁等級標籤都是連結、沒有包在別的連結裡",
+  "ok": true,
+  "detail": "(24, 0)"
+ },
+ {
+  "name": "2b 點卡片上的等級標籤跳到 /guide#levels，等級段在畫面頂端",
+  "ok": true,
+  "detail": "71.5"
+ },
+ {
+  "name": "2c 單則頁發文者的等級標籤也連到 /guide#levels",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "3a 1440 對話框內容與 /guide 相同",
+  "ok": true,
+  "detail": "48"
+ },
+ {
+  "name": "3b 1440 對話框置中",
+  "ok": true,
+  "detail": "{'top': 24, 'bottom': 876, 'left': 340, 'width': 760, 'vh': 900, 'vw': 1440}"
+ },
+ {
+  "name": "3c 1440 對話框開著無橫向溢出",
+  "ok": true,
+  "detail": "{'sw': 1440, 'cw': 1440}"
+ },
+ {
+  "name": "3d 1440 Esc 關閉",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "3e 1440 個人頁 console error 0",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "3a 390 對話框內容與 /guide 相同",
+  "ok": true,
+  "detail": "48"
+ },
+ {
+  "name": "3b 390 對話框從底部滑出（貼齊底部、滿寬）",
+  "ok": true,
+  "detail": "{'top': 101.28125, 'bottom': 844, 'left': 0, 'width': 390, 'vh': 844, 'vw': 390}"
+ },
+ {
+  "name": "3c 390 對話框開著無橫向溢出",
+  "ok": true,
+  "detail": "{'sw': 390, 'cw': 390}"
+ },
+ {
+  "name": "3d 390 Esc 關閉",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "3e 390 個人頁 console error 0",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "3f 看別人的個人頁沒有「新手指南」按鈕",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4a 未登入沒填 Email 擋下",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4b 未登入送出顯示「已收到」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4c 資料庫：類型功能建議、user_id 空、Email、附件照片",
+  "ok": true,
+  "detail": "{'id': 15, 'kind': 'suggest', 'body': '驗收：未登入送出 46621', 'email': 'guest46621@example.com', 'user_id': None, 'photo_key': 'f/z0ICfUEhWHodEg3-.webp', 'thumb_key': 'f/z0ICfUEhWHodEg3-_t.webp', 'photo_bytes': 41396, 'status': 'open', 'note': '', 'handled_by': None, 'handled_at': None, 'created_at': '2026-09-29T01:50:53.327Z'}"
+ },
+ {
+  "name": "4d 已登入 Email 預設帶自己的",
+  "ok": true,
+  "detail": "r01@demo.yinzang.test"
+ },
+ {
+  "name": "4e 已登入送出：user_id＝r01、Email＝帳號的、沒有照片",
+  "ok": true,
+  "detail": "{'id': 16, 'kind': 'data', 'body': '驗收：已登入送出 46621', 'email': 'r01@demo.yinzang.test', 'user_id': 'demo-r01', 'photo_key': None, 'thumb_key': None, 'photo_bytes': 0, 'status': 'open', 'note': '', 'handled_by': None, 'handled_at': None, 'created_at': '2026-09-29T01:50:55.481Z'}"
+ },
+ {
+  "name": "4f Turnstile 沒過 → 400 TURNSTILE_FAILED，沒有寫入",
+  "ok": true,
+  "detail": "{\"error\":{\"code\":\"TURNSTILE_FAILED\",\"message\":\"機器人驗證沒過，重新整理再試一次\"}}"
+ },
+ {
+  "name": "4g 第 1～5 則 201，第 6 則 429",
+  "ok": true,
+  "detail": "[201, 201, 201, 201, 201, 429]"
+ },
+ {
+  "name": "4h 超過 2000 字擋下",
+  "ok": true,
+  "detail": "400"
+ },
+ {
+  "name": "4i 儀表板顯示未處理件數",
+  "ok": true,
+  "detail": "('19\\n未處理的意見回饋', 19)"
+ },
+ {
+  "name": "4j 後台看得到未登入那則（含附件照片）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4k 標記已處理＋內部備註寫進資料庫",
+  "ok": true,
+  "detail": "{'status': 'done', 'note': '已回信說明', 'handled_by': 'demo-yzadmin'}"
+ },
+ {
+  "name": "4l 附件照片一般會員拿不到（403／401）",
+  "ok": true,
+  "detail": "403"
+ },
+ {
+  "name": "4m /privacy 沒有「聯絡信箱待補」，連結預選「privacy」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4m /terms 沒有「聯絡信箱待補」，連結預選「takedown」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5a 發行年待補旁邊是「補上」按鈕（雙字）",
+  "ok": true,
+  "detail": "補上"
+ },
+ {
+  "name": "5b 訪客點了先請他登入",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5c 登入後回到原頁、直接進入發行年的編輯",
+  "ok": true,
+  "detail": "http://127.0.0.1:8791/artist/qa609013/5"
+ },
+ {
+  "name": "5d 欄位＝2011、補資料事件 +10 待入帳、待入帳分數 +10",
+  "ok": true,
+  "detail": "('2011', [{'points': 10, 'state': 'pending'}], 70, 80)"
+ },
+ {
+  "name": "5e 藝人頁沒有簡介 → 「簡介待補」旁有「補上」",
+  "ok": true,
+  "detail": "[{'slug': 'wan-zhi-xuan'}]"
+ },
+ {
+  "name": "5f 點了直接進簡介編輯",
+  "ok": true,
+  "detail": "http://127.0.0.1:8791/artist/wan-zhi-xuan?edit=1#intro"
+ },
+ {
+  "name": "5g 系列頁版本欄位、曲目、正文的空白處按鈕一律「補上」",
+  "ok": true,
+  "detail": "['補上']"
+ },
+ {
+  "name": "6a 新增藝人：不等排程，分數當下 +15、事件已入帳",
+  "ok": true,
+  "detail": "(201, 663, 678, [{'state': 'credited', 'points': 15}])"
+ },
+ {
+  "name": "6b 排程重算後不會重複給分",
+  "ok": true,
+  "detail": "(678, 678)"
+ },
+ {
+  "name": "6c 藝人被合併／刪除後，下次彙總扣回 15",
+  "ok": true,
+  "detail": "(678, 663)"
+ },
+ {
+  "name": "7a 本月榜前 6 名照本月分數排序（測試分數）",
+  "ok": true,
+  "detail": "[{'pos': 1, 'user_id': 'demo-r01', 'points': 900663}, {'pos': 2, 'user_id': 'demo-r02', 'points': 800003}, {'pos': 3, 'user_id': 'demo-r03', 'points': 700117}, {'pos': 4, 'user_id': 'demo-r04', 'points': 599915}, {'pos': 5, 'user_id': 'demo-r05', 'points': 500020}, {'pos': 6, 'user_id': 'demo-r06', 'points': 399935}, {'pos': 7, 'user_id': 'demo-aze', 'points': 421}]"
+ },
+ {
+  "name": "7b 總榜照累計分數排序、最多 20 名",
+  "ok": true,
+  "detail": "[{'pos': 1, 'user_id': 'demo-r01', 'points': 900713}, {'pos': 2, 'user_id': 'demo-r02', 'points': 800053}, {'pos': 3, 'user_id': 'demo-r03', 'points': 700167}]"
+ },
+ {
+  "name": "7c 館長與停權帳號不在任何榜（兩人本月測試分數最高）",
+  "ok": true,
+  "detail": "['demo-yzadmin', 'u-lv502718l1']"
+ },
+ {
+  "name": "7d 打假先鋒不到 5 人時整榜不顯示",
+  "ok": true,
+  "detail": "(4, 0, ['rank-month', 'rank-total'])"
+ },
+ {
+  "name": "7e 頁面本月榜順序跟資料一致",
+  "ok": true,
+  "detail": "['r01', 'r02', 'r03', 'r04', 'r05', 'r06']"
+ },
+ {
+  "name": "7f 每列只有名次、大頭貼＋暱稱、等級、分數",
+  "ok": true,
+  "detail": "['rank-pos num', 'rank-who', 'lv-tag', 'rank-pts num']"
+ },
+ {
+  "name": "7g 打假先鋒滿 5 人後整榜出現",
+  "ok": true,
+  "detail": "5"
+ },
+ {
+  "name": "7h 390 榮譽榜無橫向溢出",
+  "ok": true,
+  "detail": "{'sw': 390, 'cw': 390}"
+ },
+ {
+  "name": "7i 上榜的人個人頁顯示「本月第 2 名」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "7j 沒上榜的人不顯示名次",
+  "ok": true,
+  "detail": "xiaomeng"
+ },
+ {
+  "name": "7k 頭像選單有「收藏榮譽榜」、頁尾有「新手指南」「收藏榮譽榜」",
+  "ok": true,
+  "detail": ""
+ }
+]

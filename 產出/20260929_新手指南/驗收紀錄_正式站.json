@@ -1,0 +1,97 @@
+[
+ {
+  "name": "P1 1440 /guide 正文與 v3 逐字相同",
+  "ok": true,
+  "detail": "48"
+ },
+ {
+  "name": "P2 等級表與 lib/levels.ts 一致",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "P3 得分表與常數一致",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "P4 1440 圖全部載入、等級與得分載入desktop版",
+  "ok": true,
+  "detail": "{'howto-share': 'howto-share.webp', 'howto-edit': 'howto-edit.webp', 'howto-report': 'howto-report.webp', 'levels-desktop': 'levels-desktop.webp', 'points-desktop': 'points-desktop.webp', 'titles': 'titles.webp'}"
+ },
+ {
+  "name": "P5 1440 /guide 無溢出、console error 0",
+  "ok": true,
+  "detail": "({'sw': 1440, 'cw': 1440}, [])"
+ },
+ {
+  "name": "P6 1440 /feedback?type=privacy 200、無溢出",
+  "ok": true,
+  "detail": "{'sw': 1440, 'cw': 1440}"
+ },
+ {
+  "name": "P6 1440 /ranking 200、無溢出",
+  "ok": true,
+  "detail": "{'sw': 1440, 'cw': 1440}"
+ },
+ {
+  "name": "P1 390 /guide 正文與 v3 逐字相同",
+  "ok": true,
+  "detail": "48"
+ },
+ {
+  "name": "P4 390 圖全部載入、等級與得分載入mobile版",
+  "ok": true,
+  "detail": "{'howto-share': 'howto-share.webp', 'howto-edit': 'howto-edit.webp', 'howto-report': 'howto-report.webp', 'levels-desktop': 'levels-mobile.webp', 'points-desktop': 'points-mobile.webp', 'titles': 'titles.webp'}"
+ },
+ {
+  "name": "P5 390 /guide 無溢出、console error 0",
+  "ok": true,
+  "detail": "({'sw': 390, 'cw': 390}, [])"
+ },
+ {
+  "name": "P6 390 /feedback?type=privacy 200、無溢出",
+  "ok": true,
+  "detail": "{'sw': 390, 'cw': 390}"
+ },
+ {
+  "name": "P6 390 /ranking 200、無溢出",
+  "ok": true,
+  "detail": "{'sw': 390, 'cw': 390}"
+ },
+ {
+  "name": "P7 /privacy 沒有「待補」、連到 /feedback 預選 privacy",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "P7 /terms 沒有「待補」、連到 /feedback 預選 takedown",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "P8 首頁卡片等級標籤 → /guide#levels",
+  "ok": true,
+  "detail": "71.5"
+ },
+ {
+  "name": "P9 頁尾有新手指南、收藏榮譽榜",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "P10 /guide 整頁快取（第二次 HIT）",
+  "ok": true,
+  "detail": "['HIT', 'HIT']"
+ },
+ {
+  "name": "P10 /ranking 整頁快取（第二次 HIT）",
+  "ok": true,
+  "detail": "['HIT', 'HIT']"
+ },
+ {
+  "name": "P10 /feedback 整頁快取（第二次 HIT）",
+  "ok": true,
+  "detail": "['MISS', 'HIT']"
+ }
+]

@@ -1,0 +1,103 @@
+{
+ "等級階梯_桌機": {
+  "w": 1200,
+  "h": 553,
+  "texts": 55,
+  "bad": [],
+  "fonts": [
+   "IBM Plex Mono",
+   "Inter",
+   "Noto Sans TC"
+  ],
+  "ff": "Inter",
+  "orange": 0
+ },
+ "等級階梯_手機": {
+  "w": 750,
+  "h": 897.5,
+  "texts": 55,
+  "bad": [],
+  "fonts": [
+   "IBM Plex Mono",
+   "Inter",
+   "Noto Sans TC"
+  ],
+  "ff": "Inter",
+  "orange": 0
+ },
+ "得分方式_桌機": {
+  "w": 1200,
+  "h": 779.3125,
+  "texts": 38,
+  "bad": [],
+  "fonts": [
+   "Inter",
+   "Noto Sans TC"
+  ],
+  "ff": "Inter",
+  "orange": 0.28
+ },
+ "得分方式_手機": {
+  "w": 750,
+  "h": 1011.015625,
+  "texts": 39,
+  "bad": [],
+  "fonts": [
+   "Inter",
+   "Noto Sans TC"
+  ],
+  "ff": "Inter",
+  "orange": 0.56
+ },
+ "特別稱號": {
+  "w": 600,
+  "h": 600,
+  "texts": 6,
+  "bad": [],
+  "fonts": [
+   "Inter",
+   "Noto Sans TC"
+  ],
+  "ff": "Inter",
+  "orange": 0
+ },
+ "操作示意_發布收藏": {
+  "w": 750,
+  "h": 1875.96875,
+  "texts": 15,
+  "bad": [],
+  "fonts": [
+   "IBM Plex Mono",
+   "Inter",
+   "Noto Sans TC"
+  ],
+  "ff": "Inter",
+  "orange": 1.14
+ },
+ "操作示意_編輯藝人頁": {
+  "w": 750,
+  "h": 1538.265625,
+  "texts": 9,
+  "bad": [],
+  "fonts": [
+   "IBM Plex Mono",
+   "Inter",
+   "Noto Sans TC"
+  ],
+  "ff": "Inter",
+  "orange": 0.83
+ },
+ "操作示意_回報": {
+  "w": 750,
+  "h": 1969.703125,
+  "texts": 9,
+  "bad": [],
+  "fonts": [
+   "IBM Plex Mono",
+   "Inter",
+   "Noto Sans TC"
+  ],
+  "ff": "Inter",
+  "orange": 0.65
+ }
+}
