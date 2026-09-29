@@ -1,0 +1,101 @@
+/* 首頁上方設計圖（2026-09-29）共用樣式。site.css 是正式站 9/29 的樣式表原檔，這裡只加新東西 */
+
+/* 頁首「藝人」：桌機在搜尋框右邊；手機搜尋框收起後自然落在站名右邊 */
+.nav-artists { font-size: var(--text-base); font-weight: 600; min-height: 44px; display: inline-flex; align-items: center; white-space: nowrap; }
+.nav-artists:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.sp { display: block; width: 100%; border: 0; }
+.pick-name { font-size: var(--text-2xl); font-weight: 700; letter-spacing: -.01em; line-height: 1.2; }
+.pick-name a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.pick-meta { color: var(--muted); font-size: var(--text-sm); margin-top: 4px; }
+.pick-acts { align-items: center; display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 16px; }
+.pick-acts .btn { min-height: 44px; padding: 0 18px; font-size: var(--text-sm); }
+.btn-shuffle { color: var(--text); font-size: var(--text-sm); font-weight: 600; min-height: 44px; text-decoration: underline; text-underline-offset: 3px; background: none; border: 0; cursor: pointer; padding: 0; }
+
+/* ---------- 方案 A：單曲橫條 ---------- */
+.a-pick { border-top: 2px solid var(--text); border-bottom: 1px solid var(--line); display: grid; gap: 32px; grid-template-columns: minmax(0, 1fr) 380px; padding: 24px 0; margin-bottom: 8px; }
+.a-pick .pick-info { align-self: center; }
+.a-all { color: var(--muted); font-size: var(--text-sm); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.a-all:hover { color: var(--text); }
+
+/* ---------- 方案 B：歌＋藝人兩欄 ---------- */
+.b-top { display: grid; gap: 28px; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); margin-bottom: 8px; }
+.b-pick { border-top: 2px solid var(--text); padding-top: 20px; }
+.b-pick .pick-row { align-items: flex-end; display: flex; gap: 16px; justify-content: space-between; margin-top: 16px; }
+.b-pick .pick-acts { margin-top: 0; }
+.b-art { border-top: 2px solid var(--text); padding-top: 20px; }
+.b-art-head { align-items: baseline; display: flex; justify-content: space-between; margin-bottom: 8px; }
+.b-art-title { font-size: var(--text-lg); font-weight: 700; }
+.b-art-list a { align-items: center; border-top: 1px solid var(--line); display: flex; justify-content: space-between; min-height: 48px; font-weight: 600; }
+.b-art-list a:hover { background: var(--surface); }
+.b-art-list .num { color: var(--muted); font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 400; }
+.b-art-list a.b-art-all { border-bottom: 1px solid var(--line); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- 方案 C：黑色播放帶 ---------- */
+.c-band { background: var(--text); color: #fff; }
+.c-band .wrap { display: grid; gap: 40px; grid-template-columns: 300px minmax(0, 1fr) 220px; padding-top: 32px; padding-bottom: 32px; }
+.c-band .pick-name { font-size: var(--text-3xl); color: #fff; line-height: 1.1; }
+.c-band .pick-meta { color: #b8b8b8; }            /* 對 #111 為 9.3:1 */
+.c-band .btn-onblack { background: #111; border: 1px solid #fff; color: #fff; }
+.c-band .btn-onblack:hover { background: #2a2a2a; }
+.c-band .btn-shuffle { color: #fff; }
+.c-art-title { font-size: var(--text-base); font-weight: 700; margin-bottom: 4px; }
+.c-art a { border-top: 1px solid #3a3a3a; color: #fff; display: flex; justify-content: space-between; min-height: 40px; align-items: center; font-size: var(--text-sm); font-weight: 600; }
+.c-art a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.c-art .num { color: #b8b8b8; font-family: var(--font-mono); font-weight: 400; }
+.c-art a.c-art-all { border-bottom: 1px solid #3a3a3a; text-decoration: underline; text-underline-offset: 3px; }
+.c-tag { color: #b8b8b8; font-size: var(--text-sm); border-top: 1px solid #3a3a3a; }
+.c-tag .wrap { display: block; padding-top: 12px; padding-bottom: 14px; }
+.c-tag a { color: #fff; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; margin-left: 12px; }
+
+@media (max-width: 1000px) {
+  .a-pick { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .b-top { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .c-band .wrap { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+}
+
+@media (max-width: 700px) {
+  .nav-artists { font-size: var(--text-sm); }
+  .pick-name { font-size: 1.375rem; }
+  .pick-acts { margin-top: 12px; gap: 4px 16px; }
+
+  .a-pick { padding: 16px 0; margin-top: -8px; }
+
+  .b-pick { padding-top: 14px; }
+  .b-pick .pick-row { display: block; }
+  .b-pick .pick-acts { margin-top: 10px; }
+  .b-art { border-top: 1px solid var(--line); padding-top: 0; }
+  .b-art-head { display: none; }
+  .b-art-list { display: flex; overflow-x: auto; scrollbar-width: none; }
+  .b-art-list a { border: 0; border-right: 1px solid var(--line); flex: 0 0 auto; gap: 6px; min-height: 48px; padding: 0 14px; font-size: var(--text-sm); }
+  .b-art-list a:first-child { padding-left: 0; }
+  .b-art-list a.b-art-all { border: 0; }
+
+  .c-band .wrap { padding-top: 20px; padding-bottom: 20px; }
+  .c-band .pick-name { font-size: var(--text-2xl); }
+  .c-art { display: flex; overflow-x: auto; scrollbar-width: none; margin: 0 -18px; padding: 0 18px; }
+  .c-art-title { display: none; }
+  .c-art a { border: 0; border-right: 1px solid #3a3a3a; flex: 0 0 auto; gap: 6px; padding: 0 12px; }
+  .c-art a:first-of-type { padding-left: 0; }
+  .c-art a.c-art-all { border: 0; }
+  .c-tag { display: none; }
+}
+
+@media (max-width: 700px) {
+  .b-art-list a.b-art-all, .c-art a.c-art-all { order: -1; border-right: 1px solid var(--line); text-decoration: none; }
+  .c-art a.c-art-all { border-right-color: #3a3a3a; }
+  .b-art-list a:first-child, .c-art a:first-of-type { padding-left: 14px; }
+  .b-art-list a.b-art-all, .c-art a.c-art-all { padding-left: 0; }
+  .c-art a { padding: 0 12px; }
+  .c-band .c-player { order: -1; }
+}
+
+/* 修正（截圖複檢後） */
+.a-all { flex-basis: 100%; min-height: 32px; display: inline-flex; align-items: center; }
+.a-pick { margin-bottom: 28px; }
+.b-top { margin-bottom: 32px; }
+@media (max-width: 700px) {
+  .a-pick { margin-bottom: 20px; }
+  .b-top { margin-bottom: 20px; }
+  .b-art-list a:last-child, .c-art a:last-child { border-right: 0; }
+}
