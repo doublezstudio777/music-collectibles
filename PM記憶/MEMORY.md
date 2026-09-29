@@ -58,3 +58,5 @@
 - 正式站驗收要登入又過不了 Turnstile：D1 直接建測試帳號＋`sessions`（id＝token 的 SHA-256 hex、expires_at 設短），cookie `yz_session` 帶 token；驗收後留下的測試資料列給使用者決定刪不刪（2026-09-29）
 - MusicBrainz 對不上時先用 Wikidata 查：MB 藝人的 wikidata 連結指到的中文維基條目＝網站藝人條目就是同一人；登記名常是本名或短名（江靜／大淵），也有重複條目。廠牌 browse（`release?label=`）一次看完該廠牌所有掛名（2026-09-29）
 - 頁首塞新項目前先用 Playwright 量 360／390、訪客／登入四種組合每個元素左右緣：擠不下時 flex 會先把 logo 壓窄換行，肉眼截圖不一定看得出；窄寬度的新 media query 要放在檔尾，否則會被後面 `max-width:700px` 同權重規則蓋掉（2026-09-29）
+- Playwright `context.set_extra_http_headers` 會把測試表頭（`x-yz-test-country`）也送去 Google Fonts，CORS 擋掉、字型載不到，console 一堆錯，canvas 浮水印也可能燒成系統字；改用 `context.route(本站網址 regex, 加表頭 continue_)` 只加在本站請求（2026-09-29）
+- D1 遠端一句 `UNION ALL` 串太多 SELECT 會 `too many terms in compound SELECT`，全庫掃測試資料一張表一句查（2026-09-29）

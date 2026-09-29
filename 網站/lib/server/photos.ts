@@ -10,6 +10,8 @@ import { getDb } from "@/db";
 import { adminLog, photos, settings } from "@/db/schema";
 import { randomToken } from "@/lib/server/crypto";
 import { hit } from "@/lib/server/services";
+import { claimVerifyCode } from "@/lib/server/verify";
+import { VERIFY_CODE_RE } from "@/lib/data";
 
 /** 總容量上限 8 GB（R2 免費 10 GB，留 2 GB 緩衝） */
 export const STORAGE_LIMIT = 8 * 1024 ** 3;
@@ -101,6 +103,7 @@ function sniffJpeg(b: Uint8Array): "image/jpeg" | null {
  * 不當成整筆上傳失敗——這張圖只是加分，不是必要條件。
  * orig＝沒燒浮水印的原圖（2026-09-29）：收藏照片必帶，存 `o/{id}`，/img/ 只開放 p/a/v/r 四個目錄，這個目錄任何網址都拿不到。
  * 主圖、縮圖是瀏覽器燒好浮水印的；伺服器不做影像處理，也驗不出有沒有燒，靠的是只有新版表單送得出 orig。
+ * code＝查證碼（2026-09-29）：收藏照片必帶，要是 /api/uploads/code 發給這個人、還沒用過的碼，存進 photos.verify_code。
  */
 export async function acceptUpload(
   ownerId: string,
@@ -109,7 +112,8 @@ export async function acceptUpload(
   thumb: File | null,
   og: File | null = null,
   orig: File | null = null,
-): Promise<{ ok: true; id: string; url: string; thumbUrl: string; ogUrl?: string } | { ok: false; error: UploadError }> {
+  code = "",
+): Promise<{ ok: true; id: string; url: string; thumbUrl: string; ogUrl?: string; code?: string } | { ok: false; error: UploadError }> {
   const bad = (status: number, code: string, message: string) => ({ ok: false as const, error: { status, code, message } });
   if (await isPaused()) return bad(503, "UPLOAD_PAUSED", "上傳暫停");
   if (!main || !thumb) return bad(400, "BAD_REQUEST", "缺照片檔");
@@ -123,7 +127,7 @@ export async function acceptUpload(
   let origBytes: Uint8Array | null = null;
   let oType: ImageType | null = null;
   if (purpose === "share") {
-    if (!orig || orig.size > MAX_MAIN_BYTES) return bad(400, "RELOAD", "網頁版本太舊，重新整理再上傳");
+    if (!orig || orig.size > MAX_MAIN_BYTES || !VERIFY_CODE_RE.test(code)) return bad(400, "RELOAD", "網頁版本太舊，重新整理再上傳");
     origBytes = new Uint8Array(await orig.arrayBuffer());
     oType = sniff(origBytes);
     if (!oType) return bad(415, "BAD_FORMAT", "只收 WebP 或 JPEG 照片");
@@ -138,10 +142,12 @@ export async function acceptUpload(
   if (!(await hit(`upload:${ownerId}:${day}`, DAILY_UPLOADS, 86400))) {
     return bad(429, "DAILY_LIMIT", `今天已經上傳 ${DAILY_UPLOADS} 張，明天再來`);
   }
+  const id = randomToken(12);
+  // 查證碼先佔：不是發給這個人的、或已經用過的就擋（在寫 R2、佔容量之前）
+  if (purpose === "share" && !(await claimVerifyCode(ownerId, code, id))) return bad(409, "CODE_USED", "上傳失敗，再試一次");
   const bytes = mainBytes.length + thumbBytes.length + (ogBytes?.length ?? 0) + (origBytes?.length ?? 0);
   if (!(await reserveBytes(bytes))) return bad(507, "STORAGE_FULL", "上傳暫停");
 
-  const id = randomToken(12);
   const ext = type === "image/webp" ? "webp" : "jpg";
   const tExt = tType === "image/webp" ? "webp" : "jpg";
   // 申訴證據放 a/（只給本人與管理員看，/img/ 會檢查身分）；公開照片放 p/
@@ -166,8 +172,9 @@ export async function acceptUpload(
     return bad(502, "STORAGE_ERROR", "照片存不進去，再試一次");
   }
   const { width, height } = dimensions(mainBytes, type);
-  await getDb().insert(photos).values({ id, ownerId, purpose, r2Key: key, thumbKey, ogKey, origKey, contentType: type, bytes, width, height });
-  return { ok: true, id, url: `/img/${key}`, thumbUrl: `/img/${thumbKey}`, ...(ogKey ? { ogUrl: `/img/${ogKey}` } : {}) };
+  const verifyCode = purpose === "share" ? code : null;
+  await getDb().insert(photos).values({ id, ownerId, purpose, r2Key: key, thumbKey, ogKey, origKey, verifyCode, contentType: type, bytes, width, height });
+  return { ok: true, id, url: `/img/${key}`, thumbUrl: `/img/${thumbKey}`, ...(ogKey ? { ogUrl: `/img/${ogKey}` } : {}), ...(verifyCode ? { code: verifyCode } : {}) };
 }
 
 /** 自己上傳、還沒掛到收藏或申訴的照片 */

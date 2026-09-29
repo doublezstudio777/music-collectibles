@@ -5,6 +5,8 @@
   1. 舊照片補燒（一次性）：orig_key 還是空的舊照片，現在的主圖就是沒燒過的原圖。先把它複製到 R2 不公開的 o/，
      再從這份原圖燒浮水印。
   2. 站名或帳號名改了：從 o/ 的原圖把全部照片重燒一次（lib/data.ts 的 SITE_NAME 改好、部署完再跑）。
+  3. 查證碼（2026-09-29）：還沒有查證碼的照片在這裡補發（寫進 photo_codes 與 photos.verify_code），浮水印是
+     右下角「© @帳號 · 站名 #查證碼」＋中間斜字「站名 #查證碼」。已經有碼的照片重燒時沿用原本的碼。
 
 每張照片：
   - 從原圖在無頭瀏覽器裡燒出新的主圖、縮圖（有分享預覽圖的也重畫）。燒法是 esbuild 當場打包 lib/watermark-burn.ts，
@@ -100,8 +102,31 @@ def sniff(b):
     raise RuntimeError("不是 WebP／JPEG")
 
 
+CODE_CHARS = "23456789ABCDEFGHJKMNPQRSTUVWXYZ"  # 跟 lib/data.ts 的 VERIFY_CODE_CHARS 相同
+
+
+def new_code():
+    return "".join(secrets.choice(CODE_CHARS) for _ in range(5))
+
+
+def assign_code(pid, owner):
+    """補發查證碼：先看這張照片之前有沒有發過（上次跑到一半），沒有就發一組新的（撞到已發過的換一組）"""
+    got = query(f"SELECT code FROM photo_codes WHERE photo_id = {q(pid)} LIMIT 1")
+    if got:
+        return got[0]["code"]
+    for _ in range(10):
+        code = new_code()
+        wrangler("d1", "execute", "DB", *target, "--command",
+                 f"INSERT OR IGNORE INTO photo_codes (code, owner_id, photo_id) VALUES ({q(code)}, {q(owner)}, {q(pid)})",
+                 *(["--yes"] if args.remote else []))
+        mine = query(f"SELECT photo_id FROM photo_codes WHERE code = {q(code)}")
+        if mine and mine[0]["photo_id"] == pid:
+            return code
+    raise RuntimeError("查證碼發不出來")
+
+
 def bundle():
-    entry = 'export * from "./lib/watermark-burn"; export { watermarkText, SITE_NAME } from "./lib/data";'
+    entry = 'export * from "./lib/watermark-burn"; export { watermarkMark, SITE_NAME } from "./lib/data";'
     r = subprocess.run(
         [str(ROOT / "node_modules" / ".bin" / "esbuild"), "--bundle", "--format=iife", "--global-name=YZBurn", "--tsconfig=tsconfig.json", "--loader=ts"],
         cwd=ROOT, input=entry, capture_output=True, text=True,
@@ -112,9 +137,9 @@ def bundle():
 
 
 BURN_JS = """
-async ({ b64, type, handle, og }) => {
+async ({ b64, type, handle, code, og }) => {
   const bin = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
-  const mark = YZBurn.watermarkText(handle);
+  const mark = YZBurn.watermarkMark(handle, code);
   const r = await YZBurn.burnFromOriginal(new Blob([bin], { type }), mark);
   const enc = async (b) => {
     const u = new Uint8Array(await b.arrayBuffer());
@@ -137,7 +162,7 @@ def main():
 
     where = "p.purpose = 'share' AND p.deleted_at IS NULL" + (f" AND p.id = {q(args.only)}" if args.only else "") + (" AND p.orig_key IS NULL" if args.only_legacy else "")
     rows = query(
-        f"SELECT p.id, p.r2_key, p.thumb_key, p.og_key, p.orig_key, p.bytes, u.handle FROM photos p "
+        f"SELECT p.id, p.owner_id, p.r2_key, p.thumb_key, p.og_key, p.orig_key, p.verify_code, p.bytes, u.handle FROM photos p "
         f"LEFT JOIN users u ON u.id = p.owner_id WHERE {where} ORDER BY p.created_at"
     )
     used = query("SELECT COALESCE((SELECT value FROM counters WHERE key = 'r2_bytes'), 0) AS v")[0]["v"]
@@ -162,7 +187,9 @@ def main():
                 orig = r2_get(src_key, work / f"{pid}_src")
                 otype, oext = sniff(orig)
                 orig_key = row["orig_key"] or f"o/{pid}.{oext}"
-                res = page.evaluate(BURN_JS, {"b64": base64.b64encode(orig).decode(), "type": otype, "handle": handle, "og": bool(row["og_key"])})
+                # 查證碼：已有就沿用；試跑只產生一組看效果，不寫進 D1
+                code = row["verify_code"] or (new_code() if args.dry_run else assign_code(pid, row["owner_id"]))
+                res = page.evaluate(BURN_JS, {"b64": base64.b64encode(orig).decode(), "type": otype, "handle": handle, "code": code, "og": bool(row["og_key"])})
                 if not res["fonts"]:
                     raise SystemExit("網站字型沒載到（Google Fonts 連不上？），停止，不燒系統字")
                 tok = secrets.token_urlsafe(6).replace("-", "x").replace("_", "y")
@@ -178,13 +205,13 @@ def main():
                 for name, (key, b, _) in files.items():
                     (work / key.replace("/", "_")).write_bytes(b)
                 item = {
-                    "id": pid, "帳號": handle, "浮水印": res["mark"], "補燒舊照片": legacy, "尺寸": f"{res['w']}x{res['h']}",
+                    "id": pid, "帳號": handle, "查證碼": code, "新發查證碼": not row["verify_code"], "浮水印": res["mark"], "補燒舊照片": legacy, "尺寸": f"{res['w']}x{res['h']}",
                     "舊": [row["r2_key"], row["thumb_key"], row["og_key"]], "新": [f[0] for f in files.values()], "原圖": orig_key,
                     "bytes": {"舊": row["bytes"], "新": new_bytes, "差": delta},
                 }
                 if args.dry_run:
                     report["照片"].append(item)
-                    print(f"[試跑] {pid} {res['mark']} → {item['新'][0]}（{delta:+,} bytes）")
+                    print(f"[試跑] {pid} {res['mark']['corner']} → {item['新'][0]}（{delta:+,} bytes）")
                     continue
                 if used + delta_total + delta > STORAGE_LIMIT:
                     raise SystemExit("超過 8GB 上限，停止")
@@ -197,7 +224,7 @@ def main():
                 og_new = files["og"][0] if "og" in files else None
                 sql = (
                     f"UPDATE photos SET r2_key = {q(files['main'][0])}, thumb_key = {q(files['thumb'][0])}, og_key = {q(og_new)}, "
-                    f"orig_key = {q(orig_key)}, content_type = {q(files['main'][2])}, bytes = {new_bytes} "
+                    f"orig_key = {q(orig_key)}, verify_code = {q(code)}, content_type = {q(files['main'][2])}, bytes = {new_bytes} "
                     f"WHERE id = {q(pid)} AND r2_key = {q(row['r2_key'])} AND deleted_at IS NULL; "
                     f"UPDATE counters SET value = MAX(0, value + {delta}) WHERE key = 'r2_bytes' AND changes() > 0;"
                 )
@@ -219,7 +246,7 @@ def main():
                         item.setdefault("保留舊檔", []).append(old)
                 delta_total += delta
                 report["照片"].append(item)
-                print(f"{pid} {res['mark']} → {files['main'][0]}（{delta:+,} bytes）")
+                print(f"{pid} {res['mark']['corner']} → {files['main'][0]}（{delta:+,} bytes）")
             except SystemExit:
                 raise
             except Exception as e:  # noqa: BLE001

@@ -4,7 +4,7 @@
 // 燒法在 lib/watermark-burn.ts。申訴證據不對外，不燒也不附原圖。
 
 import { api } from "@/lib/account";
-import { watermarkText } from "@/lib/data";
+import { watermarkMark } from "@/lib/data";
 import { drawOgImage } from "@/lib/og-image";
 import { encode, loadImage, MAIN_EDGE, prepareShareImage, THUMB_EDGE } from "@/lib/watermark-burn";
 
@@ -12,7 +12,7 @@ export { MAIN_EDGE, THUMB_EDGE };
 
 const extOf = (b: Blob) => (b.type === "image/webp" ? "webp" : "jpg");
 
-export type Uploaded = { id: string; url: string; thumbUrl: string; ogUrl?: string };
+export type Uploaded = { id: string; url: string; thumbUrl: string; ogUrl?: string; code?: string };
 
 /** 不燒浮水印的壓縮（藝人照片投稿、意見回饋附件用） */
 export async function prepareImage(file: File) {
@@ -34,14 +34,19 @@ export async function uploadImage(file: File, purpose: "appeal") {
 }
 
 /**
- * 收藏照片（多張，2026-09-28；浮水印燒進檔案，2026-09-29）：主圖、縮圖燒好 `@帳號 · 站名`，原圖另送。
+ * 收藏照片（多張，2026-09-28；浮水印燒進檔案，2026-09-29）：主圖、縮圖燒好 `© @帳號 · 站名 #查證碼`＋中間斜字，原圖另送。
+ * 查證碼先跟伺服器拿（/api/uploads/code），燒好再連同照片送回去，伺服器確認是發給這個人的才收。
  * 分享預覽圖只替封面畫（uploadCoverOg）。沒有帳號名就不上傳（燒不出浮水印）。
  */
 export async function uploadSharePhoto(file: File, handle: string) {
   if (!handle) throw new Error("handle");
-  const { orig, main, thumb } = await prepareShareImage(file, watermarkText(handle));
+  const c = await api<{ code: string }>("/api/uploads/code", { method: "POST" });
+  if (!c.ok) return c;
+  const code = c.data.code;
+  const { orig, main, thumb } = await prepareShareImage(file, watermarkMark(handle, code));
   const form = new FormData();
   form.append("purpose", "share");
+  form.append("code", code);
   form.append("image", main, `photo.${extOf(main)}`);
   form.append("thumb", thumb, `thumb.${extOf(thumb)}`);
   form.append("orig", orig, `orig.${extOf(orig)}`);
@@ -49,14 +54,15 @@ export async function uploadSharePhoto(file: File, handle: string) {
 }
 
 /**
- * 封面的分享預覽圖。新選的照片用本機檔案畫、燒浮水印；已經上傳過的抓主圖（作者本人有登入，拿得到 1600px），
- * 主圖已經燒過浮水印，預覽圖就不再疊一層。
+ * 封面的分享預覽圖。新選的照片用本機檔案畫、燒浮水印（查證碼用這張照片上傳時拿到的那組）；
+ * 已經上傳過的抓主圖（作者本人有登入，拿得到 1600px），主圖已經燒過浮水印，預覽圖就不再疊一層。
  */
-export async function uploadCoverOg(photoId: string, source: File | string, handle: string) {
+export async function uploadCoverOg(photoId: string, source: File | string, handle: string, code = "") {
   const fromServer = typeof source === "string";
+  if (!fromServer && !code) throw new Error("code");
   const blob = fromServer ? await fetch(source, { credentials: "same-origin" }).then((r) => (r.ok ? r.blob() : Promise.reject(new Error("fetch")))) : source;
   const img = await loadImage(blob);
-  const og = await drawOgImage(img, handle, fromServer ? "" : watermarkText(handle));
+  const og = await drawOgImage(img, fromServer ? null : watermarkMark(handle, code));
   const form = new FormData();
   form.append("photoId", photoId);
   form.append("og", og, "og.jpg");

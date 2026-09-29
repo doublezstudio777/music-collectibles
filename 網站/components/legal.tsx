@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 /** 法務頁最後更新日期（兩頁共用；改內容時一起改） */
-export const LEGAL_UPDATED = "2026-09-28";
+export const LEGAL_UPDATED = "2026-09-29";
 
 /** 隱私權政策、使用條款共用外框：頁首標示草稿與最後更新日期，底下互相連結 */
 export function LegalPage({ title, other, children }: { title: string; other: { href: string; label: string }; children: React.ReactNode }) {

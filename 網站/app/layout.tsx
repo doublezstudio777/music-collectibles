@@ -43,6 +43,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <Link href="/guide">新手指南</Link>
               <Link href="/ranking">收藏榮譽榜</Link>
               <Link href="/about">關於{SITE_NAME}</Link>
+              <Link href="/verify">照片查證</Link>
               <Link href="/privacy">隱私權政策</Link>
               <Link href="/terms">使用條款</Link>
             </nav>

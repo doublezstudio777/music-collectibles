@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { priceText, userHref, type Sale, type SaleState, type ShareView } from "@/lib/data";
+import { priceText, userHref, verifyHref, type Sale, type SaleState, type ShareView } from "@/lib/data";
 import { api, whenLoggedIn } from "@/lib/account";
 import { useAction, useAppState } from "@/lib/state";
 import type { PublicOffer } from "@/lib/server/trade";
@@ -218,7 +218,14 @@ function DetailPhoto({
         sizes="(max-width: 1000px) 100vw, 640px"
       />
     );
-    if (!main) return photo;
+    const codeLine = lock ? null : <PhotoCode code={share.code} />;
+    if (!main)
+      return (
+        <>
+          {photo}
+          {codeLine}
+        </>
+      );
     return (
       <>
         <button
@@ -230,6 +237,7 @@ function DetailPhoto({
         >
           {photo}
         </button>
+        {codeLine}
         {big !== null ? (
           <Lightbox
             list={[main]}
@@ -309,6 +317,7 @@ function DetailPhoto({
           </li>
         ))}
       </ul>
+      {lock ? null : <PhotoCode code={list[cur]?.code} />}
       {big !== null ? (
         <Lightbox
           list={list.map((p) => p.image)}
@@ -318,6 +327,16 @@ function DetailPhoto({
         />
       ) : null}
     </div>
+  );
+}
+
+/** 照片下方的查證碼（2026-09-29）：跟浮水印上的碼相同，點了到查證頁 */
+function PhotoCode({ code }: { code?: string }) {
+  if (!code) return null;
+  return (
+    <p className="photo-code" data-testid="photo-code">
+      查證碼 <a href={verifyHref(code)}>#{code}</a>
+    </p>
   );
 }
 

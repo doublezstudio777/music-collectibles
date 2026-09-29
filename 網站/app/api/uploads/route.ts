@@ -9,7 +9,8 @@ export async function GET() {
 
 /**
  * multipart：image（主圖，長邊約 1600px WebP）、thumb（縮圖）、og（選配，1200×630 分享預覽圖 JPEG）、purpose（share｜appeal）。
- * share 另外必帶 orig（沒燒浮水印的原圖，存 R2 的 o/，任何網址都拿不到；2026-09-29）；主圖、縮圖是瀏覽器燒好浮水印的。
+ * share 另外必帶 orig（沒燒浮水印的原圖，存 R2 的 o/，任何網址都拿不到；2026-09-29）與 code（查證碼，先跟 /api/uploads/code 拿）；
+ * 主圖、縮圖是瀏覽器燒好浮水印的。
  * 瀏覽器端先壓縮／畫好；伺服器端再看檔頭格式、大小、每日上限、總容量，不處理影像本身。
  */
 export async function POST(req: Request) {
@@ -26,9 +27,10 @@ export async function POST(req: Request) {
     return v && typeof v !== "string" ? (v as File) : null;
   };
   const purpose = form.get("purpose") === "appeal" ? "appeal" : "share";
-  const r = await acceptUpload(s.user.id, purpose, pick("image"), pick("thumb"), pick("og"), pick("orig"));
+  const code = String(form.get("code") ?? "");
+  const r = await acceptUpload(s.user.id, purpose, pick("image"), pick("thumb"), pick("og"), pick("orig"), code);
   if (!r.ok) return fail(r.error.status, r.error.code, r.error.message);
-  return json({ id: r.id, url: r.url, thumbUrl: r.thumbUrl, ...(r.ogUrl ? { ogUrl: r.ogUrl } : {}) }, 201);
+  return json({ id: r.id, url: r.url, thumbUrl: r.thumbUrl, ...(r.ogUrl ? { ogUrl: r.ogUrl } : {}), ...(r.code ? { code: r.code } : {}) }, 201);
 }
 
 /** 表單裡刪掉還沒發布的照片：?id=照片 id（只能刪自己的、還沒掛到收藏的），R2 一起刪、容量扣回 */

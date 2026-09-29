@@ -1,0 +1,340 @@
+{
+  "目標": "remote",
+  "dry_run": false,
+  "照片": [
+    {
+      "id": "cziqa2Gi0xQ83g40",
+      "帳號": "dz4277",
+      "查證碼": "ETJCK",
+      "新發查證碼": true,
+      "浮水印": {
+        "corner": "© @dz4277 · 樂迷藏 #ETJCK",
+        "center": "樂迷藏 #ETJCK"
+      },
+      "補燒舊照片": false,
+      "尺寸": "1200x1600",
+      "舊": [
+        "p/cziqa2Gi0xQ83g40_SnhrxeVS.webp",
+        "p/cziqa2Gi0xQ83g40_SnhrxeVS_t.webp",
+        "p/cziqa2Gi0xQ83g40_SnhrxeVS_og.jpg"
+      ],
+      "新": [
+        "p/cziqa2Gi0xQ83g40_5A7Rnz9Z.webp",
+        "p/cziqa2Gi0xQ83g40_5A7Rnz9Z_t.webp",
+        "p/cziqa2Gi0xQ83g40_5A7Rnz9Z_og.jpg"
+      ],
+      "原圖": "o/cziqa2Gi0xQ83g40.jpg",
+      "bytes": {
+        "舊": 1076238,
+        "新": 1082375,
+        "差": 6137
+      }
+    },
+    {
+      "id": "FYlAwDEUxVVTES_s",
+      "帳號": "dz4277",
+      "查證碼": "WFE8P",
+      "新發查證碼": true,
+      "浮水印": {
+        "corner": "© @dz4277 · 樂迷藏 #WFE8P",
+        "center": "樂迷藏 #WFE8P"
+      },
+      "補燒舊照片": false,
+      "尺寸": "1600x1200",
+      "舊": [
+        "p/FYlAwDEUxVVTES_s_1Q0siMsG.webp",
+        "p/FYlAwDEUxVVTES_s_1Q0siMsG_t.webp",
+        null
+      ],
+      "新": [
+        "p/FYlAwDEUxVVTES_s_8fbXJQ6f.webp",
+        "p/FYlAwDEUxVVTES_s_8fbXJQ6f_t.webp"
+      ],
+      "原圖": "o/FYlAwDEUxVVTES_s.jpg",
+      "bytes": {
+        "舊": 1148189,
+        "新": 1151085,
+        "差": 2896
+      }
+    },
+    {
+      "id": "h7Di5Oc4kIYrWoar",
+      "帳號": "dz4277",
+      "查證碼": "SQGMZ",
+      "新發查證碼": true,
+      "浮水印": {
+        "corner": "© @dz4277 · 樂迷藏 #SQGMZ",
+        "center": "樂迷藏 #SQGMZ"
+      },
+      "補燒舊照片": false,
+      "尺寸": "1200x1600",
+      "舊": [
+        "p/h7Di5Oc4kIYrWoar_aSjx3fhv.webp",
+        "p/h7Di5Oc4kIYrWoar_aSjx3fhv_t.webp",
+        "p/h7Di5Oc4kIYrWoar_aSjx3fhv_og.jpg"
+      ],
+      "新": [
+        "p/h7Di5Oc4kIYrWoar_u2pDl8gr.webp",
+        "p/h7Di5Oc4kIYrWoar_u2pDl8gr_t.webp",
+        "p/h7Di5Oc4kIYrWoar_u2pDl8gr_og.jpg"
+      ],
+      "原圖": "o/h7Di5Oc4kIYrWoar.jpg",
+      "bytes": {
+        "舊": 1076238,
+        "新": 1082806,
+        "差": 6568
+      }
+    },
+    {
+      "id": "tGqcZsr1braUFE5X",
+      "帳號": "dz4277",
+      "查證碼": "ZK6VJ",
+      "新發查證碼": true,
+      "浮水印": {
+        "corner": "© @dz4277 · 樂迷藏 #ZK6VJ",
+        "center": "樂迷藏 #ZK6VJ"
+      },
+      "補燒舊照片": false,
+      "尺寸": "1600x1200",
+      "舊": [
+        "p/tGqcZsr1braUFE5X_gskmnS0M.webp",
+        "p/tGqcZsr1braUFE5X_gskmnS0M_t.webp",
+        null
+      ],
+      "新": [
+        "p/tGqcZsr1braUFE5X_Y9sSCJho.webp",
+        "p/tGqcZsr1braUFE5X_Y9sSCJho_t.webp"
+      ],
+      "原圖": "o/tGqcZsr1braUFE5X.jpg",
+      "bytes": {
+        "舊": 959958,
+        "新": 969538,
+        "差": 9580
+      }
+    },
+    {
+      "id": "3OHcrX7PRwC0WqO-",
+      "帳號": "dz4277",
+      "查證碼": "VG369",
+      "新發查證碼": true,
+      "浮水印": {
+        "corner": "© @dz4277 · 樂迷藏 #VG369",
+        "center": "樂迷藏 #VG369"
+      },
+      "補燒舊照片": false,
+      "尺寸": "1600x1200",
+      "舊": [
+        "p/3OHcrX7PRwC0WqO-_xxnQgsmZ.webp",
+        "p/3OHcrX7PRwC0WqO-_xxnQgsmZ_t.webp",
+        null
+      ],
+      "新": [
+        "p/3OHcrX7PRwC0WqO-_diqtzqKt.webp",
+        "p/3OHcrX7PRwC0WqO-_diqtzqKt_t.webp"
+      ],
+      "原圖": "o/3OHcrX7PRwC0WqO-.jpg",
+      "bytes": {
+        "舊": 680786,
+        "新": 691054,
+        "差": 10268
+      }
+    },
+    {
+      "id": "R67pMQU6zKgIIOCy",
+      "帳號": "dz4277",
+      "查證碼": "VD3FZ",
+      "新發查證碼": true,
+      "浮水印": {
+        "corner": "© @dz4277 · 樂迷藏 #VD3FZ",
+        "center": "樂迷藏 #VD3FZ"
+      },
+      "補燒舊照片": false,
+      "尺寸": "1600x1200",
+      "舊": [
+        "p/R67pMQU6zKgIIOCy_RaMnGGQH.webp",
+        "p/R67pMQU6zKgIIOCy_RaMnGGQH_t.webp",
+        null
+      ],
+      "新": [
+        "p/R67pMQU6zKgIIOCy_adlILKVj.webp",
+        "p/R67pMQU6zKgIIOCy_adlILKVj_t.webp"
+      ],
+      "原圖": "o/R67pMQU6zKgIIOCy.jpg",
+      "bytes": {
+        "舊": 792659,
+        "新": 802109,
+        "差": 9450
+      }
+    },
+    {
+      "id": "fPLEm2_EBkksEA0o",
+      "帳號": "dz4277",
+      "查證碼": "A95Z3",
+      "新發查證碼": true,
+      "浮水印": {
+        "corner": "© @dz4277 · 樂迷藏 #A95Z3",
+        "center": "樂迷藏 #A95Z3"
+      },
+      "補燒舊照片": false,
+      "尺寸": "1600x1200",
+      "舊": [
+        "p/fPLEm2_EBkksEA0o_b6FNwiG8.webp",
+        "p/fPLEm2_EBkksEA0o_b6FNwiG8_t.webp",
+        null
+      ],
+      "新": [
+        "p/fPLEm2_EBkksEA0o_4kQEazFP.webp",
+        "p/fPLEm2_EBkksEA0o_4kQEazFP_t.webp"
+      ],
+      "原圖": "o/fPLEm2_EBkksEA0o.jpg",
+      "bytes": {
+        "舊": 537307,
+        "新": 547867,
+        "差": 10560
+      }
+    },
+    {
+      "id": "FkML0VmSP3PnishG",
+      "帳號": "dz4277",
+      "查證碼": "5BBCK",
+      "新發查證碼": true,
+      "浮水印": {
+        "corner": "© @dz4277 · 樂迷藏 #5BBCK",
+        "center": "樂迷藏 #5BBCK"
+      },
+      "補燒舊照片": false,
+      "尺寸": "1600x1200",
+      "舊": [
+        "p/FkML0VmSP3PnishG_65kNvwyy.webp",
+        "p/FkML0VmSP3PnishG_65kNvwyy_t.webp",
+        null
+      ],
+      "新": [
+        "p/FkML0VmSP3PnishG_LsIR5WZD.webp",
+        "p/FkML0VmSP3PnishG_LsIR5WZD_t.webp"
+      ],
+      "原圖": "o/FkML0VmSP3PnishG.jpg",
+      "bytes": {
+        "舊": 666274,
+        "新": 674460,
+        "差": 8186
+      }
+    },
+    {
+      "id": "efHF1UgtvxgnCtLD",
+      "帳號": "dz4277",
+      "查證碼": "AAFK9",
+      "新發查證碼": true,
+      "浮水印": {
+        "corner": "© @dz4277 · 樂迷藏 #AAFK9",
+        "center": "樂迷藏 #AAFK9"
+      },
+      "補燒舊照片": false,
+      "尺寸": "1200x1600",
+      "舊": [
+        "p/efHF1UgtvxgnCtLD_8Isz3BCy.webp",
+        "p/efHF1UgtvxgnCtLD_8Isz3BCy_t.webp",
+        "p/efHF1UgtvxgnCtLD_8Isz3BCy_og.jpg"
+      ],
+      "新": [
+        "p/efHF1UgtvxgnCtLD_Cpx9jvHF.webp",
+        "p/efHF1UgtvxgnCtLD_Cpx9jvHF_t.webp",
+        "p/efHF1UgtvxgnCtLD_Cpx9jvHF_og.jpg"
+      ],
+      "原圖": "o/efHF1UgtvxgnCtLD.jpg",
+      "bytes": {
+        "舊": 701362,
+        "新": 710203,
+        "差": 8841
+      }
+    },
+    {
+      "id": "7HG2RfH95es9LRSA",
+      "帳號": "dz4277",
+      "查證碼": "B6SQC",
+      "新發查證碼": true,
+      "浮水印": {
+        "corner": "© @dz4277 · 樂迷藏 #B6SQC",
+        "center": "樂迷藏 #B6SQC"
+      },
+      "補燒舊照片": false,
+      "尺寸": "1086x1448",
+      "舊": [
+        "p/7HG2RfH95es9LRSA_5UaLP5qq.webp",
+        "p/7HG2RfH95es9LRSA_5UaLP5qq_t.webp",
+        "p/7HG2RfH95es9LRSA_5UaLP5qq_og.jpg"
+      ],
+      "新": [
+        "p/7HG2RfH95es9LRSA_zM6HyA0Y.webp",
+        "p/7HG2RfH95es9LRSA_zM6HyA0Y_t.webp",
+        "p/7HG2RfH95es9LRSA_zM6HyA0Y_og.jpg"
+      ],
+      "原圖": "o/7HG2RfH95es9LRSA.jpg",
+      "bytes": {
+        "舊": 741659,
+        "新": 749098,
+        "差": 7439
+      }
+    },
+    {
+      "id": "3llEwMXgICVW2ted",
+      "帳號": "dz4277",
+      "查證碼": "7G9BN",
+      "新發查證碼": true,
+      "浮水印": {
+        "corner": "© @dz4277 · 樂迷藏 #7G9BN",
+        "center": "樂迷藏 #7G9BN"
+      },
+      "補燒舊照片": false,
+      "尺寸": "1200x1600",
+      "舊": [
+        "p/3llEwMXgICVW2ted_XcmZx7Wy.webp",
+        "p/3llEwMXgICVW2ted_XcmZx7Wy_t.webp",
+        null
+      ],
+      "新": [
+        "p/3llEwMXgICVW2ted_jyTDxWBA.webp",
+        "p/3llEwMXgICVW2ted_jyTDxWBA_t.webp"
+      ],
+      "原圖": "o/3llEwMXgICVW2ted.jpg",
+      "bytes": {
+        "舊": 980800,
+        "新": 980944,
+        "差": 144
+      }
+    },
+    {
+      "id": "vkos9RJqvXUpFoSN",
+      "帳號": "dz4277",
+      "查證碼": "T5FDM",
+      "新發查證碼": true,
+      "浮水印": {
+        "corner": "© @dz4277 · 樂迷藏 #T5FDM",
+        "center": "樂迷藏 #T5FDM"
+      },
+      "補燒舊照片": false,
+      "尺寸": "1600x1200",
+      "舊": [
+        "p/vkos9RJqvXUpFoSN_MN6fxzaL.webp",
+        "p/vkos9RJqvXUpFoSN_MN6fxzaL_t.webp",
+        null
+      ],
+      "新": [
+        "p/vkos9RJqvXUpFoSN_lIHjY7Zf.webp",
+        "p/vkos9RJqvXUpFoSN_lIHjY7Zf_t.webp"
+      ],
+      "原圖": "o/vkos9RJqvXUpFoSN.jpg",
+      "bytes": {
+        "舊": 1144036,
+        "新": 1148988,
+        "差": 4952
+      }
+    }
+  ],
+  "失敗": [],
+  "R2計數": {
+    "前": 12777564,
+    "後": 12862585,
+    "上限": 8589934592
+  }
+}

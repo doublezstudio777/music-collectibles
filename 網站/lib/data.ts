@@ -70,8 +70,27 @@ export const KIND_LABEL_FALLBACK = "收藏";
 export const SITE_NAME = "樂迷藏";
 export const SITE_TAGLINE = "樂迷的收藏分享";
 export const SITE_TITLE = `${SITE_NAME}｜${SITE_TAGLINE}`;
-/** 照片浮水印（上傳時燒進主圖、縮圖、預覽圖，2026-09-29）：@帳號 · 站名。改站名後要跑 scripts/reburn-watermark.py 重燒 */
-export const watermarkText = (handle: string) => `@${handle} · ${SITE_NAME}`;
+/**
+ * 照片浮水印（上傳時燒進主圖、縮圖、預覽圖，2026-09-29）。改站名後要跑 scripts/reburn-watermark.py 重燒
+ * - corner：右下角「© @帳號 · 站名 #查證碼」
+ * - center：中間斜字「站名 #查證碼」
+ */
+export type WatermarkMark = { corner: string; center: string };
+export const watermarkMark = (handle: string, code: string): WatermarkMark => ({
+  corner: `© @${handle} · ${SITE_NAME} #${code}`,
+  center: `${SITE_NAME} #${code}`,
+});
+
+/** 查證碼：5 碼大寫英數，不用容易看錯的 0 O 1 I L（31 個字元） */
+export const VERIFY_CODE_CHARS = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
+export const VERIFY_CODE_LEN = 5;
+export const VERIFY_CODE_RE = /^[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{5}$/;
+/** 使用者輸入的碼：去掉 #、空白，轉大寫；格式不對回空字串 */
+export const normVerifyCode = (v: unknown) => {
+  const c = String(v ?? "").replace(/[#\s]/g, "").toUpperCase();
+  return VERIFY_CODE_RE.test(c) ? c : "";
+};
+export const verifyHref = (code: string) => `/verify?c=${code}`;
 
 export const SITE_DESC = "看樂迷收了什麼、炫自己的收藏，沿著藝人、系列、版本與標籤找下去。";
 
@@ -252,6 +271,8 @@ export type Share = {
   og?: string;
   /** 兩張以上才有：全部照片依順序（第一張＝封面，跟 image／thumb 同一張） */
   photos?: SharePhoto[];
+  /** 封面的查證碼（2026-09-29）；舊資料補發前沒有 */
+  code?: string;
   /** 作者顯示名稱；D1 讀出來的才有 */
   authorName?: string;
   /** 發文者的等級小標籤（「收藏家 Lv.3」／「館長」），目錄建立時算好 */
@@ -328,7 +349,7 @@ export const norm = (s: string) => s.trim().toLowerCase();
 export type Lock = { target: TargetKey; level: TargetLevel; label: string };
 
 /** 一張照片：主圖（1600px，要登入）＋縮圖（公開） */
-export type SharePhoto = { image: string; thumb: string };
+export type SharePhoto = { image: string; thumb: string; code?: string };
 
 export type ShareView = {
   n: number;
@@ -350,6 +371,8 @@ export type ShareView = {
   thumb?: string;
   /** 兩張以上才有：全部照片依順序，第一張是封面 */
   photos?: SharePhoto[];
+  /** 封面的查證碼（單則頁照片下方顯示；只有單則頁帶） */
+  code?: string;
   author: { handle: string; name: string; initials: string; badge?: string };
   link?: { href: string; label: string; seriesKey: string; itemId?: string; versionId?: string };
   sale: Sale;

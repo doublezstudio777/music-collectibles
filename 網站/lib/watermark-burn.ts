@@ -5,6 +5,7 @@
 //   跟網站上傳時是同一份程式、同一套字型，改站名時從不公開的原圖重燒全部照片
 // 這支只能 import 不碰網站狀態的模組（share-image），重燒腳本才打包得動。
 
+import type { WatermarkMark } from "@/lib/data";
 import { drawOgImage } from "@/lib/og-image";
 import { drawWatermark, ensureFonts, watermarkScale } from "@/lib/share-image";
 
@@ -26,7 +27,7 @@ export async function loadImage(file: Blob) {
 }
 
 /** 縮到長邊 max，mark 有值就燒浮水印；WebP（瀏覽器不支援 WebP 編碼時退回 JPEG） */
-export function encode(img: HTMLImageElement, max: number, quality: number, mark = ""): Promise<Blob> {
+export function encode(img: HTMLImageElement, max: number, quality: number, mark: WatermarkMark | null = null): Promise<Blob> {
   const scale = Math.min(1, max / Math.max(img.width, img.height));
   const canvas = document.createElement("canvas");
   canvas.width = Math.max(1, Math.round(img.width * scale));
@@ -55,27 +56,27 @@ export function encode(img: HTMLImageElement, max: number, quality: number, mark
 }
 
 /** 主圖太大（極少見）再降一次品質 */
-async function encodeMain(img: HTMLImageElement, mark: string) {
+async function encodeMain(img: HTMLImageElement, mark: WatermarkMark | null) {
   const main = await encode(img, MAIN_EDGE, 0.82, mark);
   return main.size > 1_400_000 ? encode(img, MAIN_EDGE, 0.6, mark) : main;
 }
 
 /** 先載網站字型；載不到（網路慢、被擋）照樣燒，字型鏈後面有各平台內建的中文字（微軟正黑體、蘋方） */
-const fontsFor = (mark: string) => ensureFonts(mark, "").catch(() => false);
+const fontsFor = (mark: WatermarkMark) => ensureFonts(mark.corner + mark.center, "").catch(() => false);
 
 /** 上傳收藏照片：原圖（長邊 1600、不燒，只存不公開位置）＋燒了浮水印的主圖與縮圖 */
-export async function prepareShareImage(file: Blob, mark: string) {
-  if (!mark) throw new Error("mark");
+export async function prepareShareImage(file: Blob, mark: WatermarkMark) {
+  if (!mark.corner || !mark.center) throw new Error("mark");
   await fontsFor(mark);
   const img = await loadImage(file);
-  const orig = await encodeMain(img, "");
+  const orig = await encodeMain(img, null);
   const main = await encodeMain(img, mark);
   const thumb = await encode(img, THUMB_EDGE, 0.75, mark);
   return { orig, main, thumb, img };
 }
 
 /** 重燒：從不公開的原圖產生新的主圖與縮圖（scripts/reburn-watermark.py 用） */
-export async function burnFromOriginal(orig: Blob, mark: string) {
+export async function burnFromOriginal(orig: Blob, mark: WatermarkMark) {
   const fonts = await fontsFor(mark);
   const img = await loadImage(orig);
   const main = await encodeMain(img, mark);
@@ -84,4 +85,4 @@ export async function burnFromOriginal(orig: Blob, mark: string) {
 }
 
 /** 重燒：分享預覽圖（1200×630 JPEG）也從原圖重畫，站名換了這張一起換 */
-export const ogFromOriginal = (img: HTMLImageElement, mark: string) => drawOgImage(img, "", mark);
+export const ogFromOriginal = (img: HTMLImageElement, mark: WatermarkMark) => drawOgImage(img, mark);

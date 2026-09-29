@@ -18,6 +18,8 @@ export type PickedPhoto = {
   preview: string;
   /** 主圖網址（上傳完成才有；換封面時畫預覽圖用） */
   url?: string;
+  /** 這張照片的查證碼（上傳完成才有；畫分享預覽圖的浮水印用） */
+  code?: string;
   file?: File;
   status: "queued" | "uploading" | "done" | "error";
   error?: string;
@@ -63,7 +65,7 @@ export function usePhotoPicker(initial: PickedPhoto[] = [], onPaused?: () => voi
           return;
         }
         if (!r) return patch(it.key, { status: "error", error: "這個檔案讀不出來，換一張" });
-        if (r.ok) return patch(it.key, { status: "done", id: r.data.id, url: r.data.url });
+        if (r.ok) return patch(it.key, { status: "done", id: r.data.id, url: r.data.url, code: r.data.code });
         if (r.error.code === "STORAGE_FULL" || r.error.code === "UPLOAD_PAUSED") onPaused?.();
         patch(it.key, { status: "error", error: r.error.code === "STORAGE_FULL" ? "上傳暫停" : r.error.message });
       })();

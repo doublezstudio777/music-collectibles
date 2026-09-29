@@ -1529,3 +1529,23 @@ p.fill-row { display: flex; }
 .guide ul { display: grid; gap: 6px; list-style: disc; margin: 0 0 8px; padding-left: 1.25em; }
 .guide a { text-decoration: underline; text-underline-offset: 3px; }
 .guide-sec + .guide-sec { border-top: 1px solid var(--line); padding-top: 28px; }
+
+/* 照片查證（2026-09-29） */
+.verify-form { margin: 24px 0 28px; }
+.verify-row { display: flex; gap: 8px; }
+.verify-input { flex: 1 1 auto; font-family: var(--font-mono, "IBM Plex Mono", monospace); letter-spacing: .08em; min-height: 44px; min-width: 0; text-transform: uppercase; }
+.verify-row .btn { flex: none; min-height: 44px; }
+.verify-msg { font-size: var(--text-base); font-weight: 600; margin: 0; overflow-wrap: anywhere; }
+.verify-card { align-items: flex-start; border-top: 1px solid var(--line); display: flex; gap: 16px; padding-top: 20px; }
+.verify-thumb { background: var(--surface2); display: block; flex: none; height: 120px; overflow: hidden; width: 120px; }
+.verify-thumb img { display: block; height: 100%; object-fit: cover; width: 100%; }
+.verify-dl { display: grid; gap: 6px 12px; grid-template-columns: auto 1fr; margin: 0; min-width: 0; }
+.verify-dl dt { color: var(--muted); font-size: var(--text-sm); }
+.verify-dl dd { font-size: var(--text-sm); margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.verify-code { font-family: var(--font-mono, "IBM Plex Mono", monospace); letter-spacing: .06em; }
+/* 單則頁照片下方的查證碼 */
+.photo-code { color: var(--muted); font-size: var(--text-xs); margin: 8px 0 0; }
+.photo-code a { color: var(--muted); font-family: var(--font-mono, "IBM Plex Mono", monospace); letter-spacing: .06em; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 420px) {
+  .verify-card { flex-direction: column; }
+}

@@ -387,6 +387,8 @@ export const photos = sqliteTable(
     ogKey: text("og_key"),
     /** 沒燒浮水印的原圖（2026-09-29）：R2 的 o/，/img/ 不開放這個目錄，只給改站名時重燒用。刪照片時一起刪 */
     origKey: text("orig_key"),
+    /** 查證碼（2026-09-29）：5 碼大寫英數（不用 0 O 1 I L），燒進浮水印，/verify 用這組碼查回收藏。全站唯一；舊照片由重燒腳本補發 */
+    verifyCode: text("verify_code"),
     contentType: text("content_type").notNull(),
     bytes: integer("bytes").notNull(),
     width: integer("width").notNull().default(0),
@@ -404,8 +406,21 @@ export const photos = sqliteTable(
     // 2c：/img/ 依檔名查是誰的、什麼用途（申訴證據只給本人與管理員）
     index("photos_r2key_idx").on(t.r2Key),
     index("photos_thumbkey_idx").on(t.thumbKey),
+    uniqueIndex("photos_verify_code_uq").on(t.verifyCode),
   ],
 );
+
+/**
+ * 查證碼發號紀錄（2026-09-29）：瀏覽器燒浮水印前先跟伺服器拿碼（/api/uploads/code），上傳時帶回來，
+ * 伺服器確認是發給這個人、還沒用過，才掛到 photos.verify_code。發出去的碼不會再發第二次（code 是主鍵）。
+ * photo_id：用掉這組碼的照片；NULL＝發了還沒用（上傳失敗、中途取消）
+ */
+export const photoCodes = sqliteTable("photo_codes", {
+  code: text("code").primaryKey(),
+  ownerId: text("owner_id").notNull(),
+  photoId: text("photo_id"),
+  createdAt: text("created_at").notNull().default(now),
+});
 
 /** 整數計數器：r2_bytes（R2 累計位元組） */
 export const counters = sqliteTable("counters", {

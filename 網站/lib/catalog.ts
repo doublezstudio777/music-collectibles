@@ -260,6 +260,7 @@ export class Catalog {
   toDetailView = (s: Share): ShareView => ({
     ...this.toShareView(s),
     ...(s.photos ? { photos: s.photos } : {}),
+    ...(s.code ? { code: s.code } : {}),
     ...(s.refIdx?.length ? { refIdx: s.refIdx } : {}),
     ...(s.editedAt ? { editedAt: s.editedAt } : {}),
   });

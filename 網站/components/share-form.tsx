@@ -577,7 +577,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
           return setFormError(r.error.message);
         }
         const cover = picker.items[0];
-        if (r.data.needOg && cover?.id) await uploadCoverOg(cover.id, cover.file ?? cover.url ?? "", acc.me?.handle ?? "").catch(() => null);
+        if (r.data.needOg && cover?.id) await uploadCoverOg(cover.id, cover.file ?? cover.url ?? "", acc.me?.handle ?? "", cover.code).catch(() => null);
       }
       const saleNext = saleState === "sale" ? { state: "sale" as const, price: p ?? undefined } : { state: saleState };
       const saleChanged = !sold && (saleNext.state !== edit.sale.state || (saleNext.state === "sale" && saleNext.price !== edit.sale.price));
@@ -593,7 +593,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
     whenLoggedIn("登入後才能炫收藏", async () => {
       setBusy(true);
       const cover = picker.items[0];
-      if (cover?.id && acc.me?.handle) await uploadCoverOg(cover.id, cover.file ?? cover.url ?? "", acc.me.handle).catch(() => null);
+      if (cover?.id && acc.me?.handle) await uploadCoverOg(cover.id, cover.file ?? cover.url ?? "", acc.me.handle, cover.code).catch(() => null);
       const r = await api<{ n: number }>("/api/shares", {
         body: {
           photoIds: picker.items.map((x) => x.id).filter(Boolean),

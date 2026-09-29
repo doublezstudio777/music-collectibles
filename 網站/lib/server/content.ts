@@ -281,8 +281,13 @@ async function build(): Promise<Catalog> {
         ...(p ? { image: photoUrl(p.r2Key), thumb: photoUrl(p.thumbKey) } : {}),
         ...(p && p.width > 0 && p.height > 0 ? { imageSize: { w: p.width, h: p.height } } : {}),
         ...(p?.ogKey ? { og: photoUrl(p.ogKey) } : {}),
+        ...(p?.verifyCode ? { code: p.verifyCode } : {}),
         ...((galleryBy.get(s.no)?.length ?? 0) > 1
-          ? { photos: galleryBy.get(s.no)!.map((g) => ({ image: photoUrl(g.r2Key), thumb: photoUrl(g.thumbKey) })) }
+          ? {
+              photos: galleryBy
+                .get(s.no)!
+                .map((g) => ({ image: photoUrl(g.r2Key), thumb: photoUrl(g.thumbKey), ...(g.verifyCode ? { code: g.verifyCode } : {}) })),
+            }
           : {}),
         ...refsOf(galleryBy.get(s.no) ?? []),
         ...(s.editedAt ? { editedAt: s.editedAt } : {}),
