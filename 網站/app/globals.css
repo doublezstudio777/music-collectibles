@@ -1473,3 +1473,66 @@ button.sf-row:hover, .sf-row[aria-pressed="true"] { background: var(--surface); 
 .card .tags { max-height: 24px; overflow: hidden; }
 .card .tags li { flex: none; }
 .card-foot { margin-top: auto; padding-top: 6px; }
+
+/* ===== 新手指南批次（2026-09-29） ===== */
+/* 等級標籤改成連結（/guide#levels）；從暱稱連結裡搬出來後，補回原本跟暱稱之間 8px 的距離 */
+a.lv-tag:hover { border-color: var(--text); color: var(--text); }
+.detail-by > .lv-tag { margin-left: -4px; }
+@media (min-width: 701px) { .card-foot > .lv-card { margin-left: -2px; } }
+
+/* 新手指南 */
+.guide-sec { scroll-margin-top: 72px; }
+.guide-sec + .guide-sec { margin-top: 32px; }
+.guide #titles { scroll-margin-top: 72px; }
+.guide-fig { margin: 16px 0 20px; }
+.guide-img { display: block; height: auto; max-width: 100%; }
+.guide-img-phone { max-width: 375px; width: 100%; }
+.guide-table { margin: 8px 0 20px; }
+.guide-table th[scope="row"] { font-weight: 600; text-align: left; white-space: nowrap; }
+.guide-table td.num, .guide-table th.num { text-align: right; white-space: nowrap; }
+.guide .tbl-scroll { margin: 0; }
+@media (min-width: 641px) { .guide-dialog { width: 760px; } }
+.guide-dialog-head { align-items: center; background: var(--bg); display: flex; justify-content: space-between; margin: -24px -24px 12px; padding: 16px 24px 8px; position: sticky; top: -24px; z-index: 1; }
+.guide-dialog-head .q-title { margin: 0; }
+@media (max-width: 640px) {
+  .guide-dialog-head { margin: 0 -18px 12px; padding: 0 18px 8px; top: -12px; }
+  .guide .tbl th, .guide .tbl td { padding: 8px 6px; }
+}
+
+/* 意見回饋 */
+.fb-form { display: grid; gap: 8px; justify-items: stretch; }
+.fb-form .q-reasons { margin-bottom: 8px; }
+.fb-form .q-acts { margin-top: 8px; }
+.fb-photo-label { margin-top: 8px; }
+.fb-photo-btn { justify-self: start; }
+.fb-thumb { height: 64px; object-fit: cover; width: 64px; }
+.fb-done { font-size: var(--text-lg); font-weight: 700; margin: 24px 0; }
+.fb-body { white-space: pre-wrap; }
+.fb-note { width: 100%; }
+
+/* 資料空白處的「補上」 */
+.fill-rows { align-items: center; display: flex; flex-wrap: wrap; gap: 8px 16px; }
+.fill-row { align-items: center; display: inline-flex; flex-wrap: wrap; gap: 8px; }
+p.fill-row { display: flex; }
+.fill-label { color: var(--muted); font-size: var(--text-sm); }
+.fill-btn { min-height: 36px; padding: 0 12px; }
+.tracks-blank { padding: 8px 0; }
+
+/* 收藏榮譽榜 */
+.rank-period { font-weight: 400; margin-left: 8px; }
+.rank-list { list-style: none; margin: 0; padding: 0; }
+.rank-row { align-items: center; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 6px 10px; min-height: 48px; padding: 8px 0; }
+.rank-pos { color: var(--muted); flex: none; text-align: right; width: 2em; }
+.rank-pos:empty { display: none; }
+.rank-artist { flex: 1 0 100%; font-weight: 600; }
+.rank-who { align-items: center; color: var(--text); display: inline-flex; gap: 8px; min-width: 0; }
+.rank-name { overflow-wrap: anywhere; }
+.rank-row .lv-tag { margin-left: 0; }
+.rank-pts { margin-left: auto; white-space: nowrap; }
+/* 新手指南正文：比照法務頁的標題與條列 */
+.guide.prose { max-width: none; }
+.guide h2, .guide h3 { font-size: var(--text-lg); font-weight: 700; margin: 0 0 12px; }
+.guide p, .guide li { font-size: var(--text-base); line-height: 1.75; }
+.guide ul { display: grid; gap: 6px; list-style: disc; margin: 0 0 8px; padding-left: 1.25em; }
+.guide a { text-decoration: underline; text-underline-offset: 3px; }
+.guide-sec + .guide-sec { border-top: 1px solid var(--line); padding-top: 28px; }

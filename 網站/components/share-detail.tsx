@@ -768,8 +768,8 @@ export function ShareDetail({
               {share.author.initials}
             </span>
             <span className="who-name">{share.author.name}</span>
-            <LevelTag badge={share.author.badge} />
           </Link>
+          <LevelTag badge={share.author.badge} />
           <span className="when">{share.time}</span>
           <LikeButton n={share.n} base={share.likes} large />
         </div>

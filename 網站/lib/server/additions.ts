@@ -13,6 +13,7 @@ import { isAdmin, type User } from "@/lib/server/auth";
 import { parseJson, userNames } from "@/lib/server/content";
 import { ensureItem } from "@/lib/server/series-link";
 import { mergeArtists } from "@/lib/server/duplicates";
+import { creditCreate } from "@/lib/server/scores";
 import { HttpError } from "@/lib/server/trade";
 
 export type AdditionType = "artist" | "series" | "version";
@@ -33,10 +34,13 @@ export function autoSlug(name: string) {
 
 export async function recordAddition(type: AdditionType, ref: string, u: User) {
   const admin = isAdmin(u);
-  await getDb()
+  const r = await getDb()
     .insert(catalogAdditions)
     .values({ type, ref, createdBy: u.id, ...(admin ? { confirmedAt: nowIso(), confirmedBy: u.id } : {}) })
-    .onConflictDoNothing();
+    .onConflictDoNothing()
+    .returning({ id: catalogAdditions.id });
+  // 新增 +15 當下入帳（2026-09-29）：藝人用新增紀錄的 id，系列、版本用自己的 id（跟每日彙總同一個來源鍵）
+  if (r.length) await creditCreate(u.id, type, type === "artist" ? r[0].id : Number(ref));
 }
 
 /** 表單用：這位會員自己新增過的（藝人 slug、系列鍵），這些在表單上是「改名」不是「改」 */

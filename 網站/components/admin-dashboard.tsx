@@ -18,6 +18,7 @@ type Queue = {
   deletions?: number;
   artistPhotos?: number;
   errorReports?: number;
+  feedback?: number;
 };
 type StatsRes = { stats: Stats; cached: boolean; queue: Queue };
 type Usage = {
@@ -273,6 +274,10 @@ export function AdminDashboard() {
           <Link href="/admin/error-reports" className="queue-item" data-testid="queue-error-reports">
             <b className="num">{q.errorReports ?? 0}</b>
             <span>錯誤回報</span>
+          </Link>
+          <Link href="/admin/feedback" className="queue-item" data-testid="queue-feedback">
+            <b className="num">{q.feedback ?? 0}</b>
+            <span>未處理的意見回饋</span>
           </Link>
           <Link href="/admin/moderation#appeals" className="queue-item">
             <b className="num">{q.appeals}</b>

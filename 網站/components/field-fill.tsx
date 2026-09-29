@@ -37,12 +37,11 @@ export function FieldFill({ vkey, fields }: { vkey: string; fields: FillField[] 
   };
   const f = open ? FILL_FIELDS[open] : null;
   return (
-    <div className="year-missing" data-testid="field-missing" data-vkey={vkey}>
+    <div className="year-missing fill-rows" data-testid="field-missing" data-vkey={vkey}>
       {done.length ? <span role="status">已補上{done.map((d) => FILL_FIELDS[d].label).join("、")}，謝謝</span> : null}
-      {left.length ? <span>待補</span> : null}
       {open && f ? (
         <span className="year-fill">
-          <label className="sr-only" htmlFor={`fill-${vkey}-${open}`}>
+          <label className="fill-label" htmlFor={`fill-${vkey}-${open}`}>
             {f.label}
           </label>
           <input
@@ -56,7 +55,7 @@ export function FieldFill({ vkey, fields }: { vkey: string; fields: FillField[] 
             data-testid="fill-input"
           />
           <button type="button" className="btn btn-line" onClick={() => void send()} disabled={busy} data-testid="fill-send">
-            補上
+            儲存
           </button>
           <button type="button" className="btn-text" onClick={() => setOpen(null)}>
             取消
@@ -64,15 +63,17 @@ export function FieldFill({ vkey, fields }: { vkey: string; fields: FillField[] 
         </span>
       ) : (
         left.map((k) => (
-          <button
-            key={k}
-            type="button"
-            className="btn-text"
-            onClick={() => whenLoggedIn("登入後才能補資料", () => setOpen(k))}
-            data-testid={`fill-open-${k}`}
-          >
-            {FILL_FIELDS[k].label}
-          </button>
+          <span key={k} className="fill-row" data-field={k}>
+            <span className="fill-label">{FILL_FIELDS[k].label}待補</span>
+            <button
+              type="button"
+              className="btn btn-line fill-btn"
+              onClick={() => whenLoggedIn("登入後才能補資料", () => setOpen(k))}
+              data-testid={`fill-open-${k}`}
+            >
+              補上
+            </button>
+          </span>
         ))
       )}
       {error ? <span className="field-error">{error}</span> : null}

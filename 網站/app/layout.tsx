@@ -40,6 +40,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <span>{SITE_NAME}</span>
             <p className="foot-note">照片著作權屬上傳者，封面與藝人名稱屬原權利人。</p>
             <nav className="foot-links" aria-label="法務">
+              <Link href="/guide">新手指南</Link>
+              <Link href="/ranking">收藏榮譽榜</Link>
               <Link href="/about">關於{SITE_NAME}</Link>
               <Link href="/privacy">隱私權政策</Link>
               <Link href="/terms">使用條款</Link>

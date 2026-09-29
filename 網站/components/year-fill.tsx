@@ -28,7 +28,7 @@ export function YearFill({ skey }: { skey: string }) {
     router.refresh();
   };
   return (
-    <p className="year-missing" data-testid="year-missing">
+    <p className="year-missing fill-row" data-testid="year-missing">
       {done ? (
         <span role="status">已補上發行年 {done}，謝謝</span>
       ) : (
@@ -47,15 +47,15 @@ export function YearFill({ skey }: { skey: string }) {
                 data-testid="year-input"
               />
               <button type="button" className="btn btn-line" onClick={() => void send()} disabled={busy} data-testid="year-send">
-                補上
+                儲存
               </button>
               <button type="button" className="btn-text" onClick={() => setOpen(false)}>
                 取消
               </button>
             </span>
           ) : (
-            <button type="button" className="btn-text" onClick={() => whenLoggedIn("登入後才能補資料", () => setOpen(true))} data-testid="year-open">
-              我知道，補上
+            <button type="button" className="btn btn-line fill-btn" onClick={() => whenLoggedIn("登入後才能補資料", () => setOpen(true))} data-testid="year-open">
+              補上
             </button>
           )}
           {error ? <span className="field-error">{error}</span> : null}

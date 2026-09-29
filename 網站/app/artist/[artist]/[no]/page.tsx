@@ -39,6 +39,7 @@ import { Ava } from "@/components/ava";
 import { LevelTag } from "@/components/level-tag";
 import { YearFill } from "@/components/year-fill";
 import { FieldFill } from "@/components/field-fill";
+import { FillLink } from "@/components/fill-link";
 import { FILL_FIELDS, isBlank, type FillField } from "@/lib/fill";
 
 type Props = { params: Promise<{ artist: string; no: string }>; searchParams?: Promise<{ edit?: string }> };
@@ -296,6 +297,21 @@ function VersionTracksBlock({
   const lines = t?.lines ?? [];
   const n = trackCount(lines);
   const self = `/artist/${seriesKey(series)}`;
+  const editHref = `${self}?edit=${encodeURIComponent(`tracks:${anchor}`)}#${anchor}`;
+  // 沒有曲目（2026-09-29）：不收合，直接在欄位旁放「補上」
+  if (!lines.length && !editor) {
+    return (
+      <div className="tracks tracks-blank" data-testid="version-tracks">
+        <p className="fill-row">
+          <span className="fill-label">曲目待補</span>
+          <FillLink href={editHref} testid="tracks-edit" />
+          <Link className="link sub" href={`${self}/history?tracks=${encodeURIComponent(anchor)}`}>
+            歷史
+          </Link>
+        </p>
+      </div>
+    );
+  }
   return (
     <details className="tracks" data-testid="version-tracks" open={editor ? true : undefined}>
       <summary>
@@ -332,7 +348,7 @@ function VersionTracksBlock({
             <span className="dot" aria-hidden="true">·</span>
           </>
         ) : null}
-        <Link className="link" href={`${self}?edit=${encodeURIComponent(`tracks:${anchor}`)}#${anchor}`} data-testid="tracks-edit">
+        <Link className="link" href={editHref} data-testid="tracks-edit">
           {lines.length ? "編輯曲目" : "補上曲目"}
         </Link>
         <span className="dot" aria-hidden="true">·</span>
@@ -458,8 +474,13 @@ export default async function SeriesPage({ params, searchParams }: Props) {
       <section id="body" className="block prose">
         {editing ? (
           <WikiEditor target={`series:${skey}`} paras={page?.content ?? series.body} baseId={baseId} locked={pageLocked} closeHref={self} label="正文" />
-        ) : (
+        ) : series.body.length ? (
           series.body.map((p, i) => <p key={i}>{p}</p>)
+        ) : (
+          <p className="fill-row" data-testid="body-missing">
+            <span className="fill-label">正文待補</span>
+            <FillLink href={`${self}?edit=1#body`} testid="body-fill" />
+          </p>
         )}
         <p className="edit-line" data-testid="last-edit">
           最後修改：{lastBy.by}，{lastBy.date}

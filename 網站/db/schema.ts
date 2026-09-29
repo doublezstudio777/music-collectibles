@@ -965,3 +965,49 @@ export const catalogAdditionEdits = sqliteTable(
   },
   (t) => [index("catalog_addition_edits_addition_idx").on(t.additionId)],
 );
+
+/* =====================================================================
+ * 新手指南批次（2026-09-29，drizzle/0018）：意見回饋、收藏榮譽榜。兩張新表，都沒有內容版本觸發器。
+ * ===================================================================== */
+
+/**
+ * 意見回饋（/feedback）：未登入也能送。kind＝suggest｜data｜partner｜privacy｜takedown｜other。
+ * 附件照片放 R2 的 f/（只給管理員看，走 /api/admin/feedback/photo）。status＝open｜done；note＝內部備註
+ */
+export const feedback = sqliteTable(
+  "feedback",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    kind: text("kind").notNull(),
+    body: text("body").notNull(),
+    email: text("email").notNull().default(""),
+    userId: text("user_id"),
+    photoKey: text("photo_key"),
+    thumbKey: text("thumb_key"),
+    photoBytes: integer("photo_bytes").notNull().default(0),
+    status: text("status").notNull().default("open"),
+    note: text("note").notNull().default(""),
+    handledBy: text("handled_by"),
+    handledAt: text("handled_at"),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [index("feedback_status_idx").on(t.status, t.id)],
+);
+
+/**
+ * 收藏榮譽榜（/ranking）：每日計分排程整張重算。board＝month（本月貢獻）｜total（總榜）｜fakebuster（打假先鋒）｜topfan（頭號樂迷，ref＝藝人 slug）。
+ * points＝month 是本月入帳的分數，其他是累計分數；period＝台灣時間的月份（month 用）
+ */
+export const rankings = sqliteTable(
+  "rankings",
+  {
+    board: text("board").notNull(),
+    pos: integer("pos").notNull(),
+    userId: text("user_id").notNull(),
+    points: integer("points").notNull().default(0),
+    ref: text("ref").notNull().default(""),
+    period: text("period").notNull().default(""),
+    updatedAt: text("updated_at").notNull().default(now),
+  },
+  (t) => [primaryKey({ columns: [t.board, t.pos] }), index("rankings_user_idx").on(t.userId, t.board)],
+);

@@ -7,6 +7,7 @@ import { ogMeta } from "@/lib/server/og";
 import { CopyLink } from "@/components/share-actions";
 import { FollowButton } from "@/components/follow-button";
 import { WikiEditor } from "@/components/wiki-editor";
+import { FillLink } from "@/components/fill-link";
 import { isLocked, lastEdit, loadPage } from "@/lib/server/wiki";
 import { ShareWall } from "@/components/share-wall";
 import { SeriesTile } from "@/components/work-cover";
@@ -131,7 +132,14 @@ export default async function ArtistPage({ params, searchParams }: Props) {
             </Link>
           </p>
         </section>
-      ) : null}
+      ) : (
+        <section id="intro" className="block">
+          <p className="fill-row" data-testid="intro-missing">
+            <span className="fill-label">簡介待補</span>
+            <FillLink href={`${self}?edit=1#intro`} testid="intro-fill" />
+          </p>
+        </section>
+      )}
 
       {guests.length ? (
         <section className="block">

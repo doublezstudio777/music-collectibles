@@ -13,6 +13,8 @@
 //   同一人在同一頁連續編輯（中間沒有別人改、間隔 60 分鐘內）合併成一次，依合併後的總改動算分
 //   「還原」本身不給分
 // - 新增系列、品項、版本並經核准：+15（管理員新增的直接生效）。品項連帶送出的第一個版本不另外算
+//   2026-09-29：會員新增藝人、系列、版本改成「當下入帳」（creditCreate，新增那一刻寫一筆已入帳事件並直接加進 user_scores），
+//   新增藝人也算（事件來源用 catalog_additions 的 id，藝人改識別碼不會重複給分）；日後被合併或刪除，下一次彙總作廢扣回
 // - 藝人照片投稿被管理員設為使用中：+15（2026-09-28，比照上一條）；之後被別張替換仍保留，被撤下或刪除作廢
 // - 發炫收藏（含照片）：+10，每日上限 5 則（2026-09-28 拿掉「勾辨識參考 +5」，改管理員標記、不給分）
 // - 補上缺漏資料：+10，每日上限 5 次，7 天後入帳，7 天內被改掉不給分；補自己新增的不算。
@@ -49,42 +51,9 @@ import { threshold } from "@/lib/server/content";
 import { hit } from "@/lib/server/services";
 import { HttpError } from "@/lib/server/trade";
 
-export const POINTS = {
-  edit: 20,
-  editBig: 30,
-  create: 15,
-  share: 10,
-  fill: 10,
-  likeRecv: 1,
-  likeGive: 1,
-  comment: 2,
-  commentRecv: 1,
-  deal: 5,
-  reportOk: 10,
-  reportBad: -5,
-} as const;
+import { BIG_CHARS, CAPS, HOLD_DAYS, MINOR_CHARS, POINTS, SESSION_MINUTES, TITLE_FAKEBUSTER_MIN } from "@/lib/score-rules";
 
-export const CAPS = {
-  shareDay: 5,
-  fillDay: 5,
-  commentDay: 10,
-  likeGiveDay: 10,
-  likeRecvPerShare: 50,
-  commentRecvPerShare: 50,
-  pairLikes: 20,
-  pairComments: 10,
-  pairDeals: 2,
-} as const;
-
-/** 改動不到這麼多字＝極小修改 */
-export const MINOR_CHARS = 10;
-/** 改動這麼多字以上＝大幅編輯 */
-export const BIG_CHARS = 200;
-/** 同一人同一頁連續編輯合併的間隔 */
-export const SESSION_MINUTES = 60;
-/** 編輯、補資料、檢舉成立的入帳等待期 */
-export const HOLD_DAYS = 7;
-export const TITLE_FAKEBUSTER_MIN = 5;
+export { BIG_CHARS, CAPS, HOLD_DAYS, MINOR_CHARS, POINTS, SESSION_MINUTES, TITLE_FAKEBUSTER_MIN };
 
 const RUN_KEY = "score_run_at";
 const addDays = (iso: string, d: number) => new Date(Date.parse(iso) + d * 86400_000).toISOString();
@@ -186,6 +155,34 @@ export async function recordFill(u: User, source: string, at: string, detail: Re
     .onConflictDoNothing();
 }
 
+/* ---------- 新增藝人、系列、版本：當下入帳（2026-09-29） ---------- */
+
+/**
+ * 新增的那一刻寫一筆「已入帳」的事件，並直接把分數加進 user_scores（不等每日彙總）。
+ * 來源鍵跟每日彙總補事件的鍵相同（series:{id}、version:{id}、artist:ca:{新增紀錄 id}），重複寫入會被唯一索引擋掉、不會加兩次。
+ * 之後被合併、刪除、隱藏，由每日彙總的 BASE_REASON 作廢扣回。計分表都沒有內容版本觸發器，不影響整頁快取。
+ */
+export async function creditCreate(userId: string, type: "artist" | "series" | "version", ref: number, at = new Date().toISOString()) {
+  const db = env.DB!;
+  const source = type === "artist" ? `artist:ca:${ref}` : `${type}:${ref}`;
+  const detail = type === "artist" ? { type, addition: ref } : { type, id: ref };
+  const r = await db
+    .prepare(
+      `INSERT OR IGNORE INTO score_events (user_id, kind, source, points, occurred_at, available_at, state, detail) VALUES (?1, 'create', ?2, ?3, ?4, ?4, 'credited', ?5)`,
+    )
+    .bind(userId, source, POINTS.create, at, JSON.stringify(detail))
+    .run();
+  if (!r.meta.changes) return false;
+  await db
+    .prepare(
+      `INSERT INTO user_scores (user_id, score, pending, updated_at) VALUES (?1, ?2, 0, ?3)
+       ON CONFLICT(user_id) DO UPDATE SET score = user_scores.score + excluded.score, updated_at = excluded.updated_at`,
+    )
+    .bind(userId, POINTS.create, at)
+    .run();
+  return true;
+}
+
 export async function fillSeriesYear(u: User, rawKey: unknown, rawYear: unknown) {
   if (!u.emailVerifiedAt) throw new HttpError(403, "NOT_VERIFIED", "認證後才能補資料");
   const m = typeof rawKey === "string" ? rawKey.match(/^([a-z0-9-]{1,60})\/(\d{1,6})$/) : null;
@@ -271,6 +268,10 @@ const INSERTS = [
    SELECT v.created_by, 'create', 'version:' || v.id, ${POINTS.create}, v.created_at, v.created_at, json_object('type', 'version', 'id', v.id)
    FROM versions v JOIN items i ON i.id = v.item_ref
    WHERE v.created_by IS NOT NULL AND NOT (v.version_id = 'v1' AND i.created_by IS v.created_by)`,
+  // 新增藝人（2026-09-29）：來源用新增紀錄的 id（藝人識別碼可能被管理員改掉）
+  `INSERT OR IGNORE INTO score_events (user_id, kind, source, points, occurred_at, available_at, detail)
+   SELECT created_by, 'create', 'artist:ca:' || id, ${POINTS.create}, created_at, created_at, json_object('type', 'artist', 'addition', id)
+   FROM catalog_additions WHERE type = 'artist'`,
   // 藝人照片投稿被設為使用中（2026-09-28）：+15，比照新增並經核准；時間＝第一次設為使用中
   `INSERT OR IGNORE INTO score_events (user_id, kind, source, points, occurred_at, available_at, detail)
    SELECT submitter_id, 'create', 'aphoto:' || id, ${POINTS.create}, activated_at, activated_at, json_object('type', 'artist_photo', 'id', id)
@@ -349,6 +350,9 @@ const BASE_REASON = `CASE e.kind
         WHEN v.status != 'approved' THEN 'not_approved'
         WHEN ${LOCKED("'version:' || w.artist_slug || '/' || w.no || '#' || i.item_id || '-' || v.version_id")} THEN 'reported' END
         FROM versions v JOIN items i ON i.id = v.item_ref JOIN series w ON w.id = i.series_id WHERE v.id = ${J("id")})
+    WHEN 'artist' THEN (SELECT CASE WHEN a.deleted_at IS NOT NULL THEN 'deleted' WHEN a.hidden_at IS NOT NULL THEN 'hidden'
+        WHEN a.status != 'approved' THEN 'not_approved' END
+        FROM catalog_additions ca JOIN artists a ON a.slug = ca.ref WHERE ca.id = ${J("addition")})
     WHEN 'artist_photo' THEN (SELECT CASE WHEN p.status IN ('removed', 'deleted') THEN 'deleted' END FROM artist_photos p WHERE p.id = ${J("id")})
     END
   WHEN 'like_give' THEN CASE WHEN NOT EXISTS (SELECT 1 FROM likes l WHERE l.user_id = ${J("liker")} AND l.share_no = ${J("share")}) THEN 'removed' END
@@ -448,6 +452,39 @@ const DESIRED_TITLES = `
   SELECT user_id, kind, ref FROM fb
   UNION ALL SELECT user_id, 'topfan', slug FROM rk WHERE rn = 1`;
 
+/**
+ * 收藏榮譽榜（2026-09-29）：每次彙總整張重算 rankings，請求當下只讀這張表。
+ * 館長（ADMIN_EMAILS）與非 active（停權、已刪除）的帳號一律不列。
+ * - month：本月（台灣時間）入帳的分數合計前 20（入帳時間＝available_at；每月 1 日台灣時間起自然換成新月份重算）
+ * - total：累計分數前 20
+ * - fakebuster：所有打假先鋒；topfan：每位藝人的頭號樂迷（排序在頁面依藝人名稱做）
+ */
+const RANK_OK = `SELECT u.id FROM users u WHERE u.status = 'active' AND lower(u.email) NOT IN (SELECT lower(value) FROM json_each(?3))`;
+const RANKINGS = [
+  `DELETE FROM rankings`,
+  `WITH m AS (
+     SELECT e.user_id, SUM(e.points) AS pts FROM score_events e
+     WHERE e.state = 'credited' AND strftime('%Y-%m', e.available_at, '+8 hours') = strftime('%Y-%m', ?1, '+8 hours')
+       AND e.user_id IN (${RANK_OK})
+     GROUP BY e.user_id HAVING SUM(e.points) > 0
+   )
+   INSERT INTO rankings (board, pos, user_id, points, ref, period, updated_at)
+   SELECT 'month', ROW_NUMBER() OVER (ORDER BY m.pts DESC, COALESCE(s.score, 0) DESC, m.user_id), m.user_id, m.pts, '', strftime('%Y-%m', ?1, '+8 hours'), ?1
+   FROM m LEFT JOIN user_scores s ON s.user_id = m.user_id ORDER BY m.pts DESC, COALESCE(s.score, 0) DESC, m.user_id LIMIT 20`,
+  `INSERT INTO rankings (board, pos, user_id, points, ref, period, updated_at)
+   SELECT 'total', ROW_NUMBER() OVER (ORDER BY s.score DESC, s.user_id), s.user_id, s.score, '', '', ?1
+   FROM user_scores s WHERE s.score > 0 AND s.user_id IN (${RANK_OK}) ORDER BY s.score DESC, s.user_id LIMIT 20`,
+  `INSERT INTO rankings (board, pos, user_id, points, ref, period, updated_at)
+   SELECT 'fakebuster', ROW_NUMBER() OVER (ORDER BY COALESCE(s.score, 0) DESC, t.since, t.user_id), t.user_id, COALESCE(s.score, 0), '', '', ?1
+   FROM user_titles t LEFT JOIN user_scores s ON s.user_id = t.user_id
+   WHERE t.kind = 'fakebuster' AND t.user_id IN (${RANK_OK})`,
+  `INSERT INTO rankings (board, pos, user_id, points, ref, period, updated_at)
+   SELECT 'topfan', ROW_NUMBER() OVER (ORDER BY a.name, t.ref), t.user_id, COALESCE(s.score, 0), t.ref, '', ?1
+   FROM user_titles t JOIN artists a ON a.slug = t.ref AND a.status = 'approved' AND a.deleted_at IS NULL AND a.hidden_at IS NULL
+   LEFT JOIN user_scores s ON s.user_id = t.user_id
+   WHERE t.kind = 'topfan' AND t.user_id IN (${RANK_OK})`,
+];
+
 export type ScoreRun = { at: string; events: number; changed: number; users: number; titles: number };
 
 /** 跑一次彙總（排程每天一次；管理員可以手動觸發）。now 只給本機驗收模擬時間用 */
@@ -473,6 +510,7 @@ export async function recomputeScores(now = new Date()): Promise<ScoreRun> {
     bind(TOTALS),
     bind(`DELETE FROM user_titles WHERE (user_id, kind, ref) NOT IN (SELECT user_id, kind, ref FROM (${DESIRED_TITLES}))`),
     bind(`INSERT OR IGNORE INTO user_titles (user_id, kind, ref, since) SELECT user_id, kind, ref, ?1 FROM (${DESIRED_TITLES})`),
+    ...RANKINGS.map(bind),
     db.prepare(`INSERT INTO counters (key, value) VALUES (?1, ?2) ON CONFLICT(key) DO UPDATE SET value = excluded.value`).bind(RUN_KEY, now.getTime()),
   ];
   const r = await db.batch(stmts);

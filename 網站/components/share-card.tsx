@@ -174,8 +174,8 @@ export function ShareCard({ share }: { share: ShareView }) {
             {share.author.initials}
           </span>
           <span className="who-name">{share.author.name}</span>
-          <LevelTag badge={share.author.badge} card />
         </Link>
+        <LevelTag badge={share.author.badge} card />
         <span className="when">{share.time}</span>
         <LikeButton n={share.n} base={share.likes} />
       </footer>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { feedbackHref } from "@/lib/feedback";
 import { LegalPage } from "@/components/legal";
 import { SITE_NAME } from "@/lib/data";
 
@@ -80,7 +81,7 @@ export default function PrivacyPage() {
       <ul>
         <li>暱稱、大頭貼、密碼：在<Link href="/settings">設定</Link>頁自己修改（暱稱每 30 天可以改一次）</li>
         <li>刪除帳號：在設定頁點「申請刪除帳號」，寫下原因送出，由管理員處理。刪除後 Email、密碼、登入與活動紀錄、所在地區會刪除，暱稱改成「已刪除的會員」；炫收藏、編輯紀錄、留言、成交筆數會留在網站上，不再顯示是誰。照片預設保留，本人要求時一併刪除。詳細內容見<Link href="/terms">使用條款</Link></li>
-        <li>其他申請（查詢、複製、更正、停止利用）：聯絡信箱待補</li>
+        <li>其他申請（查詢、複製、更正、停止利用）：<Link href={feedbackHref("privacy")} data-testid="legal-feedback">意見回饋表單</Link></li>
       </ul>
 
       <h2>政策更新</h2>

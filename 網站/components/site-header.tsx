@@ -83,6 +83,9 @@ export function SiteHeader() {
                   <Link href="/messages" onClick={close}>
                     私訊
                   </Link>
+                  <Link href="/ranking" onClick={close} data-testid="menu-ranking">
+                    收藏榮譽榜
+                  </Link>
                   {acc.me.admin ? (
                     <Link href="/admin" onClick={close}>
                       管理後台

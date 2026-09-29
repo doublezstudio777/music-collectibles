@@ -62,6 +62,8 @@ export async function renameArtist(admin: User, rawFrom: unknown, rawTo: unknown
 
   run(`UPDATE artists SET slug = ?2, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE slug = ?1`, from, to);
   run(`UPDATE series SET artist_slug = ?2 WHERE artist_slug = ?1`, from, to);
+  // 新增紀錄（計分用它找藝人，2026-09-29）
+  run(`UPDATE catalog_additions SET ref = ?2 WHERE type = 'artist' AND ref = ?1`, from, to);
   // JSON 欄位裡的識別碼一律是 "slug" 帶雙引號，換整個字串不會誤傷別的字
   for (const col of ["credits", "guests", "compilation"]) {
     run(`UPDATE series SET ${col} = REPLACE(${col}, ?1, ?2) WHERE instr(${col}, ?1) > 0`, JSON.stringify(from), JSON.stringify(to));

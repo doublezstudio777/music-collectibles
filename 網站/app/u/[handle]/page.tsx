@@ -13,6 +13,8 @@ import { LevelTag } from "@/components/level-tag";
 import { profileScore } from "@/lib/server/scores";
 import { levelOf } from "@/lib/levels";
 import { FollowList } from "@/components/follow-list";
+import { GuideButton } from "@/components/guide-button";
+import { monthRank } from "@/lib/server/rankings";
 import { HoldingsList } from "@/components/holdings-list";
 import { SaleWall } from "@/components/sale-wall";
 import { ShareWall } from "@/components/share-wall";
@@ -35,6 +37,7 @@ async function loadUser(handle: string) {
       verified: false,
       region: "",
       score: null,
+      monthRank: null,
       owned: [],
       wanted: [],
     };
@@ -51,6 +54,7 @@ async function loadUser(handle: string) {
       verified: Boolean(u.emailVerifiedAt),
       region: (await regionNames([u.id])).get(u.id) ?? "",
       score: await profileScore(u),
+      monthRank: await monthRank(u.id),
       ...(await publicHoldings(u.id)),
     };
   }
@@ -140,6 +144,13 @@ export default async function UserPage({ params }: Props) {
             {user.score ? <LevelTag badge={user.score.badge} /> : null}
           </h1>
           {user.score ? <ScoreLine handle={user.handle} s={user.score} /> : null}
+          {user.monthRank ? (
+            <p className="page-meta" data-testid="profile-month-rank">
+              <Link className="link" href="/ranking#month">
+                本月第 {user.monthRank} 名
+              </Link>
+            </p>
+          ) : null}
           {user.region ? (
             <p className="page-meta" data-testid="profile-region">
               所在地區 {user.region}
@@ -155,6 +166,7 @@ export default async function UserPage({ params }: Props) {
             <Link className="btn btn-line" href="/settings">
               設定
             </Link>
+            <GuideButton />
           </div>
         </SelfOnly>
       </header>

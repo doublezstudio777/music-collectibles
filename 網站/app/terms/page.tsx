@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { feedbackHref } from "@/lib/feedback";
 import { LegalPage } from "@/components/legal";
 import { SITE_NAME } from "@/lib/data";
 
@@ -51,7 +52,7 @@ export default function TermsPage() {
           授權{SITE_NAME}與其他人使用這張照片，使用時要標示攝影者（你的帳號名）與授權方式。著作權仍屬於你
         </li>
         <li>投稿不會直接公開，由管理員挑選後才出現在藝人頁；每人每天最多投稿 5 張。被選用時可以得到分數</li>
-        <li>照片裡的人有肖像權。藝人本人或經紀公司認為照片不適合公開，可以透過網站聯絡管道（聯絡信箱待補）要求撤下，寫明藝人名稱與藝人頁網址；管理員確認後移除，照片檔案一併刪除</li>
+        <li>照片裡的人有肖像權。藝人本人或經紀公司認為照片不適合公開，可以透過<Link href={feedbackHref("takedown")} data-testid="legal-feedback">意見回饋表單</Link>要求撤下，寫明藝人名稱與藝人頁網址；管理員確認後移除，照片檔案一併刪除</li>
       </ul>
 
       <h2>等級與分數</h2>
