@@ -269,13 +269,14 @@ sql(f"UPDATE revisions SET created_at = '{iso(NOW + timedelta(days=8))}' WHERE i
 # ================= 2. 新增（經核准＋15）、管理員免審核 =================
 rs = requests.post(B + "/api/catalog/submit", json={"type": "series", "artist": ART, "title": f"D送審{STAMP}", "seriesType": "專輯發行", "year": ""}, headers=H(U["d"]))
 ri = requests.post(B + "/api/catalog/submit", json={"type": "item", "seriesKey": f"{ART}/1", "kind": "毛巾", "edition": "一般版"}, headers=H(U["d"]))
-check("2a 會員送審：待審（approved=false）", rs.status_code == 201 and rs.json().get("approved") is False and ri.status_code == 201, (rs.text[:120], ri.text[:120]))
+# 2026-09-29 改：系列、版本改事後審（新增當下生效），品項經 /api/catalog/submit 仍是會員待審
+check("2a 會員新增：系列當下生效（approved=true）、品項待審（approved=false）", rs.status_code == 201 and rs.json().get("approved") is True and ri.status_code == 201 and ri.json().get("approved") is False, (rs.text[-60:], ri.text[:120]))
 sid = sql(f"SELECT id, year, name, status FROM series WHERE artist_slug = '{ART}' AND title = 'D送審{STAMP}'")[0]
 check("2b 送審時選「不記得」＝年份空白、名稱沒有年份", sid["year"] == "" and sid["name"].startswith("《"), sid)
 iid = sql(f"SELECT i.id FROM items i JOIN series s ON s.id = i.series_id WHERE s.artist_slug = '{ART}' AND s.no = 1 AND i.kind = '毛巾'")[0]["id"]
 recompute()
 ev_d = events(U["d"]["id"])
-check("2c 待審的新增不給分（not_approved）", [e["reason"] for e in ev_d if e["source"] in (f"series:{sid['id']}", f"item:{iid}")] == ["not_approved", "not_approved"], [(e["source"], e["reason"]) for e in ev_d if e["kind"] == "create"])
+check("2c 系列當下入帳、待審的品項不給分（not_approved）", [(e["state"] == "credited", e["reason"]) for e in ev_d if e["source"] in (f"series:{sid['id']}", f"item:{iid}")] == [(True, None), (False, "not_approved")], [(e["source"], e["state"], e["reason"]) for e in ev_d if e["kind"] == "create"])
 for typ, i_ in [("series", sid["id"]), ("item", iid)]:
     requests.post(B + "/api/admin/submissions", json={"type": typ, "id": str(i_), "approve": True}, headers=AH)
 vid = sql(f"SELECT id FROM versions WHERE item_ref = {iid}")[0]["id"]
@@ -289,7 +290,8 @@ ev_d = events(U["d"]["id"])
 cr = {e["source"]: (e["state"], e["reason"], e["points"]) for e in ev_d if e["kind"] == "create"}
 check("2d 核准後系列、品項各 +15", cr.get(f"series:{sid['id']}") == ("credited", None, 15) and cr.get(f"item:{iid}") == ("credited", None, 15), cr)
 check("2e 品項連帶的第一個版本不另外算", f"version:{vid}" not in cr, cr)
-check("2f 被退回的版本不給分", v2 and cr.get(f"version:{v2[0]['id']}", ("", "", 0))[1] == "not_approved", (rv3.status_code, v2, cr))
+# 2026-09-29 改：版本事後審，會員新增當下生效＋15，管理員的待審退回對它不作用（改在後台「待確認的新增」處理）
+check("2f 會員新增的版本當下生效、+15 入帳", v2 and cr.get(f"version:{v2[0]['id']}") == ("credited", None, 15), (rv3.status_code, v2, cr))
 ra2 = requests.post(B + "/api/catalog/submit", json={"type": "series", "artist": ART, "title": f"館長新增{STAMP}", "seriesType": "專輯發行", "year": "2025"}, headers=AH)
 aw = sql(f"SELECT id, no, status FROM series WHERE artist_slug = '{ART}' AND title = '館長新增{STAMP}'")[0]
 pend = requests.get(B + "/api/admin", headers=AH).json()
@@ -301,7 +303,7 @@ ra4 = requests.post(B + "/api/catalog/submit", json={"type": "version", "itemKey
 ra5 = requests.post(B + "/api/catalog/submit", json={"type": "artist", "name": f"館長藝人{STAMP}", "slug": f"lvadm{STAMP}"}, headers=AH)
 st = sql(f"SELECT (SELECT i.status FROM items i JOIN series s ON s.id=i.series_id WHERE s.id={aw['id']} AND i.item_id='cd') it, "
          f"(SELECT group_concat(v.status) FROM versions v JOIN items i ON i.id=v.item_ref WHERE i.series_id={aw['id']}) vs, "
-         f"(SELECT status FROM artists WHERE slug='lvadm{STAMP}') ar")[0]
+         f"(SELECT status FROM artists WHERE name='館長藝人{STAMP}') ar")[0]  # 2026-09-28 起識別碼自動產生，不收 slug，改用名稱查
 check("2j 管理員新增的品項、版本、藝人也直接生效", st["it"] == "approved" and st["vs"] == "approved,approved" and st["ar"] == "approved", st)
 logn = sql(f"SELECT COUNT(*) n FROM admin_log WHERE action = '新增（免審核）' AND created_at >= '{iso(NOW)}'")[0]["n"]
 check("2k 管理員免審核寫操作紀錄（4 筆）", logn == 4, logn)
@@ -480,7 +482,7 @@ a_ai = [e for e in ev_a if e["kind"] == "edit" and json.loads(e["detail"])["targ
 check("10b 過了 7 天才被還原，不影響（仍 credited）", a_ai["state"] == "credited", (a_ai["state"], a_ai["reason"]))
 check("10c B 的極小修改與被還原的編輯 7 天後仍是 0 分", total(U["b"]["id"])[0] == 0, total(U["b"]["id"]))
 # 2026-09-28 改：辨識參考 +5 拿掉，91 → 86
-check("10d D 總分＝收藏 50＋新增 30＋收到留言 6＝86（2026-09-28 拿掉辨識參考 +5）", total(U["d"]["id"])[0] == 86, (total(U["d"]["id"]), [(e["kind"], e["state"], e["reason"]) for e in events(U["d"]["id"]) if e["state"] == "credited"]))
+check("10d D 總分＝收藏 50＋新增 45（系列、品項、版本各 15，2026-09-29 版本改當下生效）＋收到留言 6＝101", total(U["d"]["id"])[0] == 101, (total(U["d"]["id"]), [(e["kind"], e["state"], e["reason"]) for e in events(U["d"]["id"]) if e["state"] == "credited"]))
 p1s, p2s = total(U["p1"]["id"])[0], total(U["p2"]["id"])[0]
 check("10e P1＝收藏 100＋給讚 10＋收讚 10＋留言 14＋收到留言 3＝137；P2＝150＋10＋10＋6＋7＝183", (p1s, p2s) == (137, 183), (p1s, p2s))
 check("10f E＝收藏 10＋給讚 9＝19；F＝收藏 10＋留言 18＝28", (total(U["e"]["id"])[0], total(U["f"]["id"])[0]) == (19, 28), (total(U["e"]["id"]), total(U["f"]["id"])))
