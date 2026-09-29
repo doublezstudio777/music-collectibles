@@ -8,9 +8,22 @@
     "guts": {
       "mbid": "f77e7cd4-1e57-45ee-9a6f-dbb203bba4fa",
       "evidence": "MusicBrainz「兄弟本色」排序名 G.U.T.S、國家 TW、類型 Group、成立 2015，Wikidata Q28418093 與中文維基「兄弟本色」條目相同；自動規則只因研究的《台北小巨蛋日落黑趴》MusicBrainz 沒登錄、作品沒有交集而擋下"
+    },
+    "muta": {
+      "mbid": "4f531606-e7ae-47bd-9bb6-f270468b5798",
+      "evidence": "2026-09-29 補查：MusicBrainz 登記名「大淵」（排序名 MUTA，別名 林睦淵／MUTA／大淵）、國家 TW、團員關係 member of 頑童MJ116、唯一發行《Phat Life》掛本色；Wikidata Q85881366 的中文維基條目就是「大淵MUTA」。自動規則對不上是因為網站名稱「大淵MUTA」跟登記名不同，英文名 Muta 的搜尋結果又被國外同名藝人擠掉"
+    },
+    "double-j": {
+      "mbid": "eff2e455-53e9-4006-be4c-2f550f3fd8b2",
+      "evidence": "2026-09-29 補查：MusicBrainz「江靜」（別名 呆寶靜，國家 TW）的 Wikidata Q65061116 中文維基條目就是「呆寶靜」，研究資料也寫本名江靜。另有一筆「呆宝静」（0b849773，出生地中國，沒有任何發行）是同一人的重複條目，選有發行、有 Wikidata 連結的這筆"
     }
   },
-  "protectedShare": { "fillBlank": ["track_list", "tracks"] },
+  "protectedShare": {
+    "fillBlank": [
+      "track_list",
+      "tracks"
+    ]
+  },
   "mergeSeries": [
     {
       "from": "yeemao/1",
