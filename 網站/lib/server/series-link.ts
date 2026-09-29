@@ -8,6 +8,7 @@ import { and, asc, eq, isNull, max } from "drizzle-orm";
 import { getDb } from "@/db";
 import { artists, counters, items, series, shares, versions } from "@/db/schema";
 import { composeWhat, KINDS, MISC_SERIES_TITLE, type Kind } from "@/lib/data";
+import { creditCreate } from "@/lib/server/scores";
 
 export const ITEM_SLUG: Record<Kind, string> = {
   CD: "cd",
@@ -76,6 +77,8 @@ export async function ensureMiscSeries(artistSlug: string, userId: string): Prom
 /**
  * 系列裡某種品項的 item_id：已有（approved、沒刪沒藏）就用第一個；沒有就建一個直接生效的品項（沒有版本）。
  * 自動建的品項跟會員送出的新增一樣可以被檢舉「官方沒出過這個品項」。
+ * 新增當下 +15 入帳（2026-09-29，跟藝人／系列／版本一致）：來源鍵跟每日彙總補事件同一把（item:{id}），
+ * 兩個請求同時搶建同一個品項時，只有真的插進去那個會拿到分數；沒插進去（撞唯一索引）的不重複給分。
  */
 export async function ensureItem(seriesId: number, kind: Kind, userId: string): Promise<string> {
   const db = getDb();
@@ -89,7 +92,12 @@ export async function ensureItem(seriesId: number, kind: Kind, userId: string): 
   const base = ITEM_SLUG[kind];
   let itemId = base;
   for (let i = 2; existing.some((x) => x.itemId === itemId); i++) itemId = `${base}${i}`;
-  await db.insert(items).values({ seriesId, itemId, kind, sort: existing.length, status: "approved", createdBy: userId }).onConflictDoNothing();
+  const inserted = await db
+    .insert(items)
+    .values({ seriesId, itemId, kind, sort: existing.length, status: "approved", createdBy: userId })
+    .onConflictDoNothing()
+    .returning({ id: items.id });
+  if (inserted.length) await creditCreate(userId, "item", inserted[0].id);
   return itemId;
 }
 

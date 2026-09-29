@@ -15,6 +15,8 @@
 // - 新增系列、品項、版本並經核准：+15（管理員新增的直接生效）。品項連帶送出的第一個版本不另外算
 //   2026-09-29：會員新增藝人、系列、版本改成「當下入帳」（creditCreate，新增那一刻寫一筆已入帳事件並直接加進 user_scores），
 //   新增藝人也算（事件來源用 catalog_additions 的 id，藝人改識別碼不會重複給分）；日後被合併或刪除，下一次彙總作廢扣回
+//   2026-09-29 再修：自動建立品項（series-link.ts 的 ensureItem，選了系列但還沒有這種品項時）也改當下入帳，
+//   不再等隔天彙總；每日彙總仍保留同一段 INSERT OR IGNORE，靠 score_events.source 的唯一索引擋掉重複，不會加兩次
 // - 藝人照片投稿被管理員設為使用中：+15（2026-09-28，比照上一條）；之後被別張替換仍保留，被撤下或刪除作廢
 // - 發炫收藏（含照片）：+10，每日上限 5 則（2026-09-28 拿掉「勾辨識參考 +5」，改管理員標記、不給分）
 // - 補上缺漏資料：+10，每日上限 5 次，7 天後入帳，7 天內被改掉不給分；補自己新增的不算。
@@ -159,10 +161,10 @@ export async function recordFill(u: User, source: string, at: string, detail: Re
 
 /**
  * 新增的那一刻寫一筆「已入帳」的事件，並直接把分數加進 user_scores（不等每日彙總）。
- * 來源鍵跟每日彙總補事件的鍵相同（series:{id}、version:{id}、artist:ca:{新增紀錄 id}），重複寫入會被唯一索引擋掉、不會加兩次。
+ * 來源鍵跟每日彙總補事件的鍵相同（series:{id}、item:{id}、version:{id}、artist:ca:{新增紀錄 id}），重複寫入會被唯一索引擋掉、不會加兩次。
  * 之後被合併、刪除、隱藏，由每日彙總的 BASE_REASON 作廢扣回。計分表都沒有內容版本觸發器，不影響整頁快取。
  */
-export async function creditCreate(userId: string, type: "artist" | "series" | "version", ref: number, at = new Date().toISOString()) {
+export async function creditCreate(userId: string, type: "artist" | "series" | "item" | "version", ref: number, at = new Date().toISOString()) {
   const db = env.DB!;
   const source = type === "artist" ? `artist:ca:${ref}` : `${type}:${ref}`;
   const detail = type === "artist" ? { type, addition: ref } : { type, id: ref };
