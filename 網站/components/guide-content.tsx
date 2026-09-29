@@ -13,7 +13,7 @@ const pts = (x: number) => (x < 0 ? `−${Math.abs(x)}` : `+${x}`);
 /** 得分方式：[項目, 分數, 每日上限] */
 export const POINT_ROWS: [string, string, string][] = [
   ["編輯藝人頁、專輯頁", `${pts(POINTS.edit)}；單次 ${BIG_CHARS} 字以上 ${pts(POINTS.editBig)}`, "無"],
-  ["新增藝人、專輯、版本", pts(POINTS.create), "無"],
+  ["新增藝人、專輯、品項、版本", pts(POINTS.create), "無"],
   ["藝人照片獲採用", pts(POINTS.create), "無"],
   ["發布收藏", pts(POINTS.share), `${CAPS.shareDay} 則`],
   ["補上空白資料", pts(POINTS.fill), `${CAPS.fillDay} 次`],
@@ -131,7 +131,7 @@ export function GuideContent({ headingLevel = 2 }: { headingLevel?: 2 | 3 }) {
         </div>
         <Pic
           desk={{ src: "points-desktop", w: 1200, h: 780 }}
-          mobile={{ src: "points-mobile", w: 750, h: 1012 }}
+          mobile={{ src: "points-mobile", w: 750, h: 1051 }}
           alt={`得分方式：${POINT_ROWS.map((r) => `${r[0]} ${r[1]}`).join("、")}`}
         />
         <div className="tbl-scroll">

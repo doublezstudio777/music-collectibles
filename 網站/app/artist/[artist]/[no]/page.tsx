@@ -473,12 +473,12 @@ export default async function SeriesPage({ params, searchParams }: Props) {
 
       <section id="body" className="block prose">
         {editing ? (
-          <WikiEditor target={`series:${skey}`} paras={page?.content ?? series.body} baseId={baseId} locked={pageLocked} closeHref={self} label="正文" />
+          <WikiEditor target={`series:${skey}`} paras={page?.content ?? series.body} baseId={baseId} locked={pageLocked} closeHref={self} label="介紹" />
         ) : series.body.length ? (
           series.body.map((p, i) => <p key={i}>{p}</p>)
         ) : (
           <p className="fill-row" data-testid="body-missing">
-            <span className="fill-label">正文待補</span>
+            <span className="fill-label">介紹待補</span>
             <FillLink href={`${self}?edit=1#body`} testid="body-fill" />
           </p>
         )}

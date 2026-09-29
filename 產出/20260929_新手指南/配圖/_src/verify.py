@@ -1,9 +1,9 @@
-# 圖上的數字逐一對照 文案草稿_v2.md（從渲染後的 DOM 取字，不是從產生器的資料取）
+# 圖上的數字逐一對照 文案草稿_v4.md（從渲染後的 DOM 取字，不是從產生器的資料取）
 import re, json
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 SRC = Path(__file__).parent
-md = (SRC.parent.parent / "文案草稿_v2.md").read_text()
+md = (SRC.parent.parent / "文案草稿_v4.md").read_text()
 tables, cur = [], None
 for line in md.splitlines():
     if line.startswith("|"):
