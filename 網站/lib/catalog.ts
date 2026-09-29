@@ -367,15 +367,6 @@ export class Catalog {
     return blocks;
   };
 
-  /** 熱門藝人：相關收藏多的在前，只列藝人不列發行單位。多給幾位，按了不感興趣由下一位補上 */
-  hotArtists = (limit = 30) =>
-    this.artists
-      .filter((a) => a.kind === "藝人" && this.artistVisible(a))
-      .map((a) => ({ slug: a.slug, name: a.name, count: this.sharesWithTag(a.name).length }))
-      .filter((x) => x.count > 0)
-      .sort((a, b) => b.count - a.count)
-      .slice(0, limit);
-
   /** 對象的顯示名稱與連結 */
   describeTarget = (target: TargetKey): { level: TargetLevel; levelName: string; title: string; href: string } => {
     const level = target.slice(0, target.indexOf(":")) as TargetLevel;

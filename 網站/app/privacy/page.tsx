@@ -70,11 +70,12 @@ export default function PrivacyPage() {
         <li>Cloudflare：網站主機、資料庫、照片儲存、機器人驗證（Turnstile）。資料可能存放在台灣以外的地區</li>
         <li>Resend：寄送驗證碼與重設密碼的信，會拿到你的 Email 與信件內容</li>
         <li>Google Fonts：網頁字型，瀏覽器載入字型時 Google 會收到你的 IP 位址</li>
+        <li>Spotify：首頁的歌曲播放器是 Spotify 的嵌入播放器，開首頁時瀏覽器會連到 Spotify，Spotify 會收到你的 IP 位址，也可能設定它自己的 Cookie</li>
       </ul>
       <p>除了上面這些服務，以及法律規定必須提供的情況，不會把個人資料交給其他人。</p>
 
       <h2>Cookie</h2>
-      <p>網站自己只用一個登入用的 Cookie（記住你已登入，最長 30 天），沒有廣告或追蹤用的 Cookie。Cloudflare 為了擋機器人與攻擊，可能另外設定它自己的安全用 Cookie。</p>
+      <p>網站自己只用一個登入用的 Cookie（記住你已登入，最長 30 天），沒有廣告或追蹤用的 Cookie。Cloudflare 為了擋機器人與攻擊，可能另外設定它自己的安全用 Cookie；首頁的 Spotify 播放器也可能設定 Spotify 自己的 Cookie。</p>
 
       <h2>你的權利與申請方式</h2>
       <p>你可以查詢、閱覽、要求複製、補充或更正自己的個人資料，也可以要求停止蒐集、處理、利用或刪除。</p>

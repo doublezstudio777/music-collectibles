@@ -206,6 +206,9 @@ export async function mergeArtists(admin: User, rawKeep: unknown, rawLose: unkno
   run(`UPDATE follows SET artist_slug = ?2 WHERE artist_slug = ?1`, lose, keep);
   run(`DELETE FROM artist_dismissals WHERE artist_slug = ?1 AND user_id IN (SELECT user_id FROM artist_dismissals WHERE artist_slug = ?2)`, lose, keep);
   run(`UPDATE artist_dismissals SET artist_slug = ?2 WHERE artist_slug = ?1`, lose, keep);
+  // 首頁推薦歌曲：同一首兩邊都有就留 keep 那筆
+  run(`DELETE FROM spotify_picks WHERE artist_slug = ?1 AND track_id IN (SELECT track_id FROM spotify_picks WHERE artist_slug = ?2)`, lose, keep);
+  run(`UPDATE spotify_picks SET artist_slug = ?2 WHERE artist_slug = ?1`, lose, keep);
   // target_decisions／page_locks 是「對象一列」，跟 keep 既有的一列撞了就丟掉 lose 那列（keep 既有的優先）
   for (const table of ["target_decisions", "page_locks"]) {
     run(`DELETE FROM ${table} WHERE target = ?1 AND EXISTS (SELECT 1 FROM ${table} WHERE target = ?2)`, `artist:${lose}`, `artist:${keep}`);

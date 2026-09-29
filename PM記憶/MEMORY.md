@@ -60,3 +60,4 @@
 - 頁首塞新項目前先用 Playwright 量 360／390、訪客／登入四種組合每個元素左右緣：擠不下時 flex 會先把 logo 壓窄換行，肉眼截圖不一定看得出；窄寬度的新 media query 要放在檔尾，否則會被後面 `max-width:700px` 同權重規則蓋掉（2026-09-29）
 - Playwright `context.set_extra_http_headers` 會把測試表頭（`x-yz-test-country`）也送去 Google Fonts，CORS 擋掉、字型載不到，console 一堆錯，canvas 浮水印也可能燒成系統字；改用 `context.route(本站網址 regex, 加表頭 continue_)` 只加在本站請求（2026-09-29）
 - D1 遠端一句 `UNION ALL` 串太多 SELECT 會 `too many terms in compound SELECT`，全庫掃測試資料一張表一句查（2026-09-29）
+- 首頁放 Spotify 嵌入播放器後，Playwright `networkidle` 永遠等不到（播放器一直有連線），驗收與煙霧測試改 `load`＋最多 10 秒 settle；新元件 class 先 grep 有沒有撞名（`.pick` 是表單標籤，撞到多出內距，量寬度才看得出）；iframe 換歌用 key 重掛不改 src，才不會多一筆上一頁紀錄（2026-09-29）

@@ -76,6 +76,7 @@ export async function renameArtist(admin: User, rawFrom: unknown, rawTo: unknown
   prefixed("deals", "version_key");
   run(`UPDATE follows SET artist_slug = ?2 WHERE artist_slug = ?1`, from, to);
   run(`UPDATE artist_dismissals SET artist_slug = ?2 WHERE artist_slug = ?1`, from, to);
+  run(`UPDATE spotify_picks SET artist_slug = ?2 WHERE artist_slug = ?1`, from, to);
   // 對象鍵：`artist:slug`、`series:slug/1`、`item:slug/1#cd`、`version:slug/1#cd-v1`
   for (const table of ["reports", "appeals", "target_decisions", "page_locks", "revisions"]) {
     run(`UPDATE ${table} SET target = 'artist:' || ?2 WHERE target = 'artist:' || ?1`, from, to);

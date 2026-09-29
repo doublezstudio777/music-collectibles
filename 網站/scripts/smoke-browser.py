@@ -3,7 +3,7 @@
 
 curl 只看得到伺服器回 200，看不到「頁面連結點了沒反應」這種只在瀏覽器端壞的問題（2026-09-27 正式站 Link 全失效就是這樣）。
 這支用 Playwright 開真的瀏覽器：
-  1. 開首頁，等網路靜止
+  1. 開首頁，等網路靜止（最多 10 秒，見 settle）
   2. 點第一個看得到的站內連結（不含首頁、登入），確認網址換了、頁面內容跟著換
   3. 點 logo 回首頁，確認網址換回 /
   4. 整段 console error 與未捕捉例外必須是 0
@@ -27,6 +27,14 @@ errors = []
 
 def path(u):
     return urlparse(u).path or "/"
+
+
+def settle(page):
+    """等網路靜止，最多 10 秒。首頁有 Spotify 嵌入播放器（2026-09-29），播放器會一直有連線，永遠等不到 networkidle"""
+    try:
+        page.wait_for_load_state("networkidle", timeout=10000)
+    except Exception:
+        pass
 
 
 with sync_playwright() as p:
@@ -54,7 +62,8 @@ with sync_playwright() as p:
     page.on("response", on_response)
     page.on("requestfailed", on_failed)
     try:
-        first = page.goto(base + "/", wait_until="networkidle", timeout=30000)
+        first = page.goto(base + "/", wait_until="load", timeout=30000)
+        settle(page)
         if first is not None:
             fh = first.headers
             print(f"首頁 HTML：x-yz-cache={fh.get('x-yz-cache', '-')} x-yz-build={fh.get('x-yz-build', '-')} cf-cache-status={fh.get('cf-cache-status', '-')}")
@@ -80,7 +89,7 @@ with sync_playwright() as p:
                 page.wait_for_url(lambda u: path(u) == want, timeout=10000)
             except Exception:
                 fail.append(f"點 {want} 後網址沒換（仍是 {page.url}）")
-            page.wait_for_load_state("networkidle")
+            settle(page)
             after = page.locator("main").inner_text(timeout=5000)
             if path(page.url) == want:
                 print(f"點連結換頁：{page.url}")
@@ -93,7 +102,7 @@ with sync_playwright() as p:
             print(f"點 logo 回首頁：{page.url}")
         except Exception:
             fail.append(f"點 logo 後網址沒回首頁（仍是 {page.url}）")
-        page.wait_for_load_state("networkidle")
+        settle(page)
         page.wait_for_timeout(800)
     except Exception as e:  # 開不起來、找不到元素
         fail.append(f"執行失敗：{e}")

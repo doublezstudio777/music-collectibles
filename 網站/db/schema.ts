@@ -1028,3 +1028,24 @@ export const rankings = sqliteTable(
   },
   (t) => [primaryKey({ columns: [t.board, t.pos] }), index("rankings_user_idx").on(t.userId, t.board)],
 );
+
+/**
+ * 首頁推薦歌曲（2026-09-29）：首頁上方的 Spotify 嵌入播放器從這裡隨機挑一首（瀏覽器端挑）。
+ * 只推薦站上藝人的歌；title 只給後台辨認，前台不顯示（歌名只出現在 Spotify 播放器裡）。
+ * 任何變動都讓 content_version 加 1（遷移 0021 的觸發器），首頁整頁快取跟著換。
+ */
+export const spotifyPicks = sqliteTable(
+  "spotify_picks",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    artistSlug: text("artist_slug").notNull(),
+    /** Spotify 歌曲 ID（22 碼英數） */
+    trackId: text("track_id").notNull(),
+    title: text("title").notNull().default(""),
+    sort: integer("sort").notNull().default(0),
+    enabled: integer("enabled").notNull().default(1),
+    createdBy: text("created_by"),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("spotify_picks_artist_track_uq").on(t.artistSlug, t.trackId), index("spotify_picks_enabled_idx").on(t.enabled, t.sort)],
+);

@@ -5,7 +5,8 @@ import { FollowButton } from "@/components/follow-button";
 
 export const metadata = { title: "全部藝人" };
 
-type Props = { searchParams: Promise<{ g?: string; r?: string }> };
+// 類型：?type=male|female|group（首頁藝人分類連結用，2026-09-29）；舊的 ?g= 一樣有效
+type Props = { searchParams: Promise<{ g?: string; type?: string; r?: string }> };
 
 const GENDERS = Object.keys(GENDER_LABEL) as ArtistGender[];
 const REGIONS = Object.keys(REGION_LABEL) as ArtistRegion[];
@@ -21,7 +22,8 @@ const href = (g?: string, r?: string) => {
 /** 藝人目錄：男歌手／女歌手／團體 × 國內／國外，再點一次取消 */
 export default async function ArtistsPage({ searchParams }: Props) {
   const q = await searchParams;
-  const g = GENDERS.includes(q.g as ArtistGender) ? (q.g as ArtistGender) : undefined;
+  const gq = q.type ?? q.g;
+  const g = GENDERS.includes(gq as ArtistGender) ? (gq as ArtistGender) : undefined;
   const r = REGIONS.includes(q.r as ArtistRegion) ? (q.r as ArtistRegion) : undefined;
   const { c } = await pageData();
   const list = c.artistDirectory(g, r).sort((a, b) => b.count - a.count || a.artist.name.localeCompare(b.artist.name, "zh-Hant"));
