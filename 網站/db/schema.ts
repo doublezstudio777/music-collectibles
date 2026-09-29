@@ -385,6 +385,8 @@ export const photos = sqliteTable(
     thumbKey: text("thumb_key").notNull(),
     /** 分享預覽圖（1200×630 JPEG，浮水印已燒進去）；og:image 用，沒有就退回縮圖。舊資料沒有 */
     ogKey: text("og_key"),
+    /** 沒燒浮水印的原圖（2026-09-29）：R2 的 o/，/img/ 不開放這個目錄，只給改站名時重燒用。刪照片時一起刪 */
+    origKey: text("orig_key"),
     contentType: text("content_type").notNull(),
     bytes: integer("bytes").notNull(),
     width: integer("width").notNull().default(0),

@@ -265,7 +265,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
   const acc = useAccount();
   const id = "share-form";
   const [paused, setPaused] = useState(false);
-  const picker = usePhotoPicker(initial, () => setPaused(true));
+  const picker = usePhotoPicker(initial, () => setPaused(true), acc.me?.handle ?? "");
 
   /* ---------- 誰的東西 ---------- */
   const [about, setAbout] = useState<string[]>(edit?.about ?? []);

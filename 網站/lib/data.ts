@@ -66,11 +66,11 @@ export const miscSeriesRef = (artistSlug: string) => `misc:${artistSlug}`;
 export const KIND_LABEL_FALLBACK = "收藏";
 
 /** 站方描述：首頁、被鎖定內容的連結預覽共用 */
-/** 站名只在這裡設定一處：標題、頁首、浮水印、連結預覽圖、寄信都讀這個，改名時全站一起變 */
+/** 站名只在這裡設定一處：標題、頁首、浮水印、連結預覽圖、寄信都讀這個，改名時全站一起變（照片浮水印已燒進檔案，要另外跑重燒腳本） */
 export const SITE_NAME = "樂迷藏";
 export const SITE_TAGLINE = "樂迷的收藏分享";
 export const SITE_TITLE = `${SITE_NAME}｜${SITE_TAGLINE}`;
-/** 照片浮水印（顯示時疊上去，不燒進檔案）：@帳號 · 站名 */
+/** 照片浮水印（上傳時燒進主圖、縮圖、預覽圖，2026-09-29）：@帳號 · 站名。改站名後要跑 scripts/reburn-watermark.py 重燒 */
 export const watermarkText = (handle: string) => `@${handle} · ${SITE_NAME}`;
 
 export const SITE_DESC = "看樂迷收了什麼、炫自己的收藏，沿著藝人、系列、版本與標籤找下去。";

@@ -118,21 +118,21 @@ export async function executeDeletion(admin: User, id: number, deletePhotos: boo
   const files = (
     await db
       .prepare(
-        `SELECT id, r2_key AS a, thumb_key AS b, og_key AS c, bytes, purpose FROM photos
+        `SELECT id, r2_key AS a, thumb_key AS b, og_key AS c, orig_key AS o, bytes, purpose FROM photos
          WHERE owner_id = ?1 AND deleted_at IS NULL AND (purpose = 'avatar' OR ?2 = 1)`,
       )
       .bind(uid, deletePhotos ? 1 : 0)
-      .all<{ id: string; a: string; b: string; c: string | null; bytes: number; purpose: string }>()
+      .all<{ id: string; a: string; b: string; c: string | null; o: string | null; bytes: number; purpose: string }>()
   ).results ?? [];
   // 藝人照片投稿（2026-09-28）：待審的一律刪；使用中或被替換下來的只在勾選時刪（CC BY-SA 已授權，不勾就保留，標示改成「已刪除的會員」）
   const artistFiles = (
     await db
       .prepare(
-        `SELECT id, r2_key AS a, thumb_key AS b, NULL AS c, bytes, 'artist' AS purpose FROM artist_photos
+        `SELECT id, r2_key AS a, thumb_key AS b, NULL AS c, NULL AS o, bytes, 'artist' AS purpose FROM artist_photos
          WHERE submitter_id = ?1 AND (status = 'pending' OR (?2 = 1 AND status IN ('active', 'retired')))`,
       )
       .bind(uid, deletePhotos ? 1 : 0)
-      .all<{ id: number; a: string; b: string; c: string | null; bytes: number; purpose: string }>()
+      .all<{ id: number; a: string; b: string; c: string | null; o: string | null; bytes: number; purpose: string }>()
   ).results ?? [];
   const avatarFiles = files.filter((f) => f.purpose === "avatar").length;
   const likeUid = `%${uid.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
@@ -191,6 +191,11 @@ export async function executeDeletion(admin: User, id: number, deletePhotos: boo
   const cache = photoCache();
   for (const f of [...files, ...artistFiles]) {
     const keys = [...new Set([f.a, f.b, ...(f.c ? [f.c] : [])])];
+    // 不公開的原圖（2026-09-29）：沒有網址、不用清快取，只刪檔
+    if (f.o) {
+      await env.PHOTOS?.delete(f.o).catch(() => undefined);
+      r2Deleted++;
+    }
     for (const k of keys) {
       await env.PHOTOS?.delete(k).catch(() => undefined);
       r2Deleted++;

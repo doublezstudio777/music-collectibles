@@ -28,7 +28,8 @@ export type PickedPhoto = {
 let seq = 0;
 const newKey = () => `p${Date.now().toString(36)}${(seq++).toString(36)}`;
 
-export function usePhotoPicker(initial: PickedPhoto[] = [], onPaused?: () => void) {
+/** handle＝發文者帳號名，燒進浮水印用（2026-09-29）；還沒讀到帳號時照片先排隊不送 */
+export function usePhotoPicker(initial: PickedPhoto[] = [], onPaused?: () => void, handle = "") {
   const [items, setItems] = useState<PickedPhoto[]>(initial);
   const [notice, setNotice] = useState("");
   const started = useRef(new Set<string>());
@@ -42,6 +43,7 @@ export function usePhotoPicker(initial: PickedPhoto[] = [], onPaused?: () => voi
 
   // 上傳佇列：排隊中的依序送，同時最多 2 張
   useEffect(() => {
+    if (!handle) return;
     const running = items.filter((x) => x.status === "uploading").length;
     const next = items.filter((x) => x.status === "queued" && !started.current.has(x.key)).slice(0, Math.max(0, 2 - running));
     for (const it of next) {
@@ -50,7 +52,7 @@ export function usePhotoPicker(initial: PickedPhoto[] = [], onPaused?: () => voi
       void (async () => {
         let r: Awaited<ReturnType<typeof uploadSharePhoto>> | null = null;
         try {
-          r = await uploadSharePhoto(it.file!);
+          r = await uploadSharePhoto(it.file!, handle);
         } catch {
           r = null;
         }
@@ -66,7 +68,7 @@ export function usePhotoPicker(initial: PickedPhoto[] = [], onPaused?: () => voi
         patch(it.key, { status: "error", error: r.error.code === "STORAGE_FULL" ? "上傳暫停" : r.error.message });
       })();
     }
-  }, [items, patch, onPaused]);
+  }, [items, patch, onPaused, handle]);
 
   const add = (files: File[]) => {
     const room = MAX_PHOTOS - itemsRef.current.length;

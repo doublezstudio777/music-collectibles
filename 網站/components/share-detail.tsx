@@ -11,7 +11,7 @@ import { useAction, useAppState } from "@/lib/state";
 import type { PublicOffer } from "@/lib/server/trade";
 import { AppealBox } from "@/components/report";
 import { LikeButton } from "@/components/like-button";
-import { Photo, TagList, Watermark } from "@/components/share-card";
+import { Photo, TagList } from "@/components/share-card";
 import { ShareActions, type ShareInfo } from "@/components/share-actions";
 import { LevelTag } from "@/components/level-tag";
 
@@ -49,19 +49,17 @@ export function MoneyInput({
 
 /**
  * 大圖（長邊 1600px）：登入會員點照片才打開。/img/ 伺服器端會再檢查登入與每日上限，
- * 用 fetch 取檔才看得到 401／429 的說明；浮水印用 CSS 疊在上面，檔案本身沒有。
+ * 用 fetch 取檔才看得到 401／429 的說明；浮水印已燒進檔案（2026-09-29）。
  * 多張時可以左右切換（按鈕、方向鍵、手機左右滑）。
  */
 function Lightbox({
   list,
   start,
-  handle,
   alt,
   onClose,
 }: {
   list: string[];
   start: number;
-  handle: string;
   alt: string;
   onClose: () => void;
 }) {
@@ -141,7 +139,6 @@ function Lightbox({
         <span className="lightbox-frame" onClick={(e) => e.stopPropagation()}>
           {/* eslint-disable-next-line @next/next/no-img-element -- blob 網址，next/image 用不上 */}
           <img src={url} alt={alt} data-testid="lightbox-img" data-src={src} />
-          <Watermark handle={handle} large />
         </span>
       ) : (
         <p className="lightbox-msg" role="status">
@@ -214,7 +211,6 @@ function DetailPhoto({
         share={share}
         sale={sale}
         lock={lock}
-        large
         src={src}
         hires={src !== share.thumb}
         under={share.thumb}
@@ -238,7 +234,6 @@ function DetailPhoto({
           <Lightbox
             list={[main]}
             start={0}
-            handle={share.author.handle}
             alt={share.what}
             onClose={close}
           />
@@ -286,7 +281,6 @@ function DetailPhoto({
                   share={share}
                   sale={sale}
                   lock={lock}
-                  large
                   src={pick(p.image, p.thumb)}
                   hires={pick(p.image, p.thumb) !== p.thumb}
                   under={p.thumb}
@@ -319,7 +313,6 @@ function DetailPhoto({
         <Lightbox
           list={list.map((p) => p.image)}
           start={big}
-          handle={share.author.handle}
           alt={share.what}
           onClose={close}
         />

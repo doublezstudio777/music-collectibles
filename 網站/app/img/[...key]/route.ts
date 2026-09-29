@@ -22,7 +22,8 @@ import { QUOTA_MESSAGE, takeQuota } from "@/lib/server/quota";
  * - 大圖（長邊 1600px）要登入，伺服器端檢查（不是只藏前端按鈕）：沒登入 401、每帳號每日上限到了 429。
  *   Cache-Control 改 private，只准瀏覽器自己存，CDN 與共用快取不存；Worker 快取照用（檢查在查快取之前）
  * - 正版辨識的照片（purpose=mark）大小圖都要登入
- * - 浮水印不燒進檔案：檔案是原樣，浮水印在網頁上用 CSS 疊（components/share-card.tsx 的 Watermark）
+ * - 浮水印燒進檔案（2026-09-29 起）：p/ 的主圖、縮圖都是瀏覽器燒好浮水印才上傳的。沒燒的原圖放 R2 的 o/，
+ *   下面的檔名規則只開放 p/a/v/r 四個目錄，o/ 一律 404；舊的無浮水印檔名在 D1 查不到，一樣 404
  */
 export async function GET(req: Request, ctx: { params: Promise<{ key: string[] }> }) {
   const { key } = await ctx.params;

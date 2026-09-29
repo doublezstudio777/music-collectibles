@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { priceText, shareHref, tagHref, userHref, watermarkText, type Lock, type Sale, type ShareView } from "@/lib/data";
+import { priceText, shareHref, tagHref, userHref, type Lock, type Sale, type ShareView } from "@/lib/data";
 import { LikeButton } from "@/components/like-button";
 import { LevelTag } from "@/components/level-tag";
 
@@ -50,27 +50,6 @@ export function Flags({ lock, fake }: { lock: Lock | null; fake: boolean }) {
   );
 }
 
-/**
- * 浮水印：顯示時用 CSS 疊在照片上，不燒進檔案（檔案原樣，改站名全站一起變）。
- * 角落一個；large 另外在中間疊一個斜的淡字（單則頁、大圖），裁掉角落也還在。
- */
-export function Watermark({ handle, large = false }: { handle: string; large?: boolean }) {
-  if (!handle) return null;
-  const text = watermarkText(handle);
-  return (
-    <>
-      <span className="wm" aria-hidden="true" data-testid="watermark">
-        {text}
-      </span>
-      {large ? (
-        <span className="wm-center" aria-hidden="true">
-          {text}
-        </span>
-      ) : null}
-    </>
-  );
-}
-
 export function Photo({
   share,
   sizes,
@@ -78,7 +57,6 @@ export function Photo({
   lock = null,
   small = false,
   src: override,
-  large = false,
   hires = false,
   under,
   onError,
@@ -91,8 +69,6 @@ export function Photo({
   small?: boolean;
   /** 指定圖檔（單則頁：沒登入給縮圖、登入換大圖） */
   src?: string;
-  /** 浮水印多疊一個中間的 */
-  large?: boolean;
   /** 單則頁登入者：這張是高清大圖（驗收用 data-hires） */
   hires?: boolean;
   /** 高清圖載入前先墊在底下的縮圖（換圖時不會空白一下） */
@@ -119,7 +95,6 @@ export function Photo({
           />
         ) : null}
         {!src && share.kind ? <b className="photo-kind">{share.kind}</b> : null}
-        {src ? <Watermark handle={share.author.handle} large={large} /> : null}
       </span>
       <Flags lock={lock} fake={share.hasFakes} />
       {sale ? <SaleSlots sale={sale} locked={Boolean(lock)} /> : null}

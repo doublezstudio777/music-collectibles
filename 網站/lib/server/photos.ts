@@ -99,6 +99,8 @@ function sniffJpeg(b: Uint8Array): "image/jpeg" | null {
  * 檢查順序：暫停 → 格式 → 大小 → 每日上限 → 總容量。
  * og＝1200×630 JPEG 預覽圖（浮水印已燒進去，og:image 用）；格式不對或沒帶就不存，og:image 退回縮圖，
  * 不當成整筆上傳失敗——這張圖只是加分，不是必要條件。
+ * orig＝沒燒浮水印的原圖（2026-09-29）：收藏照片必帶，存 `o/{id}`，/img/ 只開放 p/a/v/r 四個目錄，這個目錄任何網址都拿不到。
+ * 主圖、縮圖是瀏覽器燒好浮水印的；伺服器不做影像處理，也驗不出有沒有燒，靠的是只有新版表單送得出 orig。
  */
 export async function acceptUpload(
   ownerId: string,
@@ -106,6 +108,7 @@ export async function acceptUpload(
   main: File | null,
   thumb: File | null,
   og: File | null = null,
+  orig: File | null = null,
 ): Promise<{ ok: true; id: string; url: string; thumbUrl: string; ogUrl?: string } | { ok: false; error: UploadError }> {
   const bad = (status: number, code: string, message: string) => ({ ok: false as const, error: { status, code, message } });
   if (await isPaused()) return bad(503, "UPLOAD_PAUSED", "上傳暫停");
@@ -116,6 +119,15 @@ export async function acceptUpload(
   const type = sniff(mainBytes);
   const tType = sniff(thumbBytes);
   if (!type || !tType) return bad(415, "BAD_FORMAT", "只收 WebP 或 JPEG 照片");
+  // 原圖：收藏照片必帶（舊版頁面送不出來，請對方重新整理），申訴證據不收
+  let origBytes: Uint8Array | null = null;
+  let oType: ImageType | null = null;
+  if (purpose === "share") {
+    if (!orig || orig.size > MAX_MAIN_BYTES) return bad(400, "RELOAD", "網頁版本太舊，重新整理再上傳");
+    origBytes = new Uint8Array(await orig.arrayBuffer());
+    oType = sniff(origBytes);
+    if (!oType) return bad(415, "BAD_FORMAT", "只收 WebP 或 JPEG 照片");
+  }
   // og 只在申訴（appeal）以外、格式對、大小對時才收；不合就當沒帶，不擋主圖上傳
   let ogBytes: Uint8Array | null = null;
   if (purpose === "share" && og && og.size > 0 && og.size <= MAX_OG_BYTES) {
@@ -126,7 +138,7 @@ export async function acceptUpload(
   if (!(await hit(`upload:${ownerId}:${day}`, DAILY_UPLOADS, 86400))) {
     return bad(429, "DAILY_LIMIT", `今天已經上傳 ${DAILY_UPLOADS} 張，明天再來`);
   }
-  const bytes = mainBytes.length + thumbBytes.length + (ogBytes?.length ?? 0);
+  const bytes = mainBytes.length + thumbBytes.length + (ogBytes?.length ?? 0) + (origBytes?.length ?? 0);
   if (!(await reserveBytes(bytes))) return bad(507, "STORAGE_FULL", "上傳暫停");
 
   const id = randomToken(12);
@@ -137,6 +149,7 @@ export async function acceptUpload(
   const key = `${dir}/${id}.${ext}`;
   const thumbKey = `${dir}/${id}_t.${tExt}`;
   const ogKey = ogBytes ? `${dir}/${id}_og.jpg` : null;
+  const origKey = origBytes && oType ? `o/${id}.${oType === "image/webp" ? "webp" : "jpg"}` : null;
   const bucket = env.PHOTOS;
   if (!bucket) {
     await releaseBytes(bytes);
@@ -146,12 +159,14 @@ export async function acceptUpload(
     await bucket.put(key, mainBytes, { httpMetadata: { contentType: type } });
     await bucket.put(thumbKey, thumbBytes, { httpMetadata: { contentType: tType } });
     if (ogKey && ogBytes) await bucket.put(ogKey, ogBytes, { httpMetadata: { contentType: "image/jpeg" } });
+    if (origKey && origBytes && oType) await bucket.put(origKey, origBytes, { httpMetadata: { contentType: oType } });
   } catch {
+    await bucket.delete([key, thumbKey, ...(ogKey ? [ogKey] : []), ...(origKey ? [origKey] : [])]).catch(() => undefined);
     await releaseBytes(bytes);
     return bad(502, "STORAGE_ERROR", "照片存不進去，再試一次");
   }
   const { width, height } = dimensions(mainBytes, type);
-  await getDb().insert(photos).values({ id, ownerId, purpose, r2Key: key, thumbKey, ogKey, contentType: type, bytes, width, height });
+  await getDb().insert(photos).values({ id, ownerId, purpose, r2Key: key, thumbKey, ogKey, origKey, contentType: type, bytes, width, height });
   return { ok: true, id, url: `/img/${key}`, thumbUrl: `/img/${thumbKey}`, ...(ogKey ? { ogUrl: `/img/${ogKey}` } : {}) };
 }
 
@@ -199,14 +214,15 @@ export const MAX_SHARE_PHOTOS = 10;
 type PhotoRow = typeof photos.$inferSelect;
 
 /**
- * 從 R2 移除照片檔（主圖、縮圖、預覽圖），D1 標 deleted_at，容量計數扣回 photos.bytes（已含預覽圖），
+ * 從 R2 移除照片檔（主圖、縮圖、預覽圖、不公開的原圖），D1 標 deleted_at，容量計數扣回 photos.bytes（已含預覽圖），
  * 並把這幾個網址的快取清掉。回傳扣回多少位元組。
  */
 export async function removePhotoFiles(origin: string, rows: PhotoRow[]) {
   if (!rows.length) return 0;
   const at = new Date().toISOString();
   const keys = rows.flatMap((r) => [r.r2Key, r.thumbKey, ...(r.ogKey ? [r.ogKey] : [])]);
-  await env.PHOTOS?.delete(keys).catch(() => undefined);
+  const origKeys = rows.flatMap((r) => (r.origKey ? [r.origKey] : []));
+  await env.PHOTOS?.delete([...keys, ...origKeys]).catch(() => undefined);
   const db = env.DB!;
   await db.batch(rows.map((r) => db.prepare("UPDATE photos SET deleted_at = ?1 WHERE id = ?2 AND deleted_at IS NULL").bind(at, r.id)));
   const bytes = rows.reduce((a, r) => a + r.bytes, 0);
