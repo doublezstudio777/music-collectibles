@@ -175,6 +175,10 @@ ul { list-style: none; margin: 0; padding: 0; }
 .nav-search .input { border-color: var(--text); min-height: 38px; font-size: var(--text-sm); }
 .nav-right { align-items: center; display: flex; gap: 12px; margin-left: auto; }
 .nav-icon { display: none; }
+/* 頁首「藝人」（2026-09-29）：桌機緊接搜尋框右邊 */
+.nav-link { align-items: center; display: inline-flex; flex: none; font-size: var(--text-sm); font-weight: 600; margin-left: -8px; min-height: 44px; padding: 0 4px; }
+.nav-link:hover, .nav-link[aria-current="page"] { text-decoration: underline; text-underline-offset: 3px; }
+.menu-panel > .menu-artists { display: none; }
 .nav-cancel { margin-left: auto; font-size: var(--text-sm); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 
 .ava {
@@ -750,17 +754,6 @@ a.pg:hover { border-color: var(--line); }
 .follow.is-on:hover { background: #333; }
 .follow-sm { min-height: 36px; min-width: 76px; padding: 0 12px; font-size: var(--text-xs); }
 
-.hot { border-bottom: 1px solid var(--line); margin-bottom: 24px; padding-bottom: 20px; }
-.hot-title { font-size: var(--text-base); font-weight: 700; margin-bottom: 12px; }
-.hot-list { display: grid; gap: 0 24px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.hot-item { align-items: center; border-top: 1px solid var(--line); display: grid; gap: 2px 12px; grid-template-columns: minmax(0, 1fr) auto; padding: 10px 0; }
-.hot-item .sub { grid-column: 1; }
-.hot-item .hot-acts { align-items: center; display: flex; gap: 10px; grid-column: 2; grid-row: 1 / span 2; }
-.hot-dismiss { color: var(--muted); font-size: var(--text-xs); font-weight: 500; min-height: 36px; }
-.hot-dismiss:hover { color: var(--text); }
-.hot-all .hot-name { text-decoration: underline; text-underline-offset: 3px; }
-.hot-name { font-weight: 600; }
-.hot-name:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* 警示：一律黑底白字，封面左上；狀態槽位在左下 */
 .flags { display: flex; flex-wrap: wrap; gap: 4px; left: 0; position: absolute; top: 0; }
@@ -885,11 +878,7 @@ a.pg:hover { border-color: var(--line); }
 .appeal-st.is-pending { background: var(--text); color: #fff; padding: 2px 8px; }
 .appeal-text { font-size: var(--text-sm); max-width: 720px; }
 
-@media (max-width: 1000px) {
-  .hot-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
 @media (max-width: 700px) {
-  .hot-list { grid-template-columns: minmax(0, 1fr); }
   .flag { font-size: var(--text-xs); padding: 3px 6px; }
   .marks, .spec-list { grid-template-columns: minmax(0, 1fr); }
   .item-index { flex-direction: column; }
@@ -982,10 +971,6 @@ body.has-modal { overflow: hidden; }
 .rev-acts { align-items: center; display: flex; flex-wrap: wrap; gap: 4px 16px; grid-column: 2; grid-row: 1 / span 2; justify-content: flex-end; }
 .revert { align-items: center; display: inline-flex; flex-wrap: wrap; gap: 8px; }
 
-.dir-filters { display: grid; gap: 10px; margin-bottom: 24px; }
-.dir-list li { align-items: center; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) auto; }
-.dir-list .row-main { display: grid; gap: 2px; min-width: 0; }
-.dir-list .sub { font-weight: 400; }
 
 .price-hist { border: 1px solid var(--line); margin: 16px 0 4px; padding: 0 16px 14px; }
 .price-grid { align-items: end; display: grid; gap: 12px 24px; grid-template-columns: minmax(0, 1fr) auto; }
@@ -1010,7 +995,6 @@ body.has-modal { overflow: hidden; }
   .rev-acts { grid-column: 1; grid-row: auto; justify-content: flex-start; }
   .hidden-row { grid-template-columns: minmax(0, 1fr) auto; }
   .hidden-row > .sub { grid-column: 1; }
-  .hot-item .hot-acts { gap: 6px; }
 }
 
 /* 分享（2026-09-27）：單則頁「分享」「下載分享圖」＋小選單；系列頁、藝人頁「複製連結」 */
@@ -1529,3 +1513,55 @@ p.fill-row { display: flex; }
 .guide ul { display: grid; gap: 6px; list-style: disc; margin: 0 0 8px; padding-left: 1.25em; }
 .guide a { text-decoration: underline; text-underline-offset: 3px; }
 .guide-sec + .guide-sec { border-top: 1px solid var(--line); padding-top: 28px; }
+
+/* ============================================================
+   藝人圓圈（2026-09-29）：首頁最上方一排、藝人目錄格狀。
+   使用者指定圓形，是全站直角的唯一例外；圓圈只放照片或名字第一個字
+   ============================================================ */
+.faces { margin-bottom: 16px; }
+.faces-row {
+  display: flex; gap: 12px; list-style: none; margin: 0; overflow-x: auto; padding: 0 0 8px;
+  scroll-snap-type: x proximity; scrollbar-width: thin; -webkit-overflow-scrolling: touch;
+}
+.faces-row .face { flex: 0 0 80px; scroll-snap-align: start; }
+/* 桌機 1136px 寬放 12 位半：第 13 位露出一截，看得出右邊還有 */
+.face { min-width: 0; }
+.face-link { align-items: center; display: flex; flex-direction: column; gap: 6px; text-align: center; }
+.face-img {
+  align-items: center; background: var(--surface2); border-radius: 50%; color: var(--text); display: flex; flex: none;
+  font-size: 1.375rem; font-weight: 700; height: 64px; justify-content: center; object-fit: cover; width: 64px;
+}
+/* 藝人照片多半是半身直幅，臉在上方 */
+.face-artist { object-position: 50% 22%; }
+.face-more { background: var(--bg); border: 1px solid var(--line); }
+.face-more svg { height: 22px; width: 22px; }
+.face-name { font-size: var(--text-xs); font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; width: 100%; }
+.face-link:hover .face-name { text-decoration: underline; text-underline-offset: 3px; }
+.face-link:hover .face-more { border-color: var(--text); }
+
+.dir-bar { flex-wrap: wrap; }
+.face-grid { display: grid; gap: 32px 16px; grid-template-columns: repeat(6, minmax(0, 1fr)); list-style: none; margin: 0; padding: 0; }
+.face-grid .face-link { gap: 4px; }
+.face-grid .face-img { font-size: 2.25rem; height: 112px; margin-bottom: 6px; width: 112px; }
+.face-grid .face-name { font-size: var(--text-base); }
+@media (max-width: 1000px) {
+  .face-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  /* 首頁一排：右側出血到螢幕邊緣露出下一個當提示，滑到底留一段跟左緣等寬的空間（同系列卡片） */
+  .faces-row { margin-right: -18px; padding-right: 18px; scrollbar-width: none; }
+  .faces-row .face { flex-basis: 76px; }
+  .faces-row::-webkit-scrollbar { display: none; }
+  .face-grid { gap: 24px 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .face-grid .face-img { font-size: 1.75rem; height: 88px; width: 88px; }
+  .face-grid .face-name { font-size: var(--text-sm); }
+}
+
+/* 360 這類窄手機：已登入時頁首放不下（頭像比「登入」寬），「藝人」改成頭像選單第一項；
+   未登入時縮小間距留在頁首。登入狀態讀出來之前先不顯示，避免出現又消失 */
+@media (max-width: 379px) {
+  .nav-row, .nav-right { gap: 8px; }
+  .nav-link { margin-left: 0; padding: 0; }
+  .nav-row:not([data-acc="anon"]) .nav-link { display: none; }
+  .menu-panel > .menu-artists { display: block; }
+}

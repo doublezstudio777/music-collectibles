@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { artistHref, type ShareView } from "@/lib/data";
-import { dismissArtist, useAppState } from "@/lib/state";
+import type { ShareView } from "@/lib/data";
+import { useAppState } from "@/lib/state";
 import { ShareCard } from "@/components/share-card";
-import { FollowButton } from "@/components/follow-button";
 
 /** 首頁以炫收藏為主：排序在前，「只看在賣」是次要開關 */
 export type WallFilter = "all" | "selling";
@@ -92,53 +91,9 @@ function Pager({ page, total, query }: { page: number; total: number; query: Wal
   );
 }
 
-export type HotArtist = { slug: string; name: string; count: number };
-
-/** 熱門藝人顯示幾位（第 6 格是「看全部藝人」） */
-const HOT_SHOWN = 5;
-
-/**
- * 還沒追蹤任何藝人：一排熱門藝人。點名字進藝人頁；每位有「追蹤」「不感興趣」，
- * 按了不感興趣由下一位補上、之後不再推薦。最後一格連到藝人目錄。
- */
-function HotArtists({ list }: { list: HotArtist[] }) {
-  const { state } = useAppState();
-  const shown = list.filter((a) => !state.dismissed.includes(a.slug)).slice(0, HOT_SHOWN);
-  return (
-    <section className="hot" aria-labelledby="hot-title">
-      <h2 id="hot-title" className="hot-title">
-        熱門藝人
-      </h2>
-      <ul className="hot-list">
-        {shown.map((artist) => (
-          <li key={artist.slug} className="hot-item" data-artist={artist.slug}>
-            <Link className="hot-name" href={artistHref(artist.slug)}>
-              {artist.name}
-            </Link>
-            <span className="sub">{artist.count} 則收藏</span>
-            <span className="hot-acts">
-              <FollowButton slug={artist.slug} name={artist.name} small />
-              <button type="button" className="btn-text hot-dismiss" aria-label={`不感興趣：${artist.name}`} onClick={() => dismissArtist(artist.slug)}>
-                不感興趣
-              </button>
-            </span>
-          </li>
-        ))}
-        <li className="hot-item hot-all">
-          <Link className="hot-name" href="/artists">
-            看全部藝人
-          </Link>
-          <span className="sub">依類型與地區找</span>
-        </li>
-      </ul>
-    </section>
-  );
-}
-
 /** 炫收藏牆。資料都是伺服器從 D1 讀的；追蹤中、只看在賣、排序在這裡做 */
 export function ShareWall({
   shares,
-  hot = [],
   sortable = false,
   paged = false,
   filter = "all",
@@ -148,8 +103,6 @@ export function ShareWall({
   empty,
 }: {
   shares: ShareView[];
-  /** 首頁：還沒追蹤藝人時上方那一排 */
-  hot?: HotArtist[];
   sortable?: boolean;
   /** 首頁：排序分頁籤＋只看在賣＋每頁 24 則 */
   paged?: boolean;
@@ -162,7 +115,7 @@ export function ShareWall({
   const { state } = useAppState();
   const [localSort, setSort] = useState<WallSort>("new");
   const sort = paged ? initialSort : localSort;
-  /** 追蹤中分頁：沒追蹤任何藝人時，上方熱門藝人、下方照最新排 */
+  /** 追蹤中分頁：沒追蹤任何藝人時照最新排（藝人圓圈在牆的上方，見 artist-faces.tsx） */
   const followingTab = paged && sort === "following";
   const noFollows = followingTab && state.ready && state.follows.length === 0;
 
@@ -240,7 +193,6 @@ export function ShareWall({
           ) : null}
         </div>
       ) : null}
-      {noFollows ? <HotArtists list={hot} /> : null}
       {waiting ? null : shown.length === 0 ? (
         followingTab ? (
           <p className="empty">追蹤的藝人還沒有新的收藏</p>

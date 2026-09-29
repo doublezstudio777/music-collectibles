@@ -23,7 +23,7 @@ export function SiteHeader() {
 
   return (
     <header className="nav">
-      <div className="wrap nav-row">
+      <div className="wrap nav-row" data-acc={acc.status}>
         <Link className="logo" href="/">
           {SITE_NAME}
         </Link>
@@ -36,6 +36,9 @@ export function SiteHeader() {
             <form className="nav-search" action="/search" role="search">
               <input name="q" className="input" placeholder="搜尋藝人、系列、收藏" aria-label="搜尋藝人、系列、收藏" />
             </form>
+            <Link className="nav-link" href="/artists" aria-current={pathname === "/artists" ? "page" : undefined} data-testid="nav-artists">
+              藝人
+            </Link>
             <div className="nav-right">
               <Link className="nav-icon" href="/search" aria-label="搜尋">
                 <Search aria-hidden="true" />
@@ -74,6 +77,10 @@ export function SiteHeader() {
                 </summary>
                 <div className="menu-panel">
                   <p className="menu-now">{acc.me.name}</p>
+                  {/* 頁首放不下「藝人」的窄手機（<380px，已登入）才出現，見 globals.css */}
+                  <Link className="menu-artists" href="/artists" onClick={close} data-testid="menu-artists">
+                    藝人
+                  </Link>
                   <Link href={userHref(acc.me.handle)} onClick={close}>
                     我的頁
                   </Link>

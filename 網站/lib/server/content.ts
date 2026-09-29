@@ -10,6 +10,7 @@ import { cache } from "react";
 import { and, count, eq, getTableColumns, inArray, isNull } from "drizzle-orm";
 import { getDb } from "@/db";
 import {
+  artistPhotos,
   artists as tArtists,
   contentVersion,
   holdings,
@@ -111,7 +112,7 @@ export async function lockForShare(s: Pick<ShareRow, "no" | "seriesKey" | "itemI
 
 async function build(): Promise<Catalog> {
   const db = getDb();
-  const [aRows, sRows, iRows, vRows, mRows, fRows, shRows, uRows, pRows, likeRows, holdRows] = await db.batch([
+  const [aRows, sRows, iRows, vRows, mRows, fRows, shRows, uRows, pRows, likeRows, holdRows, apRows] = await db.batch([
     db.select().from(tArtists).where(and(eq(tArtists.status, "approved"), isNull(tArtists.deletedAt), isNull(tArtists.hiddenAt))),
     db.select().from(tSeries).where(and(eq(tSeries.status, "approved"), isNull(tSeries.deletedAt), isNull(tSeries.hiddenAt))),
     db.select().from(tItems).where(and(eq(tItems.status, "approved"), isNull(tItems.deletedAt), isNull(tItems.hiddenAt))),
@@ -130,7 +131,10 @@ async function build(): Promise<Catalog> {
     db.select().from(photos).where(and(eq(photos.purpose, "share"), isNull(photos.deletedAt))),
     db.select({ n: likes.shareNo, c: count() }).from(likes).groupBy(likes.shareNo),
     db.select({ key: holdings.targetKey, kind: holdings.kind, c: count() }).from(holdings).groupBy(holdings.targetKey, holdings.kind),
+    // 藝人使用中的照片（2026-09-29 首頁藝人圓圈、藝人目錄）：artist_photos 只有「使用中」變動才加內容版本號，跟目錄同步
+    db.select({ slug: artistPhotos.artistSlug, key: artistPhotos.thumbKey }).from(artistPhotos).where(eq(artistPhotos.status, "active")),
   ]);
+  const facePhoto = new Map(apRows.map((x) => [x.slug, photoUrl(x.key)]));
 
   const userById = new Map(uRows.map((u) => [u.id, u]));
   const handleOf = (id: string | null) => (id ? (userById.get(id)?.handle ?? "") : "");
@@ -157,6 +161,7 @@ async function build(): Promise<Catalog> {
       lastEdit: { by: nameOf(a.lastEditBy ?? a.createdBy) || SITE_NAME, date: day(a.updatedAt) },
       ...(a.wikiUrl ? { wiki: { url: a.wikiUrl, license: a.wikiLicense ?? "CC BY-SA 4.0" } } : {}),
       display: (a.display === "on" || a.display === "off" ? a.display : "auto") as Artist["display"],
+      ...(facePhoto.has(a.slug) ? { photo: facePhoto.get(a.slug) } : {}),
     }))
     .sort((a, b) => a.name.localeCompare(b.name, "zh-Hant"));
 
