@@ -33,9 +33,6 @@ import {
 } from "@/lib/data";
 import { LABEL_FORCE_SLUGS } from "@/lib/label-artists";
 
-/** 藝人圓圈：img 沒有就畫灰底加名字第一個字 */
-export type ArtistFace = { slug: string; name: string; count: number; img?: string; imgFrom?: "artist" | "share"; gender?: ArtistGender; region?: ArtistRegion };
-
 export type RelatedScope = { series: string } | { tag: string };
 export type RelatedBlock = { title: string; href: string; total: number; items: Share[]; scope: RelatedScope };
 
@@ -111,9 +108,12 @@ export class Catalog {
     return a && this.artistVisible(a) ? a : undefined;
   };
 
-  /** 藝人目錄：只列藝人（不含發行單位）、只列看得到的，照類型與地區篩；順序同首頁圓圈 */
+  /** 藝人目錄：只列藝人（不含發行單位）、只列看得到的，照類型與地區篩 */
   artistDirectory = (gender?: ArtistGender, region?: ArtistRegion) =>
-    this.artistFaces().filter((a) => (!gender || a.gender === gender) && (!region || a.region === region));
+    this.artists
+      .filter((a) => a.kind === "藝人" && this.artistVisible(a))
+      .filter((a) => (!gender || a.gender === gender) && (!region || a.region === region))
+      .map((a) => ({ artist: a, count: this.sharesWithTag(a.name).length }));
   getShare = (n: number) => this.#lazy("shareByNo", () => new Map(this.shares.map((s) => [s.n, s]))).get(n);
   getSeriesByKey = (key: string) =>
     this.#lazy("seriesByKey", () => new Map(this.seriesList.map((w) => [seriesKey(w), w]))).get(key);
@@ -366,29 +366,14 @@ export class Catalog {
     return blocks;
   };
 
-  /**
-   * 藝人圓圈（2026-09-29 首頁最上方一排、藝人目錄）：圓圈照片優先序是藝人使用中照片 → 相關收藏裡最新一則沒被鎖定的
-   * 縮圖（浮水印已燒進檔案）→ 沒有圖（前端畫灰底加名字第一個字）。不用官方封面。
-   * 只列藝人不列發行單位、只列看得到的；收藏數多的在前，同數依名稱。不含讚數與留言，按讚、留言不影響整頁快取
-   */
-  artistFaces = () =>
-    this.#lazy("artistFaces", () =>
-      this.artists
-        .filter((a) => a.kind === "藝人" && this.artistVisible(a))
-        .map((a): ArtistFace => {
-          const list = this.sharesWithTag(a.name);
-          const img = a.photo ?? list.find((s) => s.thumb && !this.toShareView(s).lock)?.thumb;
-          return {
-            slug: a.slug,
-            name: a.name,
-            count: list.length,
-            ...(img ? { img, imgFrom: a.photo ? ("artist" as const) : ("share" as const) } : {}),
-            ...(a.gender ? { gender: a.gender } : {}),
-            ...(a.region ? { region: a.region } : {}),
-          };
-        })
-        .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, "zh-Hant")),
-    );
+  /** 熱門藝人：相關收藏多的在前，只列藝人不列發行單位。多給幾位，按了不感興趣由下一位補上 */
+  hotArtists = (limit = 30) =>
+    this.artists
+      .filter((a) => a.kind === "藝人" && this.artistVisible(a))
+      .map((a) => ({ slug: a.slug, name: a.name, count: this.sharesWithTag(a.name).length }))
+      .filter((x) => x.count > 0)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, limit);
 
   /** 對象的顯示名稱與連結 */
   describeTarget = (target: TargetKey): { level: TargetLevel; levelName: string; title: string; href: string } => {

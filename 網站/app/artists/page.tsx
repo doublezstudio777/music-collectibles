@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { artistHref, GENDER_LABEL, REGION_LABEL, type ArtistGender, type ArtistRegion } from "@/lib/data";
 import { pageData } from "@/lib/server/viewer";
-import { FaceImg } from "@/components/artist-faces";
+import { FollowButton } from "@/components/follow-button";
 
 export const metadata = { title: "全部藝人" };
 
@@ -18,48 +18,49 @@ const href = (g?: string, r?: string) => {
   return s ? `/artists?${s}` : "/artists";
 };
 
-/**
- * 藝人目錄（2026-09-29 改圓圈格狀）：男歌手／女歌手／團體 × 國內／國外，篩選跟首頁排序同一套分頁籤樣式，再點一次取消。
- * 追蹤在藝人頁操作，這裡不放按鈕
- */
+/** 藝人目錄：男歌手／女歌手／團體 × 國內／國外，再點一次取消 */
 export default async function ArtistsPage({ searchParams }: Props) {
   const q = await searchParams;
   const g = GENDERS.includes(q.g as ArtistGender) ? (q.g as ArtistGender) : undefined;
   const r = REGIONS.includes(q.r as ArtistRegion) ? (q.r as ArtistRegion) : undefined;
   const { c } = await pageData();
-  const list = c.artistDirectory(g, r);
+  const list = c.artistDirectory(g, r).sort((a, b) => b.count - a.count || a.artist.name.localeCompare(b.artist.name, "zh-Hant"));
   return (
     <main className="wrap page">
       <header className="page-head">
         <h1 className="page-title">全部藝人</h1>
       </header>
-      <div className="wall-bar dir-bar">
-        <nav className="filters" aria-label="類型">
+      <nav className="dir-filters" aria-label="篩選">
+        <div className="picks filter-picks">
           {GENDERS.map((x) => (
-            <Link key={x} className="filter" href={href(g === x ? undefined : x, r)} aria-current={g === x ? "page" : undefined} data-filter={`g-${x}`}>
+            <Link key={x} className="pick" href={href(g === x ? undefined : x, r)} aria-pressed={g === x} data-filter={`g-${x}`}>
               {GENDER_LABEL[x]}
             </Link>
           ))}
-        </nav>
-        <nav className="filters" aria-label="地區">
+        </div>
+        <div className="picks filter-picks">
           {REGIONS.map((x) => (
-            <Link key={x} className="filter" href={href(g, r === x ? undefined : x)} aria-current={r === x ? "page" : undefined} data-filter={`r-${x}`}>
+            <Link key={x} className="pick" href={href(g, r === x ? undefined : x)} aria-pressed={r === x} data-filter={`r-${x}`}>
               {REGION_LABEL[x]}
             </Link>
           ))}
-        </nav>
-      </div>
+        </div>
+      </nav>
       {list.length === 0 ? (
         <p className="empty">沒有符合的藝人</p>
       ) : (
-        <ul className="face-grid" data-testid="artist-dir">
-          {list.map((f, i) => (
-            <li key={f.slug} className="face" data-artist={f.slug}>
-              <Link className="face-link" href={artistHref(f.slug)}>
-                <FaceImg face={f} eager={i < 12} />
-                <span className="face-name">{f.name}</span>
-                <span className="sub num">{f.count} 則收藏</span>
-              </Link>
+        <ul className="rows dir-list" data-testid="artist-dir">
+          {list.map(({ artist: a, count }) => (
+            <li key={a.slug} data-artist={a.slug}>
+              <span className="row-main">
+                <Link className="link dir-name" href={artistHref(a.slug)}>
+                  {a.name}
+                </Link>
+                <span className="sub">
+                  {[a.gender ? GENDER_LABEL[a.gender] : null, a.region ? REGION_LABEL[a.region] : null, `${count} 則收藏`].filter(Boolean).join(" · ")}
+                </span>
+              </span>
+              <FollowButton slug={a.slug} name={a.name} small />
             </li>
           ))}
         </ul>

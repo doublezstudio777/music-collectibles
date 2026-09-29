@@ -137,8 +137,6 @@ export type Artist = {
   wiki?: { url: string; license: string };
   /** 藝人頁顯示：auto＝有系列或收藏才顯示；on／off＝管理員強制 */
   display?: "auto" | "on" | "off";
-  /** 使用中的藝人照片（/img/…），沒有就不帶 */
-  photo?: string;
 };
 
 export type Version = {

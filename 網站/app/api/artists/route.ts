@@ -9,13 +9,13 @@ export async function GET(req: Request) {
   const r = ["domestic", "overseas"].includes(q.get("r") ?? "") ? (q.get("r") as ArtistRegion) : undefined;
   const c = await getCatalog();
   return json({
-    artists: c.artistDirectory(g, r).map((a) => ({
+    artists: c.artistDirectory(g, r).map(({ artist: a, count }) => ({
       slug: a.slug,
       name: a.name,
-      tagline: c.getArtist(a.slug)?.tagline ?? "",
+      tagline: a.tagline,
       gender: a.gender ?? null,
       region: a.region ?? null,
-      shares: a.count,
+      shares: count,
     })),
   });
 }
