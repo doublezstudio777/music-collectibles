@@ -1470,8 +1470,9 @@ button.sf-row:hover, .sf-row[aria-pressed="true"] { background: var(--surface); 
 .wall { align-items: stretch; }
 .card { height: 100%; }
 .card-title { min-height: calc(1.45em * 2); }
-.card .tags { max-height: 24px; overflow: hidden; }
-.card .tags li { flex: none; }
+/* 一行不換行、橫向超出才裁；不設固定高度，避免標籤框底線被裁掉 */
+.card .tags { flex-wrap: nowrap; overflow: hidden; }
+.card .tags li { display: flex; flex: none; }
 .card-foot { margin-top: auto; padding-top: 6px; }
 
 /* ===== 新手指南批次（2026-09-29） ===== */
