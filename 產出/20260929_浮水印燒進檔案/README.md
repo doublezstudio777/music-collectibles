@@ -45,7 +45,7 @@ Cloudflare API 列 bucket 加總 12,829,942 bytes（約 12.2 MB）＝D1 計數�
 
 ## 留在正式站的測試資料
 
-驗收用帳號 `wmtest0929`（`u-wmtest0929`，直接寫 D1 建的，沒有密碼、session 2 天後過期）與它上傳的 1 張照片 `0G0JYMCy4gu1odvl`（沒掛到任何收藏，約 52 KB）。要不要刪待使用者決定，這輪沒刪。
+驗收用帳號 `wmtest0929`（`u-wmtest0929`，直接寫 D1 建的，沒有密碼、session 2 天後過期）與它上傳的 1 張照片 `0G0JYMCy4gu1odvl`（沒掛到任何收藏，約 52 KB）。9/29 使用者同意後已刪：D1 5 列（users、sessions、user_activity、rate_limits、photos 各 1），R2 3 檔，全庫掃描剩 0，R2 實際 12,777,564 bytes＝D1 計數。
 
 ## 影響舊驗收
 
