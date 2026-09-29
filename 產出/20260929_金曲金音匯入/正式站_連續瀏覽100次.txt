@@ -1,0 +1,10 @@
+/：{'200': 100}  快取 {'MISS': 4, 'HIT': 96}
+/artists：{'200': 100}  快取 {'HIT': 97, 'MISS': 3}
+/artist/mie-huo-qi：{'200': 100}  快取 {'MISS': 3, 'HIT': 97}
+/artist/sandy-lam：{'200': 100}  快取 {'MISS': 4, 'HIT': 96}
+/artist/xu-fu-kai：{'200': 100}  快取 {'MISS': 4, 'HIT': 96}
+/artist/mie-huo-qi/1：{'200': 100}  快取 {'MISS': 3, 'HIT': 97}
+/artist/sandy-lam/1：{'200': 100}  快取 {'MISS': 4, 'HIT': 96}
+合計 700 次：{'200': 700}；503＝0
+時間 2026-09-29T16:00:17.779091+00:00 ～ 2026-09-29T16:13:55.597613+00:00
+CPU（success）：請求 713、錯誤 0、cpuTime p50 1.6ms p90 2.7ms p99 197.8ms（GraphQL 另查 16:00～16:15 UTC；腳本原本多查 cpuTimeMax 欄位被拒，已修）

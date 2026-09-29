@@ -87,6 +87,7 @@ export class Catalog {
   /**
    * 藝人頁對外顯示嗎（2c）：沒有任何系列（主要、客串、合輯）也沒有任何相關收藏就不顯示，
    * 直接打網址回 404。管理員可強制開（on）或關（off）。名單可以先匯入，等有人發了收藏才自動出現。
+   * 2026-09-29 加：沒有系列與收藏、但「有獎項紀錄且有維基簡介」的也顯示（金曲金音入圍、有維基條目的藝人）。
    */
   artistVisible = (a: Artist) => {
     if (a.display === "on") return true;
@@ -97,7 +98,8 @@ export class Catalog {
       this.mainSeriesOf(a.slug).length > 0 ||
       this.guestSeriesOf(a.slug).length > 0 ||
       this.compilationsOf(a.slug).length > 0 ||
-      this.sharesWithTag(a.name).length > 0;
+      this.sharesWithTag(a.name).length > 0 ||
+      (a.awards.length > 0 && !!a.wiki && a.intro.some((p) => p.trim() !== ""));
     this.#visible.set(a.slug, v);
     return v;
   };

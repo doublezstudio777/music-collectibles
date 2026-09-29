@@ -1,0 +1,9 @@
+/ status=200 每請求非閒置 47.98 ms（1 次，牆鐘 76ms）
+/ status=200 每請求非閒置 39.54 ms（1 次，牆鐘 57ms）
+/ status=200 每請求非閒置 22.78 ms（1 次，牆鐘 56ms）
+/artists status=200 每請求非閒置 35.70 ms（1 次，牆鐘 63ms）
+/artists status=200 每請求非閒置 42.11 ms（1 次，牆鐘 62ms）
+/artists status=200 每請求非閒置 37.07 ms（1 次，牆鐘 59ms）
+/artist/zhang-zhen-yue status=200 每請求非閒置 40.21 ms（1 次，牆鐘 67ms）
+/artist/zhang-zhen-yue status=200 每請求非閒置 42.16 ms（1 次，牆鐘 77ms）
+/artist/zhang-zhen-yue status=200 每請求非閒置 28.59 ms（1 次，牆鐘 68ms）

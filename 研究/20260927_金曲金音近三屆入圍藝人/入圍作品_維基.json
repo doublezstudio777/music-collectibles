@@ -1,0 +1,3048 @@
+{
+ "_說明": "2026-09-29 從中文維基「第35～37屆金曲獎」「第15～17屆金音創作獎」條目的入圍表格擷取：同一列出現的《》〈〉作品名歸給同列出現名字的藝人（名字包含比對，可能多抓，只當 MusicBrainz 對應的佐證用，不上網站）",
+ "來源": [
+  "https://zh.wikipedia.org/wiki/第15屆金音創作獎",
+  "https://zh.wikipedia.org/wiki/第16屆金音創作獎",
+  "https://zh.wikipedia.org/wiki/第17屆金音創作獎",
+  "https://zh.wikipedia.org/wiki/第35屆金曲獎",
+  "https://zh.wikipedia.org/wiki/第36屆金曲獎",
+  "https://zh.wikipedia.org/wiki/第37屆金曲獎"
+ ],
+ "藝人": {
+  "a-kua-mian": {
+   "works": [
+    "心",
+    "陷眠"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "shang-xin-yu-jue": {
+   "works": [
+    "大雨",
+    "無名氏敬上"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "sorry-youth": {
+   "works": [
+    "噪音公寓"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "joanna-wang": {
+   "works": [
+    "Dead Talents Society",
+    "Hotel La Rut (破爛酒店)",
+    "She Had a Habit of Meeting All of the Artists Backstage (她有一個習慣在後台跟藝人見面)",
+    "∞→0",
+    "鬼才之道",
+    "鬼才出道"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第16屆金音創作獎",
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "elephant-gym": {
+   "works": [
+    "Flow (楊乃文專輯) Flow",
+    "Jhalleyaa (feat. Shashaa Tirupati)",
+    "世界",
+    "世界 World",
+    "你將永遠活在我的歌裡",
+    "瓦合",
+    "羽毛 (feat. 壞特 ?te)"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎"
+   ]
+  },
+  "bu-lai-mei": {
+   "works": [
+    "Castle",
+    "Peace and Quiet (Bremen announcement)",
+    "The Great Bremen Show",
+    "劉暐個人專輯"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "plutato": {
+   "works": [
+    "Ctrl+Z",
+    "Pluto Potato",
+    "賣火柴的小女孩",
+    "馬鈴薯大兵"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第16屆金音創作獎",
+    "第35屆金曲獎"
+   ]
+  },
+  "imdifficult": {
+   "works": [
+    "I'mdifficult",
+    "Last Summer (月亮惹的禍）"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "jiang-hui-yi": {
+   "works": [
+    "陷眠"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎"
+   ]
+  },
+  "dac": {
+   "works": [
+    "Beach Song",
+    "Enough",
+    "Home",
+    "Little More Time",
+    "Love Hereafter",
+    "One More (feat. LEO37, DCIV, Dac, Lazy Habits, Star Wu, 謝明諺)",
+    "Snack"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第17屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "liu-wei": {
+   "works": [
+    "Castle",
+    "也許我見不到你了",
+    "劉暐個人專輯"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "zheng-jing-ru": {
+   "works": [
+    "暗流"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "makav": {
+   "works": [
+    "GMA36 Cypher",
+    "Kingdom Lifestyle",
+    "You are not alone",
+    "別遺棄 Aka Sawadan",
+    "寶藏 Treasure",
+    "寶藏Treasure",
+    "我做了快樂的夢"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "qiu-shu-chan": {
+   "works": [
+    "亻厓个房間",
+    "所在",
+    "繭的形狀",
+    "𠊎个房間"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "flowstrong": {
+   "works": [
+    "Study (of) Breaks",
+    "〈流水席〉發行場：家宴",
+    "吸塵器 維他命 (beat by Flowstrong)",
+    "流水席",
+    "熬辣醬"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第16屆金音創作獎",
+    "第17屆金音創作獎"
+   ]
+  },
+  "andr": {
+   "works": [
+    "Hidden Card 藏招",
+    "I Am Here",
+    "POWER ANDRE 99",
+    "Pandemic 傳染病",
+    "shhh, it’s under my bed",
+    "承諾",
+    "萬事美妙"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第16屆金音創作獎",
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "zheng-jia-fu": {
+   "works": [
+    "Pluto Potato"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "xie-ming-yan": {
+   "works": [
+    "Chamakana",
+    "One More (feat. LEO37, DCIV, Dac, Lazy Habits, Star Wu, 謝明諺)",
+    "Our Waning Love",
+    "視角"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第16屆金音創作獎"
+   ]
+  },
+  "li-mao-song": {
+   "works": [
+    "草本藥師"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "su-yu-han": {
+   "works": [
+    "Over The Moons",
+    "嗨高科技 Hi-Tech Pros and Cons",
+    "天才與笨蛋",
+    "她去了一場寧靜的戰爭",
+    "指仙",
+    "自由的姿態",
+    "自由的姿態 （Liberated Gesture)"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第17屆金音創作獎",
+    "第35屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "pan-zi-jue": {
+   "works": [
+    "沒問題少女"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎"
+   ]
+  },
+  "zhang-kai-ting": {
+   "works": [
+    "世界",
+    "世界 World"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎"
+   ]
+  },
+  "jian-yu-min": {
+   "works": [
+    "參螺旋",
+    "幾何碼"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "robot-swing": {
+   "works": [
+    "IS IT ALIVE? (Live at Yuchen Cinema Studio)",
+    "One More (feat. LEO37, DCIV, Dac, Lazy Habits, Star Wu, 謝明諺)",
+    "Override!",
+    "Robot Revolution",
+    "“Is It Alive?”"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第16屆金音創作獎",
+    "第17屆金音創作獎"
+   ]
+  },
+  "mandark": {
+   "works": [
+    "Legacy Presents【2023都市女聲】：MANDARK〈be a “BADA88”〉首場個人專場演唱會",
+    "be a “BADA88”"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "deca-joins": {
+   "works": [
+    "deca joins 2024首演 天堂與泥土 / Heaven ＆ Dirt",
+    "在這裡停一下"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第17屆金音創作獎"
+   ]
+  },
+  "trash": {
+   "works": [
+    "HOLY TRIP! 精神時光屋",
+    "Hakka Sucker",
+    "TRASH〈HOLY TRIP! 精神時光屋〉高雄演唱會",
+    "希望のうた",
+    "幸福的末班車",
+    "明日へ",
+    "最美的風景"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "jia-ri-zhen-cao": {
+   "works": [
+    "Dapple Patterns"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "huang-ye-yuan": {
+   "works": [
+    "悖論"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "lite": {
+   "works": [
+    "STRATA"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "silica-gel": {
+   "works": [
+    "POWER ANDRE 99"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "age-factory": {
+   "works": [
+    "Songs"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "narabara": {
+   "works": [
+    "Dab Hi"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "sha-zi-yu-bai-chi": {
+   "works": [
+    "姿態",
+    "遠慮"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎"
+   ]
+  },
+  "wen-shi-za-cao": {
+   "works": [
+    "Intro_鞋"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "yang-nai-wen": {
+   "works": [
+    "A Dream of Bonnie and Clyde feat. JADE",
+    "Flow",
+    "Flow (楊乃文專輯) Flow",
+    "Monster",
+    "世界 World",
+    "你將永遠活在我的歌裡",
+    "思緒的盡頭",
+    "愛人錯過",
+    "愛情研究院",
+    "瓦合"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "jade": {
+   "works": [
+    "A Dream of Bonnie and Clyde feat. JADE",
+    "Creeper",
+    "Flow (楊乃文專輯) Flow",
+    "萬物皆欲"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "bai-he-hua": {
+   "works": [
+    "Pandemic 傳染病",
+    "出來",
+    "怪味",
+    "萬事美妙"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第16屆金音創作獎"
+   ]
+  },
+  "nong-cun-wu-zhuang-qing-nian": {
+   "works": [
+    "予你的歌 Hōo Lí ê Kua",
+    "阿母的話 A-bú ê Uē"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "zoomie": {
+   "works": [
+    "鎮妹 Zhin' Moi",
+    "鎮妹Zhin‘ Moi"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎"
+   ]
+  },
+  "panai": {
+   "works": [
+    "吊樹頭 Tiàu Tshiū-Thâu",
+    "夜婆 Iā-Pô"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎"
+   ]
+  },
+  "ana": {
+   "works": [
+    "9 of 9 ：ARCANA CONCERT",
+    "Chamakana",
+    "Final Girl",
+    "HUR＋ 九人九色專場演唱會〈9 of 9 ：ARCANA CONCERT〉",
+    "吊樹頭 Tiàu Tshiū-Thâu",
+    "夜婆 Iā-Pô"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第17屆金音創作獎",
+    "第35屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "blaire-ko": {
+   "works": [
+    "吊樹頭 Tiàu Tshiū-Thâu",
+    "夜婆 Iā-Pô"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "usay-kawlu": {
+   "works": [
+    "Niyaro' 家鄉",
+    "美感",
+    "美感 Harateng no Pangcah"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎"
+   ]
+  },
+  "gummy-b": {
+   "works": [
+    "2026 大港開唱｜Gummy B X 陳嫺靜",
+    "ABC",
+    "BS",
+    "SWIRL",
+    "更好"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第17屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "wannasleep": {
+   "works": [
+    "ABC",
+    "BS",
+    "且且",
+    "基礎憂鬱"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "2change": {
+   "works": [
+    "THE ONE GOT C.H.A.N.G.E.s.",
+    "YUHUM"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第17屆金音創作獎"
+   ]
+  },
+  "smashregz": {
+   "works": [
+    "三不管",
+    "如何三天內成為饒舌歌手？"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎"
+   ]
+  },
+  "shen-jing-yuan": {
+   "works": [
+    "不眨眼的人"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "dizparity": {
+   "works": [
+    "淒惻秩序  Melancholy Order",
+    "自我排空  Kenosis"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "lv-shao-chun": {
+   "works": [
+    "宇",
+    "胎內"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "freedom-beat": {
+   "works": [
+    "HEMI DEMI SEMI",
+    "在石頭縫隙間"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "cheer": {
+   "works": [
+    "HEMI DEMI SEMI",
+    "在石頭縫隙間"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "xiao-qin": {
+   "works": [
+    "美麗的灣"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "you-fa": {
+   "works": [
+    "fakeloh 石化"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "lu-qian-qian": {
+   "works": [
+    "內建系統",
+    "夢幻曲"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎"
+   ]
+  },
+  "ti-pi-ou-jue-shi-da-le-tuan": {
+   "works": [
+    "優雅如你",
+    "繞．境"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎"
+   ]
+  },
+  "nio": {
+   "works": [
+    "HIDEOUT",
+    "讓我想起"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第17屆金音創作獎"
+   ]
+  },
+  "linion": {
+   "works": [
+    "HIDEOUT"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "zheng-ping": {
+   "works": [
+    "簡單一句話"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎"
+   ]
+  },
+  "wen-ti-zong-bu": {
+   "works": [
+    "WET/DRY",
+    "我在這裡"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "yellow": {
+   "works": [
+    "RACE OF FAITH ft YELLOW 黃宣",
+    "輕功水上飄"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "sophy": {
+   "works": [
+    "RACE OF FAITH ft YELLOW 黃宣",
+    "水性揚花"
+   ],
+   "pages": [
+    "第15屆金音創作獎"
+   ]
+  },
+  "shi-shi": {
+   "works": [
+    "Adddicted (feat. Karencici)",
+    "BOOMERANG",
+    "Flow (楊乃文專輯) Flow",
+    "世界 World",
+    "你將永遠活在我的歌裡",
+    "瓦合"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎"
+   ]
+  },
+  "karencici": {
+   "works": [
+    "Adddicted (feat. Karencici)",
+    "Loser.",
+    "Made For You",
+    "Superwoman"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第17屆金音創作獎",
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "sunset-rollercoaster": {
+   "works": [
+    "AAA",
+    "AAA (專輯) AAA",
+    "Antenna",
+    "Bluebird",
+    "Pleasure (蔡依林專輯) Pleasure",
+    "QUIT QUIETLY",
+    "SEX TAPE (feat. 落日飛車)",
+    "Suí 水",
+    "Young Man",
+    "不完全自救手冊",
+    "夢想家"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第17屆金音創作獎",
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "ozi": {
+   "works": [
+    "ADICA",
+    "SEX TAPE (feat. 落日飛車)",
+    "SWIRL",
+    "不遠處",
+    "情勒"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "9m88": {
+   "works": [
+    "Sent",
+    "〈大濛〉電影原聲帶",
+    "大濛",
+    "野獸派"
+   ],
+   "pages": [
+    "第15屆金音創作獎",
+    "第35屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "zheng-yi-nong": {
+   "works": [
+    "Pleasure (蔡依林專輯) Pleasure",
+    "且且",
+    "圓缺",
+    "基礎憂鬱"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "lv-shi-xuan": {
+   "works": [
+    "AAA",
+    "AAA (專輯) AAA",
+    "Pleasure (蔡依林專輯) Pleasure",
+    "Suí 水",
+    "二周目",
+    "夢想家",
+    "好聲豪氣"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "funkymo": {
+   "works": [
+    "修理車",
+    "物件，所在"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "chen-xian-jing": {
+   "works": [
+    "2026 大港開唱｜Gummy B X 陳嫺靜",
+    "New Notes",
+    "New notes",
+    "New notes (prod. by 鄭昭元 ZAOYUAN)",
+    "Pleasure (蔡依林專輯) Pleasure",
+    "吸塵器 維他命 (beat by Flowstrong)",
+    "如果每天都可以 happy happy 誰想要sad:)) - 一起去度假",
+    "如果每天都可以 happy happy 誰想要sad:＊- 合作的秘密",
+    "如果每天都可以happy happy 誰想要sad:)) – 一起去度假",
+    "如果每天都可以happy happy 誰想要sad:＊- 合作的秘密",
+    "如果每天都可以happy happy 誰想要sad：* - 合作的秘密"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第17屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "future-after-a-second": {
+   "works": [
+    "『異骨』Xenobones"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "ba-shi-ba-ke-ba-le-zi": {
+   "works": [
+    "【二巡的盡頭】Tour Final 台北 THE WALL LIVEHOUSE",
+    "浪漫野球戰士列傳"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "mao-dan-zhi": {
+   "works": [
+    "多汁",
+    "失望"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "dang-dai-dian-ying-da-shi": {
+   "works": [
+    "你在注視那遙遠的地方",
+    "我希望你的眼睛",
+    "當代電影大師2025公演"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "lucy": {
+   "works": [
+    "Dance on the Shoreline",
+    "Nothing ever stops me"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "lin-yi-shuo": {
+   "works": [
+    "萬事美妙"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "lin-yi-le": {
+   "works": [
+    "素顏的樣子"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "brbp": {
+   "works": [
+    "BRBP"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "ftk": {
+   "works": [
+    "五毒"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "tickle-tickle": {
+   "works": [
+    "成人料理亭"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "zhong-qi": {
+   "works": [
+    "19%",
+    "美秀集團同名專輯 美秀集團"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "wu-zheng-jun": {
+   "works": [
+    "傳奇．雙擊--新視界",
+    "傳奇．雙擊—新視界"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "huang-rui-feng": {
+   "works": [
+    "傳奇．雙擊--新視界",
+    "傳奇．雙擊—新視界"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "li-wei-yong": {
+   "works": [
+    "不會得就是不會得"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "zheng-zhao-yuan": {
+   "works": [
+    "All On You",
+    "Enough",
+    "Home",
+    "New notes (prod. by 鄭昭元 ZAOYUAN)"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第17屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "hong-wei-nong": {
+   "works": [
+    "IS IT ALIVE? (Live at Yuchen Cinema Studio)",
+    "Override!"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第17屆金音創作獎"
+   ]
+  },
+  "leo": {
+   "works": [
+    "Leo王船",
+    "〈Leo王船〉－騷晒午桑",
+    "王品流 Freestyle"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "pang-hu": {
+   "works": [
+    "胖虎x2024 火球祭 FIREBALL Fest. 演出精華回顧"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "kong-long-de-pi": {
+   "works": [
+    "I Dig You",
+    "I Dig You：恐龍木乃伊之謎",
+    "恐龍的皮〈I Dig You：恐龍木乃伊之謎〉電影專場"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "fat-hamster-and-kang-new": {
+   "works": [
+    "Brains in a Vat"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "jacqui": {
+   "works": [
+    "Dirty Mirror Selfie"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "lomba-sihir": {
+   "works": [
+    "Obrolan Jam 3 Pagi"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "feast": {
+   "works": [
+    "Membangun & Menghancurkan"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "elle-shimada": {
+   "works": [
+    "LULLABY FOR THR RIVER IN MY BODY"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "dao-che-ru-ku": {
+   "works": [
+    "燒香拜佛"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "xie-ming-you": {
+   "works": [
+    "偏南",
+    "偏南風"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "giyu-tjuljaviya": {
+   "works": [
+    "南迴之子",
+    "雲就要翻過山"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "ke-zhi-tang": {
+   "works": [
+    "My Nova",
+    "This is My World"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "jiang-meng-xun": {
+   "works": [
+    "完福"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "savage-m": {
+   "works": [
+    "海口"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "someshiit": {
+   "works": [
+    "Knock'em off (feat. someshiit 山姆)",
+    "善良是",
+    "愚公"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "li-ying-hong": {
+   "works": [
+    "東方美人",
+    "萬華的蛇"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "yang-shu-ya": {
+   "works": [
+    "Rule男Freestyle"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "knowtis": {
+   "works": [
+    "Knock'em off (feat. someshiit 山姆)"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "puzzleman": {
+   "works": [
+    "MY MESSAGE (feat. Shing02)"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "ced": {
+   "works": [
+    "RLGL"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "wring-out-laura": {
+   "works": [
+    "Elixir"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "oberka": {
+   "works": [
+    "Regrow Protocol",
+    "Wildbait"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "b-e-n-n": {
+   "works": [
+    "Hilarious"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "sonia-calico": {
+   "works": [
+    "月光乩"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "chen-zi-zhang": {
+   "works": [
+    "The Sea, The Sky, The You and I (feat. 鄭立偉)",
+    "海、天、你與我"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "huang-yan-bin": {
+   "works": [
+    "布爾達河"
+   ],
+   "pages": [
+    "第16屆金音創作獎"
+   ]
+  },
+  "bradd": {
+   "works": [
+    "Friendly Singing Neighbor",
+    "Harvey Dent",
+    "Pink & Purple",
+    "青春戀愛手冊"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第17屆金音創作獎"
+   ]
+  },
+  "chen-yi-heng": {
+   "works": [
+    "罐頭塔"
+   ],
+   "pages": [
+    "第16屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "chen-ying-da-si-chong-zou": {
+   "works": [
+    "Live Without Irony",
+    "Prioritization Suite - 2. 金錢"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "chen-ying-da": {
+   "works": [
+    "Live Without Irony",
+    "Over The Moons",
+    "Prioritization Suite - 2. 金錢"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "miss-alpaca": {
+   "works": [
+    "((No wool. No hump))",
+    "Awake",
+    "Unlock Your Soul"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "luo-yan-ting": {
+   "works": [
+    "On Your Side",
+    "Tumbleweed from nowhere"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "cold-dew": {
+   "works": [
+    "臺北人文地景"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "piao-liu-chu-kou": {
+   "works": [
+    "GMA36 Cypher",
+    "Masonolay i Cepo'",
+    "Pleasure (蔡依林專輯) Pleasure",
+    "You are not alone",
+    "別遺棄 Aka Sawadan",
+    "我做了快樂的夢"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "tiu-tiu": {
+   "works": [
+    "沈默的鉅作"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "ceng-guo-hong": {
+   "works": [
+    "AAA",
+    "QUIT QUIETLY",
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "luo-si-rong": {
+   "works": [
+    "亻厓个房間",
+    "女兒的九十九種藍——聽見零雨",
+    "𠊎个房間"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "ma-wei": {
+   "works": [
+    "奧祕"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "debloop": {
+   "works": [
+    "Puffer Bone"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "tru": {
+   "works": [
+    "ALIVE"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "lin-wei-zhong": {
+   "works": [
+    "Live Without Irony"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "wang-pin-xin": {
+   "works": [
+    "Logic Code Eurorack & Drum",
+    "菇"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "ye-jun-lin": {
+   "works": [
+    "康達效應 Coanda Effect"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "brandon-lin": {
+   "works": [
+    "Sure As The Sun Will Rise"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "zheng-yu-tai": {
+   "works": [
+    "氣孔生成維度"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "thats-my-shhh": {
+   "works": [
+    "TMSX : 10 Years of Shhh"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "sheng-zi-chong": {
+   "works": [
+    "THE CURE",
+    "聲子蟲〈THE CURE〉專場"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "c-holly": {
+   "works": [
+    "9 of 9 ：ARCANA CONCERT",
+    "HUR＋ 九人九色專場演唱會〈9 of 9 ：ARCANA CONCERT〉"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "ena-mori": {
+   "works": [
+    "Ore"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "kiki": {
+   "works": [
+    "KIKI"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "shnti": {
+   "works": [
+    "Melting PT."
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "n-y-p-d": {
+   "works": [
+    "DON'T LIKE 我鍾意"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "namdo-calling": {
+   "works": [
+    "NAMDO CALLING"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "po-hou": {
+   "works": [
+    "最後一舞"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "yu-tiao": {
+   "works": [
+    "忘形",
+    "爛人指引"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "acid-brain": {
+   "works": [
+    "七日譚 Heptaméron"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "yang-shi-xuan": {
+   "works": [
+    "三菜一湯",
+    "普通活著 Daily Diner",
+    "瓦合",
+    "自種自收"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第35屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "lao-wang-le-dui": {
+   "works": [
+    "暮夜徐行",
+    "深夜的巴士會開往哪裡"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "gong-zhen-xiao-ying": {
+   "works": [
+    "解"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "yi-hao-li-hang": {
+   "works": [
+    "Alang mu Kbayang 母親的古白楊"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "cha-lao-ba-xi-wa-li": {
+   "works": [
+    "Kami Kami 我們我們"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "chun-mian-le-dui": {
+   "works": [
+    "Pleasure (蔡依林專輯) Pleasure",
+    "下回上去"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "lei-qing": {
+   "works": [
+    "南洋探險隊",
+    "春子"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "ao-yu-shan": {
+   "works": [
+    "Hidden Album",
+    "Hollywood Dream"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "our-shame": {
+   "works": [
+    "Hollywood Dream"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "qiu-shu": {
+   "works": [
+    "鏡仔"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "lizi": {
+   "works": [
+    "Off the Chain"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "su-yi-fei": {
+   "works": [
+    "少年殺人事件"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "dciv": {
+   "works": [
+    "失而復得",
+    "給我兒子們的信"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "fang-pin-rong": {
+   "works": [
+    "VISION"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "miss-ko": {
+   "works": [
+    "b.ye 畢業"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "wu-rui-peng": {
+   "works": [
+    "別鬧"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "xiong-zai": {
+   "works": [
+    "520",
+    "∞→0",
+    "存活"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第35屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "cicada": {
+   "works": [
+    "Gazing the Shades of White (The Remixes)"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "undep": {
+   "works": [
+    "umop ap!sdn",
+    "ǝuo"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "prod-cw": {
+   "works": [
+    "If this is the end, meet me in Dreamland.",
+    "MUSIC SAVED MY LIFE SO DID YOU 我是電子音樂"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "yyt": {
+   "works": [
+    "Balls Hit the Floor"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "a-flyt": {
+   "works": [
+    "B.A.S.I.C"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "teacheray": {
+   "works": [
+    "raymond."
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "falk-bonitz-rafique": {
+   "works": [
+    "Ad Astra",
+    "Sure As The Sun Will Rise"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "yang-yi-xiu": {
+   "works": [
+    "厭世調",
+    "野臺語言"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "jocelyn9-4-0": {
+   "works": [
+    "Jocelyn 9.4.0",
+    "Sweet Spot"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第35屆金曲獎"
+   ]
+  },
+  "erika-liu": {
+   "works": [
+    "雙魚宮"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "erika": {
+   "works": [
+    "雙魚宮"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "yun-duan-si-ji": {
+   "works": [
+    "1997",
+    "These Days"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "haezee": {
+   "works": [
+    "TWO BROKEN SOULS"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "zhong-yi-an": {
+   "works": [
+    "和大安區蘇格拉底打羽球 feat.阿橘Ahhg"
+   ],
+   "pages": [
+    "第17屆金音創作獎"
+   ]
+  },
+  "xu-zhe-pei": {
+   "works": [
+    "樹洞裡可以悲傷",
+    "與世隔絕的怪物"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "a-root": {
+   "works": [
+    "Over The Moons",
+    "指仙",
+    "臺灣文蛤 Huh?"
+   ],
+   "pages": [
+    "第17屆金音創作獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "cao-dong-mei-you-pai-dui": {
+   "works": [
+    "Flow (楊乃文專輯) Flow",
+    "世界 World",
+    "但",
+    "你將永遠活在我的歌裡",
+    "瓦合"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "su-pei-qing": {
+   "works": [
+    "Flow (楊乃文專輯) Flow",
+    "世界 World",
+    "你將永遠活在我的歌裡",
+    "你會永遠活在我的歌裡",
+    "瓦合"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "xu-fu-kai": {
+   "works": [
+    "Flow (楊乃文專輯) Flow",
+    "世界 World",
+    "五木大学",
+    "伊的身邊已經有別人2023",
+    "你將永遠活在我的歌裡",
+    "瓦合"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "weng-li-you": {
+   "works": [
+    "Flow (楊乃文專輯) Flow",
+    "世界 World",
+    "你將永遠活在我的歌裡",
+    "刀馬旦",
+    "瓦合"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "su-ming-yuan": {
+   "works": [
+    "Flow (楊乃文專輯) Flow",
+    "世界 World",
+    "主題歌",
+    "你將永遠活在我的歌裡",
+    "心內烏空",
+    "瓦合"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "huang-fei": {
+   "works": [
+    "Flow (楊乃文專輯) Flow",
+    "世界 World",
+    "你將永遠活在我的歌裡",
+    "十八般武藝",
+    "瓦合"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "eason-chan": {
+   "works": [
+    "CHIN UP!",
+    "Flow (楊乃文專輯) Flow",
+    "世界 World",
+    "你將永遠活在我的歌裡",
+    "瓦合",
+    "社交恐懼癌",
+    "英雄聯盟:雙城之戰",
+    "這樣很好"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "xu-jun": {
+   "works": [
+    "不完全自救手冊",
+    "期待集",
+    "歌一切",
+    "蘑菇濃湯",
+    "離別總是那麼突然",
+    "青鳥 (生物股長單曲) 青鳥"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "gao-wu-ren": {
+   "works": [
+    "Monster",
+    "帶你飛",
+    "思緒的盡頭",
+    "愛人錯過",
+    "愛情研究院",
+    "我們就像那些要命的傻瓜"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "qiu-de": {
+   "works": [
+    "不完全自救手冊",
+    "胚胎",
+    "蘑菇濃湯",
+    "裘德",
+    "離別總是那麼突然",
+    "離開銀色荒原",
+    "青鳥 (生物股長單曲) 青鳥",
+    "骨骼謝幕"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "aoi": {
+   "works": [
+    "海海人生"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "qing-chong": {
+   "works": [
+    "海海人生"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "mie-huo-qi": {
+   "works": [
+    "家和萬事興"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "xiong-mei-ling": {
+   "works": [
+    "一路平安",
+    "秋離"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "lin-yu-ting": {
+   "works": [
+    "洄游",
+    "羊尾仔看詩"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "ye-ying": {
+   "works": [
+    "遷徙"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "peng-bai-yi": {
+   "works": [
+    "客耀"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "az": {
+   "works": [
+    "美式教育"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "qiu-li-ting": {
+   "works": [
+    "給幸福的一封信"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "sa-ba-tai-lu-ge-er-tong-he-chang-tuan": {
+   "works": [
+    "給幸福的一封信"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "wu-jiong-en-jia-yi-fa-li-de": {
+   "works": [
+    "Vusam 種子",
+    "Vusam種子"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "o-kai-singers": {
+   "works": [
+    "最好的日常",
+    "最好的日常 (Those Days)",
+    "最好的日常 （Those Days）",
+    "最好的日常(Those Days)"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "a-luo-ka-li-ting-ba-qi-la": {
+   "works": [
+    "女人島"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "mc-hotdog": {
+   "works": [
+    "可夢",
+    "樓上的房東",
+    "蘑菇濃湯",
+    "離別總是那麼突然",
+    "青鳥 (生物股長單曲) 青鳥",
+    "髒藝術家"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "amei": {
+   "works": [
+    "Circus Monkey",
+    "Turn Up",
+    "三天三夜",
+    "什麼都不必說 2022Remix",
+    "我的存在就是愛你",
+    "比莉卡厲害",
+    "熱情的沙漠",
+    "蘑菇濃湯",
+    "阿福羅火山",
+    "雙節棍",
+    "離別總是那麼突然",
+    "青鳥 (生物股長單曲) 青鳥"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "atarashii-gakko": {
+   "works": [
+    "AG! Calling",
+    "Tokyo Calling"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "jj-lin": {
+   "works": [
+    "重拾_快樂",
+    "重拾＿快樂",
+    "願與愁"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "feng-xiao-yue": {
+   "works": [
+    "帽子裡的惡魔",
+    "柒"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "yang-su-hao": {
+   "works": [
+    "一路平安",
+    "像咱這款人",
+    "皇民戰士大軍伕",
+    "秋離"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "su-yun-ying": {
+   "works": [
+    "不完全自救手冊",
+    "圓",
+    "蘑菇濃湯",
+    "離別總是那麼突然",
+    "青鳥 (生物股長單曲) 青鳥"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "huang-jing-shi-yi": {
+   "works": [
+    "不完全自救手冊",
+    "期待集"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "marz23": {
+   "works": [
+    "Hakka Sucker",
+    "不遠處",
+    "情勒",
+    "最美的風景"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "terence-lam": {
+   "works": [
+    "CHIN UP!",
+    "有色眼鏡",
+    "社交恐懼癌",
+    "隱形色"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "the-crane": {
+   "works": [
+    "SWIRL",
+    "Same Stories, Different Narratives",
+    "UMAMI"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "yuan-ya-wei": {
+   "works": [
+    "在與生俱來的不平衡裡",
+    "蘑菇濃湯",
+    "離別總是那麼突然",
+    "青鳥 (生物股長單曲) 青鳥"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "lin-jun-yi": {
+   "works": [
+    "上好的一年"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "cai-jia-zhen": {
+   "works": [
+    "彼个秘密"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "lulu-lin": {
+   "works": [
+    "Chill 幻"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "guang-cai-yu-lao-le-shou": {
+   "works": [
+    "浮生錄：廣財與老樂手"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "ya-wei-mo-rui": {
+   "works": [
+    "世界和我一起跳舞"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "lu-bo-he-chang-tuan": {
+   "works": [
+    "美麗新世界"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "mixer": {
+   "works": [
+    "都是浪漫害的"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "the-wanted": {
+   "works": [
+    "減肥計劃"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "limi": {
+   "works": [
+    "自然現象"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "zou-xu": {
+   "works": [
+    "把水開著"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "aden": {
+   "works": [
+    "Be a Lover"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "vash-hsu": {
+   "works": [
+    "躍"
+   ],
+   "pages": [
+    "第35屆金曲獎"
+   ]
+  },
+  "san-zhi-gou": {
+   "works": [
+    "不完全自救手冊",
+    "期待集"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "hong-pei-yu": {
+   "works": [
+    "Pleasure (蔡依林專輯) Pleasure",
+    "不完全自救手冊",
+    "修補你的心 Fix You",
+    "污漬",
+    "沙文",
+    "滴滴答答",
+    "開",
+    "開 (專輯) 開",
+    "高麗菜粥"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "sandy-lam": {
+   "works": [
+    "不完全自救手冊",
+    "修補你的心 Fix You",
+    "污漬",
+    "沙文"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "yang-shu-yu-ji-na": {
+   "works": [
+    "Pretty Disco",
+    "We Are Family",
+    "亻厓个房間",
+    "把燈關上（摎火扚忒）",
+    "辣妹駕到",
+    "𠊎个房間"
+   ],
+   "pages": [
+    "第35屆金曲獎",
+    "第36屆金曲獎"
+   ]
+  },
+  "li-zhu-xin": {
+   "works": [
+    "AAA",
+    "AAA (專輯) AAA",
+    "Pleasure (蔡依林專輯) Pleasure",
+    "Suí 水",
+    "夢想家",
+    "足芳足芳"
+   ],
+   "pages": [
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "khalil-fong": {
+   "works": [
+    "AAA",
+    "AAA (專輯) AAA",
+    "Suí 水",
+    "一簾幽夢",
+    "十分鐘的戀愛",
+    "夢想家",
+    "彼個所在",
+    "愛愛愛",
+    "才二十三"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "wei-ru-xuan": {
+   "works": [
+    "AAA",
+    "AAA (專輯) AAA",
+    "Suí 水",
+    "一簾幽夢",
+    "十分鐘的戀愛",
+    "夢想家",
+    "彼個所在",
+    "愛愛愛",
+    "珍珠刑"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "tanya-chua": {
+   "works": [
+    "AAA",
+    "AAA (專輯) AAA",
+    "Suí 水",
+    "不夠善良的我們：戲劇音樂設計專輯",
+    "夢想家"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "chen-jian-qi": {
+   "works": [
+    "不完全自救手冊",
+    "幸福在歌唱<small>（電影《陽光女子合唱團"
+   ],
+   "pages": [
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "chen-qi-zhen": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "chen-shan-ni": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "hush": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "kang-shi-tan-de-bian-hua-qiu": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "wang-xin-ling": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "wu-yue-tian-ma-sha": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "huang-qi-shan": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "ice-paper": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "jihu": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "kafe-hu": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "project-ace": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "qin-si-feng": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "tu-ling-yin-le-shi-yan-shi": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "von-citizen": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "ok": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "zheng-nan": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "leezi": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "zhou-yun-peng": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "ivana-wong": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "james-lee": {
+   "works": [
+    "不完全自救手冊"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "j-sheon": {
+   "works": [
+    "OUTCOMES 結果論"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "wang-hui-zhu": {
+   "works": [
+    "滴滴答答",
+    "高麗菜粥"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "qiu-lin": {
+   "works": [
+    "夢裡夢外"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "traego": {
+   "works": [
+    "Hakka Sucker",
+    "最美的風景",
+    "純粹污垢"
+   ],
+   "pages": [
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "huang-zi-xuan": {
+   "works": [
+    "Pleasure (蔡依林專輯) Pleasure",
+    "牛騷 New Soul"
+   ],
+   "pages": [
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "mi-sha": {
+   "works": [
+    "亻厓个房間",
+    "親愛的企鵝",
+    "𠊎个房間"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "morikilr": {
+   "works": [
+    "kamawan za kavung 像帽子一樣"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "a-bu-si-ta-na-bi-ma": {
+   "works": [
+    "BUNUN 布農",
+    "QUEENDOM"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "sangpuy": {
+   "works": [
+    "GMA36 Cypher",
+    "You are not alone",
+    "mudalrep 靠近",
+    "別遺棄 Aka Sawadan",
+    "我做了快樂的夢",
+    "靠近 mudalrep"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "mei-xiu-ji-tuan": {
+   "works": [
+    "手機錢包鑰匙菸",
+    "美秀集團同名專輯",
+    "美秀集團同名專輯 美秀集團"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "lu-guang-zhong": {
+   "works": [
+    "傷心早餐店 HeartBreakFast 傷心早餐店",
+    "手機錢包鑰匙菸",
+    "美秀集團同名專輯"
+   ],
+   "pages": [
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "energy": {
+   "works": [
+    "Here I Am",
+    "Here I Am (Energy專輯) Here I Am",
+    "星期五晚上"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "jud": {
+   "works": [
+    "JUD 陳泳希 首張迷你專輯",
+    "當我不敢說",
+    "知更"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "polin": {
+   "works": [
+    "允許萬物破碎"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "genblue": {
+   "works": [
+    "1st Single Album COCOCO",
+    "COCOCO",
+    "MIRROR (幻藍小熊迷你專輯) MIRROR"
+   ],
+   "pages": [
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "xiao-huang-qi": {
+   "works": [
+    "做一個惜情軟心的人",
+    "和天一樣高",
+    "夢田",
+    "天空不要為我掉眼淚",
+    "奉獻",
+    "我的未來不是夢",
+    "沒事的"
+   ],
+   "pages": [
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "li-rong-hao": {
+   "works": [
+    "黑馬"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "penny-tai": {
+   "works": [
+    "雙生火焰 (專輯) 雙生火焰"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "chen-xin-yue": {
+   "works": [
+    "V"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "carris-tsai": {
+   "works": [
+    "戲台"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "lin-mei-xiu": {
+   "works": [
+    "Lady Pum Pum"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "zhan-ya-wen": {
+   "works": [
+    "演一首歌"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "dremedreman": {
+   "works": [
+    "全村的希望"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "wu-wang-he-zuo-she": {
+   "works": [
+    "開往天堂的海盜船"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "dong-li-huo-che": {
+   "works": [
+    "結伴"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "collage": {
+   "works": [
+    "Deus Ex Machina"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "dan-dan-mao-mao": {
+   "works": [
+    "RUN, DON'T WALK"
+   ],
+   "pages": [
+    "第36屆金曲獎"
+   ]
+  },
+  "peng-jia-hui": {
+   "works": [
+    "Pleasure (蔡依林專輯) Pleasure",
+    "大齡女子",
+    "完整的大人",
+    "快樂的人請舉手",
+    "我在客廳做的夢",
+    "敲敲我的頭",
+    "舊夢",
+    "走在紅毯那一天"
+   ],
+   "pages": [
+    "第36屆金曲獎",
+    "第37屆金曲獎"
+   ]
+  },
+  "jolin": {
+   "works": [
+    "Pleasure",
+    "Pleasure (蔡依林專輯) Pleasure",
+    "跟著感覺走"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "zhang-zhen-yue": {
+   "works": [
+    "Pleasure (蔡依林專輯) Pleasure",
+    "跟著感覺走"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "a-lin": {
+   "works": [
+    "Invisible Nation (Original Motion Picture Soundtrack) 〈看不見的國家〉電影原聲帶",
+    "Naru37",
+    "New Notes",
+    "Over The Moons",
+    "Pleasure (蔡依林專輯) Pleasure",
+    "pleasure",
+    "幸福在歌唱",
+    "幸福在歌唱<small>（電影《陽光女子合唱團",
+    "征服",
+    "旋木",
+    "消失",
+    "無言花",
+    "看不見的國家",
+    "缺席",
+    "跟著感覺走",
+    "野百合也有春天",
+    "離開我"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "mj116": {
+   "works": [
+    "OGS",
+    "Pleasure (蔡依林專輯) Pleasure"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "huang-yu-han": {
+   "works": [
+    "Ngai",
+    "Pleasure (蔡依林專輯) Pleasure"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "bai-bing-bing": {
+   "works": [
+    "Pleasure (蔡依林專輯) Pleasure",
+    "喝酒講酒話"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "dan-yi-chun": {
+   "works": [
+    "純妹妹"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "wu-yong-ji": {
+   "works": [
+    "褪褲lān的兄弟"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "cj-mit": {
+   "works": [
+    "我說"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "a-yi-luo": {
+   "works": [
+    "南方的冬"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "sarah": {
+   "works": [
+    "慢花誌"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "lawis-aow": {
+   "works": [
+    "Saitikotiko",
+    "Saitikotiko 一次又一次"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "arase": {
+   "works": [
+    "AKA"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "suming": {
+   "works": [
+    "Mikerid 引路"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "matzka": {
+   "works": [
+    "djekuacan 年少不努力"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "chen-xiao-xia": {
+   "works": [
+    "老翅膀"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "zhou-tang-hao": {
+   "works": [
+    "Circus Monkey",
+    "LOVE RAGE HOPE",
+    "Turn Up",
+    "三天三夜",
+    "什麼都不必說 2022Remix",
+    "比莉卡厲害",
+    "熱情的沙漠",
+    "阿福羅火山",
+    "雙節棍"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "ceng-wei-zhong": {
+   "works": [
+    "頇顢"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "since-chou": {
+   "works": [
+    "人造人間"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "chen-yi-ting": {
+   "works": [
+    "三十幾"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "xiu-lan-ma-ya": {
+   "works": [
+    "鐵心肝"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "pia": {
+   "works": [
+    "離婚初體驗"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "icyball": {
+   "works": [
+    "我很抱歉"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "tizzy-bac": {
+   "works": [
+    "說出我的名字"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "yi-zi-le-tuan": {
+   "works": [
+    "愛的對白"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "163braces": {
+   "works": [
+    "海螺記"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  },
+  "joyce": {
+   "works": [
+    "才華換桃花"
+   ],
+   "pages": [
+    "第37屆金曲獎"
+   ]
+  }
+ }
+}

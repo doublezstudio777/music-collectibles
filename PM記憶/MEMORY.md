@@ -61,3 +61,4 @@
 - Playwright `context.set_extra_http_headers` 會把測試表頭（`x-yz-test-country`）也送去 Google Fonts，CORS 擋掉、字型載不到，console 一堆錯，canvas 浮水印也可能燒成系統字；改用 `context.route(本站網址 regex, 加表頭 continue_)` 只加在本站請求（2026-09-29）
 - D1 遠端一句 `UNION ALL` 串太多 SELECT 會 `too many terms in compound SELECT`，全庫掃測試資料一張表一句查（2026-09-29）
 - 首頁放 Spotify 嵌入播放器後，Playwright `networkidle` 永遠等不到（播放器一直有連線），驗收與煙霧測試改 `load`＋最多 10 秒 settle；新元件 class 先 grep 有沒有撞名（`.pick` 是表單標籤，撞到多出內距，量寬度才看得出）；iframe 換歌用 key 重掛不改 src，才不會多一筆上一頁紀錄（2026-09-29）
+- MusicBrainz 大批對應：金曲金音名單沒有作品欄，佐證改用「中文維基各屆條目入圍表格同列作品」＋「MB 的 Wikidata→zhwiki 條目＝網站維基條目」，209 位對上 106。`workersInvocationsAdaptive` 的 quantiles 沒有 cpuTimeMax（整個查詢回 data:null），只查 P50/P90/P99；`until` 迴圈條件裡的 `pgrep -f 關鍵字` 一樣會比對到迴圈自己（2026-09-30 又踩一次，等背景工作改看輸出檔）（2026-09-30）

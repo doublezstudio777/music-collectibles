@@ -1,7 +1,7 @@
 // MusicBrainz 抓取與藝人對應（import-musicbrainz.mjs 用；也可單獨跑：node scripts/musicbrainz-fetch.mjs）。
 //
 // API 規則（https://musicbrainz.org/doc/MusicBrainz_API/Rate_Limiting）：
-//   - User-Agent 固定 `Lemicang/0.1 ( zukawork0312@gmail.com )`
+//   - User-Agent 固定 `Lemicang/0.1 ( https://yinzang.dblzm.workers.dev )`（聯絡方式用網站網址，不放任何人的 Email）
 //   - 每秒最多 1 次請求（這支每次請求間隔 ≥1.1 秒）；503 退避重試（2、4、8、16、32 秒）
 //   - 回應 JSON 存在 網站/.cache/musicbrainz/（已在 .gitignore），重跑時同一個網址直接讀快取，不重抓
 //
@@ -10,7 +10,10 @@
 //   2. 候選要「名稱或別名完全相同」＋「國家 TW 或地區在台灣」＋「類型相符」（團體對 Group，男女歌手對 Person）
 //   3. 再抓候選的 release-group，跟已知作品（研究的實體發行標題＋維基簡介裡《》括起來的作品）比對有沒有交集
 //   3b. 沒有作品交集時，改看 MusicBrainz 關係（跟名單裡其他藝人是團員等關係）或該候選的發行掛在顏社／本色
-//   4. 恰好一位候選同時符合 2、3（或 3b） → 對應成功；沒有已知作品可比、但恰好一位符合 2 → 也列「疑義」不配
+//   3c. （2026-09-29 金曲金音批加）藝人有中文維基條目時：候選的 Wikidata 連結指到的中文維基條目＝網站藝人的條目 → 就是同一人，
+//       這條佐證成立時不看國家與類型（MusicBrainz 常沒填國家；海外藝人本來就不是 TW）
+//   4. 恰好一位候選同時符合 2、3（或 3b、3c） → 對應成功；沒有已知作品可比、但恰好一位符合 2 → 也列「疑義」不配
+//   海外藝人（region＝overseas）：第 2 條的「台灣」改成不看國家，其餘一樣
 
 import { createHash } from "node:crypto";
 import dns from "node:dns";
@@ -21,7 +24,7 @@ import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const CACHE = join(root, ".cache", "musicbrainz");
-const UA = "Lemicang/0.1 ( zukawork0312@gmail.com )";
+const UA = "Lemicang/0.1 ( https://yinzang.dblzm.workers.dev )";
 const API = "https://musicbrainz.org/ws/2/";
 
 // WSL 沒有 IPv6 出口，Node 預設的雙棧競速（250ms）會在 IPv4 還沒連上前就放棄：固定走 IPv4
@@ -101,6 +104,60 @@ const isTaiwan = (a) =>
   /taiwan|臺灣|台灣|taipei|kaohsiung|tainan|taichung/i.test([a.area?.name, a["begin-area"]?.name].filter(Boolean).join(" "));
 const typeOk = (want, got) => (want === "group" ? got === "Group" : want === "male" || want === "female" ? got === "Person" : true);
 
+/** 中文維基條目標題（比對用）：網址最後一段解碼、底線當空白 */
+const wikiTitle = (u) => {
+  try {
+    return norm(decodeURIComponent(String(u).split("/wiki/")[1] ?? "").replace(/_/g, " "));
+  } catch {
+    return "";
+  }
+};
+let lastWd = 0;
+/** Wikidata 項目的中文維基條目標題（有快取；Wikidata 不在 MusicBrainz 限速內，仍每秒最多 1 次） */
+async function zhwikiOf(qid) {
+  const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&props=sitelinks&sitefilter=zhwiki&format=json`;
+  const file = join(CACHE, `${createHash("sha1").update(url).digest("hex")}.json`);
+  if (existsSync(file)) {
+    stats.cached++;
+    return JSON.parse(readFileSync(file, "utf8")).body?.entities?.[qid]?.sitelinks?.zhwiki?.title ?? "";
+  }
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const wait = lastWd + 1100 - Date.now();
+    if (wait > 0) await sleep(wait);
+    lastWd = Date.now();
+    stats.network++;
+    try {
+      const res = await fetch(url, { headers: { "User-Agent": UA, Accept: "application/json" }, signal: AbortSignal.timeout(30000) });
+      if (!res.ok) throw new Error(String(res.status));
+      const body = await res.json();
+      mkdirSync(CACHE, { recursive: true });
+      writeFileSync(file, JSON.stringify({ url, fetchedAt: new Date().toISOString(), body }));
+      return body?.entities?.[qid]?.sitelinks?.zhwiki?.title ?? "";
+    } catch (e) {
+      stats.retries++;
+      console.error(`  Wikidata 失敗（${e.message}），重試：${qid}`);
+      await sleep(2 ** (attempt + 1) * 1000);
+    }
+  }
+  return "";
+}
+/** 候選藝人的 Wikidata 是否指到同一個中文維基條目 */
+async function wikiSame(mbid, wikiUrl) {
+  const want = wikiTitle(wikiUrl);
+  if (!want) return "";
+  const a = await mb(`artist/${mbid}?inc=url-rels`);
+  for (const r of a.relations ?? []) {
+    const u = r.url?.resource ?? "";
+    if (r.type === "wikipedia" && /zh\.wikipedia\.org/.test(u) && wikiTitle(u) === want) return `中文維基連結相同（${decodeURIComponent(u.split("/wiki/")[1])}）`;
+    const m = u.match(/wikidata\.org\/wiki\/(Q\d+)/);
+    if (m) {
+      const t = await zhwikiOf(m[1]);
+      if (t && norm(t.replace(/_/g, " ")) === want) return `Wikidata ${m[1]} 的中文維基條目＝「${t}」`;
+    }
+  }
+  return "";
+}
+
 /** 已知作品是否有交集：標題正規化後相等，或一方包含另一方（至少 2 字） */
 export function titleHit(known, titles) {
   const k = known.map(norm).filter((x) => x.length >= 2);
@@ -122,10 +179,12 @@ export async function matchArtist(person) {
   const exact = (res.artists ?? []).filter((a) => [a.name, a["sort-name"], ...(a.aliases ?? []).map((x) => x.name)].some((n) => wanted.has(norm(n))));
   const cands = [];
   for (const a of exact.slice(0, 5)) {
-    const tw = isTaiwan(a);
-    const typ = typeOk(person.gender, a.type);
-    let hits = [];
-    if (tw && typ && person.known.length) {
+    // 3c：維基條目相同就是同一人，國家、類型不看
+    const same = person.wiki ? await wikiSame(a.id, person.wiki) : "";
+    const tw = !!same || person.region === "overseas" || isTaiwan(a);
+    const typ = !!same || typeOk(person.gender, a.type);
+    let hits = same ? [same] : [];
+    if (tw && typ && !same && person.known.length) {
       const rgs = await browseAll("release-group", `artist=${a.id}`, "release-groups");
       hits = titleHit(person.known, rgs.map((g) => g.title));
     }

@@ -154,7 +154,7 @@ export type Artist = {
   lastEdit: { by: string; date: string };
   /** 簡介取自維基百科時的來源（CC BY-SA 4.0） */
   wiki?: { url: string; license: string };
-  /** 藝人頁顯示：auto＝有系列或收藏才顯示；on／off＝管理員強制 */
+  /** 藝人頁顯示：auto＝有系列或收藏、或有獎項＋維基簡介才顯示；on／off＝管理員強制 */
   display?: "auto" | "on" | "off";
 };
 

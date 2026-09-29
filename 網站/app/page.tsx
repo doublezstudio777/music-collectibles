@@ -24,7 +24,7 @@ export default async function Home({ searchParams }: Props) {
     if (!d) return [];
     const a = d.artist;
     const meta = [a.gender ? GENDER_LABEL[a.gender] : null, a.region ? REGION_LABEL[a.region] : null, `${d.count} 則收藏`].filter(Boolean).join("・");
-    return [{ track: p.trackId, slug: a.slug, name: a.name, meta }];
+    return [{ track: p.trackId, slug: a.slug, name: a.name, meta, count: d.count }];
   });
   const byGender = (g: ArtistGender) => dir.filter((d) => d.artist.gender === g).length;
   return (

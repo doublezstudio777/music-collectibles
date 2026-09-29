@@ -1,0 +1,5 @@
+/ status=200 每請求非閒置 15.69 ms（10 次，牆鐘 224ms）
+/artists status=200 每請求非閒置 21.32 ms（10 次，牆鐘 258ms）
+/artist/mc-hotdog status=200 每請求非閒置 20.14 ms（10 次，牆鐘 342ms）
+/artist/mc-hotdog/1 status=200 每請求非閒置 17.62 ms（10 次，牆鐘 316ms）
+/artist/zhang-zhen-yue status=200 每請求非閒置 16.65 ms（10 次，牆鐘 317ms）

@@ -82,7 +82,9 @@ const trackTotal = (media) => media.reduce((n, m) => n + (m.tracks?.length ?? m[
 
 /* ---------- 主程式 ---------- */
 
-export async function run({ remote, persist, dry, mapping, releases, people, PROTECTED_SHARE, manual = {}, norm }) {
+export async function run({ remote, persist, dry, mapping, releases, people, PROTECTED_SHARE, manual = {}, norm, set = "label" }) {
+  // 金曲金音批：mapping 裡 previous＝顏社本色上次的對應，只用來歸屬，不算進本批報告
+  const own = mapping.filter((m) => !m.previous);
   const wrangler = (args, capture = false) =>
     spawnSync(process.execPath, ["--import", "./scripts/sites-env.mjs", "./node_modules/wrangler/bin/wrangler.js", ...args], {
       cwd: root,
@@ -380,17 +382,18 @@ export async function run({ remote, persist, dry, mapping, releases, people, PRO
     }
   }
 
-  const out = join(root, ".wrangler", "import-musicbrainz.sql");
+  const out = join(root, ".wrangler", `import-musicbrainz${set === "awards" ? "-awards" : ""}.sql`);
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, lines.join("\n") + "\n");
 
   const summary = {
     環境: remote ? "remote" : "local",
+    批次: set,
     藝人: {
-      名單: mapping.length,
-      對應成功: mapping.filter((m) => m.status === "ok").length,
-      對應不到: mapping.filter((m) => m.status !== "ok").map((m) => ({ 藝人: m.name, 識別碼: m.slug, 原因: m.reason, 候選: m.candidates.map((c) => `${c.name}｜${c.country || "國家未標"}｜${c.type || "類型未標"}｜${c.mbid}`) })),
-      對應成功清單: mapping.filter((m) => m.status === "ok").map((m) => ({ 藝人: m.name, 識別碼: m.slug, mbid: m.mbid, 依據: m.reason })),
+      名單: own.length,
+      對應成功: own.filter((m) => m.status === "ok").length,
+      對應不到: own.filter((m) => m.status !== "ok").map((m) => ({ 藝人: m.name, 識別碼: m.slug, 原因: m.reason, 候選: m.candidates.map((c) => `${c.name}｜${c.country || "國家未標"}｜${c.type || "類型未標"}｜${c.mbid}`) })),
+      對應成功清單: own.filter((m) => m.status === "ok").map((m) => ({ 藝人: m.name, 識別碼: m.slug, mbid: m.mbid, 依據: m.reason })),
     },
     MusicBrainz: { release: seenRelease.size, 收錄的release_group: groups.size, 跳過: skipped, 跳過明細: skippedList },
     計畫: {
@@ -405,7 +408,7 @@ export async function run({ remote, persist, dry, mapping, releases, people, PRO
     匯入前: before,
     受保護版本id: protectedId,
   };
-  const reportFile = join(root, ".wrangler", `import-musicbrainz-report${remote ? "-remote" : ""}.json`);
+  const reportFile = join(root, ".wrangler", `import-musicbrainz${set === "awards" ? "-awards" : ""}-report${remote ? "-remote" : ""}.json`);
   writeFileSync(reportFile, JSON.stringify(summary, null, 2));
   console.log(JSON.stringify({ ...summary, MusicBrainz: { ...summary.MusicBrainz, 跳過明細: `${skippedList.length} 筆（見報告檔）` }, 計畫: { ...summary.計畫, 明細: "見報告檔" } }, null, 2));
 

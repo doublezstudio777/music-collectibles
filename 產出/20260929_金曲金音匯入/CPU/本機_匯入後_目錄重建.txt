@@ -1,0 +1,9 @@
+/ status=200 每請求非閒置 66.89 ms（1 次，牆鐘 90ms）
+/ status=200 每請求非閒置 43.82 ms（1 次，牆鐘 80ms）
+/ status=200 每請求非閒置 36.00 ms（1 次，牆鐘 94ms）
+/artists status=200 每請求非閒置 39.93 ms（1 次，牆鐘 85ms）
+/artists status=200 每請求非閒置 41.92 ms（1 次，牆鐘 84ms）
+/artists status=200 每請求非閒置 52.97 ms（1 次，牆鐘 91ms）
+/artist/sandy-lam status=200 每請求非閒置 42.07 ms（1 次，牆鐘 101ms）
+/artist/sandy-lam status=200 每請求非閒置 39.35 ms（1 次，牆鐘 95ms）
+/artist/sandy-lam status=200 每請求非閒置 40.41 ms（1 次，牆鐘 96ms）

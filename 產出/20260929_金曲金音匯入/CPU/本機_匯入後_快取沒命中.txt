@@ -1,0 +1,9 @@
+/ status=200 每請求非閒置 12.83 ms（10 次，牆鐘 197ms）
+/artists status=200 每請求非閒置 20.57 ms（10 次，牆鐘 247ms）
+/artist/mc-hotdog status=200 每請求非閒置 17.69 ms（10 次，牆鐘 327ms）
+/artist/mc-hotdog/1 status=200 每請求非閒置 17.28 ms（10 次，牆鐘 317ms）
+/artist/zhang-zhen-yue status=200 每請求非閒置 18.18 ms（10 次，牆鐘 337ms）
+/artist/sandy-lam status=200 每請求非閒置 24.00 ms（10 次，牆鐘 374ms）
+/artist/eason-chan status=200 每請求非閒置 20.51 ms（10 次，牆鐘 362ms）
+/artist/sandy-lam/1 status=200 每請求非閒置 24.97 ms（10 次，牆鐘 413ms）
+/artist/cao-dong-mei-you-pai-dui status=200 每請求非閒置 15.21 ms（10 次，牆鐘 297ms）
