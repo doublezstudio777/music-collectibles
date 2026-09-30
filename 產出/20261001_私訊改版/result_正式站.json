@@ -1,0 +1,132 @@
+[
+ {
+  "name": "P1 頁首私訊＋願望清單",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "P1b 沒有「聊聊」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "P2 願望清單頁標題",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "P3 定價出售「問賣家」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "P4 純分享收藏「私訊」開出釘住收藏的對話（不傳訊息）",
+  "ok": true,
+  "detail": "thread 1"
+ },
+ {
+  "name": "P5 個人頁「傳訊息」開直接私訊",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "P6 乙頁首未讀 1（橘色方塊）",
+  "ok": true,
+  "detail": "1"
+ },
+ {
+  "name": "P7 乙列表：直接私訊、大頭貼、加粗",
+  "ok": true,
+  "detail": "重驗（等對話載入完再判斷）通過"
+ },
+ {
+  "name": "P8 乙讀完未讀歸零",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "P9 甲收到回覆未讀 1",
+  "ok": true,
+  "detail": "1"
+ },
+ {
+  "name": "P10 封鎖後甲不能傳（403 BLOCKED）",
+  "ok": true,
+  "detail": "{'status': 403, 'body': {'error': {'code': 'BLOCKED', 'message': '目前無法傳訊息給這位會員'}}}"
+ },
+ {
+  "name": "P11 甲畫面顯示無法傳訊息",
+  "ok": true,
+  "detail": "重驗（等對話載入完再判斷）通過"
+ },
+ {
+  "name": "P12 乙設定頁封鎖名單有甲",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "P13 解除後甲可以傳",
+  "ok": true,
+  "detail": "{'status': 200, 'body': {'ok': True}}"
+ },
+ {
+  "name": "P14 檢舉進後台資料表",
+  "ok": true,
+  "detail": "[{\"reason\": \"other\", \"note\": \"正式站驗收用的檢舉，請忽略\", \"status\": \"open\"}]"
+ },
+ {
+  "name": "P15 對話資料：收藏空對話 started_at 空、直接私訊有值",
+  "ok": true,
+  "detail": "[{\"id\": 1, \"share_no\": 3, \"started_at\": null}, {\"id\": 2, \"share_no\": 0, \"started_at\": \"2026-09-30T16:28:31.141Z\"}]"
+ },
+ {
+  "name": "P16 Chromium 390 登入 頁首一行放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 372, \"overlap\": 0, \"rows\": 1, \"docW\": 390}"
+ },
+ {
+  "name": "P16 Chromium 390 訪客 頁首一行放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 372, \"overlap\": 0, \"rows\": 1, \"docW\": 390}"
+ },
+ {
+  "name": "P16 Chromium 360 登入 頁首一行放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 342, \"overlap\": 0, \"rows\": 1, \"docW\": 360}"
+ },
+ {
+  "name": "P16 Chromium 360 訪客 頁首一行放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 342, \"overlap\": 0, \"rows\": 1, \"docW\": 360}"
+ },
+ {
+  "name": "P16 Chromium 320 登入 頁首一行放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 311.40625, \"overlap\": 0, \"rows\": 1, \"docW\": 320}"
+ },
+ {
+  "name": "P16 Chromium 320 訪客 頁首一行放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 308, \"overlap\": 0, \"rows\": 1, \"docW\": 320}"
+ },
+ {
+  "name": "P17 WebKit 390 登入 頁首一行放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 372, \"overlap\": 0, \"rows\": 1, \"docW\": 390}"
+ },
+ {
+  "name": "P17 WebKit 320 登入 頁首一行放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 311.40625, \"overlap\": 0, \"rows\": 1, \"docW\": 320}"
+ },
+ {
+  "name": "P18 console 沒有錯誤（刻意觸發的 403 與 Turnstile 除外）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "P11b 乙在對話裡解除封鎖後輸入框回來",
+  "ok": true,
+  "detail": ""
+ }
+]

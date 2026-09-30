@@ -62,7 +62,7 @@
  {
   "name": "2h 同一對人不同收藏＝不同對話",
   "ok": true,
-  "detail": "13 vs 14"
+  "detail": "7 vs 8"
  },
  {
   "name": "2i 同一則再按一次回到同一條",
@@ -77,7 +77,7 @@
  {
   "name": "2k 直接私訊資料：share_no=0、peer＝站長、started_at 有值",
   "ok": true,
-  "detail": "{\"share_no\": 0, \"buyer_id\": \"dmtest-a\", \"peer_id\": \"_mVdpM87Csonq7po\", \"pair_key\": \"_mVdpM87Csonq7po|dmtest-a\", \"started_at\": \"2026-09-30T16:16:58.671Z\"}"
+  "detail": "{\"share_no\": 0, \"buyer_id\": \"dmtest-a\", \"peer_id\": \"_mVdpM87Csonq7po\", \"pair_key\": \"_mVdpM87Csonq7po|dmtest-a\", \"started_at\": \"2026-09-30T16:22:57.029Z\"}"
  },
  {
   "name": "3a 賣家頁首未讀 3（對話數）",
@@ -92,7 +92,7 @@
  {
   "name": "3c 列表三條，依最新訊息排序（直接私訊最新在最上）",
   "ok": true,
-  "detail": "[15, 14, 13]"
+  "detail": "[9, 8, 7]"
  },
  {
   "name": "3d 直接私訊顯示大頭貼、收藏相關顯示縮圖＋標題",

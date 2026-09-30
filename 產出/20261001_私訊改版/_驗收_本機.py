@@ -312,6 +312,7 @@ def main():
         shot(po, "1440_設定_封鎖名單")
         box.locator('[data-testid="unblock"]').click()
         po.locator('[data-testid="blocks-msg"]').wait_for()
+        box.get_by_text("沒有封鎖任何人").wait_for(timeout=10000)
         check("6i 解除後名單空", "沒有封鎖任何人" in box.inner_text())
         rr = api(pa, f"/api/threads/{t3}/messages", {"text": "解除後可以傳了"})
         check("6j 解除後甲可以再傳", rr["status"] == 200, str(rr))
