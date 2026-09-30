@@ -2,6 +2,8 @@
 
 用法（網站/ 先 npm run build，再 npm start -- --port 8795）：
     python3 _驗收_本機.py [http://127.0.0.1:8795]
+正式站（Turnstile 過不了，改用 D1 直接建的測試帳號＋session；大頭貼每天 5 次，正式站只傳 3 張）：
+    MYPAGE_TOKEN=… MYPAGE_HANDLE=… MYPAGE_OTHER=別人的帳號 MYPAGE_FAVS=大象體操,9m88,王若琳 python3 _驗收_本機.py https://lemibox.com
 
 - 用示範帳號 xiaomeng 登入（本機 Turnstile 測試金鑰，假 token 會過）
 - 每次跑先清 xiaomeng 的大頭貼每日次數、最喜歡的藝人，可以重跑
@@ -16,8 +18,10 @@ import subprocess
 import sys
 import tempfile
 import time
+import os
 import urllib.request
 from pathlib import Path
+from urllib.parse import urlparse
 
 from PIL import Image, ImageDraw
 from playwright.sync_api import sync_playwright
@@ -28,8 +32,11 @@ SITE = HERE.parent.parent / "網站"
 OUT = HERE / "img"
 OUT.mkdir(exist_ok=True)
 TMP = Path(tempfile.mkdtemp(prefix="mypage-"))
-HANDLE = "xiaomeng"
-OTHER = "aze"
+PROD = "127.0.0.1" not in BASE
+HANDLE = os.environ.get("MYPAGE_HANDLE", "xiaomeng")
+OTHER = os.environ.get("MYPAGE_OTHER", "aze")
+FAV_QS = os.environ.get("MYPAGE_FAVS", "林夏,山線,雨停").split(",")
+PRE = "正式站_" if PROD else ""
 
 results: list[tuple[str, bool, str]] = []
 
@@ -41,6 +48,8 @@ def check(name: str, ok: bool, detail: str = "") -> bool:
 
 
 def sql(q: str) -> None:
+    if PROD:
+        return
     subprocess.run(
         ["node", "--import", "./scripts/sites-env.mjs", "./node_modules/wrangler/bin/wrangler.js", "d1", "execute", "DB", "--local",
          "--config", "wrangler.local.jsonc", "--persist-to", ".wrangler/state", "--command", q],
@@ -78,7 +87,7 @@ def fixture(name: str, w: int, h: int) -> Path:
 
 
 def shot(page, name: str, full: bool = True) -> None:
-    page.screenshot(path=str(OUT / f"{name}.jpg"), type="jpeg", quality=80, full_page=full)
+    page.screenshot(path=str(OUT / f"{PRE}{name}.jpg"), type="jpeg", quality=80, full_page=full)
 
 
 def no_overflow(page, name: str) -> None:
@@ -132,8 +141,8 @@ def main() -> None:
     sql(f"DELETE FROM rate_limits WHERE key LIKE 'avatar:demo-{HANDLE}:%'")
     sql(f"UPDATE users SET fav_artists = '[]', links = '{{}}' WHERE handle = '{HANDLE}'")
     sql("UPDATE artists SET hidden_at = NULL WHERE slug = 'lin-hsia'")
-    token = login()
-    cookie = [{"name": "yz_session", "value": token, "domain": "127.0.0.1", "path": "/", "httpOnly": True}]
+    token = os.environ["MYPAGE_TOKEN"] if PROD else login()
+    cookie = [{"name": "yz_session", "value": token, "domain": urlparse(BASE).hostname, "path": "/", "httpOnly": True, "secure": PROD}]
 
     with sync_playwright() as p:
         errors: list[str] = []
@@ -204,7 +213,7 @@ def main() -> None:
         check("四個連結儲存，沒寫 https 自動補", pg.input_value("[data-testid=link-ig]") == "https://instagram.com/lemi_test", pg.input_value("[data-testid=link-ig]"))
 
         # 最喜歡的藝人：搜尋加三位、排序、移除一位
-        for q in ["林夏", "山線", "雨停"]:
+        for q in FAV_QS:
             pg.fill("[data-testid=fav-q]", q)
             pg.wait_for_selector("[data-testid=fav-found] button")
             pg.click("[data-testid=fav-found] button >> nth=0")
@@ -261,7 +270,7 @@ def main() -> None:
         ctx.close()
 
         # ---------- 手機 390／360／320（Chromium 觸控） ----------
-        phone_files = {390: [("直式", portrait), ("橫式", landscape), ("超大 6000×8000", huge)], 360: [], 320: []}
+        phone_files = {390: [("超大 6000×8000", huge)] if PROD else [("直式", portrait), ("橫式", landscape), ("超大 6000×8000", huge)], 360: [], 320: []}
         for w, files in phone_files.items():
             c = b.new_context(viewport={"width": w, "height": 780}, is_mobile=True, has_touch=True, device_scale_factor=3)
             c.add_cookies(cookie)
@@ -295,7 +304,7 @@ def main() -> None:
                 check(f"{w} {label} 單指拖曳", v2["cx"] > v1["cx"] and v2["cy"] > v1["cy"] and v2["z"] == v1["z"], f"{v1} → {v2}")
                 scroll = pg.evaluate("window.scrollY")
                 check(f"{w} {label} 拖曳時頁面沒跟著捲", scroll == 0, f"scrollY {scroll}")
-                if label == "直式":
+                if label == "直式" or (PROD and label.startswith("超大")):
                     shot(pg, f"{w}_裁切視窗_直式", full=False)
                 if label == "橫式":
                     shot(pg, f"{w}_裁切視窗_橫式", full=False)
@@ -384,12 +393,13 @@ def main() -> None:
         check("未登入看得到自介、藝人、連結", pg.locator("[data-testid=profile-bio]").count() == 1 and pg.locator("[data-testid=profile-links] a").count() == 4)
         shot(pg, "1440_個人頁_訪客", full=False)
 
-        # 藝人被隱藏：個人頁不顯示、設定頁也不回
-        sql("UPDATE artists SET hidden_at = '2026-09-30T00:00:00Z' WHERE slug = 'lin-hsia'")
-        pg.goto(f"{BASE}/u/{HANDLE}", wait_until="load")
-        shown = pg.evaluate("[...document.querySelectorAll('[data-testid=profile-favs] a')].map(a => a.dataset.slug)")
-        check("隱藏的藝人不顯示在個人頁", "lin-hsia" not in shown and len(shown) == len(s2) - ("lin-hsia" in s2), str(shown))
-        sql("UPDATE artists SET hidden_at = NULL WHERE slug = 'lin-hsia'")
+        # 藝人被隱藏：個人頁不顯示、設定頁也不回（正式站不動真藝人，只在本機驗）
+        if not PROD:
+            sql("UPDATE artists SET hidden_at = '2026-09-30T00:00:00Z' WHERE slug = 'lin-hsia'")
+            pg.goto(f"{BASE}/u/{HANDLE}", wait_until="load")
+            shown = pg.evaluate("[...document.querySelectorAll('[data-testid=profile-favs] a')].map(a => a.dataset.slug)")
+            check("隱藏的藝人不顯示在個人頁", "lin-hsia" not in shown and len(shown) == len(s2) - ("lin-hsia" in s2), str(shown))
+            sql("UPDATE artists SET hidden_at = NULL WHERE slug = 'lin-hsia'")
         c.close()
         b.close()
 
@@ -397,7 +407,7 @@ def main() -> None:
 
     ok = sum(1 for r in results if r[1])
     print(f"\n{ok}/{len(results)} 通過")
-    (HERE / "result_本機.json").write_text(json.dumps([{"name": n, "ok": o, "detail": d} for n, o, d in results], ensure_ascii=False, indent=1), encoding="utf-8")
+    (HERE / f"result_{'正式站' if PROD else '本機'}.json").write_text(json.dumps([{"name": n, "ok": o, "detail": d} for n, o, d in results], ensure_ascii=False, indent=1), encoding="utf-8")
     sys.exit(0 if ok == len(results) else 1)
 
 

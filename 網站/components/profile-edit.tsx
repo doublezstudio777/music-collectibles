@@ -137,7 +137,8 @@ function LinksBox({ initial }: { initial: Links }) {
 function FavBox({ initial }: { initial: Fav[] }) {
   const [list, setList] = useState<Fav[]>(initial);
   const [q, setQ] = useState("");
-  const [found, setFound] = useState<Fav[]>([]);
+  // 搜尋結果連同查詢字一起存：字改了、新結果還沒回來前不顯示上一輪的結果（免得點到別人）
+  const [found, setFound] = useState<{ q: string; list: Fav[] }>({ q: "", list: [] });
   const { busy, msg, run } = useSave();
   const full = list.length >= FAV_MAX;
 
@@ -147,7 +148,7 @@ function FavBox({ initial }: { initial: Fav[] }) {
     let dead = false;
     const t = setTimeout(() => {
       void api<{ artists: Fav[] }>(`/api/artists/search?visible=1&q=${encodeURIComponent(k)}`).then((r) => {
-        if (!dead && r.ok) setFound(r.data.artists.slice(0, 8).map((a) => ({ slug: a.slug, name: a.name })));
+        if (!dead && r.ok) setFound({ q: k, list: r.data.artists.slice(0, 8).map((a) => ({ slug: a.slug, name: a.name })) });
       });
     }, 200);
     return () => {
@@ -172,7 +173,8 @@ function FavBox({ initial }: { initial: Fav[] }) {
       const r = await api("/api/me/profile", { method: "PATCH", body: { favArtists: list.map((a) => a.slug) } });
       return r.ok ? { ok: true, text: "已儲存" } : { ok: false, text: r.error.message };
     });
-  const options = found.filter((a) => !list.some((x) => x.slug === a.slug));
+  const settled = found.q === q.trim();
+  const options = settled ? found.list.filter((a) => !list.some((x) => x.slug === a.slug)) : [];
 
   return (
     <section className="block settings-block" data-testid="fav-box">
@@ -235,7 +237,7 @@ function FavBox({ initial }: { initial: Fav[] }) {
               </button>
             ))
           ) : (
-            <p className="page-meta">找不到</p>
+            <p className="page-meta">{settled ? "找不到" : "找找看…"}</p>
           )}
         </div>
       ) : null}
