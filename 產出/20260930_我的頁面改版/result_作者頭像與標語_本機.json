@@ -7,12 +7,12 @@
  {
   "name": "首頁至少有一張卡片是大頭貼",
   "ok": true,
-  "detail": "[{'handle': 'xiaomeng', 'img': '/img/v/PqwqVp68DVWQ1I2T.webp', 'text': None, 'n': '/share/1'}]"
+  "detail": "[{'handle': 'xiaomeng', 'img': '/img/v/-olRznEZ_Bft3KyQ.webp', 'text': None, 'n': '/share/1'}]"
  },
  {
   "name": "單則頁作者欄 有大頭貼",
   "ok": true,
-  "detail": "/share/1 /img/v/PqwqVp68DVWQ1I2T.webp"
+  "detail": "/share/1 /img/v/-olRznEZ_Bft3KyQ.webp"
  },
  {
   "name": "單則頁作者欄 沒大頭貼",
@@ -22,22 +22,22 @@
  {
   "name": "換大頭貼後首頁卡片換成新的那張",
   "ok": true,
-  "detail": "['/img/v/PqwqVp68DVWQ1I2T.webp'] → ['/img/v/TX5k3o1ILwWLD7oq.webp']（新 /img/v/TX5k3o1ILwWLD7oq.webp）"
+  "detail": "['/img/v/-olRznEZ_Bft3KyQ.webp'] → ['/img/v/gxnI051WuwCxX6bE.webp']（新 /img/v/gxnI051WuwCxX6bE.webp）"
  },
  {
-  "name": "首頁整頁快取有在運作（第二次讀是 HIT）",
+  "name": "首頁走整頁快取（x-yz-cache 表頭；上一項證明快取版本已換新）",
   "ok": true,
   "detail": "HIT"
  },
  {
-  "name": "WebKit 390 訪客：第一個畫面就有標語",
+  "name": "WebKit 390 訪客：第一個畫面就有標語（收合：第一句＋看更多）",
   "ok": true,
-  "detail": "{'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124}"
+  "detail": "{'top': 81, 'h': 46, 'band': 147, 'disp': 'block', 'op': '1', 'text': '每一張專輯、每一件周邊，背後都有一段只有收藏的人才知道的故事。看更多', 'auth': None}"
  },
  {
-  "name": "WebKit 390 訪客：標語含「關於我們」、之後位置不動",
+  "name": "WebKit 390 訪客：載入完、登入狀態讀出後位置不動",
   "ok": true,
-  "detail": "{'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124} → {'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124, 'text': '別讓一張專輯的來歷，只有少數人知道。\\n關於我們\\n\\n', 'auth': None}"
+  "detail": "{'top': 81, 'h': 46, 'band': 147, 'disp': 'block', 'op': '1', 'text': '每一張專輯、每一件周邊，背後都有一段只有收藏的人才知道的故事。看更多', 'auth': None} → {'top': 81, 'h': 46, 'band': 147, 'disp': 'block', 'op': '1', 'text': '每一張專輯、每一件周邊，背後都有一段只有收藏的人才知道的故事。看更多', 'auth': None}"
  },
  {
   "name": "WebKit 390 訪客：<html> 沒有 data-auth",
@@ -45,14 +45,34 @@
   "detail": ""
  },
  {
-  "name": "WebKit 390 登入：第一個畫面就有標語",
+  "name": "WebKit 390 訪客：看更多在原地展開全文（逐字相同、不跳頁）",
   "ok": true,
-  "detail": "{'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124}"
+  "detail": "覺得哪裡可以更好，都很歡迎來信告訴我們。 http://127.0.0.1:8795/"
  },
  {
-  "name": "WebKit 390 登入：標語含「關於我們」、之後位置不動",
+  "name": "WebKit 390 訪客：展開後只往下推（上緣不動、色帶下移＝標語增加的高度）",
   "ok": true,
-  "detail": "{'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124} → {'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124, 'text': '別讓一張專輯的來歷，只有少數人知道。\\n關於我們\\n\\n', 'auth': None}"
+  "detail": "h 46→138 band 147→239"
+ },
+ {
+  "name": "WebKit 390 訪客：「來信告訴我們」連 /feedback",
+  "ok": true,
+  "detail": "/feedback"
+ },
+ {
+  "name": "WebKit 390 訪客：展開後沒有橫向溢出",
+  "ok": true,
+  "detail": "[390, 390]"
+ },
+ {
+  "name": "WebKit 390 登入：第一個畫面就有標語（收合：第一句＋看更多）",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 46, 'band': 147, 'disp': 'block', 'op': '1', 'text': '每一張專輯、每一件周邊，背後都有一段只有收藏的人才知道的故事。看更多', 'auth': None}"
+ },
+ {
+  "name": "WebKit 390 登入：載入完、登入狀態讀出後位置不動",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 46, 'band': 147, 'disp': 'block', 'op': '1', 'text': '每一張專輯、每一件周邊，背後都有一段只有收藏的人才知道的故事。看更多', 'auth': None} → {'top': 81, 'h': 46, 'band': 147, 'disp': 'block', 'op': '1', 'text': '每一張專輯、每一件周邊，背後都有一段只有收藏的人才知道的故事。看更多', 'auth': None}"
  },
  {
   "name": "WebKit 390 登入：<html> 沒有 data-auth",
@@ -60,14 +80,34 @@
   "detail": ""
  },
  {
-  "name": "WebKit 320 訪客：第一個畫面就有標語",
+  "name": "WebKit 390 登入：看更多在原地展開全文（逐字相同、不跳頁）",
   "ok": true,
-  "detail": "{'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157}"
+  "detail": "覺得哪裡可以更好，都很歡迎來信告訴我們。 http://127.0.0.1:8795/"
  },
  {
-  "name": "WebKit 320 訪客：標語含「關於我們」、之後位置不動",
+  "name": "WebKit 390 登入：展開後只往下推（上緣不動、色帶下移＝標語增加的高度）",
   "ok": true,
-  "detail": "{'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157} → {'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157, 'text': '別讓一張專輯的來歷，只有少數人知道。\\n關於我們\\n\\n', 'auth': None}"
+  "detail": "h 46→138 band 147→239"
+ },
+ {
+  "name": "WebKit 390 登入：「來信告訴我們」連 /feedback",
+  "ok": true,
+  "detail": "/feedback"
+ },
+ {
+  "name": "WebKit 390 登入：展開後沒有橫向溢出",
+  "ok": true,
+  "detail": "[390, 390]"
+ },
+ {
+  "name": "WebKit 320 訪客：第一個畫面就有標語（收合：第一句＋看更多）",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 46, 'band': 147, 'disp': 'block', 'op': '1', 'text': '每一張專輯、每一件周邊，背後都有一段只有收藏的人才知道的故事。看更多', 'auth': None}"
+ },
+ {
+  "name": "WebKit 320 訪客：載入完、登入狀態讀出後位置不動",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 46, 'band': 147, 'disp': 'block', 'op': '1', 'text': '每一張專輯、每一件周邊，背後都有一段只有收藏的人才知道的故事。看更多', 'auth': None} → {'top': 81, 'h': 46, 'band': 147, 'disp': 'block', 'op': '1', 'text': '每一張專輯、每一件周邊，背後都有一段只有收藏的人才知道的故事。看更多', 'auth': None}"
  },
  {
   "name": "WebKit 320 訪客：<html> 沒有 data-auth",
@@ -75,17 +115,127 @@
   "detail": ""
  },
  {
-  "name": "WebKit 320 登入：第一個畫面就有標語",
+  "name": "WebKit 320 訪客：看更多在原地展開全文（逐字相同、不跳頁）",
   "ok": true,
-  "detail": "{'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157}"
+  "detail": "覺得哪裡可以更好，都很歡迎來信告訴我們。 http://127.0.0.1:8795/"
  },
  {
-  "name": "WebKit 320 登入：標語含「關於我們」、之後位置不動",
+  "name": "WebKit 320 訪客：展開後只往下推（上緣不動、色帶下移＝標語增加的高度）",
   "ok": true,
-  "detail": "{'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157} → {'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157, 'text': '別讓一張專輯的來歷，只有少數人知道。\\n關於我們\\n\\n', 'auth': None}"
+  "detail": "h 46→184 band 147→285"
+ },
+ {
+  "name": "WebKit 320 訪客：「來信告訴我們」連 /feedback",
+  "ok": true,
+  "detail": "/feedback"
+ },
+ {
+  "name": "WebKit 320 訪客：展開後沒有橫向溢出",
+  "ok": true,
+  "detail": "[320, 320]"
+ },
+ {
+  "name": "WebKit 320 登入：第一個畫面就有標語（收合：第一句＋看更多）",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 46, 'band': 147, 'disp': 'block', 'op': '1', 'text': '每一張專輯、每一件周邊，背後都有一段只有收藏的人才知道的故事。看更多', 'auth': None}"
+ },
+ {
+  "name": "WebKit 320 登入：載入完、登入狀態讀出後位置不動",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 46, 'band': 147, 'disp': 'block', 'op': '1', 'text': '每一張專輯、每一件周邊，背後都有一段只有收藏的人才知道的故事。看更多', 'auth': None} → {'top': 81, 'h': 46, 'band': 147, 'disp': 'block', 'op': '1', 'text': '每一張專輯、每一件周邊，背後都有一段只有收藏的人才知道的故事。看更多', 'auth': None}"
  },
  {
   "name": "WebKit 320 登入：<html> 沒有 data-auth",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "WebKit 320 登入：看更多在原地展開全文（逐字相同、不跳頁）",
+  "ok": true,
+  "detail": "覺得哪裡可以更好，都很歡迎來信告訴我們。 http://127.0.0.1:8795/"
+ },
+ {
+  "name": "WebKit 320 登入：展開後只往下推（上緣不動、色帶下移＝標語增加的高度）",
+  "ok": true,
+  "detail": "h 46→184 band 147→285"
+ },
+ {
+  "name": "WebKit 320 登入：「來信告訴我們」連 /feedback",
+  "ok": true,
+  "detail": "/feedback"
+ },
+ {
+  "name": "WebKit 320 登入：展開後沒有橫向溢出",
+  "ok": true,
+  "detail": "[320, 320]"
+ },
+ {
+  "name": "關於頁放全文、連 /feedback",
+  "ok": true,
+  "detail": "，都很歡迎來信告訴我們。"
+ },
+ {
+  "name": "關於頁站長四段還在",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1440 頁尾版權文字逐字、標章站內圖檔載入",
+  "ok": true,
+  "detail": "{'text': '© 2026 樂迷藏\\u3000會員照片以 CC BY-NC-ND 4.0 授權：可分享，須標示原拍攝者與樂迷藏出處，不得商業使用、不得修改。', 'src': '/brand/cc-by-nc-nd-88x31.png', 'nat': [88, 31], 'right': 1288, 'sw':"
+ },
+ {
+  "name": "1440 頁尾不溢出",
+  "ok": true,
+  "detail": "right 1288.0 sw 1440"
+ },
+ {
+  "name": "1440 標章連到 BY-NC-ND 條款",
+  "ok": true,
+  "detail": "https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant"
+ },
+ {
+  "name": "390 頁尾版權文字逐字、標章站內圖檔載入",
+  "ok": true,
+  "detail": "{'text': '© 2026 樂迷藏\\u3000會員照片以 CC BY-NC-ND 4.0 授權：可分享，須標示原拍攝者與樂迷藏出處，不得商業使用、不得修改。', 'src': '/brand/cc-by-nc-nd-88x31.png', 'nat': [88, 31], 'right': 372, 'sw': "
+ },
+ {
+  "name": "390 頁尾不溢出",
+  "ok": true,
+  "detail": "right 372.0 sw 390"
+ },
+ {
+  "name": "390 標章連到 BY-NC-ND 條款",
+  "ok": true,
+  "detail": "https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant"
+ },
+ {
+  "name": "320 頁尾版權文字逐字、標章站內圖檔載入",
+  "ok": true,
+  "detail": "{'text': '© 2026 樂迷藏\\u3000會員照片以 CC BY-NC-ND 4.0 授權：可分享，須標示原拍攝者與樂迷藏出處，不得商業使用、不得修改。', 'src': '/brand/cc-by-nc-nd-88x31.png', 'nat': [88, 31], 'right': 302, 'sw': "
+ },
+ {
+  "name": "320 頁尾不溢出",
+  "ok": true,
+  "detail": "right 302.0 sw 320"
+ },
+ {
+  "name": "320 標章連到 BY-NC-ND 條款",
+  "ok": true,
+  "detail": "https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant"
+ },
+ {
+  "name": "投稿勾選文字改 CC BY-NC-ND 4.0＋條款連結",
+  "ok": true,
+  "detail": "同意以 CC BY-NC-ND 4.0 授權：可分享，但須標示原拍攝者與樂迷藏出處、不得商業使用、不得修改"
+ },
+ {
+  "name": "條款：著作權屬原拍攝者、授權樂迷藏在本站使用、BY-NC-ND",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "條款：舊 BY-SA 投稿照原授權、維基照片段落還在",
   "ok": true,
   "detail": ""
  },

@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { feedbackHref } from "@/lib/feedback";
 import { LegalPage } from "@/components/legal";
-import { SITE_NAME } from "@/lib/data";
+import { PHOTO_LICENSE_URL, SITE_NAME } from "@/lib/data";
 
+// 2026-09-30 照片授權改 CC BY-NC-ND 4.0：條款措辭是草稿，待律師審閱（00_現況.md「正式上線前律師確認清單」）
 export const metadata = { title: "使用條款" };
 
 export default function TermsPage() {
@@ -29,7 +30,14 @@ export default function TermsPage() {
 
       <h2>照片與文字的權利</h2>
       <ul>
-        <li>你上傳的照片，著作權屬於你。上傳即表示你授權{SITE_NAME}在站內顯示，並產生縮圖、分享用的預覽圖。站內顯示的照片、縮圖與預覽圖都會把浮水印直接加進圖檔，浮水印上有你的帳號、站名與這張照片的查證碼；另外保存一份沒有浮水印的原圖，不公開，只用在網站更名時重新加上浮水印</li>
+        <li>你上傳的照片（收藏照片、藝人照片投稿），著作權屬於原拍攝者。上傳即表示你授權{SITE_NAME}在本站使用這張照片：在站內顯示，並產生縮圖、分享用的預覽圖。站內顯示的照片、縮圖與預覽圖都會把浮水印直接加進圖檔，浮水印上有你的帳號、站名與這張照片的查證碼；另外保存一份沒有浮水印的原圖，不公開，只用在網站更名時重新加上浮水印</li>
+        <li>
+          上傳的照片同時以
+          <a href={PHOTO_LICENSE_URL} target="_blank" rel="license noopener noreferrer">
+            創用 CC 姓名標示－非商業性－禁止改作 4.0 國際（CC BY-NC-ND 4.0）
+          </a>
+          授權其他人使用：可以分享，但須標示原拍攝者與{SITE_NAME}出處，不得商業使用，也不得修改（裁切、去浮水印、改色都算修改）
+        </li>
         <li>請只上傳自己拍攝或有權使用的照片。專輯封面、藝人名稱等屬於原權利人</li>
         <li>
           藝人頁與系列頁的文字，以
@@ -42,7 +50,7 @@ export default function TermsPage() {
 
       <h2 id="share-photos">分享站上的照片</h2>
       <ul>
-        <li>歡迎把站上的照片分享到其他地方。分享時須保留照片上的浮水印，並註明出處是{SITE_NAME}</li>
+        <li>歡迎把站上的會員照片分享到其他地方，照 CC BY-NC-ND 4.0：保留照片上的浮水印，標示原拍攝者與出處{SITE_NAME}，不得商業使用</li>
         <li>不得移除、裁掉、遮蓋或修改照片上的浮水印</li>
         <li>不得拿別人的照片冒充自己的物品販售或交易</li>
         <li>
@@ -56,11 +64,12 @@ export default function TermsPage() {
         <li>投稿的照片必須是你本人拍攝，而且只收公開演出的場合（演唱會、音樂祭、公開活動）。後台、私人聚會、偷拍，或未經同意拍攝私人生活的照片不收</li>
         <li>
           投稿即表示你以
-          <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh-hant" target="_blank" rel="noopener noreferrer">
-            CC BY-SA 4.0
+          <a href={PHOTO_LICENSE_URL} target="_blank" rel="license noopener noreferrer">
+            CC BY-NC-ND 4.0
           </a>
-          授權{SITE_NAME}與其他人使用這張照片，使用時要標示攝影者（你的帳號名）與授權方式。著作權仍屬於你
+          授權：{SITE_NAME}可以在本站使用這張照片；其他人可以分享，但須標示原拍攝者（你的帳號名）與{SITE_NAME}出處，不得商業使用、不得修改。著作權仍屬於你
         </li>
+        <li>2026 年 9 月 30 日這次條款更新前投稿的照片，投稿時已同意以 CC BY-SA 4.0 授權，這些照片照原本的授權，照片下方標示的就是它的授權</li>
         <li>投稿不會直接公開，由管理員挑選後才出現在藝人頁；每人每天最多投稿 5 張。被選用時可以得到分數</li>
         <li>照片裡的人有肖像權。藝人本人或經紀公司認為照片不適合公開，可以透過<Link href={feedbackHref("takedown")} data-testid="legal-feedback">意見回饋表單</Link>要求撤下，寫明藝人名稱與藝人頁網址；管理員確認後移除，照片檔案一併刪除</li>
       </ul>

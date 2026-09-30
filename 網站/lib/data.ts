@@ -68,6 +68,12 @@ export const KIND_LABEL_FALLBACK = "收藏";
 /** 站方描述：首頁、被鎖定內容的連結預覽共用 */
 /** 站名只在這裡設定一處：標題、頁首、浮水印、連結預覽圖、寄信都讀這個，改名時全站一起變（照片浮水印已燒進檔案，要另外跑重燒腳本） */
 export const SITE_NAME = "樂迷藏";
+/**
+ * 會員上傳照片（收藏照片、藝人照片投稿）的授權（2026-09-30 使用者核准）：可分享、須標示原拍攝者與樂迷藏出處、
+ * 不得商業使用、不得修改。舊的藝人照片投稿已用 CC BY-SA 4.0 授權，授權存在每張照片那一列，不改
+ */
+export const PHOTO_LICENSE = "CC BY-NC-ND 4.0";
+export const PHOTO_LICENSE_URL = "https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant";
 export const SITE_TAGLINE = "樂迷的收藏分享";
 export const SITE_TITLE = `${SITE_NAME}｜${SITE_TAGLINE}`;
 /**

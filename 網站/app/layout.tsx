@@ -6,7 +6,7 @@ import { AuthPanel } from "@/components/auth-panel";
 import { sponsorUrl, turnstileSiteKey } from "@/lib/server/services";
 import { indexingAllowed } from "@/lib/server/guard";
 import { SITE_DESC } from "@/lib/data";
-import { SITE_NAME, SITE_TITLE } from "@/lib/data";
+import { PHOTO_LICENSE_URL, SITE_NAME, SITE_TITLE } from "@/lib/data";
 
 // 不給搜尋引擎收錄（2026-09-26 定案，名稱定案後用 ALLOW_INDEXING=1 一次打開）
 export async function generateMetadata(): Promise<Metadata> {
@@ -57,6 +57,16 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 贊助
               </a>
             ) : null}
+          </div>
+          {/* 版權與照片授權（2026-09-30 使用者核准）：會員照片 CC BY-NC-ND 4.0。標章是官方 88×31 圖檔放站內，不外連圖片 */}
+          <div className="wrap foot-cc" data-testid="foot-cc">
+            <a href={PHOTO_LICENSE_URL} target="_blank" rel="license noopener" className="foot-cc-badge">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/brand/cc-by-nc-nd-88x31.png" alt="CC BY-NC-ND 4.0" width={88} height={31} />
+            </a>
+            <p>
+              © 2026 {SITE_NAME}　會員照片以 CC BY-NC-ND 4.0 授權：可分享，須標示原拍攝者與{SITE_NAME}出處，不得商業使用、不得修改。
+            </p>
           </div>
         </footer>
       </body>

@@ -221,8 +221,14 @@ ul { list-style: none; margin: 0; padding: 0; }
 .page { padding: 40px 32px 96px; }
 .page-wall { padding-top: 24px; }
 /* 首頁標語：訪客與登入會員一律顯示（2026-09-30 使用者定案，見 home-tagline.tsx） */
-.home-tagline { align-items: baseline; color: var(--muted); display: flex; flex-wrap: wrap; font-size: var(--text-sm); gap: 10px; margin-bottom: 20px; }
-.home-tagline-link { color: var(--text); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+/* 收合：第一句＋「看更多」；展開：全文接在後面同一段落（文字流，不另起區塊） */
+.home-tagline { color: var(--muted); font-size: var(--text-sm); line-height: 1.7; margin-bottom: 20px; max-width: 46em; overflow-wrap: anywhere; }
+.home-tagline-more {
+  color: var(--text); font: inherit; font-weight: 600; margin-left: .6em; padding: 0; text-decoration: underline;
+  text-underline-offset: 3px; white-space: nowrap;
+}
+.home-tagline-more:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+.home-tagline-link { color: var(--text); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .page-narrow { max-width: 680px; }
 .page-head { margin-bottom: 32px; }
 .head-split { align-items: flex-end; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; }
@@ -1667,3 +1673,13 @@ p.fill-row { display: flex; }
 @media (max-width: 700px) {
   .crop-modal { align-items: center; }
 }
+
+/* 頁尾版權與照片授權（2026-09-30）：標章 88×31 官方圖檔，文字手機可換行 */
+.foot-cc { align-items: center; border-top: 1px solid var(--line); color: var(--muted); display: flex; font-size: var(--text-xs); gap: 12px; line-height: 1.6; padding-block: 14px; }
+.foot-cc p { flex: 1; margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.foot-cc-badge { display: block; flex: none; line-height: 0; }
+.foot-cc-badge img { display: block; height: 31px; width: 88px; }
+@media (max-width: 700px) {
+  .foot-cc { align-items: flex-start; flex-direction: column; gap: 8px; }
+}
+.prose .about-lede { border-bottom: 1px solid var(--line); margin-bottom: 1.4em; padding-bottom: 1.2em; }

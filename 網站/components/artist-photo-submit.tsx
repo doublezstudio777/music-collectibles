@@ -4,9 +4,10 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { api, useAccount, whenLoggedIn } from "@/lib/account";
 import { prepareImage } from "@/lib/image";
+import { PHOTO_LICENSE_URL, SITE_NAME } from "@/lib/data";
 
 /**
- * 藝人頁「投稿藝人照片」（2026-09-28）。要登入；必勾本人拍攝與 CC BY-SA 4.0 授權；拍攝場合選填。
+ * 藝人頁「投稿藝人照片」（2026-09-28）。要登入；必勾本人拍攝與 CC BY-NC-ND 4.0 授權（2026-09-30 前是 CC BY-SA 4.0）；拍攝場合選填。
  * 照片在瀏覽器壓縮（規格同收藏照片：主圖長邊 1600、縮圖 480），投稿不公開，管理員設為使用中才會出現在藝人頁。
  */
 export function ArtistPhotoSubmit({ slug, name }: { slug: string; name: string }) {
@@ -99,12 +100,12 @@ export function ArtistPhotoSubmit({ slug, name }: { slug: string; name: string }
             setLic(e.target.checked);
             setError("");
           }} data-testid="artist-photo-license" />
-        <span>
+        <span data-testid="artist-photo-license-text">
           同意以{" "}
-          <a className="link" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh-hant" target="_blank" rel="license noopener">
-            CC BY-SA 4.0
+          <a className="link" href={PHOTO_LICENSE_URL} target="_blank" rel="license noopener">
+            CC BY-NC-ND 4.0
           </a>{" "}
-          授權樂迷藏與他人使用
+          授權：可分享，但須標示原拍攝者與{SITE_NAME}出處、不得商業使用、不得修改
         </span>
       </label>
       <div className="artist-photo-occasion">

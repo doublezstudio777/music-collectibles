@@ -124,7 +124,7 @@ export async function executeDeletion(admin: User, id: number, deletePhotos: boo
       .bind(uid, deletePhotos ? 1 : 0)
       .all<{ id: string; a: string; b: string; c: string | null; o: string | null; bytes: number; purpose: string }>()
   ).results ?? [];
-  // 藝人照片投稿（2026-09-28）：待審的一律刪；使用中或被替換下來的只在勾選時刪（CC BY-SA 已授權，不勾就保留，標示改成「已刪除的會員」）
+  // 藝人照片投稿（2026-09-28）：待審的一律刪；使用中或被替換下來的只在勾選時刪（CC 授權已給出（舊投稿 BY-SA、2026-09-30 起 BY-NC-ND），不勾就保留，標示改成「已刪除的會員」）
   const artistFiles = (
     await db
       .prepare(

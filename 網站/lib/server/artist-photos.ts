@@ -2,7 +2,7 @@
 //
 // - 藝人頁上方一張「目前使用中」（artist_photos.status=active，每位藝人最多一張，部分唯一索引保證）
 // - 來源：維基共享資源匯入（scripts/import-artist-photos.mjs，本機縮圖後上傳 R2 `r/`），或會員投稿
-// - 會員投稿：要登入、Email 已驗證，必勾「本人拍攝」「同意以 CC BY-SA 4.0 授權」；瀏覽器端壓縮（規格同收藏照片：
+// - 會員投稿：要登入、Email 已驗證，必勾「本人拍攝」「同意以 CC BY-NC-ND 4.0 授權」（2026-09-30 前是 CC BY-SA 4.0）；瀏覽器端壓縮（規格同收藏照片：
 //   主圖長邊 1600＋縮圖 480），每人每日（台灣日期）最多 5 張；投稿不公開（/img/ 只給投稿者本人與管理員），進後台佇列
 // - 後台：設為使用中（原本使用中的改成 retired，檔案保留可再設回）、退回、刪除、一鍵撤下；退回／刪除／撤下都從 R2 刪檔、
 //   容量扣回、清照片快取。每個操作寫 admin_log
@@ -16,11 +16,13 @@ import { adminLog, artistPhotos, artists, users } from "@/db/schema";
 import { randomToken } from "@/lib/server/crypto";
 import { dimensions, isPaused, MAX_MAIN_BYTES, MAX_THUMB_BYTES, purgePhotoCache, releaseBytes, reserveBytes, sniff } from "@/lib/server/photos";
 import { HttpError } from "@/lib/server/trade";
+import { PHOTO_LICENSE, PHOTO_LICENSE_URL } from "@/lib/data";
 import type { User } from "@/lib/server/auth";
 
 export const ARTIST_PHOTO_DAILY = 5;
-export const MEMBER_LICENSE = "CC BY-SA 4.0";
-export const MEMBER_LICENSE_URL = "https://creativecommons.org/licenses/by-sa/4.0/deed.zh-hant";
+// 2026-09-30 起新投稿改 CC BY-NC-ND 4.0（lib/data.ts PHOTO_LICENSE）；之前的投稿每張那一列仍記 CC BY-SA 4.0，授權不能撤回，不改
+export const MEMBER_LICENSE = PHOTO_LICENSE;
+export const MEMBER_LICENSE_URL = PHOTO_LICENSE_URL;
 
 type Row = typeof artistPhotos.$inferSelect;
 

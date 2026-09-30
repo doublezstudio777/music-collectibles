@@ -125,7 +125,7 @@ def confirm_upload(page, label: str, _unused=None) -> None:
         json.dumps(sent),
     )
     src = page.get_attribute("[data-testid=avatar-box] img.ava-img", "src")
-    raw = urllib.request.urlopen(f"{BASE}{src}", timeout=20).read()
+    raw = urllib.request.urlopen(urllib.request.Request(f"{BASE}{src}", headers={"user-agent": "Mozilla/5.0 mypage-check"}), timeout=20).read()
     im = Image.open(io.BytesIO(raw))
     check(f"{label} 伺服器存的是 256×256 {im.format}", im.size == (256, 256) and im.format == "WEBP", f"{im.format} {im.size}")
 
@@ -142,6 +142,11 @@ def main() -> None:
     sql(f"UPDATE users SET fav_artists = '[]', links = '{{}}' WHERE handle = '{HANDLE}'")
     sql("UPDATE artists SET hidden_at = NULL WHERE slug = 'lin-hsia'")
     token = os.environ["MYPAGE_TOKEN"] if PROD else login()
+    if PROD:
+        # 正式站不能下 SQL：用 API 把測試帳號的藝人與連結清空，才能重跑
+        req = urllib.request.Request(f"{BASE}/api/me/profile", method="PATCH", data=json.dumps({"favArtists": [], "links": {}}).encode(),
+                                     headers={"content-type": "application/json", "origin": BASE, "cookie": f"yz_session={token}", "user-agent": "Mozilla/5.0 mypage-check"})
+        urllib.request.urlopen(req, timeout=20).read()
     cookie = [{"name": "yz_session", "value": token, "domain": urlparse(BASE).hostname, "path": "/", "httpOnly": True, "secure": PROD}]
 
     with sync_playwright() as p:

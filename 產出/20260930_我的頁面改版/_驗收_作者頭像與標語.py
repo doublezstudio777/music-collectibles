@@ -5,7 +5,7 @@
 
 - 作者頭像：首頁第一頁每位作者，卡片頭像要跟他個人頁的頭像一致（有大頭貼＝圖、沒有＝首字）；單則頁作者欄各截一張有／沒有大頭貼的
 - 本機另外驗「換大頭貼後卡片跟著換」：API 換一張新的，重新整理首頁，卡片網址要變成新的那張（整頁快取跟著換新）
-- 標語：WebKit 390／320，訪客與登入各一次，第一個畫面就在、之後位置不動；登入者故意留舊的 localStorage lmb_auth=user 也照樣顯示
+- 標語：WebKit 390／320，訪客與登入各一次，收合與展開各截圖；第一個畫面就在、之後位置不動；登入者故意留舊的 localStorage lmb_auth=user 也照樣顯示\n- 頁尾版權（1440／390／320）、關於頁全文、投稿勾選文字、條款照片段落
 """
 
 import io
@@ -126,7 +126,15 @@ def main():
         ctx.close()
         b.close()
 
-        # 標語：WebKit 390／320，訪客＋登入
+        # 標語：WebKit 390／320，訪客＋登入，收合＋展開
+        FULL = ("每一張專輯、每一件周邊，背後都有一段只有收藏的人才知道的故事。早期資訊不透明，很多專輯的來歷只留在少數人的記憶裡，"
+                "我們想讓這些故事被看見。你可以在這裡秀出自己的收藏，也可以跟懂的人買賣交流。資料庫還在一點一點補齊，"
+                "如果你願意幫忙補一筆資料，或覺得哪裡可以更好，都很歡迎來信告訴我們。")
+        FIRST = "每一張專輯、每一件周邊，背後都有一段只有收藏的人才知道的故事。"
+        GEO = """() => { const t = document.querySelector('[data-testid=home-tagline]'); if (!t) return null;
+            const r = t.getBoundingClientRect(); const band = t.nextElementSibling?.getBoundingClientRect();
+            return { top: r.top, h: r.height, band: band?.top, disp: getComputedStyle(t).display, op: getComputedStyle(t).opacity,
+                     text: t.innerText.replace(/\\s+/g, ''), auth: document.documentElement.dataset.auth ?? null }; }"""
         wk = p.webkit.launch()
         for w in [390, 320]:
             for who in ["訪客", "登入"]:
@@ -135,25 +143,84 @@ def main():
                     c.add_cookies(cookie)
                     c.add_init_script("try{localStorage.setItem('lmb_auth','user')}catch(e){}")
                 pg = c.new_page()
-                pg.on("console", lambda m: errors.append(f"webkit {w}: {m.text}") if m.type == "error" else None)
+                pg.on("console", lambda m, w=w: errors.append(f"webkit {w}: {m.text}") if m.type == "error" else None)
                 pg.goto(f"{BASE}/", wait_until="domcontentloaded")
-                first = pg.evaluate("""() => { const t = document.querySelector('[data-testid=home-tagline]');
-                    const r = t?.getBoundingClientRect(); const band = t?.nextElementSibling?.getBoundingClientRect();
-                    return t ? { top: r.top, h: r.height, op: getComputedStyle(t).opacity, disp: getComputedStyle(t).display, band: band?.top } : null; }""")
+                first = pg.evaluate(GEO)
                 pg.wait_for_load_state("load")
                 if who == "登入":
                     pg.wait_for_selector("[data-testid=me-avatar]", timeout=15000)
                 pg.wait_for_timeout(1500)
-                later = pg.evaluate("""() => { const t = document.querySelector('[data-testid=home-tagline]');
-                    const r = t.getBoundingClientRect(); const band = t.nextElementSibling?.getBoundingClientRect();
-                    return { top: r.top, h: r.height, op: getComputedStyle(t).opacity, disp: getComputedStyle(t).display, band: band?.top,
-                             text: t.innerText, auth: document.documentElement.dataset.auth ?? null }; }""")
-                check(f"WebKit {w} {who}：第一個畫面就有標語", first and first["h"] > 0 and first["op"] == "1" and first["disp"] != "none", str(first))
-                check(f"WebKit {w} {who}：標語含「關於我們」、之後位置不動", "關於我們" in later["text"] and later["op"] == "1" and first and abs(later["top"] - first["top"]) < 0.5 and abs((later["band"] or 0) - (first["band"] or 0)) < 0.5, f"{first} → {later}")
-                check(f"WebKit {w} {who}：<html> 沒有 data-auth", later["auth"] is None)
-                shot(pg, f"webkit_{w}_首頁標語_{who}")
+                later = pg.evaluate(GEO)
+                tag = f"WebKit {w} {who}"
+                check(f"{tag}：第一個畫面就有標語（收合：第一句＋看更多）", first and first["h"] > 0 and first["op"] == "1" and first["text"] == FIRST + "看更多", str(first))
+                check(f"{tag}：載入完、登入狀態讀出後位置不動", first and abs(later["top"] - first["top"]) < 0.5 and abs(later["h"] - first["h"]) < 0.5 and abs((later["band"] or 0) - (first["band"] or 0)) < 0.5, f"{first} → {later}")
+                check(f"{tag}：<html> 沒有 data-auth", later["auth"] is None)
+                shot(pg, f"webkit_{w}_首頁標語_{who}_收合")
+                pg.tap("[data-testid=home-tagline-more]")
+                pg.wait_for_selector("[data-testid=home-tagline-rest]")
+                opened = pg.evaluate(GEO)
+                href = pg.get_attribute("[data-testid=home-tagline-rest] a", "href")
+                url_same = pg.url.rstrip("/") == BASE.rstrip("/")
+                check(f"{tag}：看更多在原地展開全文（逐字相同、不跳頁）", opened["text"] == FULL and url_same and abs(opened["top"] - later["top"]) < 0.5, f"{opened['text'][-20:]} {pg.url}")
+                check(f"{tag}：展開後只往下推（上緣不動、色帶下移＝標語增加的高度）", abs((opened["band"] - later["band"]) - (opened["h"] - later["h"])) < 0.5, f"h {later['h']}→{opened['h']} band {later['band']}→{opened['band']}")
+                check(f"{tag}：「來信告訴我們」連 /feedback", href == "/feedback", str(href))
+                sw = pg.evaluate("[document.documentElement.scrollWidth, innerWidth]")
+                check(f"{tag}：展開後沒有橫向溢出", sw[0] <= sw[1], str(sw))
+                shot(pg, f"webkit_{w}_首頁標語_{who}_展開")
                 c.close()
         wk.close()
+
+        # 關於頁全文、頁尾版權、投稿勾選文字、條款段落
+        b = p.chromium.launch()
+        c = b.new_context(viewport={"width": 1440, "height": 900})
+        pg = c.new_page()
+        pg.goto(f"{BASE}/about", wait_until="load")
+        about = pg.inner_text("[data-testid=about-tagline]").replace("\n", "")
+        check("關於頁放全文、連 /feedback", about == FULL and pg.get_attribute("[data-testid=about-tagline] a", "href") == "/feedback", about[-12:])
+        check("關於頁站長四段還在", pg.locator(".prose p").count() >= 6)
+        shot(pg, "1440_關於頁")
+        c.close()
+        FOOT = "© 2026 樂迷藏　會員照片以 CC BY-NC-ND 4.0 授權：可分享，須標示原拍攝者與樂迷藏出處，不得商業使用、不得修改。"
+        for w in [1440, 390, 320]:
+            c = b.new_context(viewport={"width": w, "height": 900}, is_mobile=w < 1000)
+            pg = c.new_page()
+            pg.goto(f"{BASE}/about", wait_until="load")
+            cc = pg.locator("[data-testid=foot-cc]")
+            cc.scroll_into_view_if_needed()
+            info = pg.evaluate("""() => { const el = document.querySelector('[data-testid=foot-cc]'); const img = el.querySelector('img');
+                return { text: el.querySelector('p').textContent, src: img.getAttribute('src'), nat: [img.naturalWidth, img.naturalHeight],
+                  right: Math.max(...[...el.querySelectorAll('*')].map(x => x.getBoundingClientRect().right)), sw: document.documentElement.scrollWidth,
+                  href: el.querySelector('a').getAttribute('href') }; }""")
+            check(f"{w} 頁尾版權文字逐字、標章站內圖檔載入", info["text"] == FOOT and info["src"].startswith("/brand/") and info["nat"] == [88, 31], str(info)[:160])
+            check(f"{w} 頁尾不溢出", info["right"] <= w and info["sw"] <= w, f"right {info['right']:.1f} sw {info['sw']}")
+            check(f"{w} 標章連到 BY-NC-ND 條款", "by-nc-nd/4.0" in info["href"], info["href"])
+            bb = pg.locator("footer.foot").bounding_box()
+            shot(pg, f"{w}_頁尾", clip={"x": 0, "y": bb["y"], "width": w, "height": bb["height"]})
+            c.close()
+        c = b.new_context(viewport={"width": 1440, "height": 1400})
+        c.add_cookies(cookie)
+        pg = c.new_page()
+        artist = "lin-hsia" if not PROD else "elephant-gym"
+        pg.goto(f"{BASE}/artist/{artist}", wait_until="load")
+        pg.click("[data-testid=artist-photo-entry]")
+        pg.wait_for_selector("[data-testid=artist-photo-license-text]")
+        lic = pg.inner_text("[data-testid=artist-photo-license-text]")
+        lhref = pg.get_attribute("[data-testid=artist-photo-license-text] a", "href")
+        check("投稿勾選文字改 CC BY-NC-ND 4.0＋條款連結", "CC BY-NC-ND 4.0" in lic and "不得商業使用" in lic and "不得修改" in lic and lhref == "https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant", lic)
+        bb = pg.locator("[data-testid=artist-photo-form]").bounding_box()
+        shot(pg, "1440_投稿勾選文字", clip={"x": bb["x"] - 8, "y": bb["y"] - 8, "width": min(900, bb["width"] + 16), "height": bb["height"] + 16})
+        pg.goto(f"{BASE}/terms", wait_until="load")
+        terms = pg.inner_text("main")
+        check("條款：著作權屬原拍攝者、授權樂迷藏在本站使用、BY-NC-ND", "著作權屬於原拍攝者" in terms and "授權樂迷藏在本站使用" in terms and "CC BY-NC-ND 4.0" in terms)
+        check("條款：舊 BY-SA 投稿照原授權、維基照片段落還在", "照原本的授權" in terms and "維基共享資源" in terms)
+        for h in ["照片與文字的權利", "藝人照片"]:
+            sec = pg.locator(f"h2:text-is('{h}')")
+            pg.evaluate("y => window.scrollTo(0, y)", pg.evaluate(f"document.evaluate(\"//h2[text()='{h}']\", document, null, 9, null).singleNodeValue.getBoundingClientRect().top + scrollY - 20"))
+            top = sec.bounding_box()
+            nxt = sec.locator("xpath=following-sibling::ul[1]").bounding_box()
+            shot(pg, f"1440_條款_{h}", clip={"x": top["x"] - 8, "y": top["y"] - 8, "width": 700, "height": nxt["y"] + nxt["height"] - top["y"] + 16})
+        c.close()
+        b.close()
         check("沒有 console error", not errors, "\n".join(errors[:6]))
 
     ok = sum(1 for r in results if r[1])

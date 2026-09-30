@@ -1,6 +1,8 @@
 import { ogMeta } from "@/lib/server/og";
 import { siteOrigin } from "@/lib/server/viewer";
 import { SITE_NAME } from "@/lib/data";
+import Link from "next/link";
+import { TAGLINE_END, TAGLINE_FIRST, TAGLINE_LINK_HREF, TAGLINE_LINK_TEXT, TAGLINE_REST_BEFORE_LINK } from "@/lib/tagline";
 
 const PARAS = [
   `大家開始用串流聽歌之後，會去買實體專輯的人越來越少。唱片公司壓的量跟著變少，有一段時間發行的專輯，到了現在幾乎已經找不到了。`,
@@ -24,6 +26,15 @@ export default function AboutPage() {
     <main className="wrap page page-narrow">
       <h1 className="page-title">關於{SITE_NAME}</h1>
       <section className="block prose">
+        {/* 首頁標語全文（2026-09-30 使用者定稿），放在站長四段前面；四段不動 */}
+        <p className="about-lede" data-testid="about-tagline">
+          {TAGLINE_FIRST}
+          {TAGLINE_REST_BEFORE_LINK}
+          <Link className="link" href={TAGLINE_LINK_HREF}>
+            {TAGLINE_LINK_TEXT}
+          </Link>
+          {TAGLINE_END}
+        </p>
         {PARAS.map((p, i) => (
           <p key={i}>{p}</p>
         ))}

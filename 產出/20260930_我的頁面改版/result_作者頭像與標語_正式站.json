@@ -1,0 +1,87 @@
+[
+ {
+  "name": "首頁卡片頭像跟作者個人頁一致（有大頭貼顯示圖、沒有顯示首字）",
+  "ok": true,
+  "detail": "6 張卡、6 張有大頭貼；不一致 []"
+ },
+ {
+  "name": "首頁至少有一張卡片是大頭貼",
+  "ok": true,
+  "detail": "[{'handle': 'dz4277', 'img': '/img/v/cZVKPvij_luJAPM-.jpg', 'text': None, 'n': '/share/10'}]"
+ },
+ {
+  "name": "單則頁作者欄 有大頭貼",
+  "ok": true,
+  "detail": "/share/10 /img/v/cZVKPvij_luJAPM-.jpg"
+ },
+ {
+  "name": "單則頁作者欄 沒大頭貼：找得到樣本",
+  "ok": false,
+  "detail": ""
+ },
+ {
+  "name": "WebKit 390 訪客：第一個畫面就有標語",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124}"
+ },
+ {
+  "name": "WebKit 390 訪客：標語含「關於我們」、之後位置不動",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124} → {'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124, 'text': '別讓一張專輯的來歷，只有少數人知道。\\n關於我們\\n\\n', 'auth': None}"
+ },
+ {
+  "name": "WebKit 390 訪客：<html> 沒有 data-auth",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "WebKit 390 登入：第一個畫面就有標語",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124}"
+ },
+ {
+  "name": "WebKit 390 登入：標語含「關於我們」、之後位置不動",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124} → {'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124, 'text': '別讓一張專輯的來歷，只有少數人知道。\\n關於我們\\n\\n', 'auth': None}"
+ },
+ {
+  "name": "WebKit 390 登入：<html> 沒有 data-auth",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "WebKit 320 訪客：第一個畫面就有標語",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157}"
+ },
+ {
+  "name": "WebKit 320 訪客：標語含「關於我們」、之後位置不動",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157} → {'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157, 'text': '別讓一張專輯的來歷，只有少數人知道。\\n關於我們\\n\\n', 'auth': None}"
+ },
+ {
+  "name": "WebKit 320 訪客：<html> 沒有 data-auth",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "WebKit 320 登入：第一個畫面就有標語",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157}"
+ },
+ {
+  "name": "WebKit 320 登入：標語含「關於我們」、之後位置不動",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157} → {'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157, 'text': '別讓一張專輯的來歷，只有少數人知道。\\n關於我們\\n\\n', 'auth': None}"
+ },
+ {
+  "name": "WebKit 320 登入：<html> 沒有 data-auth",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "沒有 console error",
+  "ok": true,
+  "detail": ""
+ }
+]
