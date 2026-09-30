@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/account";
 import { FEEDBACK_LABEL } from "@/lib/feedback";

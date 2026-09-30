@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/link";
 import { notFound } from "next/navigation";
 import { artistHref, seriesHref, type Series } from "@/lib/data";
 import { latestRevisionId } from "@/lib/server/wiki";

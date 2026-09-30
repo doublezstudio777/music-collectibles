@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/link";
 import { artistHref, GENDER_LABEL, REGION_LABEL, type ArtistGender, type ArtistRegion } from "@/lib/data";
 import { pageData } from "@/lib/server/viewer";
 import { FollowButton } from "@/components/follow-button";

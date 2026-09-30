@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/link";
 import { Ava } from "@/components/ava";
 import { LevelTag } from "@/components/level-tag";
 import { rankingBoards, type RankRow } from "@/lib/server/rankings";

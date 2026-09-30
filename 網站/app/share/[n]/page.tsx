@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/link";
 import { notFound } from "next/navigation";
 import { SITE_DESC, shareDesc, shareHref, type Share } from "@/lib/data";
 import { ARTISTS_CRUMB, HOME_CRUMB, artistCrumb, breadcrumbLd, ldJson, seriesCrumb, shareCrumb, shareIndex, seoMeta } from "@/lib/server/seo";

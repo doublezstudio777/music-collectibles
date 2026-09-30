@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import type { HoldingView } from "@/lib/data";
 import { useAppState } from "@/lib/state";
 import { useIsSelf } from "@/components/self-only";

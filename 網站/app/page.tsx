@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/link";
 import { pageData } from "@/lib/server/viewer";
 import { ShareWall, type WallFilter, type WallSort } from "@/components/share-wall";
 import { HomeTagline } from "@/components/home-tagline";

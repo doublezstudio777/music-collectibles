@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import { useState } from "react";
 import type { ShareView } from "@/lib/data";
 import { useAppState } from "@/lib/state";

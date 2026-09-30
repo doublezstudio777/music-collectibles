@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/link";
 import { TERMS_HISTORY, TERMS_VERSION } from "@/lib/legal";
 
 // 條款歷史版本（2026-10-01，使用條款第 18 條第 4 項）。改版時在 lib/legal.ts 的 TERMS_HISTORY 補一列，舊版全文另存一頁連過來

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/link";
 import { feedbackHref } from "@/lib/feedback";
 import { LegalPage } from "@/components/legal";
 import { SITE_NAME } from "@/lib/data";

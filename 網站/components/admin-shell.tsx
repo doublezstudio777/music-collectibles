@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/link";
 import { getViewer } from "@/lib/server/viewer";
 import { isAdmin } from "@/lib/server/auth";
 

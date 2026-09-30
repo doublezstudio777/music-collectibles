@@ -6,7 +6,7 @@
 // 換一首用 key 換掉整個 iframe，不改 src（改 src 會在瀏覽器上一頁多一筆紀錄）。
 // 每天一首（2026-09-29）：第一眼那首以台灣日期為種子從歌單固定挑出，同一天所有人相同、隔天換；「換一首」照舊隨機。
 // 種子只用日期，歌單順序由伺服器固定輸出，所以不需要伺服器參與，整頁快取不受影響。
-import Link from "next/link";
+import Link from "@/components/link";
 import { useEffect, useState } from "react";
 import { artistHref } from "@/lib/data";
 

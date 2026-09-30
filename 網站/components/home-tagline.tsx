@@ -4,7 +4,7 @@
 // 收合時第一句＋「看更多」，按了在原地展開全文（不跳頁），「來信告訴我們」連到 /feedback。
 // 伺服器與瀏覽器第一次畫的都是收合狀態，整頁快取給誰都同一份，第一個畫面不會閃也不會跳。
 // 之前「登入者收起」的做法（opacity 切換、<html data-auth>、localStorage lmb_auth）已撤掉。
-import Link from "next/link";
+import Link from "@/components/link";
 import { useState } from "react";
 import { TAGLINE_END, TAGLINE_FIRST, TAGLINE_LINK_HREF, TAGLINE_LINK_TEXT, TAGLINE_REST_BEFORE_LINK } from "@/lib/tagline";
 

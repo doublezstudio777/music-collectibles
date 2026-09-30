@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/link";
 import { charCount, diffParas, type ParaDiff } from "@/lib/diff";
 import { PageLockButton, RevertButton } from "@/components/wiki-editor";
 import type { RevisionView } from "@/lib/server/wiki";

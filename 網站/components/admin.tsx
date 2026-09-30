@@ -1,7 +1,7 @@
 "use client";
 
 import { Ava } from "@/components/ava";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useEffect, useState } from "react";
 import { reasonLabel, targetLevel, type ReportReason, type TargetKey } from "@/lib/data";
 import { SaveMsg, useSave } from "@/components/save-status";

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/link";
 import { artistHref } from "@/lib/data";
 import { pageData } from "@/lib/server/viewer";
 import { ShareWall } from "@/components/share-wall";

@@ -79,3 +79,6 @@
 - 2026-10-01 起寫入 API 要「已同意現行條款」：驗收腳本用 SQL 建測試會員要帶 `terms_version='1.0'`（`lib/legal.ts` 的 TERMS_VERSION），不然發布、出價、留言全回 403 TERMS_REQUIRED；管理員帳號沒同意會被補同意視窗蓋住畫面（後台 API 不擋）。驗收從 server log 抓信要用 bytes 切位置再 decode，用 `os.path.getsize` 當字元位置會切錯（2026-10-01）
 - CDP 轉接 ps1 只能寫 ASCII：PowerShell 5 讀無 BOM 的 UTF-8，中文註解會吃掉下一行；Chrome 用 `powershell Start-Process` 開（`cmd.exe /c start` 沒起來），轉接每次連線前重起。同一個 CDP context 在註冊頁拿過 Turnstile token 後，下一頁可能 60 秒都等不到，換新 context 就好（2026-10-01）
 - `deploy.sh` 第 5 步若 wrangler 報 `/zones/…/workers/routes` No access：程式其實已上線，先 curl 看 `x-yz-build` 是新版，再手動 `node scripts/keep-assets.mjs save`＋`scripts/deploy.sh --smoke-only`；Custom Domain 綁定用 `accounts/{id}/workers/domains` API 確認還在（2026-10-01）
+- 查「哪條路由 exceededResources」：GraphQL `workersInvocationsAdaptive` 沒有路徑維度，只能看 datetimeMinute＋coloCode 抓「同分鐘同機房一串」；cron 另查 `workersInvocationsScheduled`（有 cpuTimeUs）。每請求 CPU 用 `wrangler tail --format json` 的 `cpuTime`，以 cf-ray 對 Playwright 回應表頭；tail 流量一大會漏事件，對不到的不能當 0（2026-10-01）
+- vinext `<Link>` 預設進畫面就預取、每個預取都是一次 RSC 渲染，免費方案會被一頁 10～30 個預取打爆（1102）；全站 Link 一律從 `@/components/link` import（預設 prefetch=false），curl 只打整頁 HTML 看不出來，要用瀏覽器數 `_rsc` 請求（2026-10-01）
+- 正式站量登入後 CPU 不用走 Turnstile：D1 直接插臨時 users＋sessions（sessions.id＝token 的 SHA-256），量完把 session 設過期，帳號列回報等使用者回「刪」；users 寫入會讓 content_version +1、全站快取失效，量測第一輪會偏高（2026-10-01）

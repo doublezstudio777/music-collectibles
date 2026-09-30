@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/link";
 import { SERIES_KIND_LABEL, seriesHref, type Artist, type Series } from "@/lib/data";
 
 /** 系列封面：純色塊，沒有真封面前不畫假圖。photo＝收藏者拍的照片縮圖（系列頁「其他系列」用，沒有就色塊） */

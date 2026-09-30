@@ -1,7 +1,7 @@
 import { overrideOf, overridePhoto, pick, seoContext, seoMeta, ldJson, breadcrumbLd, HOME_CRUMB } from "@/lib/server/seo";
 import { clipWidth, DESC_MAX } from "@/lib/seo";
 import { SITE_NAME } from "@/lib/data";
-import Link from "next/link";
+import Link from "@/components/link";
 import { ABOUT_PARAS } from "@/lib/about";
 import { TAGLINE_END, TAGLINE_FIRST, TAGLINE_LINK_HREF, TAGLINE_LINK_TEXT, TAGLINE_REST_BEFORE_LINK } from "@/lib/tagline";
 

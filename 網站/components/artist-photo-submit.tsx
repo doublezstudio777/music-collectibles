@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { api, useAccount, whenLoggedIn } from "@/lib/account";
 import { prepareImage } from "@/lib/image";
 import { PHOTO_LICENSE_URL, SITE_NAME } from "@/lib/data";

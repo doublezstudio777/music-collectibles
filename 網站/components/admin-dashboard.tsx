@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/account";
 import type { DayPoint, Stats } from "@/lib/server/stats";

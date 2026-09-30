@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/link";
 import { LegalPage } from "@/components/legal";
 import { PHOTO_LICENSE_URL, SITE_NAME } from "@/lib/data";
 import { CONTACT_EMAIL, DELETION_DAYS, OPERATOR_TEXT, TAKEDOWN_PATH } from "@/lib/legal";

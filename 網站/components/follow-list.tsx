@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import { artistHref } from "@/lib/data";
 import { useAppState } from "@/lib/state";
 import { FollowButton } from "@/components/follow-button";

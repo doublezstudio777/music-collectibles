@@ -1,7 +1,7 @@
 // 照片查證（2026-09-29）：輸入照片浮水印上的查證碼，查這張照片原本屬於哪一則收藏。
 // 不進整頁快取（worker.ts CACHEABLE 沒列），每次查詢都算同一個 IP 的次數（lib/server/verify.ts）。
 // 露出多少：收藏公開中才給縮圖、標題、發文者、發布日期；下架的只說是哪位會員；已刪帳號只說「已刪除的會員」。
-import Link from "next/link";
+import Link from "@/components/link";
 import { headers } from "next/headers";
 import { normVerifyCode, SITE_NAME, shareHref, userHref } from "@/lib/data";
 import { photoUrl } from "@/lib/server/content";

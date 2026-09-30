@@ -4,7 +4,7 @@
 // 登入後 /api/me 回 termsOk=false 就跳；按「稍後再說」這個分頁不再自動跳，但發布、出價、投稿被 API 擋下（TERMS_REQUIRED）時會再打開。
 // 沒同意前可以瀏覽，不能發布、出價、投稿。
 
-import Link from "next/link";
+import Link from "@/components/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api, closeConsent, refreshAccount, useAccount } from "@/lib/account";

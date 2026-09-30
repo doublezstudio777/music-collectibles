@@ -5,7 +5,7 @@
 // 留言一律當純文字輸出（React 跳脫），換行用 CSS 保留。
 
 import { Ava } from "@/components/ava";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useCallback, useEffect, useState } from "react";
 import { api, openPanel, useAccount } from "@/lib/account";
 import { relTime } from "@/lib/data";

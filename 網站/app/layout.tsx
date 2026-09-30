@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/link";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { AuthPanel } from "@/components/auth-panel";

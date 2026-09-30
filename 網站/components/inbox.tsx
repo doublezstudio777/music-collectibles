@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import { useEffect, useState } from "react";
 import { priceText, shareHref, userHref, type Sale, type ShareView } from "@/lib/data";
 import { SaveMsg, useSave } from "@/components/save-status";

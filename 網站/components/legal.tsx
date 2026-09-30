@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/link";
 import { TERMS_EFFECTIVE, TERMS_VERSION } from "@/lib/legal";
 
 /**

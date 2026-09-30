@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import { useState } from "react";
 import { api, openPanel, refreshAccount, useAccount } from "@/lib/account";
 import { DELETION_DAYS } from "@/lib/legal";

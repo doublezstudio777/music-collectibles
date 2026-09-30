@@ -2,7 +2,7 @@
 
 import { Ava } from "@/components/ava";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/link";
 import { priceText, shareHref, tagHref, userHref, type Lock, type Sale, type ShareView } from "@/lib/data";
 import { LikeButton } from "@/components/like-button";
 import { LevelTag } from "@/components/level-tag";

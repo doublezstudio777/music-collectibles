@@ -1,7 +1,7 @@
 // 新手指南正文（2026-09-29）：/guide 頁與個人頁「新手指南」對話框共用同一份。
 // 正文逐字照 產出/20260929_新手指南/文案草稿_v3.md（站名讀 SITE_NAME）；兩張表的數字一律從程式常數產生
 // （lib/levels.ts、lib/score-rules.ts），規則改了這裡跟著變。圖只是視覺輔助，表格才是可讀取的資料。
-import Link from "next/link";
+import Link from "@/components/link";
 import { SITE_NAME } from "@/lib/data";
 import { feedbackHref } from "@/lib/feedback";
 import { LEVELS, TIERS } from "@/lib/levels";
