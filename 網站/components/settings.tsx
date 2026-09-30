@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { api, openPanel, refreshAccount, setMe, useAccount, type Me } from "@/lib/account";
 import { Ava } from "@/components/ava";
-import { prepareAvatar } from "@/lib/image";
 import { SaveMsg, useSave } from "@/components/save-status";
+import { AvatarCropper } from "@/components/avatar-cropper";
+import { ProfileExtras } from "@/components/profile-edit";
 
 /** 台灣日期 2026-10-28 */
 const twDate = (iso: string) => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 10);
@@ -52,6 +53,8 @@ function NameBox({ me }: { me: Me }) {
 function AvatarBox({ me }: { me: Me }) {
   const { busy, msg, run } = useSave();
   const router = useRouter();
+  // 選了檔先開裁切視窗（2026-09-30），按確定才上傳；取消就什麼都不變
+  const [cropFile, setCropFile] = useState<File | null>(null);
   const done = async (text: string) => {
     await refreshAccount();
     router.refresh();
@@ -60,14 +63,16 @@ function AvatarBox({ me }: { me: Me }) {
   const pick = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = "";
-    if (!file) return;
+    if (file) setCropFile(file);
+  };
+  const cancel = useCallback(() => setCropFile(null), []);
+  const unreadable = useCallback(() => {
+    setCropFile(null);
+    void run(async () => ({ ok: false, text: "這張照片讀不到，換一張再試" }));
+  }, [run]);
+  const upload = (blob: Blob) => {
+    setCropFile(null);
     void run(async () => {
-      let blob: Blob;
-      try {
-        blob = await prepareAvatar(file);
-      } catch {
-        return { ok: false, text: "這張照片讀不到，換一張再試" };
-      }
       const form = new FormData();
       form.append("image", blob, blob.type === "image/webp" ? "avatar.webp" : "avatar.jpg");
       const r = await api("/api/me/avatar", { body: form });
@@ -94,10 +99,11 @@ function AvatarBox({ me }: { me: Me }) {
               移除
             </button>
           ) : null}
-          <p className="page-meta">照片會從中間裁成正方形。一天最多換 5 次。</p>
+          <p className="page-meta">選好照片可以拖曳、縮放調整位置。一天最多換 5 次。</p>
         </div>
       </div>
       <SaveMsg {...msg} testid="avatar-msg" />
+      {cropFile ? <AvatarCropper file={cropFile} onCancel={cancel} onDone={upload} onError={unreadable} /> : null}
     </section>
   );
 }
@@ -181,6 +187,7 @@ export function SettingsForm() {
       <AvatarBox me={me} />
       {/* key 只用 id：暱稱改了不能讓這塊重掛，不然「已儲存」會跟著消失（2026-09-28 使用者回報改了沒反應） */}
       <NameBox key={me.id} me={me} />
+      <ProfileExtras key={`p-${me.id}`} />
       <PasswordBox />
       <SessionsBox />
       <p className="settings-delete">

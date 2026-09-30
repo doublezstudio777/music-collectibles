@@ -152,7 +152,7 @@ export async function executeDeletion(admin: User, id: number, deletePhotos: boo
       .bind(at, admin.id, JSON.stringify(artistFiles.map((f) => f.id))),
     db
       .prepare(
-        `UPDATE users SET email = ?1, email_verified_at = NULL, password_hash = '!deleted', handle = ?2, name = ?3, bio = '',
+        `UPDATE users SET email = ?1, email_verified_at = NULL, password_hash = '!deleted', handle = ?2, name = ?3, bio = '', links = '{}', fav_artists = '[]',
                 name_key = NULL, name_changed_at = NULL, avatar_key = NULL, status = 'deleted', deleted_at = ?4,
                 deletion_requested_at = NULL, updated_at = ?4
          WHERE id = ?5`,

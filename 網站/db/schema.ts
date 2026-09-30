@@ -47,6 +47,13 @@ export const users = sqliteTable(
     avatarKey: text("avatar_key"),
     /** 管理員執行刪除帳號的時間（status=deleted） */
     deletedAt: text("deleted_at"),
+    /**
+     * 2026-09-30 我的頁面（drizzle/0024）：社群連結 JSON { ig?, threads?, youtube?, facebook? }，
+     * 每個值是完整 https 網址，網域白名單在 lib/profile-rules.ts，伺服器存之前驗過
+     */
+    links: text("links").notNull().default("{}"),
+    /** 最喜歡的藝人 JSON string[]（藝人 slug，最多 5 位，照使用者排的順序） */
+    favArtists: text("fav_artists").notNull().default("[]"),
   },
   (t) => [
     uniqueIndex("users_email_uq").on(t.email),

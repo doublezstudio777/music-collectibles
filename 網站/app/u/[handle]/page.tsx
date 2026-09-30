@@ -4,7 +4,7 @@ import { avatarUrl, userByHandle } from "@/lib/server/auth";
 import { Ava } from "@/components/ava";
 import { ReportBox } from "@/components/report";
 import { NotSelf } from "@/components/self-only";
-import { avatarTarget } from "@/lib/data";
+import { artistHref, avatarTarget } from "@/lib/data";
 import { publicHoldings } from "@/lib/server/me";
 import { regionNames } from "@/lib/server/geo";
 import { pageData } from "@/lib/server/viewer";
@@ -18,6 +18,8 @@ import { monthRank } from "@/lib/server/rankings";
 import { HoldingsList } from "@/components/holdings-list";
 import { SaleWall } from "@/components/sale-wall";
 import { ShareWall } from "@/components/share-wall";
+import { SocialIcons } from "@/components/social-icons";
+import { parseFavs, parseLinks, type Links } from "@/lib/profile-rules";
 
 type Props = { params: Promise<{ handle: string }> };
 
@@ -34,6 +36,8 @@ async function loadUser(handle: string) {
       avatar: null,
       avatarId: "",
       bio: "",
+      links: {} as Links,
+      favs: [] as string[],
       verified: false,
       region: "",
       score: null,
@@ -51,6 +55,8 @@ async function loadUser(handle: string) {
       // 檢舉大頭貼用：v/{照片 id}.webp → 照片 id
       avatarId: u.avatarKey ? u.avatarKey.slice(2).replace(/\.[a-z]+$/, "") : "",
       bio: u.bio,
+      links: parseLinks(u.links),
+      favs: parseFavs(u.favArtists),
       verified: Boolean(u.emailVerifiedAt),
       region: (await regionNames([u.id])).get(u.id) ?? "",
       score: await profileScore(u),
@@ -122,6 +128,8 @@ export default async function UserPage({ params }: Props) {
   const user = await loadUser((await params).handle);
   if (!user) notFound();
   const { c } = await pageData();
+  // 最喜歡的藝人：照本人排的順序，已隱藏、刪除或前台看不到藝人頁的不顯示
+  const favs = user.favs.map((slug) => c.visibleArtist(slug)).filter((a) => a !== undefined);
   const own = c.shares.filter((s) => s.author === user.handle).map(c.toShareView);
   // 我有／想要的版本：別人看用伺服器給的清單；本人看時按鈕即時變，所以把全部版本的列都給
   const catalog = c.holdingViews(c.seriesList.flatMap((w) => w.items.flatMap((it) => it.versions.map((v) => `${w.artistSlug}/${w.no}#${it.id}-${v.id}`))));
@@ -156,15 +164,30 @@ export default async function UserPage({ params }: Props) {
               所在地區 {user.region}
             </p>
           ) : null}
-          {user.bio ? <p className="page-meta">{user.bio}</p> : null}
+          {user.bio ? (
+            <p className="profile-bio" data-testid="profile-bio">
+              {user.bio}
+            </p>
+          ) : null}
+          {favs.length ? (
+            <p className="fav-tags" data-testid="profile-favs">
+              <span className="fav-tags-label">最喜歡的藝人</span>
+              {favs.map((a) => (
+                <Link key={a.slug} className="fav-tag" href={artistHref(a.slug)} data-slug={a.slug}>
+                  {a.name}
+                </Link>
+              ))}
+            </p>
+          ) : null}
+          <SocialIcons links={user.links} />
         </div>
         <SelfOnly handle={user.handle}>
           <div className="head-actions">
+            <Link className="btn btn-line" href="/settings" data-testid="edit-profile">
+              編輯個人資料
+            </Link>
             <Link className="btn btn-line" href="/me/likes">
               喜愛清單
-            </Link>
-            <Link className="btn btn-line" href="/settings">
-              設定
             </Link>
             <GuideButton />
           </div>

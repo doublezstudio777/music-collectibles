@@ -1615,3 +1615,65 @@ p.fill-row { display: flex; }
   .logo-mark { height: 26px; width: 26px; }
   .nav-right .btn-p { padding-left: 10px; padding-right: 10px; }
 }
+
+/* ---------- 我的頁面（2026-09-30）：自我介紹、社群連結、最喜歡的藝人、大頭貼裁切 ---------- */
+/* 個人頁：自介、藝人、連結加上去之後文字欄變高，頭像改貼頂（原本桌機貼底、手機置中，會懸在半空），桌機按鈕仍貼底 */
+.profile { align-items: flex-start; }
+.profile > .head-actions { align-self: flex-end; }
+.profile-bio { color: var(--text); font-size: var(--text-base); margin-top: 10px; max-width: 40em; overflow-wrap: anywhere; white-space: pre-line; }
+.fav-tags { align-items: center; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.fav-tags-label { color: var(--muted); font-size: var(--text-xs); margin-right: 4px; }
+.fav-tag {
+  border: 1px solid var(--text); color: var(--text); font-size: var(--text-xs); font-weight: 600; line-height: 1.4; padding: 3px 8px;
+  transition: background var(--duration) var(--ease-out);
+}
+.fav-tag:hover { background: var(--surface); }
+.social-links { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 12px 0 0; padding: 0; }
+.social-link {
+  align-items: center; border: 1px solid var(--line); color: var(--text); display: inline-flex; height: 40px; justify-content: center; width: 40px;
+  transition: border-color var(--duration) var(--ease-out);
+}
+.social-link:hover { border-color: var(--text); }
+.social-link:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+
+/* 設定頁 */
+.bio-input { min-height: 112px; }
+.settings-row-between { justify-content: space-between; }
+.field-count { color: var(--muted); font-size: var(--text-xs); }
+.field-count.is-over { color: var(--orange-text); font-weight: 600; }
+.link-field .field-label { margin: 4px 0 6px; }
+.fav-rows { list-style: none; margin: 0; padding: 0; }
+.fav-row { align-items: center; border-top: 1px solid var(--line); display: flex; gap: 12px; min-height: 48px; }
+.fav-row:last-child { border-bottom: 1px solid var(--line); }
+.fav-no { color: var(--muted); font-family: var(--font-mono); font-size: var(--text-xs); width: 1.2em; }
+.fav-name { flex: 1; font-weight: 600; min-width: 0; overflow-wrap: anywhere; }
+.fav-acts { display: flex; flex: none; gap: 4px; }
+.fav-btn {
+  align-items: center; border: 1px solid var(--line); display: inline-flex; font-size: var(--text-sm); font-weight: 600;
+  height: 40px; justify-content: center; min-width: 40px; padding: 0 10px;
+}
+.fav-btn:hover:not(:disabled) { border-color: var(--text); }
+.fav-btn:disabled { color: var(--line); cursor: default; }
+.fav-found { display: flex; flex-wrap: wrap; gap: 8px; }
+.settings-wait { min-height: 120px; }
+
+/* 大頭貼裁切視窗：正方形取景、圓形遮罩（框外壓暗），輸出仍是正方形 */
+.crop-box { max-width: 400px; }
+.crop-view {
+  aspect-ratio: 1; background: var(--surface); cursor: grab; overflow: hidden; position: relative;
+  touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; width: 100%;
+}
+.crop-view:active { cursor: grabbing; }
+.crop-view:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+.crop-canvas { display: block; height: 100%; width: 100%; }
+.crop-mask { height: 100%; inset: 0; pointer-events: none; position: absolute; width: 100%; }
+.crop-mask path { fill: rgb(17 17 17 / .6); }
+.crop-mask circle { fill: none; stroke: #fff; stroke-width: 1; }
+.crop-wait { color: var(--muted); font-size: var(--text-sm); inset: 0; margin: 0; place-content: center; position: absolute; display: grid; text-align: center; }
+.crop-zoom { align-items: center; display: flex; gap: 10px; margin-top: 16px; }
+.crop-zoom input { accent-color: var(--text); flex: 1; height: 44px; min-width: 0; }
+.crop-zoom-mark { color: var(--muted); font-weight: 600; width: 1em; text-align: center; }
+.crop-acts { display: grid; gap: 8px; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); margin-top: 12px; }
+@media (max-width: 700px) {
+  .crop-modal { align-items: center; }
+}

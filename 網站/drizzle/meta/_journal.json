@@ -169,6 +169,13 @@
       "when": 1790775506381,
       "tag": "0023_spotify_albums",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "6",
+      "when": 1790781126114,
+      "tag": "0024_profile_links_fav_artists",
+      "breakpoints": true
     }
   ]
 }

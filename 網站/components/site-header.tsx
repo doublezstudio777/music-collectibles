@@ -77,7 +77,7 @@ export function SiteHeader() {
                 <div className="menu-panel">
                   <p className="menu-now">{acc.me.name}</p>
                   <Link href={userHref(acc.me.handle)} onClick={close}>
-                    我的頁
+                    我的頁面
                   </Link>
                   <Link href="/me/likes" onClick={close}>
                     喜愛清單
