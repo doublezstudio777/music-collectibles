@@ -1,0 +1,40 @@
+{
+  "目標": "remote",
+  "dry_run": false,
+  "照片": [
+    {
+      "id": "LOte2S2y5LlbqJz2",
+      "帳號": "del-xihn4msti0",
+      "查證碼": "S6RZT",
+      "新發查證碼": false,
+      "浮水印": {
+        "corner": "© @del-xihn4msti0 · 樂迷藏 #S6RZT",
+        "center": "樂迷藏 #S6RZT"
+      },
+      "補燒舊照片": false,
+      "尺寸": "1200x900",
+      "舊": [
+        "p/LOte2S2y5LlbqJz2.webp",
+        "p/LOte2S2y5LlbqJz2_t.webp",
+        "p/LOte2S2y5LlbqJz2_og.jpg"
+      ],
+      "新": [
+        "p/LOte2S2y5LlbqJz2_4q2PSdjp.webp",
+        "p/LOte2S2y5LlbqJz2_4q2PSdjp_t.webp",
+        "p/LOte2S2y5LlbqJz2_4q2PSdjp_og.jpg"
+      ],
+      "原圖": "o/LOte2S2y5LlbqJz2.webp",
+      "bytes": {
+        "舊": 100109,
+        "新": 101706,
+        "差": 1597
+      }
+    }
+  ],
+  "失敗": [],
+  "R2計數": {
+    "前": 20641426,
+    "後": 20643023,
+    "上限": 8589934592
+  }
+}

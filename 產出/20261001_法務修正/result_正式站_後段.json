@@ -1,0 +1,50 @@
+{
+  "stamp": "10010120",
+  "results": [
+    {
+      "name": "E1 正式站權利侵害通知送出，對到收藏與會員",
+      "ok": true,
+      "detail": "{'status': 'pending', 'member_id': 'lt486460dbec8f', 'shares': '[11]'}"
+    },
+    {
+      "name": "E2 移除：收藏 404、會員收到通知信（附回復通知網址、沒有通知人 Email）",
+      "ok": true,
+      "detail": "(200, 404, '樂迷藏：你的內容因權利侵害通知已先移除（通知 #1）')"
+    },
+    {
+      "name": "E3 會員送回復通知",
+      "ok": true,
+      "detail": "{\"ok\":true}"
+    },
+    {
+      "name": "E4 轉送：通知人收到回復通知信（10 個工作日）",
+      "ok": true,
+      "detail": "(200, '樂迷藏：權利侵害通知 #1 的回復通知')"
+    },
+    {
+      "name": "E5 回復：收藏 200、處理紀錄 6 步",
+      "ok": true,
+      "detail": "(200, ['送出通知', '移除內容（隱藏收藏 #11）', '已寄信通知 @lmblg10010120', '會員送出回復通知', '轉送回復通知給通知人（已寄信），期限 2026-10-15', '回復內容（收藏 #11 取消隱藏）'])"
+    },
+    {
+      "name": "F1 管理員執行刪帳：帳號名換代號、reburnPending=1、reburned_at 空",
+      "ok": true,
+      "detail": "(200, 'del-xihn4msti0', {'sessions': 2, 'emailCodes': 0, 'userGeo': 0, 'userActivity': 1, 'rateLimits': 3, 'counters': 0, 'nameChanges': 0, 'blocks': 0, 'photos': 0, 'avatars': 0, 'adminLogRetargeted': 0, 'artistPhotos': 0, 'reburnPending': 1})"
+    },
+    {
+      "name": "F2 正式站重燒：只這 1 張、浮水印 @del-代號、沒有原帳號名",
+      "ok": true,
+      "detail": "(0, '© @del-xihn4msti0 · 樂迷藏 #S6RZT', '改成 @del-xihn4msti0\\n要處理 1 張；R2 計數目前 20,641,426 bytes\\nLOte2S2y5LlbqJz2 © @del-xihn4msti0 · 樂迷藏 #S6RZT → p/LOte2S2y5LlbqJz2_4q2PSdjp.webp（+1,597 bytes）\\n完成 1 張，失敗 0 張；R2 計數 20,641,426 → 20,643,023（上限 8,589,934,592）\\n報告：/home/dz/AboutAI/專案/music-collectibles/網站/.wrangler/reburn/report.json\\n刪帳申請 1 已記下重燒完成\\n', '')"
+    },
+    {
+      "name": "F3 舊縮圖網址 404、新縮圖 200、reburned_at 寫入",
+      "ok": true,
+      "detail": "(404, 200)"
+    },
+    {
+      "name": "Z console error 0（排除 Spotify、Sentry、Turnstile）",
+      "ok": true,
+      "detail": "[]"
+    }
+  ]
+}

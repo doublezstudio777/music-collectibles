@@ -1,0 +1,70 @@
+{
+  "stamp": "10010120",
+  "note": "第一輪跑到權利侵害通知表單時 Turnstile 60 秒沒給 token 中斷（腳本例外，沒寫檔），這 16 項照終端輸出記錄；E、F 段見 result_正式站_後段.json",
+  "results": [
+    {
+      "name": "A1 條款、隱私權沒有「草稿」，版本 1.0、生效日 2026-10-01",
+      "ok": true
+    },
+    {
+      "name": "A2 經營者與 service@lemibox.com 寫在條款與隱私權",
+      "ok": true
+    },
+    {
+      "name": "A3 首頁沒有達帛利字樣、頁尾 © 2026 樂迷藏＋D4＋權利侵害通知連結",
+      "ok": true
+    },
+    {
+      "name": "A4 M7 禁售品（票券加價／票根另寫／盜錄／私製／仿冒商標）",
+      "ok": true
+    },
+    {
+      "name": "A5 M3 瀏覽次數 90 天、利用地區、不提供的影響、私訊檢舉與封鎖",
+      "ok": true
+    },
+    {
+      "name": "A6 /takedown 200、公告窗口",
+      "ok": true
+    },
+    {
+      "name": "A7 /terms/history 200",
+      "ok": true
+    },
+    {
+      "name": "B1 沒同意的舊會員寫留言 → 403 TERMS_REQUIRED",
+      "ok": true
+    },
+    {
+      "name": "B2 正式站：舊會員登入後跳補同意視窗",
+      "ok": true
+    },
+    {
+      "name": "B3 按同意 → D1 users 1.0、terms_consents via=update",
+      "ok": true
+    },
+    {
+      "name": "C1 發布鈕旁有授權提示",
+      "ok": true
+    },
+    {
+      "name": "C2 同意後可以發布",
+      "ok": true
+    },
+    {
+      "name": "C3 GPS 實測（正式站 R2）：原檔有 GPS，主圖、縮圖、原圖都沒有 EXIF／GPS",
+      "ok": true
+    },
+    {
+      "name": "D1 正式站註冊畫面：同意框在、沒勾送出鈕反灰",
+      "ok": true
+    },
+    {
+      "name": "D2 正式站勾選註冊 → users 1.0、terms_consents via=register",
+      "ok": true
+    },
+    {
+      "name": "D3 註冊驗證信有寄出",
+      "ok": true
+    }
+  ]
+}

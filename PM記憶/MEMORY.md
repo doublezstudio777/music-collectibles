@@ -76,3 +76,6 @@
 - 平行 worktree 開本機伺服器前先 `ss -ltnp | grep :87` 看 port 被誰佔、`readlink /proc/PID/cwd` 看是哪個 worktree，別殺別人的；10/01 dm 那邊佔 8795，SEO 這邊改 8797，停伺服器的腳本只殺 cwd 是自己 worktree 的程序（2026-10-01）
 - vinext 預設把 metadata（title、canonical、robots、og）串流到 `<body>`，只有「只讀 HTML 的爬蟲」UA 拿 head 版，整頁快取又不分 UA；已設 `next.config.ts` 的 `htmlLimitedBots: /.*/`＋worker.ts 補空 UA。驗 SEO 標籤要量「在不在 `</head>` 之前」，不要只 grep 有沒有（2026-10-01）
 - 腳本打本機或正式站的 POST API 要帶 `Origin` 表頭，不然 403 BAD_ORIGIN；本機要測後台，D1 直接建 `admin@demo.yinzang.test`（本機 ADMIN_EMAILS 預設值）＋sessions 列。站外備份的 R2-remote 沒有藝人照片 r/ 與分享預覽圖 _og.jpg，本機驗收缺圖的 404 要先分辨是不是缺檔（2026-10-01）
+- 2026-10-01 起寫入 API 要「已同意現行條款」：驗收腳本用 SQL 建測試會員要帶 `terms_version='1.0'`（`lib/legal.ts` 的 TERMS_VERSION），不然發布、出價、留言全回 403 TERMS_REQUIRED；管理員帳號沒同意會被補同意視窗蓋住畫面（後台 API 不擋）。驗收從 server log 抓信要用 bytes 切位置再 decode，用 `os.path.getsize` 當字元位置會切錯（2026-10-01）
+- CDP 轉接 ps1 只能寫 ASCII：PowerShell 5 讀無 BOM 的 UTF-8，中文註解會吃掉下一行；Chrome 用 `powershell Start-Process` 開（`cmd.exe /c start` 沒起來），轉接每次連線前重起。同一個 CDP context 在註冊頁拿過 Turnstile token 後，下一頁可能 60 秒都等不到，換新 context 就好（2026-10-01）
+- `deploy.sh` 第 5 步若 wrangler 報 `/zones/…/workers/routes` No access：程式其實已上線，先 curl 看 `x-yz-build` 是新版，再手動 `node scripts/keep-assets.mjs save`＋`scripts/deploy.sh --smoke-only`；Custom Domain 綁定用 `accounts/{id}/workers/domains` API 確認還在（2026-10-01）
