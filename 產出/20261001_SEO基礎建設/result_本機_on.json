@@ -1,0 +1,718 @@
+{
+  "phase": "on",
+  "counts": {
+    "series_total": 679,
+    "shares_total": 6,
+    "artists_total_approved": 234,
+    "artists_directory_visible": 136,
+    "sitemap": {
+      "/sitemaps/pages.xml": 6,
+      "/sitemaps/artists-1.xml": 133,
+      "/sitemaps/series-1.xml": 678,
+      "/sitemaps/shares-1.xml": 6
+    }
+  },
+  "results": [
+    {
+      "id": "meta/",
+      "name": "/ 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"樂迷藏｜樂迷的收藏分享\", \"description\": \"看樂迷收了什麼、炫自己的收藏，沿著藝人、系列、版本與標籤找下去。\", \"canonical\": \"https://lemibox.com/\", \"og:image\": \"https://lemibox.com/og-default.png\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/about",
+      "name": "/about 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"關於樂迷藏｜樂迷藏\", \"description\": \"大家開始用串流聽歌之後，會去買實體專輯的人越來越少。唱片公司壓的量跟著變少，有一段時間發行的專輯，到了現在幾乎已經找不到了。\", \"canonical\": \"https://lemibox.com/about\", \"og:image\": \"https://lemibox.com/og-default.png\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/guide",
+      "name": "/guide 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"新手指南｜樂迷藏\", \"description\": \"第一次來樂迷藏：怎麼炫收藏、補專輯與版本資料、開價出售、回報疑似盜版，還有等級與稱號怎麼算。\", \"canonical\": \"https://lemibox.com/guide\", \"og:image\": \"https://lemibox.com/og-default.png\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/?page=2",
+      "name": "/?page=2 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"樂迷藏｜樂迷的收藏分享\", \"description\": \"看樂迷收了什麼、炫自己的收藏，沿著藝人、系列、版本與標籤找下去。\", \"canonical\": \"https://lemibox.com/?page=2\", \"og:image\": \"https://lemibox.com/og-default.png\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/artist/hyukoh",
+      "name": "/artist/hyukoh 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"Hyukoh｜專輯、版本與收藏｜樂迷藏\", \"description\": \"Hyukoh。樂迷藏收錄1個系列、1則樂迷收藏。\", \"canonical\": \"https://lemibox.com/artist/hyukoh\", \"og:image\": \"https://lemibox.com/img/p/6L-Rdu4orshJq-FD_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/artist/sunset-rollercoaster",
+      "name": "/artist/sunset-rollercoaster 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"落日飛車｜專輯、版本與收藏｜樂迷藏\", \"description\": \"落日飛車，第37屆金曲獎 最佳樂團獎得主。樂迷藏收錄8個系列、1則樂迷收藏。落日飛車 是於2009年成立的台灣樂團，由主唱兼吉他手國國、貝斯手弘禮、鍵盤手小干、薩克斯手…\", \"canonical\": \"https://lemibox.com/artist/sunset-rollercoaster\", \"og:image\": \"https://lemibox.com/img/p/efHF1UgtvxgnCtLD_Cpx9jvHF_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/artist/a-tt4v",
+      "name": "/artist/a-tt4v 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"理想混蛋｜專輯、版本與收藏｜樂迷藏\", \"description\": \"理想混蛋。樂迷藏收錄1個系列、1則樂迷收藏。\", \"canonical\": \"https://lemibox.com/artist/a-tt4v\", \"og:image\": \"https://lemibox.com/img/p/XHkax5np8xFn-pAR_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/artist/lu1",
+      "name": "/artist/lu1 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"路壹 Lu1｜專輯、版本與收藏｜樂迷藏\", \"description\": \"路壹 Lu1。樂迷藏收錄1個系列、1則樂迷收藏。\", \"canonical\": \"https://lemibox.com/artist/lu1\", \"og:image\": \"https://lemibox.com/img/p/jurbzq3Rk5GSb3qi_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/artist/gordon",
+      "name": "/artist/gordon 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"國蛋｜專輯、版本與收藏｜樂迷藏\", \"description\": \"國蛋，顏社旗下藝人。樂迷藏收錄12個系列、1則樂迷收藏。楊國雋（1986年8月19日—），藝名國蛋（GorDoN），臺灣饒舌歌手，臺南出身。高中畢業於台南一中，為饒舌歌手蛋堡…\", \"canonical\": \"https://lemibox.com/artist/gordon\", \"og:image\": \"https://lemibox.com/img/p/h7Di5Oc4kIYrWoar_u2pDl8gr_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/artist/a-tt4v/1",
+      "name": "/artist/a-tt4v/1 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"理想混蛋《關掉／打開》2022 台灣首版 CD｜曲目、版本與收藏｜樂迷藏\", \"description\": \"理想混蛋《關掉／打開》，2022年發行的專輯。收錄1個版本（CD）、10首曲目、1則樂迷收藏。\", \"canonical\": \"https://lemibox.com/artist/a-tt4v/1\", \"og:image\": \"https://lemibox.com/img/p/XHkax5np8xFn-pAR_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/artist/hyukoh/1",
+      "name": "/artist/hyukoh/1 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"Hyukoh《23》2017 專輯｜曲目、版本與收藏｜樂迷藏\", \"description\": \"Hyukoh《23》，2017年發行的專輯。收錄4個版本（CD、黑膠）、12首曲目、1則樂迷收藏。\", \"canonical\": \"https://lemibox.com/artist/hyukoh/1\", \"og:image\": \"https://lemibox.com/img/p/6L-Rdu4orshJq-FD_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/artist/lu1/1",
+      "name": "/artist/lu1/1 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"路壹 Lu1《男孩》2015 台灣首版 CD｜曲目、版本與收藏｜樂迷藏\", \"description\": \"路壹 Lu1《男孩》，2015年發行的專輯。收錄1個版本（CD）、16首曲目、1則樂迷收藏。\", \"canonical\": \"https://lemibox.com/artist/lu1/1\", \"og:image\": \"https://lemibox.com/img/p/jurbzq3Rk5GSb3qi_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/artist/sunset-rollercoaster/2",
+      "name": "/artist/sunset-rollercoaster/2 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"落日飛車《My jinji》日版 CD｜曲目、版本與收藏｜樂迷藏\", \"description\": \"落日飛車《My jinji》，2016年發行的專輯。收錄1個版本（CD）、1則樂迷收藏。\", \"canonical\": \"https://lemibox.com/artist/sunset-rollercoaster/2\", \"og:image\": \"https://lemibox.com/img/p/efHF1UgtvxgnCtLD_Cpx9jvHF_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/artist/gordon/5",
+      "name": "/artist/gordon/5 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"國蛋《Dr. Paper Vol.3 Sunday Night Slow Jams》2016 CD｜曲目、版本與收藏｜樂迷藏\", \"description\": \"國蛋《Dr. Paper Vol.3 Sunday Night Slow Jams》，2016年發行的專輯。收錄1個版本（CD）、8首曲目、1則樂迷收藏。CD・2016・顏社企業有限公司：Mixtape\", \"canonical\": \"https://lemibox.com/artist/gordon/5\", \"og:image\": \"https://lemibox.com/img/p/h7Di5Oc4kIYrWoar_u2pDl8gr_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/share/10",
+      "name": "/share/10 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"Hyukoh《23》2020 韓國再版 CD｜民生鄰居的收藏｜樂迷藏\", \"description\": \"Hyukoh《23》2020 韓國再版 CD。全新未拆 韓版專輯\", \"canonical\": \"https://lemibox.com/share/10\", \"og:image\": \"https://lemibox.com/img/p/6L-Rdu4orshJq-FD_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/share/8",
+      "name": "/share/8 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"理想混蛋《關掉／打開》2022 台灣首版 CD｜民生鄰居的收藏｜樂迷藏\", \"description\": \"理想混蛋《關掉／打開》2022 台灣首版 CD。Zepp演唱會親簽的\", \"canonical\": \"https://lemibox.com/share/8\", \"og:image\": \"https://lemibox.com/img/p/XHkax5np8xFn-pAR_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/share/9",
+      "name": "/share/9 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"路壹 Lu1《男孩》2015 台灣首版 CD｜民生鄰居的收藏｜樂迷藏\", \"description\": \"路壹 Lu1《男孩》2015 台灣首版 CD。全新 Lu1 路壹 男孩專輯\", \"canonical\": \"https://lemibox.com/share/9\", \"og:image\": \"https://lemibox.com/img/p/jurbzq3Rk5GSb3qi_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/share/3",
+      "name": "/share/3 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"國蛋《Dr. Paper Vol.3 Sunday Night Slow Jams》2016 CD｜民生鄰居的收藏｜樂迷藏\", \"description\": \"國蛋《Dr. Paper Vol.3 Sunday Night Slow Jams》2016 CD。運氣很好找到國蛋本人簽名✍️\", \"canonical\": \"https://lemibox.com/share/3\", \"og:image\": \"https://lemibox.com/img/p/h7Di5Oc4kIYrWoar_u2pDl8gr_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/share/4",
+      "name": "/share/4 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"落日飛車《My jinji》日版 CD｜民生鄰居的收藏｜樂迷藏\", \"description\": \"落日飛車《My jinji》日版 CD，2016年發行。日版的My jinji 很酷裡面除了有日文的側標，還有一張日文翻譯的歌單 運氣很好是2026…\", \"canonical\": \"https://lemibox.com/share/4\", \"og:image\": \"https://lemibox.com/img/p/efHF1UgtvxgnCtLD_Cpx9jvHF_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "meta/share/5",
+      "name": "/share/5 200、title／description／canonical／og 都有且在 <head>",
+      "ok": true,
+      "detail": "{\"title\": \"MC HotDog 帽子｜民生鄰居的收藏｜樂迷藏\", \"description\": \"MC HotDog 帽子。2006年推出的限量 Newera聯名帽 只有288頂\", \"canonical\": \"https://lemibox.com/share/5\", \"og:image\": \"https://lemibox.com/img/p/7HG2RfH95es9LRSA_zM6HyA0Y_og.jpg\"} head=['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport']"
+    },
+    {
+      "id": "fmt-1",
+      "name": "系列頁標題＝「理想混蛋《關掉／打開》2022 台灣首版 CD｜曲目、版本與收藏｜樂迷藏」",
+      "ok": true,
+      "detail": "理想混蛋《關掉／打開》2022 台灣首版 CD｜曲目、版本與收藏｜樂迷藏"
+    },
+    {
+      "id": "fmt-2",
+      "name": "收藏頁標題＝「Hyukoh《23》2020 韓國再版 CD｜民生鄰居的收藏｜樂迷藏」",
+      "ok": true,
+      "detail": "Hyukoh《23》2020 韓國再版 CD｜民生鄰居的收藏｜樂迷藏"
+    },
+    {
+      "id": "fmt-3",
+      "name": "收藏頁描述含藝人、專輯、版本、發行年與內文開頭",
+      "ok": true,
+      "detail": "Hyukoh《23》2020 韓國再版 CD。全新未拆 韓版專輯"
+    },
+    {
+      "id": "fmt-4",
+      "name": "首頁補上 og 標籤（og-default.png）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "fmt-6",
+      "name": "沒連系列的收藏標題用發文者的類型細項（MC HotDog 帽子）",
+      "ok": true,
+      "detail": "MC HotDog 帽子｜民生鄰居的收藏｜樂迷藏"
+    },
+    {
+      "id": "fmt-5",
+      "name": "首頁分頁 ?page=2 canonical 指自己",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "alt-1",
+      "name": "收藏照片 alt 自動產生（藝人《系列》版本＋誰的收藏照片）",
+      "ok": true,
+      "detail": [
+        "Hyukoh《23》2020 韓國再版 CD，民生鄰居的收藏照片",
+        "Hyukoh《23》2020 韓國再版 CD，民生鄰居的收藏照片",
+        ""
+      ]
+    },
+    {
+      "id": "alt-2",
+      "name": "藝人頁收藏卡片 alt 也是自動組的（首頁收藏牆是前端渲染，瀏覽器截圖另驗）",
+      "ok": true,
+      "detail": [
+        "Hyukoh《23》2020 韓國再版 CD，民生鄰居的收藏照片"
+      ]
+    },
+    {
+      "id": "alt-3",
+      "name": "沒連系列的收藏 alt 照原字（MC HotDog 帽子）",
+      "ok": true,
+      "detail": [
+        "MC HotDog 帽子，民生鄰居的收藏照片",
+        "MC HotDog 帽子，民生鄰居的收藏照片"
+      ]
+    },
+    {
+      "id": "ld/",
+      "name": "/ 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/about",
+      "name": "/about 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/guide",
+      "name": "/guide 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/artist/hyukoh",
+      "name": "/artist/hyukoh 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/artist/sunset-rollercoaster",
+      "name": "/artist/sunset-rollercoaster 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/artist/a-tt4v",
+      "name": "/artist/a-tt4v 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/artist/lu1",
+      "name": "/artist/lu1 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/artist/gordon",
+      "name": "/artist/gordon 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/artist/a-tt4v/1",
+      "name": "/artist/a-tt4v/1 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/artist/hyukoh/1",
+      "name": "/artist/hyukoh/1 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/artist/lu1/1",
+      "name": "/artist/lu1/1 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/artist/sunset-rollercoaster/2",
+      "name": "/artist/sunset-rollercoaster/2 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/artist/gordon/5",
+      "name": "/artist/gordon/5 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/share/10",
+      "name": "/share/10 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/share/8",
+      "name": "/share/8 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/share/9",
+      "name": "/share/9 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/share/3",
+      "name": "/share/3 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/share/4",
+      "name": "/share/4 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld/share/5",
+      "name": "/share/5 結構化資料通過 schema.org 詞彙檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "ld-album",
+      "name": "系列頁 MusicAlbum（Hyukoh《23》）有曲目、4 個 MusicRelease 版本",
+      "ok": true,
+      "detail": "[{\"@type\": \"MusicRelease\", \"@id\": \"https://lemibox.com/artist/hyukoh/1#cd-v1\", \"url\": \"https://lemibox.com/artist/hyukoh/1#cd-v1\", \"name\": \"23 2017 韓國首版 CD\", \"musicReleaseFormat\": \"https://schema.org/CDFormat\", \"releaseOf\": {\"@id\": \"https://lemibox.com/artist/hyukoh/1#album\"}, \"datePublished\": \"2017-04-24\", \"recordLabel\": {\"@type\": \"Organization\", \"name\": \"HIGHGRND、두루두루 Artist Management Company\"}"
+    },
+    {
+      "id": "ld-release-fmt",
+      "name": "版本格式對到 CDFormat／VinylFormat",
+      "ok": true,
+      "detail": [
+        "https://schema.org/CDFormat",
+        "https://schema.org/CDFormat",
+        "https://schema.org/CDFormat",
+        "https://schema.org/VinylFormat"
+      ]
+    },
+    {
+      "id": "ld-release-no-catalog",
+      "name": "結構化資料不含目錄號、條碼（登入限定的辨識細節）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "ld-artist",
+      "name": "藝人頁有 MusicGroup／Person",
+      "ok": true,
+      "detail": [
+        "MusicGroup",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "id": "ld-bc",
+      "name": "收藏頁麵包屑 首頁 › 藝人 › Hyukoh › 23 › 這則",
+      "ok": true,
+      "detail": [
+        "首頁",
+        "藝人",
+        "Hyukoh",
+        "23",
+        "Hyukoh《23》2020 韓國再版 CD"
+      ]
+    },
+    {
+      "id": "ld-no-offer",
+      "name": "沒有加 Product／Offer（只提方案）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "ni-thin",
+      "name": "內容太空的系列 noindex；補 30 字以上介紹自動恢復收錄",
+      "ok": true,
+      "detail": "200 noindex → 200 收錄 → 200 noindex"
+    },
+    {
+      "id": "ni-lock",
+      "name": "檢舉達門檻、交易暫停的收藏 noindex；解除後恢復",
+      "ok": true,
+      "detail": "200 收錄 → 200 noindex → 200 收錄"
+    },
+    {
+      "id": "ni-del",
+      "name": "已刪除的收藏回 404（不收錄、不在 sitemap）",
+      "ok": true,
+      "detail": "200 收錄 → 404 noindex → 200 收錄"
+    },
+    {
+      "id": "ni-pend-artist",
+      "name": "待確認的藝人 noindex；確認後恢復",
+      "ok": true,
+      "detail": "200 收錄 → 200 noindex → 200 收錄"
+    },
+    {
+      "id": "ni-pend-series",
+      "name": "待確認的系列 noindex；確認後恢復",
+      "ok": true,
+      "detail": "200 收錄 → 200 noindex → 200 收錄"
+    },
+    {
+      "id": "ni-pend-version",
+      "name": "待確認的版本不列進 MusicRelease（4→3）",
+      "ok": true,
+      "detail": 3
+    },
+    {
+      "id": "ni-status-pending",
+      "name": "審核中（status=pending）的系列 404",
+      "ok": true,
+      "detail": 404
+    },
+    {
+      "id": "ni-priv/settings",
+      "name": "/settings 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/messages",
+      "name": "/messages 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/search?q=落日",
+      "name": "/search?q=落日 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/me",
+      "name": "/me 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/me/likes",
+      "name": "/me/likes 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/login",
+      "name": "/login 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/admin",
+      "name": "/admin 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/u/dz4277",
+      "name": "/u/dz4277 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/tag/test",
+      "name": "/tag/test 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/ranking",
+      "name": "/ranking 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/feedback",
+      "name": "/feedback 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/verify",
+      "name": "/verify 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/share/new",
+      "name": "/share/new 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/share/10/edit",
+      "name": "/share/10/edit 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/artist/hyukoh/history",
+      "name": "/artist/hyukoh/history 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/artist/hyukoh/1/history",
+      "name": "/artist/hyukoh/1/history 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "ni-priv/artist/hyukoh?edit=1",
+      "name": "/artist/hyukoh?edit=1 帶 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "200 noindex"
+    },
+    {
+      "id": "idx/",
+      "name": "/ 沒有 X-Robots-Tag（可收錄）",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "id": "idx/artists",
+      "name": "/artists 沒有 X-Robots-Tag（可收錄）",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "id": "idx/artist/hyukoh",
+      "name": "/artist/hyukoh 沒有 X-Robots-Tag（可收錄）",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "id": "idx/artist/hyukoh/1",
+      "name": "/artist/hyukoh/1 沒有 X-Robots-Tag（可收錄）",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "id": "idx/share/10",
+      "name": "/share/10 沒有 X-Robots-Tag（可收錄）",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "id": "idx/about",
+      "name": "/about 沒有 X-Robots-Tag（可收錄）",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "id": "idx/guide",
+      "name": "/guide 沒有 X-Robots-Tag（可收錄）",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "id": "sm-robots",
+      "name": "ALLOW_INDEXING=1：robots.txt 附 Sitemap",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "sm-1",
+      "name": "sitemap.xml 是索引，分檔 pages／artists／series／shares",
+      "ok": true,
+      "detail": [
+        "/sitemaps/pages.xml",
+        "/sitemaps/artists-1.xml",
+        "/sitemaps/series-1.xml",
+        "/sitemaps/shares-1.xml"
+      ]
+    },
+    {
+      "id": "sm-2",
+      "name": "sitemap 沒有私人頁、沒有 noindex 對象（內容太空的系列）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "sm-3",
+      "name": "sitemap 裡 823 個網址逐一打開：全部 200 且可收錄",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "sm-4",
+      "name": "內容改變後 sitemap 自動更新（太空系列補介紹後出現）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "adm-1",
+      "name": "後台讀得到藝人的自動標題、描述、收錄判斷",
+      "ok": true,
+      "detail": "{\"target\": \"artist:hyukoh\", \"override\": {}, \"site\": {\"suffix\": \"樂迷藏\", \"description\": \"看樂迷收了什麼、炫自己的收藏，沿著藝人、系列、版本與標籤找下去。\"}, \"label\": \"Hyukoh\", \"path\": \"/artist/hyukoh\", \"absolute\": false, \"auto\": {\"title\": \"Hyukoh｜專輯、版本與收藏\", \"description\": \"Hyukoh。樂迷藏收錄1個系列、1則樂迷收藏。\", \"og\": \"/img/p/6L-Rdu4orshJq-FD_og."
+    },
+    {
+      "id": "adm-2",
+      "name": "沒登入打後台 API 被擋",
+      "ok": true,
+      "detail": 401
+    },
+    {
+      "id": "adm-3",
+      "name": "自訂標題、描述生效（接後綴）",
+      "ok": true,
+      "detail": "Hyukoh 赫俄克｜韓國樂團專輯與版本｜樂迷藏"
+    },
+    {
+      "id": "adm-4",
+      "name": "上傳 og 圖（1200×630）後 og:image 換成 /img/g/…，圖片 200",
+      "ok": true,
+      "detail": "201 {'key': 'g/kuk6oAuYxLfCVMYn.jpg', 'url': '/img/g/kuk6oAuYxLfCVMYn.jpg'} https://lemibox.com/img/g/kuk6oAuYxLfCVMYn.jpg 200"
+    },
+    {
+      "id": "adm-5",
+      "name": "尺寸不對的 og 圖被拒",
+      "ok": true,
+      "detail": "400 {'error': {'code': 'BAD_SIZE', 'message': 'og 圖要是 1200×630'}}"
+    },
+    {
+      "id": "adm-6",
+      "name": "不收錄開關：藝人頁 noindex、sitemap 拿掉",
+      "ok": true,
+      "detail": "noindex"
+    },
+    {
+      "id": "adm-7",
+      "name": "欄位清空＝回到自動標題",
+      "ok": true,
+      "detail": "Hyukoh｜專輯、版本與收藏｜樂迷藏"
+    },
+    {
+      "id": "adm-8",
+      "name": "關掉開關、清掉 og 圖後恢復自動（收錄、og 回藝人照片或收藏照片）",
+      "ok": true,
+      "detail": "https://lemibox.com/img/p/6L-Rdu4orshJq-FD_og.jpg"
+    },
+    {
+      "id": "adm-9",
+      "name": "settings 沒留下 seo:artist:hyukoh（全部清空就刪列）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "adm-10",
+      "name": "全站標題後綴、預設描述生效",
+      "ok": true,
+      "detail": "理想混蛋《關掉／打開》2022 台灣首版 CD｜曲目、版本與收藏｜樂迷藏 Lemibox / 全站預設描述測試"
+    },
+    {
+      "id": "adm-11",
+      "name": "全站設定清空回預設",
+      "ok": true,
+      "detail": "理想混蛋《關掉／打開》2022 台灣首版 CD｜曲目、版本與收藏｜樂迷藏"
+    },
+    {
+      "id": "adm-form-series:a-tt4v/1",
+      "name": "後台讀得到 series:a-tt4v/1 的自動值",
+      "ok": true,
+      "detail": "{\"title\": \"理想混蛋《關掉／打開》2022 台灣首版 CD｜曲目、版本與收藏\", \"description\": \"理想混蛋《關掉／打開》，2022年發行的專輯。收錄1個版本（CD）、10首曲目、1則樂迷收藏。\", \"og\": \"/img/p/XHkax5np8xFn-pAR_og.jpg\"}"
+    },
+    {
+      "id": "adm-form-page:home",
+      "name": "後台讀得到 page:home 的自動值",
+      "ok": true,
+      "detail": "{\"title\": \"樂迷藏｜樂迷的收藏分享\", \"description\": \"看樂迷收了什麼、炫自己的收藏，沿著藝人、系列、版本與標籤找下去。\", \"og\": \"/og-default.png\"}"
+    },
+    {
+      "id": "adm-form-page:about",
+      "name": "後台讀得到 page:about 的自動值",
+      "ok": true,
+      "detail": "{\"title\": \"關於樂迷藏\", \"description\": \"大家開始用串流聽歌之後，會去買實體專輯的人越來越少。唱片公司壓的量跟著變少，有一段時間發行的專輯，到了現在幾乎已經找不到了。\", \"og\": \"/og-default.png\"}"
+    },
+    {
+      "id": "adm-search",
+      "name": "後台搜尋找得到藝人與系列",
+      "ok": true,
+      "detail": [
+        "artist:sunset-rollercoaster",
+        "artist:aaa-hyukoh",
+        "series:sunset-rollercoaster/1",
+        "series:sunset-rollercoaster/2",
+        "series:sunset-rollercoaster/3"
+      ]
+    },
+    {
+      "id": "adm-log",
+      "name": "後台 SEO 寫入都有操作紀錄",
+      "ok": true,
+      "detail": 21
+    },
+    {
+      "id": "adm-ui-1",
+      "name": "Google 預覽即時更新，標題超過 30 字出現提醒",
+      "ok": true,
+      "detail": "1 Hyukoh 赫俄克：韓國獨立樂團的全部專輯、每一個版本、樂迷收藏與曲目比對｜樂迷藏"
+    },
+    {
+      "id": "adm-ui-2",
+      "name": "首頁的預覽標題不接後綴",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "adm-ui-3",
+      "name": "後台 SEO 在 390px 沒有橫向溢出",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "adm-ui-4",
+      "name": "後台 SEO 頁 console error 0（本機缺的 _og.jpg 除外）",
+      "ok": true,
+      "detail": {
+        "errs": [
+          "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        ],
+        "404": [
+          "http://127.0.0.1:8797/img/p/6L-Rdu4orshJq-FD_og.jpg"
+        ]
+      }
+    }
+  ]
+}

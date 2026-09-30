@@ -2,8 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { artistHref, seriesHref, type Series } from "@/lib/data";
 import { latestRevisionId } from "@/lib/server/wiki";
-import { pageData, siteOrigin } from "@/lib/server/viewer";
-import { ogMeta } from "@/lib/server/og";
+import { pageData } from "@/lib/server/viewer";
+import { ARTISTS_CRUMB, HOME_CRUMB, artistCrumb, artistDescription, artistIndex, artistLd, artistTitle, breadcrumbLd, ldJson, overrideOf, overridePhoto, pick, seoContext, seoMeta } from "@/lib/server/seo";
 import { CopyLink } from "@/components/share-actions";
 import { FollowButton } from "@/components/follow-button";
 import { WikiEditor } from "@/components/wiki-editor";
@@ -18,21 +18,27 @@ import { ArtistPhotoSubmit } from "@/components/artist-photo-submit";
 
 type Props = { params: Promise<{ artist: string }>; searchParams: Promise<{ edit?: string }> };
 
+// 藝人頁 metadata（2026-10-01 SEO）：標題「某某｜專輯、版本與收藏」，描述＝定位＋系列與收藏數＋簡介開頭，
+// canonical 固定正式網域（?edit=1 也指回本頁）。後台可覆寫；內容太空、待確認、後台設定不收錄時 noindex（lib/server/seo.ts）
 export async function generateMetadata({ params }: Props) {
-  const { c } = await pageData();
+  const [{ c }, ctx] = await Promise.all([pageData(), seoContext()]);
   const a = c.visibleArtist((await params).artist);
   if (!a) return { title: "找不到藝人" };
+  const o = overrideOf(ctx, `artist:${a.slug}`);
   const related = c.sharesWithTag(a.name);
   // 藝人照片（2026-09-28）：有使用中的照片就當 og:image。這張不是會員的收藏，不燒浮水印；授權標示在頁面上
   const photo = await activeArtistPhoto(a.slug);
-  return ogMeta({
-    origin: await siteOrigin(),
+  return seoMeta({
     path: artistHref(a.slug),
-    title: a.name,
-    description: [a.tagline, related.length ? `${related.length} 則炫收藏` : ""].filter(Boolean).join("・") || `${a.name} 在${SITE_NAME}`,
-    photo: photo
-      ? { url: photo.url, ...(photo.width && photo.height ? { size: { w: photo.width, h: photo.height } } : {}), type: photo.contentType === "image/webp" ? "image/webp" : "image/jpeg" }
-      : c.ogPhotoOf(related),
+    title: pick(o.title, artistTitle(a)),
+    description: pick(o.description, artistDescription(c, a)),
+    photo:
+      overridePhoto(o) ??
+      (photo
+        ? { url: photo.url, ...(photo.width && photo.height ? { size: { w: photo.width, h: photo.height } } : {}), type: photo.contentType === "image/webp" ? "image/webp" : "image/jpeg" }
+        : c.ogPhotoOf(related)),
+    index: artistIndex(c, ctx, a).index,
+    alt: `${a.name}照片`,
   });
 }
 
@@ -58,8 +64,12 @@ export default async function ArtistPage({ params, searchParams }: Props) {
   const comps = c.compilationsOf(artist.slug).sort((x, y) => newest(x.series, y.series));
   const related = c.sharesWithTag(artist.name);
 
+  const ctx = await seoContext();
+  const ld = ldJson([artistLd(c, ctx, artist, photo?.url ?? null), breadcrumbLd([HOME_CRUMB, ARTISTS_CRUMB, artistCrumb(artist)])]);
+
   return (
     <main className="wrap page">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld }} />
       <header className={`page-head head-split${photo ? " has-photo" : ""}`}>
         {photo ? <ArtistPhotoFigure photo={photo} name={artist.name} /> : null}
         <div className="artist-head-text">

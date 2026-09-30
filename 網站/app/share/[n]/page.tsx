@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { SITE_DESC, shareDesc, shareHref } from "@/lib/data";
-import { ogMeta } from "@/lib/server/og";
-import { ogPhoto } from "@/lib/catalog";
+import { SITE_DESC, shareDesc, shareHref, type Share } from "@/lib/data";
+import { ARTISTS_CRUMB, HOME_CRUMB, artistCrumb, breadcrumbLd, ldJson, seriesCrumb, shareCrumb, shareIndex, seoMeta } from "@/lib/server/seo";
+import { releaseLine, sharePhotoAlt, shareDescription, shareTitle } from "@/lib/seo";
+import { ogPhoto, type Catalog } from "@/lib/catalog";
 import { pageData, siteOrigin } from "@/lib/server/viewer";
 import { publicOffers } from "@/lib/server/trade";
 import { ShareDetail } from "@/components/share-detail";
@@ -12,25 +13,38 @@ import { ShareQuestion } from "@/components/share-question";
 
 type Props = { params: Promise<{ n: string }> };
 
+// 收藏頁 metadata（2026-10-01 SEO）：標題「藝人《系列》版本 品項｜某某的收藏」，描述加發行年與內文前 40 字，
+// canonical 固定正式網域。被鎖定（檢舉達門檻）的照舊只給通用字與站方預設圖，並且不收錄
 export async function generateMetadata({ params }: Props) {
   const { n } = await params;
   const { c } = await pageData();
   const s = c.getShare(Number(n));
   if (!s) return { title: "找不到這則炫收藏" };
-  const origin = await siteOrigin();
   const path = shareHref(s.n);
-  // 被鎖定的：預覽只給通用字與站方預設圖，不露出原本的標題與照片
+  const decision = shareIndex(c, s);
   if (c.toShareView(s).lock) {
-    return ogMeta({ origin, path, title: "一則炫收藏", description: SITE_DESC, photo: null, type: "article" });
+    return seoMeta({ path, title: "一則炫收藏", description: SITE_DESC, photo: null, type: "article", index: false });
   }
-  return ogMeta({
-    origin,
+  const parts = c.shareParts(s);
+  const author = s.authorName ?? s.author;
+  const title = shareTitle(parts, s.what, author);
+  return seoMeta({
     path,
-    title: s.what,
-    description: shareDesc(c.shareParts(s), s.authorName ?? s.author),
+    title,
+    description: shareDescription(parts, shareYear(c, s), s.story, s.what),
     photo: ogPhoto(s),
     type: "article",
+    index: decision.index,
+    alt: sharePhotoAlt({ what: s.what, about: s.about, author: { name: author }, link: s.link }),
   });
+}
+
+/** 發行年：連到的版本（發行日期優先）→ 系列年份 */
+function shareYear(c: Catalog, s: Share) {
+  if (!s.link) return "";
+  const w = c.getSeriesByKey(s.link.series);
+  const r = s.link.item && s.link.version ? c.resolveVersionKey(`${s.link.series}#${s.link.item}-${s.link.version}`) : null;
+  return r?.version.releaseDate || r?.version.year || w?.year || "";
 }
 
 export default async function SharePage({ params }: Props) {
@@ -47,9 +61,21 @@ export default async function SharePage({ params }: Props) {
     ? null
     : { url: `${origin}${shareHref(n)}`, title: share.what, text: shareDesc(c.shareParts(share), view.author.name) };
 
+  // 麵包屑（結構化資料）：首頁 › 藝人 › 第一位有公開頁的相關藝人 › 系列 › 這則
+  const w = share.link ? c.getSeriesByKey(share.link.series) : undefined;
+  const firstArtist = c.aboutSlugs(share).map((slug) => c.visibleArtist(slug)).find(Boolean) ?? (w ? c.visibleArtist(w.artistSlug) : undefined);
+  const crumbs = [
+    HOME_CRUMB,
+    ARTISTS_CRUMB,
+    ...(firstArtist ? [artistCrumb(firstArtist)] : []),
+    ...(w ? [seriesCrumb(w)] : []),
+    shareCrumb(n, view.lock ? "一則炫收藏" : (share.link ? releaseLine(c.shareParts(share)) : "") || share.what.replace(/・/g, " ")),
+  ];
+
   // 底部只放跟同一個系列、藝人、標籤有關的，不放同一位會員的
   return (
     <main className="wrap page">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson([breadcrumbLd(crumbs)]) }} />
       <ShareDetail share={view} offers={await publicOffers(n)} shareInfo={shareInfo} />
       {/* 留言不在整頁快取裡，前端另外打 /api/comments 載入 */}
       <ShareComments share={n} />

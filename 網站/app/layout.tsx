@@ -5,14 +5,17 @@ import { SiteHeader } from "@/components/site-header";
 import { AuthPanel } from "@/components/auth-panel";
 import { sponsorUrl, turnstileSiteKey } from "@/lib/server/services";
 import { indexingAllowed } from "@/lib/server/guard";
+import { seoContext } from "@/lib/server/seo";
 import { SITE_DESC } from "@/lib/data";
 import { PHOTO_LICENSE_URL, SITE_NAME, SITE_TITLE } from "@/lib/data";
 
 // 不給搜尋引擎收錄（2026-09-26 定案，名稱定案後用 ALLOW_INDEXING=1 一次打開）
+// 標題後綴與預設描述（2026-10-01 SEO）：後台「全站 SEO 設定」可改，沒設用站名與 SITE_DESC（lib/server/seo.ts）
 export async function generateMetadata(): Promise<Metadata> {
+  const { site } = await seoContext().catch(() => ({ site: { suffix: SITE_NAME, description: SITE_DESC } }));
   return {
-    title: { default: SITE_TITLE, template: `%s｜${SITE_NAME}` },
-    description: SITE_DESC,
+    title: { default: SITE_TITLE, template: `%s｜${site.suffix}` },
+    description: site.description,
     ...(indexingAllowed() ? {} : { robots: { index: false } }),
   };
 }

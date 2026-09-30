@@ -4,11 +4,29 @@ import { ShareWall, type WallFilter, type WallSort } from "@/components/share-wa
 import { HomeTagline } from "@/components/home-tagline";
 import { HomePick, type PickSong } from "@/components/home-pick";
 import { homePicks } from "@/lib/server/spotify-picks";
-import { GENDER_LABEL, REGION_LABEL, SITE_TITLE, type ArtistGender } from "@/lib/data";
+import { GENDER_LABEL, REGION_LABEL, SITE_NAME, SITE_TITLE, type ArtistGender } from "@/lib/data";
+import { ldJson, overrideOf, overridePhoto, pick, seoContext, seoMeta } from "@/lib/server/seo";
+import { CANONICAL_ORIGIN } from "@/lib/seo";
 
 type Props = { searchParams: Promise<{ state?: string; sort?: string; page?: string }> };
 
 const GENDERS = Object.keys(GENDER_LABEL) as ArtistGender[];
+
+// 首頁 metadata（2026-10-01 SEO）：原本沒有 og 標籤，補上站方預設圖；後台可覆寫標題、描述、og 圖、不收錄。
+// ?state、?sort 這些篩選版本 canonical 指回首頁；分頁（?page=2 起）各自是自己的 canonical
+export async function generateMetadata({ searchParams }: Props) {
+  const ctx = await seoContext();
+  const o = overrideOf(ctx, "page:home");
+  const page = Math.max(1, Number.parseInt((await searchParams).page ?? "1", 10) || 1);
+  return seoMeta({
+    path: page > 1 ? `/?page=${page}` : "/",
+    title: pick(o.title, SITE_TITLE),
+    description: pick(o.description, ctx.site.description),
+    photo: overridePhoto(o),
+    absolute: true,
+    index: !o.noindex,
+  });
+}
 
 export default async function Home({ searchParams }: Props) {
   const q = await searchParams;
@@ -30,6 +48,10 @@ export default async function Home({ searchParams }: Props) {
   return (
     <main className="wrap page page-wall">
       <h1 className="sr-only">{SITE_TITLE}</h1>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: ldJson([{ "@type": "WebSite", "@id": `${CANONICAL_ORIGIN}/#website`, name: SITE_NAME, url: `${CANONICAL_ORIGIN}/`, inLanguage: "zh-Hant-TW" }]) }}
+      />
       <HomeTagline />
       <div className={songs.length ? "home-top" : "home-top is-solo"} data-testid="home-top">
         {songs.length ? <HomePick songs={songs} /> : null}

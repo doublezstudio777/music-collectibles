@@ -15,6 +15,7 @@ import { Photo, TagList } from "@/components/share-card";
 import { ShareActions, type ShareInfo } from "@/components/share-actions";
 import { LevelTag } from "@/components/level-tag";
 import { DmButton } from "@/components/dm-button";
+import { sharePhotoAlt } from "@/lib/seo";
 
 /** 金額輸入：只收正整數 */
 export function parsePrice(raw: string) {
@@ -243,7 +244,7 @@ function DetailPhoto({
           <Lightbox
             list={[main]}
             start={0}
-            alt={share.what}
+            alt={sharePhotoAlt(share)}
             onClose={close}
           />
         ) : null}
@@ -323,7 +324,7 @@ function DetailPhoto({
         <Lightbox
           list={list.map((p) => p.image)}
           start={big}
-          alt={share.what}
+          alt={sharePhotoAlt(share)}
           onClose={close}
         />
       ) : null}

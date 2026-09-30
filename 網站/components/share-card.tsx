@@ -6,6 +6,7 @@ import Link from "next/link";
 import { priceText, shareHref, tagHref, userHref, type Lock, type Sale, type ShareView } from "@/lib/data";
 import { LikeButton } from "@/components/like-button";
 import { LevelTag } from "@/components/level-tag";
+import { sharePhotoAlt } from "@/lib/seo";
 
 /** 封面左下的狀態槽位：四種狀態同一個位子；被鎖時改成「交易暫停」 */
 export function SaleSlots({ sale, locked = false }: { sale: Sale; locked?: boolean }) {
@@ -86,7 +87,7 @@ export function Photo({
           <Image
             key={src}
             src={src}
-            alt={share.what}
+            alt={sharePhotoAlt(share)}
             fill
             sizes={sizes}
             unoptimized={src.startsWith("/img/")}

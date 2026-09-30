@@ -12,7 +12,7 @@ curl 只看得到伺服器回 200，看不到「頁面連結點了沒反應」�
 失敗時逐筆列出（2026-09-28 部署快取批次）：console error 附來源網址與行號；另外記錄每一個 HTTP 400 以上的回應
 （網址、狀態碼、資源類型、x-yz-cache／cf-cache-status 表頭），HTML 回應另記 x-yz-build，用來判斷是不是舊 HTML 指到不存在的檔案。
 
-用法：python3 scripts/smoke-browser.py https://lemibox.com（舊網址 https://yinzang.dblzm.workers.dev 一樣可以）
+用法：python3 scripts/smoke-browser.py https://lemibox.com（舊網址 workers.dev 2026-10-01 已關閉）
 需要：pip3 install playwright && python3 -m playwright install chromium
 """
 import sys

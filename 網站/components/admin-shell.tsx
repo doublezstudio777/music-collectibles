@@ -13,6 +13,7 @@ const TABS = [
   { href: "/admin/duplicates", label: "疑似重複藝人" },
   { href: "/admin/artist-photos", label: "藝人照片" },
   { href: "/admin/spotify-picks", label: "推薦歌曲" },
+  { href: "/admin/seo", label: "SEO" },
   { href: "/admin/deletions", label: "刪帳申請" },
 ] as const;
 

@@ -10,7 +10,7 @@ export function ArtistPhotoFigure({ photo, name }: { photo: ArtistPhoto; name: s
   return (
     <figure className="artist-photo" style={{ width: dw }} data-testid="artist-photo">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={photo.url} alt={name} width={w} height={h} decoding="async" />
+      <img src={photo.url} alt={`${name}照片`} width={w} height={h} decoding="async" />
       <figcaption className="artist-photo-credit" data-testid="artist-photo-credit">
         攝影：
         {photo.authorUrl ? (

@@ -1,0 +1,131 @@
+{
+  "phase": "off",
+  "results": [
+    {
+      "id": "off-1",
+      "name": "robots.txt 沒附 Sitemap",
+      "ok": true,
+      "detail": "t\nDisallow: /\n\nUser-agent: ImagesiftBot\nDisallow: /\n\nUser-agent: Omgilibot\nDisallow: /\n\nUser-agent: Timpibot\nDisallow: /\n\nUser-agent: DuckAssistBot\nDisallow: /\n\nUser-agent: MistralAI-User\nDisallow: /\n"
+    },
+    {
+      "id": "off-2",
+      "name": "robots.txt 仍允許爬取、只擋 /admin 與 /api/",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "off-/",
+      "name": "/ meta robots＝noindex 且 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "noindex / noindex"
+    },
+    {
+      "id": "off-head-/",
+      "name": "/ robots meta 在 <head>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "off-/about",
+      "name": "/about meta robots＝noindex 且 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "noindex / noindex"
+    },
+    {
+      "id": "off-head-/about",
+      "name": "/about robots meta 在 <head>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "off-/guide",
+      "name": "/guide meta robots＝noindex 且 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "noindex / noindex"
+    },
+    {
+      "id": "off-head-/guide",
+      "name": "/guide robots meta 在 <head>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "off-/artists",
+      "name": "/artists meta robots＝noindex 且 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "noindex / noindex"
+    },
+    {
+      "id": "off-head-/artists",
+      "name": "/artists robots meta 在 <head>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "off-/artist/hyukoh",
+      "name": "/artist/hyukoh meta robots＝noindex 且 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "noindex / noindex"
+    },
+    {
+      "id": "off-head-/artist/hyukoh",
+      "name": "/artist/hyukoh robots meta 在 <head>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "off-/artist/hyukoh/1",
+      "name": "/artist/hyukoh/1 meta robots＝noindex 且 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "noindex / noindex"
+    },
+    {
+      "id": "off-head-/artist/hyukoh/1",
+      "name": "/artist/hyukoh/1 robots meta 在 <head>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "off-/share/10",
+      "name": "/share/10 meta robots＝noindex 且 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "noindex / noindex"
+    },
+    {
+      "id": "off-head-/share/10",
+      "name": "/share/10 robots meta 在 <head>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "off-/privacy",
+      "name": "/privacy meta robots＝noindex 且 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "noindex / noindex"
+    },
+    {
+      "id": "off-head-/privacy",
+      "name": "/privacy robots meta 在 <head>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "off-/terms",
+      "name": "/terms meta robots＝noindex 且 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "noindex / noindex"
+    },
+    {
+      "id": "off-head-/terms",
+      "name": "/terms robots meta 在 <head>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "off-sitemap",
+      "name": "sitemap.xml 照樣產生（頁面本身都 noindex）",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

@@ -24,12 +24,13 @@ import { QUOTA_MESSAGE, takeQuota } from "@/lib/server/quota";
  * - 正版辨識的照片（purpose=mark）大小圖都要登入
  * - 浮水印燒進檔案（2026-09-29 起）：p/ 的主圖、縮圖都是瀏覽器燒好浮水印才上傳的。沒燒的原圖放 R2 的 o/，
  *   下面的檔名規則只開放 p/a/v/r 四個目錄，o/ 一律 404；舊的無浮水印檔名在 D1 查不到，一樣 404
+ * - g/（2026-10-01）：後台 SEO 上傳的 og 圖，photos 表 purpose=seo，公開（跟大頭貼一樣主圖＝縮圖）
  */
 export async function GET(req: Request, ctx: { params: Promise<{ key: string[] }> }) {
   const { key } = await ctx.params;
   const k = key.join("/");
   const notFound = () => new Response("Not found", { status: 404, headers: { "X-Content-Type-Options": "nosniff", "Cache-Control": "no-store" } });
-  if (!/^[pavr]\/[A-Za-z0-9_-]+\.(webp|jpg)$/.test(k) || !env.PHOTOS) return notFound();
+  if (!/^[pavrg]\/[A-Za-z0-9_-]+\.(webp|jpg)$/.test(k) || !env.PHOTOS) return notFound();
 
   const { status, photo, gone } = await siteStatus(k);
   // 申訴證據（a/ 開頭，或舊資料裡 purpose=appeal 的）只給上傳的本人與管理員

@@ -19,8 +19,9 @@ import {
   type ShareView,
   type Version,
 } from "@/lib/data";
-import { pageData, siteOrigin } from "@/lib/server/viewer";
-import { ogMeta } from "@/lib/server/og";
+import { pageData } from "@/lib/server/viewer";
+import { cache } from "react";
+import { ARTISTS_CRUMB, HOME_CRUMB, artistCrumb, breadcrumbLd, ldJson, mainTracks, overrideOf, overridePhoto, pick, seoContext, seoMeta, seriesCrumb, seriesDescription, seriesIndex, seriesLd, seriesTitle } from "@/lib/server/seo";
 import { CopyLink } from "@/components/share-actions";
 import { HoldingButtons, OwnersCount } from "@/components/holding-buttons";
 import { PriceHistory } from "@/components/price-history";
@@ -28,7 +29,7 @@ import { WikiEditor } from "@/components/wiki-editor";
 import { priceSummaries } from "@/lib/server/prices";
 import { isLocked, lastEdit, latestRevisionId, loadPage, targetKey, type WikiTarget } from "@/lib/server/wiki";
 import { seriesTracks, type VersionTracks } from "@/lib/server/tracks";
-import { diffText, diffTracks, parseTracks, REGULAR_EDITION, trackCount } from "@/lib/tracks";
+import { diffText, diffTracks, parseTracks, trackCount } from "@/lib/tracks";
 import type { PriceSummary } from "@/lib/prices";
 import { LockBanner, ReportBox } from "@/components/report";
 import { ItemLooseWall, VersionWall } from "@/components/share-wall";
@@ -65,21 +66,6 @@ const PUBLIC_FILL = (Object.keys(FILL_FIELDS) as FillField[]).filter(
 type Tracks = Map<string, VersionTracks>;
 const linesOf = (tracks: Tracks, item: Item, v: Version) => tracks.get(versionAnchor(item, v))?.lines ?? [];
 
-/**
- * 系列的代表曲目：一般版（版本名稱有「一般版／標準版」）的曲目；判斷不出來就用最早的實體版本（依發行日期、年份）。
- * 只看有曲目的版本
- */
-function mainTracks(series: Series, tracks: Tracks) {
-  const all = series.items
-    .flatMap((it) => it.versions.map((v, i) => ({ it, v, i, lines: linesOf(tracks, it, v) })))
-    .filter((x) => x.lines.length);
-  const regular = all.find((x) => REGULAR_EDITION.test(x.v.edition));
-  if (regular) return { ...regular, regular: true };
-  const when = (v: Version) => v.releaseDate || v.year || "9999";
-  const first = [...all].sort((a, b) => when(a.v).localeCompare(when(b.v)))[0];
-  return first ? { ...first, regular: false } : null;
-}
-
 function TrackList({ lines }: { lines: string[] }) {
   const discs = parseTracks(lines);
   return (
@@ -111,17 +97,25 @@ async function load(params: Props["params"]) {
   return { c, series: c.getSeries(artist, Number(no)) };
 }
 
+// 系列頁 metadata（2026-10-01 SEO）：
+// - 標題：只有一個版本「理想混蛋《關掉／打開》2022 台灣首版 CD｜曲目、版本與收藏」；多個版本「Hyukoh《23》2017 專輯｜曲目、版本與收藏」
+// - 描述：藝人、系列、發行年、版本數與品項、曲目數、收藏數，再接系列介紹開頭
+// - 版本沒有獨立網址（系列頁的錨點），版本的 MusicRelease 放在這頁的結構化資料裡
+// 後台可覆寫；內容太空、待確認、後台設定不收錄時 noindex（lib/server/seo.ts）
+const tracksOf = cache(seriesTracks);
+
 export async function generateMetadata({ params }: Props) {
-  const { c, series: w } = await load(params);
+  const [{ c, series: w }, ctx] = await Promise.all([load(params), seoContext()]);
   if (!w) return { title: "找不到系列" };
-  const artists = c.creditNames(w).map((a) => a.name).join("、");
-  const n = c.sharesOfSeries(w).length;
-  return ogMeta({
-    origin: await siteOrigin(),
+  const o = overrideOf(ctx, `series:${w.artistSlug}/${w.no}`);
+  const main = mainTracks(w, await tracksOf(w.artistSlug, w.no));
+  return seoMeta({
     path: `/artist/${w.artistSlug}/${w.no}`,
-    title: `${w.name}｜${artists}`,
-    description: [artists, w.title, Array.from(new Set(w.items.map((i) => i.kind))).join("、"), n ? `${n} 則炫收藏` : ""].filter(Boolean).join("・"),
-    photo: c.ogPhotoOf(c.sharesOfSeries(w)),
+    title: pick(o.title, seriesTitle(c, w)),
+    description: pick(o.description, seriesDescription(c, w, main ? trackCount(main.lines) : 0)),
+    photo: overridePhoto(o) ?? c.ogPhotoOf(c.sharesOfSeries(w)),
+    index: seriesIndex(c, ctx, w).index,
+    alt: `${c.creditNames(w).map((a) => a.name).join("、")}《${w.title}》`,
   });
 }
 
@@ -378,7 +372,7 @@ export default async function SeriesPage({ params, searchParams }: Props) {
     editing ? latestRevisionId(`series:${skey}`) : 0,
     priceSummaries(skey, lockedShares),
     seriesContributors(series.artistSlug, series.no),
-    seriesTracks(series.artistSlug, series.no),
+    tracksOf(series.artistSlug, series.no),
     tt ? isLocked(tt) : false,
     tt ? latestRevisionId(targetKey(tt)) : 0,
   ]);
@@ -410,8 +404,23 @@ export default async function SeriesPage({ params, searchParams }: Props) {
     .filter((g) => g.list.length > 0);
   const wanted = versions.reduce((n, v) => n + v.wanted, 0);
 
+  // 結構化資料（2026-10-01 SEO）：MusicAlbum＋各版本 MusicRelease、麵包屑
+  const ctx = await seoContext();
+  const leadArtist = credits.find((a) => c.artistVisible(a));
+  const album = seriesLd(c, ctx, series, {
+    image: selfCover,
+    description: seriesDescription(c, series, main ? trackCount(main.lines) : 0),
+    tracks,
+    mainLines: main?.lines ?? [],
+  });
+  const ld = ldJson([
+    ...(album ? [album] : []),
+    breadcrumbLd([HOME_CRUMB, ARTISTS_CRUMB, ...(leadArtist ? [artistCrumb(leadArtist)] : []), seriesCrumb(series)]),
+  ]);
+
   return (
     <main className="wrap page">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld }} />
       <header className="work-head">
         {selfCover ? (
           <span className="cover cover-lg cover-photo" aria-hidden="true" style={{ backgroundImage: `url(${selfCover})` }} />

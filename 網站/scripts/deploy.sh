@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# 樂迷藏正式部署（Cloudflare Workers：正式網域 lemibox.com，舊網址 yinzang.dblzm.workers.dev 照常保留）。
+# 樂迷藏正式部署（Cloudflare Workers：正式網域 lemibox.com。舊網址 yinzang.dblzm.workers.dev 2026-10-01 關閉，workers_dev=false）。
 # 順序是閘門：任何一步失敗就停，後面不會跑。先套遷移、再部署程式；遷移前先做站外備份。
 #
 # 用法（在 網站/ 底下，已 wrangler login 或設好 CLOUDFLARE_API_TOKEN）：
-#   scripts/deploy.sh                        一般部署，煙霧測試驗預設兩個網址（新網域＋舊 workers.dev）
+#   scripts/deploy.sh                        一般部署，煙霧測試只驗 lemibox.com，另外斷言舊網址 workers.dev 已經不能用
 #   scripts/deploy.sh --first                第一次部署（雲端 D1 還是空的，跳過遷移前備份）
 #   scripts/deploy.sh --url https://X ...    煙霧測試只驗指定網址（可重複給多個 --url）
 #   scripts/deploy.sh --smoke-only [--url …] 不建置不部署，只對現在線上的版本跑第 6、7 步（驗新網址、查問題用）
@@ -25,7 +25,9 @@ while [[ $# -gt 0 ]]; do
   esac
   shift
 done
-[[ ${#URLS[@]} -gt 0 ]] || URLS=("https://lemibox.com" "https://yinzang.dblzm.workers.dev")
+[[ ${#URLS[@]} -gt 0 ]] || URLS=("https://lemibox.com")
+# 舊網址（2026-10-01 關閉）：部署後斷言它不再回應網站內容
+OLD_URL="https://yinzang.dblzm.workers.dev"
 CFG=wrangler.production.jsonc
 W=(node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js)
 INDEXING=$(grep -oE '"ALLOW_INDEXING": *"[01]"' "$CFG" | grep -oE '[01]"$' | tr -d '"')
@@ -56,6 +58,8 @@ YINZANG_DEPLOY=production npm run build
 if grep -q "LOCAL_TEST" dist/server/wrangler.json; then echo "建置結果帶了 LOCAL_TEST，停止"; exit 1; fi
 # 正式網域綁定寫在 routes（custom_domain）；建置後的設定檔一定要還帶著，不然部署可能把網域綁定拿掉
 grep -q '"lemibox.com"' dist/server/wrangler.json && grep -q '"custom_domain"' dist/server/wrangler.json || { echo "建置結果沒有帶 lemibox.com 的 routes，停止"; exit 1; }
+# 舊網址 workers.dev 已關閉（2026-10-01）：建置後的設定一定要是 workers_dev=false，不然部署會把舊網址打開
+grep -qE '"workers_dev": *false' dist/server/wrangler.json || { echo "建置結果的 workers_dev 不是 false（舊網址會被打開），停止"; exit 1; }
 # 上一版的 JS／CSS 保留 7 天一起部署：新版本傳開前，舊版本回的舊 HTML 還指著舊檔（理由見 scripts/keep-assets.mjs 開頭）
 node scripts/keep-assets.mjs merge
 
@@ -100,8 +104,17 @@ smoke() {
     if grep -qi "^x-robots-tag: noindex" <<<"$HEAD"; then echo "煙霧測試失敗：ALLOW_INDEXING=1 卻還有 X-Robots-Tag noindex"; exit 1; fi; echo "沒有 X-Robots-Tag noindex（開放收錄）"
     if grep -q '<meta name="robots" content="noindex"' <<<"$BODY"; then echo "煙霧測試失敗：ALLOW_INDEXING=1 卻還有 meta robots noindex"; exit 1; fi; echo "沒有 meta robots noindex（開放收錄）"
   fi
+  # SEO（2026-10-01）：首頁 canonical 固定正式網域、有 og:image（首頁原本沒有 og）
+  grep -q '<link rel="canonical" href="https://lemibox.com/"' <<<"$BODY" || { echo "煙霧測試失敗：首頁 canonical"; exit 1; }; echo "首頁 canonical https://lemibox.com/"
+  grep -q '<meta property="og:image" content="https://lemibox.com/' <<<"$BODY" || { echo "煙霧測試失敗：首頁 og:image"; exit 1; }; echo "首頁 og:image"
   ROBOTS=$(curl -fsS -m 30 "$URL/robots.txt")
   grep -q "Disallow: /admin" <<<"$ROBOTS" || { echo "煙霧測試失敗：robots.txt 正常"; exit 1; }; echo "robots.txt 正常"
+  if [[ "$INDEXING" == "0" ]]; then
+    if grep -q "^Sitemap:" <<<"$ROBOTS"; then echo "煙霧測試失敗：ALLOW_INDEXING=0 的 robots.txt 不該附 sitemap"; exit 1; fi; echo "robots.txt 沒附 sitemap（未開放收錄）"
+  else
+    grep -q "^Sitemap: https://lemibox.com/sitemap.xml" <<<"$ROBOTS" || { echo "煙霧測試失敗：robots.txt 沒附 sitemap"; exit 1; }; echo "robots.txt 附 sitemap"
+  fi
+  curl -fsS -m 30 "$URL/sitemap.xml" | grep -q "<sitemapindex" || { echo "煙霧測試失敗：sitemap.xml"; exit 1; }; echo "sitemap.xml 正常"
   if [[ "$URL" == "https://lemibox.com" ]]; then
     local WWW
     WWW=$(curl -sS -m 30 -o /dev/null -w '%{http_code} %{redirect_url}' "https://www.lemibox.com/artists?x=1")
@@ -114,6 +127,23 @@ smoke() {
   python3 scripts/smoke-browser.py "$URL" || { echo "煙霧測試失敗：瀏覽器步驟（程式已部署，要回復見部署手冊第八節）"; exit 1; }
 }
 
+# 舊網址已關閉的斷言（2026-10-01）：workers.dev 不能再回網站內容。關掉後 Cloudflare 回 404（錯誤碼 1042 之類）或連不上都算過；
+# 回 200、或回應裡有 x-yz-build（我們的 Worker 才會帶）都算失敗。剛部署完可能要幾十秒才生效，最多等 90 秒
+old_closed() {
+  step "8. 舊網址 $OLD_URL 已關閉"
+  local i CODE HDR
+  for i in $(seq 1 18); do
+    HDR=$(curl -sS -m 20 -A "Mozilla/5.0 lemibox-smoke" -D - -o /dev/null "$OLD_URL/" 2>/dev/null || true)
+    CODE=$(head -n1 <<<"$HDR" | awk '{print $2}')
+    if [[ "$CODE" != "200" && "$CODE" != "301" && "$CODE" != "302" ]] && ! grep -qi "^x-yz-build:" <<<"$HDR"; then
+      echo "舊網址已關閉（HTTP ${CODE:-連不上}）"; return 0
+    fi
+    sleep 5
+  done
+  echo "煙霧測試失敗：舊網址 $OLD_URL 還在回應（HTTP $CODE）"; exit 1
+}
+
 [[ $SMOKE_ONLY -eq 1 ]] && VID=""
 for u in "${URLS[@]}"; do smoke "$u"; done
+old_closed
 if [[ $SMOKE_ONLY -eq 1 ]]; then echo "煙霧測試完成（${URLS[*]}）"; else echo "部署完成（${VID}）。接著照部署手冊跑「部署後檢查」。"; fi

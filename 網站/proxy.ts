@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { indexingAllowed } from "@/lib/server/guard";
 import { redirectPath } from "@/lib/server/redirects";
 import { getCatalog } from "@/lib/server/content";
+import { isPrivatePath } from "@/lib/seo";
 
 /**
  * 全站回應加 X-Robots-Tag（不給搜尋引擎收錄，開關是 ALLOW_INDEXING）。
@@ -54,6 +55,6 @@ export async function proxy(req: NextRequest) {
     }
   }
   const res = NextResponse.next();
-  if (!indexingAllowed()) res.headers.set("X-Robots-Tag", "noindex");
+  if (!indexingAllowed() || isPrivatePath(req.nextUrl.pathname, req.nextUrl.search)) res.headers.set("X-Robots-Tag", "noindex");
   return res;
 }

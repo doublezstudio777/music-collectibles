@@ -100,7 +100,7 @@ function limitKey(req: Request, env: Env): string | null {
 
 // 正式網域（2026-09-30 定案 lemibox.com）：www 綁在同一個 Worker（Custom Domain），這裡一律 301 到 apex。
 // http 也一律 301 到 https apex（Custom Domain 預設 http 照樣回 200，zone 的 Always Use HTTPS 沒開、金鑰也沒有改 zone 設定的權限）。
-// 帳號的 API 金鑰沒有 Redirect Rules 權限，改在 Worker 做；不碰 D1，不吃限流。舊的 workers.dev 網址不轉，照常服務
+// 帳號的 API 金鑰沒有 Redirect Rules 權限，改在 Worker 做；不碰 D1，不吃限流。舊的 workers.dev 網址 2026-10-01 關閉（workers_dev=false），不轉址
 const WWW_HOST = "www.lemibox.com";
 const APEX_HOST = "lemibox.com";
 const APEX = "https://lemibox.com";
@@ -117,6 +117,8 @@ const worker = {
     const headers = new Headers(raw.headers);
     headers.delete("x-yz-test-country");
     headers.set("x-yz-country", country(raw, env));
+    // 沒帶 User-Agent 的請求 vinext 會把 metadata 串流到 <body>，整頁快取又不分 User-Agent：補一個，讓大家都拿 <head> 版（next.config.ts）
+    if (!headers.get("user-agent")) headers.set("user-agent", "lemibox-no-ua");
     const req = new Request(raw, { headers });
     if (req.method !== "GET" || !CACHEABLE.test(url.pathname) || url.pathname === "/share/new") {
       return app.fetch(req, env, ctx);
