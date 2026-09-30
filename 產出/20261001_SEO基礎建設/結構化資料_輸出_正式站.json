@@ -1,0 +1,898 @@
+{
+  "/": [
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://lemibox.com/#website",
+          "name": "樂迷藏",
+          "url": "https://lemibox.com/",
+          "inLanguage": "zh-Hant-TW"
+        }
+      ]
+    }
+  ],
+  "/about": [
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "首頁",
+              "item": "https://lemibox.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "關於樂迷藏",
+              "item": "https://lemibox.com/about"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "/guide": [
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "首頁",
+              "item": "https://lemibox.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "新手指南",
+              "item": "https://lemibox.com/guide"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "/artist/hyukoh": [
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "MusicGroup",
+          "@id": "https://lemibox.com/artist/hyukoh#artist",
+          "name": "Hyukoh",
+          "url": "https://lemibox.com/artist/hyukoh",
+          "alternateName": [
+            "HYUKOH",
+            "혁오",
+            "赫吳"
+          ],
+          "album": [
+            {
+              "@type": "MusicAlbum",
+              "@id": "https://lemibox.com/artist/hyukoh/1#album",
+              "name": "23",
+              "url": "https://lemibox.com/artist/hyukoh/1"
+            }
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "首頁",
+              "item": "https://lemibox.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "藝人",
+              "item": "https://lemibox.com/artists"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Hyukoh",
+              "item": "https://lemibox.com/artist/hyukoh"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "/artist/sunset-rollercoaster": [
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "MusicGroup",
+          "@id": "https://lemibox.com/artist/sunset-rollercoaster#artist",
+          "name": "落日飛車",
+          "url": "https://lemibox.com/artist/sunset-rollercoaster",
+          "alternateName": [
+            "Sunset Rollercoaster"
+          ],
+          "description": "第37屆金曲獎 最佳樂團獎得主",
+          "sameAs": [
+            "https://zh.wikipedia.org/wiki/%E8%90%BD%E6%97%A5%E9%A3%9B%E8%BB%8A"
+          ],
+          "album": [
+            {
+              "@type": "MusicAlbum",
+              "@id": "https://lemibox.com/artist/sunset-rollercoaster/2#album",
+              "name": "My jinji",
+              "url": "https://lemibox.com/artist/sunset-rollercoaster/2"
+            },
+            {
+              "@type": "MusicAlbum",
+              "@id": "https://lemibox.com/artist/sunset-rollercoaster/3#album",
+              "name": "Bossa Nova",
+              "url": "https://lemibox.com/artist/sunset-rollercoaster/3"
+            },
+            {
+              "@type": "MusicAlbum",
+              "@id": "https://lemibox.com/artist/sunset-rollercoaster/4#album",
+              "name": "Jinji Kikko",
+              "url": "https://lemibox.com/artist/sunset-rollercoaster/4"
+            },
+            {
+              "@type": "MusicAlbum",
+              "@id": "https://lemibox.com/artist/sunset-rollercoaster/5#album",
+              "name": "Cassa Nova",
+              "url": "https://lemibox.com/artist/sunset-rollercoaster/5"
+            },
+            {
+              "@type": "MusicAlbum",
+              "@id": "https://lemibox.com/artist/sunset-rollercoaster/6#album",
+              "name": "Infinity Sunset",
+              "url": "https://lemibox.com/artist/sunset-rollercoaster/6"
+            },
+            {
+              "@type": "MusicAlbum",
+              "@id": "https://lemibox.com/artist/sunset-rollercoaster/7#album",
+              "name": "AAA",
+              "url": "https://lemibox.com/artist/sunset-rollercoaster/7"
+            },
+            {
+              "@type": "MusicAlbum",
+              "@id": "https://lemibox.com/artist/sunset-rollercoaster/8#album",
+              "name": "AAA LIVE",
+              "url": "https://lemibox.com/artist/sunset-rollercoaster/8"
+            }
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "首頁",
+              "item": "https://lemibox.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "藝人",
+              "item": "https://lemibox.com/artists"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "落日飛車",
+              "item": "https://lemibox.com/artist/sunset-rollercoaster"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "/artist/a-tt4v": [
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "MusicGroup",
+          "@id": "https://lemibox.com/artist/a-tt4v#artist",
+          "name": "理想混蛋",
+          "url": "https://lemibox.com/artist/a-tt4v",
+          "alternateName": [
+            "Bestards"
+          ],
+          "album": [
+            {
+              "@type": "MusicAlbum",
+              "@id": "https://lemibox.com/artist/a-tt4v/1#album",
+              "name": "關掉／打開",
+              "url": "https://lemibox.com/artist/a-tt4v/1"
+            }
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "首頁",
+              "item": "https://lemibox.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "藝人",
+              "item": "https://lemibox.com/artists"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "理想混蛋",
+              "item": "https://lemibox.com/artist/a-tt4v"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "/artist/hyukoh/1": [
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "MusicAlbum",
+          "@id": "https://lemibox.com/artist/hyukoh/1#album",
+          "name": "23",
+          "url": "https://lemibox.com/artist/hyukoh/1",
+          "albumReleaseType": "https://schema.org/AlbumRelease",
+          "byArtist": [
+            {
+              "@type": "MusicGroup",
+              "@id": "https://lemibox.com/artist/hyukoh#artist",
+              "name": "Hyukoh",
+              "url": "https://lemibox.com/artist/hyukoh"
+            }
+          ],
+          "datePublished": "2017",
+          "description": "Hyukoh《23》，2017年發行的專輯。收錄4個版本（CD、黑膠）、12首曲目、1則樂迷收藏。",
+          "image": "https://lemibox.com/img/p/6L-Rdu4orshJq-FD_t.jpg",
+          "numTracks": 12,
+          "track": [
+            {
+              "@type": "MusicRecording",
+              "name": "Burning youth",
+              "position": 1,
+              "duration": "PT2M8S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "Tokyo Inn",
+              "position": 2,
+              "duration": "PT3M29S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "가죽자켓",
+              "position": 3,
+              "duration": "PT3M43S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "TOMBOY",
+              "position": 4,
+              "duration": "PT4M2S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "2002WorldCup",
+              "position": 5,
+              "duration": "PT3M12S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "Jesus lived in a motel room",
+              "position": 6,
+              "duration": "PT5M7S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "Wanli万里",
+              "position": 7,
+              "duration": "PT4M56S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "Die alone",
+              "position": 8,
+              "duration": "PT4M58S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "지정석",
+              "position": 9,
+              "duration": "PT5M14S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "Simon",
+              "position": 10,
+              "duration": "PT3M54S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "Paul",
+              "position": 11,
+              "duration": "PT4M31S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "Surf boy",
+              "position": 12,
+              "duration": "PT4M12S"
+            }
+          ],
+          "albumRelease": [
+            {
+              "@type": "MusicRelease",
+              "@id": "https://lemibox.com/artist/hyukoh/1#cd-v1",
+              "url": "https://lemibox.com/artist/hyukoh/1#cd-v1",
+              "name": "23 2017 韓國首版 CD",
+              "musicReleaseFormat": "https://schema.org/CDFormat",
+              "releaseOf": {
+                "@id": "https://lemibox.com/artist/hyukoh/1#album"
+              },
+              "datePublished": "2017-04-24",
+              "recordLabel": {
+                "@type": "Organization",
+                "name": "HIGHGRND、두루두루 Artist Management Company"
+              },
+              "numTracks": 12,
+              "sameAs": [
+                "https://musicbrainz.org/release/59185260-5d61-4b56-8f29-b12322016636"
+              ]
+            },
+            {
+              "@type": "MusicRelease",
+              "@id": "https://lemibox.com/artist/hyukoh/1#cd-v2",
+              "url": "https://lemibox.com/artist/hyukoh/1#cd-v2",
+              "name": "23 2017 日本首版 CD",
+              "musicReleaseFormat": "https://schema.org/CDFormat",
+              "releaseOf": {
+                "@id": "https://lemibox.com/artist/hyukoh/1#album"
+              },
+              "datePublished": "2017-06-07",
+              "recordLabel": {
+                "@type": "Organization",
+                "name": "TOY’S FACTORY、두루두루 Artist Management Company"
+              },
+              "numTracks": 12,
+              "sameAs": [
+                "https://musicbrainz.org/release/a29b4b40-4193-483a-9e38-d33eb07229c9"
+              ]
+            },
+            {
+              "@type": "MusicRelease",
+              "@id": "https://lemibox.com/artist/hyukoh/1#cd-v3",
+              "url": "https://lemibox.com/artist/hyukoh/1#cd-v3",
+              "name": "23 2020 韓國再版 CD",
+              "musicReleaseFormat": "https://schema.org/CDFormat",
+              "releaseOf": {
+                "@id": "https://lemibox.com/artist/hyukoh/1#album"
+              },
+              "datePublished": "2020-03-11",
+              "recordLabel": {
+                "@type": "Organization",
+                "name": "Mirrorball Music、두루두루 Artist Management Company"
+              },
+              "numTracks": 12,
+              "sameAs": [
+                "https://musicbrainz.org/release/3255625f-51c2-4480-8453-9f309db8bbd6"
+              ]
+            },
+            {
+              "@type": "MusicRelease",
+              "@id": "https://lemibox.com/artist/hyukoh/1#vinyl-v1",
+              "url": "https://lemibox.com/artist/hyukoh/1#vinyl-v1",
+              "name": "23 2018 日本再版 2 張黑膠",
+              "musicReleaseFormat": "https://schema.org/VinylFormat",
+              "releaseOf": {
+                "@id": "https://lemibox.com/artist/hyukoh/1#album"
+              },
+              "datePublished": "2018-10-10",
+              "recordLabel": {
+                "@type": "Organization",
+                "name": "TOY’S FACTORY、두루두루 Artist Management Company"
+              },
+              "numTracks": 12,
+              "sameAs": [
+                "https://musicbrainz.org/release/f0f9a521-c2d4-45a7-9cf5-418c3c2620c8"
+              ]
+            }
+          ],
+          "sameAs": [
+            "https://musicbrainz.org/release-group/aeca72a6-7851-4207-b368-91cce0d14d8a"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "首頁",
+              "item": "https://lemibox.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "藝人",
+              "item": "https://lemibox.com/artists"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Hyukoh",
+              "item": "https://lemibox.com/artist/hyukoh"
+            },
+            {
+              "@type": "ListItem",
+              "position": 4,
+              "name": "23",
+              "item": "https://lemibox.com/artist/hyukoh/1"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "/artist/a-tt4v/1": [
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "MusicAlbum",
+          "@id": "https://lemibox.com/artist/a-tt4v/1#album",
+          "name": "關掉／打開",
+          "url": "https://lemibox.com/artist/a-tt4v/1",
+          "albumReleaseType": "https://schema.org/AlbumRelease",
+          "byArtist": [
+            {
+              "@type": "MusicGroup",
+              "@id": "https://lemibox.com/artist/a-tt4v#artist",
+              "name": "理想混蛋",
+              "url": "https://lemibox.com/artist/a-tt4v"
+            }
+          ],
+          "datePublished": "2022",
+          "description": "理想混蛋《關掉／打開》，2022年發行的專輯。收錄1個版本（CD）、10首曲目、1則樂迷收藏。",
+          "image": "https://lemibox.com/img/p/XHkax5np8xFn-pAR_t.jpg",
+          "numTracks": 10,
+          "track": [
+            {
+              "@type": "MusicRecording",
+              "name": "白晝將盡",
+              "position": 1,
+              "duration": "PT3M53S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "Reset",
+              "position": 2,
+              "duration": "PT5M35S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "門",
+              "position": 3,
+              "duration": "PT4M45S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "絕對值",
+              "position": 4,
+              "duration": "PT4M36S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "我反芻著你留下的寂寞",
+              "position": 5,
+              "duration": "PT4M15S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "今天星期六",
+              "position": 6,
+              "duration": "PT3M42S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "我就想你",
+              "position": 7,
+              "duration": "PT3M24S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "好方法",
+              "position": 8,
+              "duration": "PT4M11S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "一定會的",
+              "position": 9,
+              "duration": "PT5M8S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "在地球爆炸之前",
+              "position": 10,
+              "duration": "PT3M58S"
+            }
+          ],
+          "albumRelease": [
+            {
+              "@type": "MusicRelease",
+              "@id": "https://lemibox.com/artist/a-tt4v/1#cd-v1",
+              "url": "https://lemibox.com/artist/a-tt4v/1#cd-v1",
+              "name": "關掉／打開 2022 台灣首版 CD",
+              "musicReleaseFormat": "https://schema.org/CDFormat",
+              "releaseOf": {
+                "@id": "https://lemibox.com/artist/a-tt4v/1#album"
+              },
+              "datePublished": "2022-04-29",
+              "recordLabel": {
+                "@type": "Organization",
+                "name": "何樂音樂"
+              },
+              "numTracks": 10
+            }
+          ],
+          "sameAs": [
+            "https://musicbrainz.org/release-group/b6fb36f5-effa-428c-ab7b-a717e878b4cc"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "首頁",
+              "item": "https://lemibox.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "藝人",
+              "item": "https://lemibox.com/artists"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "理想混蛋",
+              "item": "https://lemibox.com/artist/a-tt4v"
+            },
+            {
+              "@type": "ListItem",
+              "position": 4,
+              "name": "關掉／打開",
+              "item": "https://lemibox.com/artist/a-tt4v/1"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "/artist/lu1/1": [
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "MusicAlbum",
+          "@id": "https://lemibox.com/artist/lu1/1#album",
+          "name": "男孩",
+          "url": "https://lemibox.com/artist/lu1/1",
+          "albumReleaseType": "https://schema.org/AlbumRelease",
+          "byArtist": [
+            {
+              "@type": "Person",
+              "@id": "https://lemibox.com/artist/lu1#artist",
+              "name": "路壹 Lu1",
+              "url": "https://lemibox.com/artist/lu1"
+            }
+          ],
+          "datePublished": "2015",
+          "description": "路壹 Lu1《男孩》，2015年發行的專輯。收錄1個版本（CD）、16首曲目、1則樂迷收藏。",
+          "image": "https://lemibox.com/img/p/jurbzq3Rk5GSb3qi_t.jpg",
+          "numTracks": 16,
+          "track": [
+            {
+              "@type": "MusicRecording",
+              "name": "你看那是岸(Intro)",
+              "position": 1,
+              "duration": "PT1M38S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "男孩",
+              "position": 2,
+              "duration": "PT4M26S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "很可愛的歌",
+              "position": 3,
+              "duration": "PT4M54S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "日記,七月二十一號,晴(Skit)",
+              "position": 4,
+              "duration": "PT1M58S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "伸手摘下了(男孩 Part2)",
+              "position": 5,
+              "duration": "PT3M19S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "Feelin’ Blue",
+              "position": 6,
+              "duration": "PT2M12S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "起舞吧(男孩 Part3)",
+              "position": 7,
+              "duration": "PT2M34S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "夜街",
+              "position": 8,
+              "duration": "PT4M8S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "什麼都不用想(Kichy TliC Remix)",
+              "position": 9,
+              "duration": "PT2M42S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "日記,十月十號,陰(Skit)",
+              "position": 10,
+              "duration": "PT2M4S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "Thoughts",
+              "position": 11,
+              "duration": "PT1M45S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "Beats Y’all",
+              "position": 12,
+              "duration": "PT3M34S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "老電影",
+              "position": 13,
+              "duration": "PT3M52S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "男孩(2015 Special Version)",
+              "position": 14,
+              "duration": "PT3M30S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "伸手摘下了(Octave20 Remix)",
+              "position": 15,
+              "duration": "PT4M15S"
+            },
+            {
+              "@type": "MusicRecording",
+              "name": "Amused Memory",
+              "position": 16,
+              "duration": "PT3M50S"
+            }
+          ],
+          "albumRelease": [
+            {
+              "@type": "MusicRelease",
+              "@id": "https://lemibox.com/artist/lu1/1#cd-v1",
+              "url": "https://lemibox.com/artist/lu1/1#cd-v1",
+              "name": "男孩 2015 台灣首版 CD",
+              "musicReleaseFormat": "https://schema.org/CDFormat",
+              "releaseOf": {
+                "@id": "https://lemibox.com/artist/lu1/1#album"
+              },
+              "datePublished": "2015-05-30",
+              "recordLabel": {
+                "@type": "Organization",
+                "name": "顏社"
+              },
+              "numTracks": 16,
+              "sameAs": [
+                "https://musicbrainz.org/release/5e559176-25ab-4e4d-9936-f903794ae340"
+              ]
+            }
+          ],
+          "sameAs": [
+            "https://musicbrainz.org/release-group/325ac0b4-f423-4d67-a45e-28257aa58f7e"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "首頁",
+              "item": "https://lemibox.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "藝人",
+              "item": "https://lemibox.com/artists"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "路壹 Lu1",
+              "item": "https://lemibox.com/artist/lu1"
+            },
+            {
+              "@type": "ListItem",
+              "position": 4,
+              "name": "男孩",
+              "item": "https://lemibox.com/artist/lu1/1"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "/share/10": [
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "首頁",
+              "item": "https://lemibox.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "藝人",
+              "item": "https://lemibox.com/artists"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Hyukoh",
+              "item": "https://lemibox.com/artist/hyukoh"
+            },
+            {
+              "@type": "ListItem",
+              "position": 4,
+              "name": "23",
+              "item": "https://lemibox.com/artist/hyukoh/1"
+            },
+            {
+              "@type": "ListItem",
+              "position": 5,
+              "name": "Hyukoh《23》2020 韓國再版 CD",
+              "item": "https://lemibox.com/share/10"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "/share/8": [
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "首頁",
+              "item": "https://lemibox.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "藝人",
+              "item": "https://lemibox.com/artists"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "理想混蛋",
+              "item": "https://lemibox.com/artist/a-tt4v"
+            },
+            {
+              "@type": "ListItem",
+              "position": 4,
+              "name": "關掉／打開",
+              "item": "https://lemibox.com/artist/a-tt4v/1"
+            },
+            {
+              "@type": "ListItem",
+              "position": 5,
+              "name": "理想混蛋《關掉／打開》2022 台灣首版 CD",
+              "item": "https://lemibox.com/share/8"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "/share/9": [
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "首頁",
+              "item": "https://lemibox.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "藝人",
+              "item": "https://lemibox.com/artists"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "路壹 Lu1",
+              "item": "https://lemibox.com/artist/lu1"
+            },
+            {
+              "@type": "ListItem",
+              "position": 4,
+              "name": "男孩",
+              "item": "https://lemibox.com/artist/lu1/1"
+            },
+            {
+              "@type": "ListItem",
+              "position": 5,
+              "name": "路壹 Lu1《男孩》2015 台灣首版 CD",
+              "item": "https://lemibox.com/share/9"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

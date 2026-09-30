@@ -73,3 +73,6 @@
 - 路由裡要背景做事用 `import { waitUntil } from "cloudflare:workers"`，本機 wrangler dev 也會跑；MusicBrainz 從本機連續查偶發 503，批次要有「等幾秒重試＋整批延後」兩層（2026-09-30）
 - `deploy.sh` 第 3 步備份遇到「已刪除照片的 R2 檔不在」會 exit 3；D1 已匯出完整時可照腳本第 4～7 步手動部署，煙霧測試用腳本複本改 VID 後以 --smoke-only 跑（複本要放 scripts/ 下，腳本會 cd 到上一層）（2026-10-01）
 - 平行分支遷移撞號：rebase 時 `drizzle/meta/_journal.json`、快照一律取 main 的，刪掉自己的 .sql 與快照，再 `drizzle-kit generate --name 同名` 重產（手補的資料 SQL 要再貼回）；解 schema.ts 衝突別用 regex 抓 `=======`，檔內註解分隔線也是一串等號，要整行比對。正式站驗收等元素出現再判斷，不要固定 sleep（私訊 API 單次約 2.6 秒）（2026-10-01）
+- 平行 worktree 開本機伺服器前先 `ss -ltnp | grep :87` 看 port 被誰佔、`readlink /proc/PID/cwd` 看是哪個 worktree，別殺別人的；10/01 dm 那邊佔 8795，SEO 這邊改 8797，停伺服器的腳本只殺 cwd 是自己 worktree 的程序（2026-10-01）
+- vinext 預設把 metadata（title、canonical、robots、og）串流到 `<body>`，只有「只讀 HTML 的爬蟲」UA 拿 head 版，整頁快取又不分 UA；已設 `next.config.ts` 的 `htmlLimitedBots: /.*/`＋worker.ts 補空 UA。驗 SEO 標籤要量「在不在 `</head>` 之前」，不要只 grep 有沒有（2026-10-01）
+- 腳本打本機或正式站的 POST API 要帶 `Origin` 表頭，不然 403 BAD_ORIGIN；本機要測後台，D1 直接建 `admin@demo.yinzang.test`（本機 ADMIN_EMAILS 預設值）＋sessions 列。站外備份的 R2-remote 沒有藝人照片 r/ 與分享預覽圖 _og.jpg，本機驗收缺圖的 404 要先分辨是不是缺檔（2026-10-01）

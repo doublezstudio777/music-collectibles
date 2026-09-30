@@ -1,0 +1,314 @@
+{
+  "results": [
+    {
+      "id": "prod-meta/",
+      "name": "/ title／description／canonical／og 在 <head>，canonical＝正式網域",
+      "ok": true,
+      "detail": "200 ['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'robots', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport'] https://lemibox.com/"
+    },
+    {
+      "id": "prod-noindex/",
+      "name": "/ 仍 noindex（meta＋X-Robots-Tag）",
+      "ok": true,
+      "detail": "noindex noindex"
+    },
+    {
+      "id": "prod-ld/",
+      "name": "/ 結構化資料（WebSite）過 schema.org 檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "prod-meta/about",
+      "name": "/about title／description／canonical／og 在 <head>，canonical＝正式網域",
+      "ok": true,
+      "detail": "200 ['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'robots', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport'] https://lemibox.com/about"
+    },
+    {
+      "id": "prod-noindex/about",
+      "name": "/about 仍 noindex（meta＋X-Robots-Tag）",
+      "ok": true,
+      "detail": "noindex noindex"
+    },
+    {
+      "id": "prod-ld/about",
+      "name": "/about 結構化資料（BreadcrumbList）過 schema.org 檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "prod-meta/guide",
+      "name": "/guide title／description／canonical／og 在 <head>，canonical＝正式網域",
+      "ok": true,
+      "detail": "200 ['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'robots', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport'] https://lemibox.com/guide"
+    },
+    {
+      "id": "prod-noindex/guide",
+      "name": "/guide 仍 noindex（meta＋X-Robots-Tag）",
+      "ok": true,
+      "detail": "noindex noindex"
+    },
+    {
+      "id": "prod-ld/guide",
+      "name": "/guide 結構化資料（BreadcrumbList）過 schema.org 檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "prod-meta/artist/hyukoh",
+      "name": "/artist/hyukoh title／description／canonical／og 在 <head>，canonical＝正式網域",
+      "ok": true,
+      "detail": "200 ['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'robots', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport'] https://lemibox.com/artist/hyukoh"
+    },
+    {
+      "id": "prod-noindex/artist/hyukoh",
+      "name": "/artist/hyukoh 仍 noindex（meta＋X-Robots-Tag）",
+      "ok": true,
+      "detail": "noindex noindex"
+    },
+    {
+      "id": "prod-ld/artist/hyukoh",
+      "name": "/artist/hyukoh 結構化資料（MusicGroup, BreadcrumbList）過 schema.org 檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "prod-meta/artist/sunset-rollercoaster",
+      "name": "/artist/sunset-rollercoaster title／description／canonical／og 在 <head>，canonical＝正式網域",
+      "ok": true,
+      "detail": "200 ['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'robots', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport'] https://lemibox.com/artist/sunset-rollercoaster"
+    },
+    {
+      "id": "prod-noindex/artist/sunset-rollercoaster",
+      "name": "/artist/sunset-rollercoaster 仍 noindex（meta＋X-Robots-Tag）",
+      "ok": true,
+      "detail": "noindex noindex"
+    },
+    {
+      "id": "prod-ld/artist/sunset-rollercoaster",
+      "name": "/artist/sunset-rollercoaster 結構化資料（MusicGroup, BreadcrumbList）過 schema.org 檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "prod-meta/artist/a-tt4v",
+      "name": "/artist/a-tt4v title／description／canonical／og 在 <head>，canonical＝正式網域",
+      "ok": true,
+      "detail": "200 ['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'robots', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport'] https://lemibox.com/artist/a-tt4v"
+    },
+    {
+      "id": "prod-noindex/artist/a-tt4v",
+      "name": "/artist/a-tt4v 仍 noindex（meta＋X-Robots-Tag）",
+      "ok": true,
+      "detail": "noindex noindex"
+    },
+    {
+      "id": "prod-ld/artist/a-tt4v",
+      "name": "/artist/a-tt4v 結構化資料（MusicGroup, BreadcrumbList）過 schema.org 檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "prod-meta/artist/hyukoh/1",
+      "name": "/artist/hyukoh/1 title／description／canonical／og 在 <head>，canonical＝正式網域",
+      "ok": true,
+      "detail": "200 ['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'robots', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport'] https://lemibox.com/artist/hyukoh/1"
+    },
+    {
+      "id": "prod-noindex/artist/hyukoh/1",
+      "name": "/artist/hyukoh/1 仍 noindex（meta＋X-Robots-Tag）",
+      "ok": true,
+      "detail": "noindex noindex"
+    },
+    {
+      "id": "prod-ld/artist/hyukoh/1",
+      "name": "/artist/hyukoh/1 結構化資料（MusicAlbum, BreadcrumbList）過 schema.org 檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "prod-meta/artist/a-tt4v/1",
+      "name": "/artist/a-tt4v/1 title／description／canonical／og 在 <head>，canonical＝正式網域",
+      "ok": true,
+      "detail": "200 ['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'robots', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport'] https://lemibox.com/artist/a-tt4v/1"
+    },
+    {
+      "id": "prod-noindex/artist/a-tt4v/1",
+      "name": "/artist/a-tt4v/1 仍 noindex（meta＋X-Robots-Tag）",
+      "ok": true,
+      "detail": "noindex noindex"
+    },
+    {
+      "id": "prod-ld/artist/a-tt4v/1",
+      "name": "/artist/a-tt4v/1 結構化資料（MusicAlbum, BreadcrumbList）過 schema.org 檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "prod-meta/artist/lu1/1",
+      "name": "/artist/lu1/1 title／description／canonical／og 在 <head>，canonical＝正式網域",
+      "ok": true,
+      "detail": "200 ['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'robots', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport'] https://lemibox.com/artist/lu1/1"
+    },
+    {
+      "id": "prod-noindex/artist/lu1/1",
+      "name": "/artist/lu1/1 仍 noindex（meta＋X-Robots-Tag）",
+      "ok": true,
+      "detail": "noindex noindex"
+    },
+    {
+      "id": "prod-ld/artist/lu1/1",
+      "name": "/artist/lu1/1 結構化資料（MusicAlbum, BreadcrumbList）過 schema.org 檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "prod-meta/share/10",
+      "name": "/share/10 title／description／canonical／og 在 <head>，canonical＝正式網域",
+      "ok": true,
+      "detail": "200 ['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'robots', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport'] https://lemibox.com/share/10"
+    },
+    {
+      "id": "prod-noindex/share/10",
+      "name": "/share/10 仍 noindex（meta＋X-Robots-Tag）",
+      "ok": true,
+      "detail": "noindex noindex"
+    },
+    {
+      "id": "prod-ld/share/10",
+      "name": "/share/10 結構化資料（BreadcrumbList）過 schema.org 檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "prod-meta/share/8",
+      "name": "/share/8 title／description／canonical／og 在 <head>，canonical＝正式網域",
+      "ok": true,
+      "detail": "200 ['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'robots', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport'] https://lemibox.com/share/8"
+    },
+    {
+      "id": "prod-noindex/share/8",
+      "name": "/share/8 仍 noindex（meta＋X-Robots-Tag）",
+      "ok": true,
+      "detail": "noindex noindex"
+    },
+    {
+      "id": "prod-ld/share/8",
+      "name": "/share/8 結構化資料（BreadcrumbList）過 schema.org 檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "prod-meta/share/9",
+      "name": "/share/9 title／description／canonical／og 在 <head>，canonical＝正式網域",
+      "ok": true,
+      "detail": "200 ['canonical', 'description', 'og:description', 'og:image', 'og:image:alt', 'og:image:height', 'og:image:type', 'og:image:width', 'og:locale', 'og:site_name', 'og:title', 'og:type', 'og:url', 'robots', 'title', 'twitter:card', 'twitter:description', 'twitter:image', 'twitter:title', 'viewport'] https://lemibox.com/share/9"
+    },
+    {
+      "id": "prod-noindex/share/9",
+      "name": "/share/9 仍 noindex（meta＋X-Robots-Tag）",
+      "ok": true,
+      "detail": "noindex noindex"
+    },
+    {
+      "id": "prod-ld/share/9",
+      "name": "/share/9 結構化資料（BreadcrumbList）過 schema.org 檢查",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "prod-fmt-1",
+      "name": "正式站系列頁標題格式",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "prod-fmt-2",
+      "name": "正式站收藏頁標題格式",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "prod-robots",
+      "name": "robots.txt 維持原狀：不附 Sitemap、允許爬取、擋 /admin 與 /api/、AI 爬蟲整站拒絕",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "prod-sitemap",
+      "name": "sitemap.xml 索引＋分檔都 200",
+      "ok": true,
+      "detail": {
+        "/sitemaps/pages.xml": 6,
+        "/sitemaps/artists-1.xml": 133,
+        "/sitemaps/series-1.xml": 678,
+        "/sitemaps/shares-1.xml": 6
+      }
+    },
+    {
+      "id": "prod-priv/settings",
+      "name": "/settings X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "noindex"
+    },
+    {
+      "id": "prod-priv/u/dz4277",
+      "name": "/u/dz4277 X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "noindex"
+    },
+    {
+      "id": "prod-priv/search?q=x",
+      "name": "/search?q=x X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "noindex"
+    },
+    {
+      "id": "prod-priv/me",
+      "name": "/me X-Robots-Tag noindex",
+      "ok": true,
+      "detail": "noindex"
+    },
+    {
+      "id": "prod-old",
+      "name": "舊網址 yinzang.dblzm.workers.dev 已關閉（不是 200、沒有網站的 x-yz-build）",
+      "ok": true,
+      "detail": "HTTP/2 404 "
+    },
+    {
+      "id": "prod-old-2",
+      "name": "舊網址內頁也關閉",
+      "ok": true,
+      "detail": "HTTP/2 404"
+    },
+    {
+      "id": "prod-www",
+      "name": "www 仍 301 到 apex",
+      "ok": true,
+      "detail": "HTTP/2 301"
+    },
+    {
+      "id": "prod-http",
+      "name": "http 仍 301 到 https",
+      "ok": true,
+      "detail": "HTTP/1.1 301 Moved Permanently"
+    }
+  ],
+  "sitemap": {
+    "/sitemaps/pages.xml": 6,
+    "/sitemaps/artists-1.xml": 133,
+    "/sitemaps/series-1.xml": 678,
+    "/sitemaps/shares-1.xml": 6
+  },
+  "old_url": {
+    "root": {
+      "status": "HTTP/2 404",
+      "headers": "HTTP/2 404 \ndate: Wed, 30 Sep 2026 16:39:14 GMT\ncontent-type: text/plain; charset=UTF-8\ncontent-length: 17\ncache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0\nexpires: Thu, 01 Jan 1970 00:00:01 GMT\nreferrer-policy: same-origin\nx-frame-options: SAMEORIGIN\nreport-to: {\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=0PIUH0qQe2IrmZkUhrBmYRVaduzyRH1unL6QJNyIhDT%2BMAR%2Bhq04delcVPQlXCIo8UtKakHXBpUnjpD8Vo2aOF5KBAJYX6PraYJwGKNHkw8XdZcceEKs8FKKrLhqrv3MK1Z7dSqb9XsUpmhB\"}]}\nnel: {\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}\nserver: cloudflare\ncf-ray: a434a9998a6dc7d9-ATL\nalt-svc: h3=\":443\"; ma=86400\n\n",
+      "stderr": ""
+    },
+    "share10": {
+      "status": "HTTP/2 404",
+      "headers": "HTTP/2 404 \ndate: Wed, 30 Sep 2026 16:39:14 GMT\ncontent-type: text/plain; charset=UTF-8\ncontent-length: 17\ncache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0\nexpires: Thu, 01 Jan 1970 00:00:01 GMT\nreferrer-policy: same-origin\nx-frame-options: SAMEORIGIN\nreport-to: {\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=mfXO2AEQKeJRkv7UQ14uCC%2FHV3vovcIa%2BkuJkv2CB6xE69AyJWQGS5wyBGHDuVRxUYEstzYcidC0s%2Bxso%2Br9tKWh4FnXBCexv%2BLwusOLg36gNxR7Ueh09MUhggDa6a0Pqjvm%2Bq56tXQOmg1z\"}]}\nnel: {\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}\nserver: cloudflare\ncf-ray: a434a99cefba0055-PDX\nalt-svc: h3=\":443\"; ma=86400\n\n"
+    }
+  }
+}

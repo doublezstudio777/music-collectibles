@@ -603,7 +603,7 @@
       "id": "adm-4",
       "name": "上傳 og 圖（1200×630）後 og:image 換成 /img/g/…，圖片 200",
       "ok": true,
-      "detail": "201 {'key': 'g/kuk6oAuYxLfCVMYn.jpg', 'url': '/img/g/kuk6oAuYxLfCVMYn.jpg'} https://lemibox.com/img/g/kuk6oAuYxLfCVMYn.jpg 200"
+      "detail": "201 {'key': 'g/KHTf-s6q612aOGuq.jpg', 'url': '/img/g/KHTf-s6q612aOGuq.jpg'} https://lemibox.com/img/g/KHTf-s6q612aOGuq.jpg 200"
     },
     {
       "id": "adm-5",
@@ -681,7 +681,7 @@
       "id": "adm-log",
       "name": "後台 SEO 寫入都有操作紀錄",
       "ok": true,
-      "detail": 21
+      "detail": 28
     },
     {
       "id": "adm-ui-1",
