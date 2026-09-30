@@ -1,7 +1,7 @@
 // MusicBrainz 抓取與藝人對應（import-musicbrainz.mjs 用；也可單獨跑：node scripts/musicbrainz-fetch.mjs）。
 //
 // API 規則（https://musicbrainz.org/doc/MusicBrainz_API/Rate_Limiting）：
-//   - User-Agent 固定 `Lemicang/0.1 ( https://yinzang.dblzm.workers.dev )`（聯絡方式用網站網址，不放任何人的 Email）
+//   - User-Agent 固定 `Lemibox/0.1 ( https://lemibox.com )`（聯絡方式用網站網址，不放任何人的 Email）
 //   - 每秒最多 1 次請求（這支每次請求間隔 ≥1.1 秒）；503 退避重試（2、4、8、16、32 秒）
 //   - 回應 JSON 存在 網站/.cache/musicbrainz/（已在 .gitignore），重跑時同一個網址直接讀快取，不重抓
 //
@@ -24,7 +24,7 @@ import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const CACHE = join(root, ".cache", "musicbrainz");
-const UA = "Lemicang/0.1 ( https://yinzang.dblzm.workers.dev )";
+const UA = "Lemibox/0.1 ( https://lemibox.com )";
 const API = "https://musicbrainz.org/ws/2/";
 
 // WSL 沒有 IPv6 出口，Node 預設的雙棧競速（250ms）會在 IPv4 還沒連上前就放棄：固定走 IPv4

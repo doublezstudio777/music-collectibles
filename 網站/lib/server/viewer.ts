@@ -25,7 +25,11 @@ export async function pageData() {
   return { c: await getCatalog() };
 }
 
-/** 目前網站的來源（https://yinzang.dblzm.workers.dev），給 og:url、og:image 這類要絕對網址的地方 */
+/**
+ * 目前網站的來源，給 og:url、og:image 這類要絕對網址的地方。
+ * 照請求的 host 算（正式網域 https://lemibox.com、舊網址 https://yinzang.dblzm.workers.dev 各回各的），不寫死：
+ * 舊網址還沒轉址前兩邊都要能用。開放收錄前要改成固定回正式網域（canonical），避免兩個 host 同時被收錄
+ */
 export async function siteOrigin() {
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:5173";

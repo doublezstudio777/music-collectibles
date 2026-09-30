@@ -9,7 +9,7 @@ wrangler deploy 回來時，新版本還在傳到各機器：這段時間同一�
 過程中看到的每一筆 404、舊版本回應都逐筆印出（時間、網址、狀態），不是只給數量。
 90 秒內沒達成就 exit 1。
 
-用法：python3 scripts/wait-live.py https://yinzang.dblzm.workers.dev <版本號>
+用法：python3 scripts/wait-live.py https://lemibox.com <版本號>（舊網址一樣可以）
 """
 import re, sys, time, urllib.error, urllib.request
 

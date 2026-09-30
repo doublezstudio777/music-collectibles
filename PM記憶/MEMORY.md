@@ -62,3 +62,5 @@
 - D1 遠端一句 `UNION ALL` 串太多 SELECT 會 `too many terms in compound SELECT`，全庫掃測試資料一張表一句查（2026-09-29）
 - 首頁放 Spotify 嵌入播放器後，Playwright `networkidle` 永遠等不到（播放器一直有連線），驗收與煙霧測試改 `load`＋最多 10 秒 settle；新元件 class 先 grep 有沒有撞名（`.pick` 是表單標籤，撞到多出內距，量寬度才看得出）；iframe 換歌用 key 重掛不改 src，才不會多一筆上一頁紀錄（2026-09-29）
 - MusicBrainz 大批對應：金曲金音名單沒有作品欄，佐證改用「中文維基各屆條目入圍表格同列作品」＋「MB 的 Wikidata→zhwiki 條目＝網站維基條目」，209 位對上 106。`workersInvocationsAdaptive` 的 quantiles 沒有 cpuTimeMax（整個查詢回 data:null），只查 P50/P90/P99；`until` 迴圈條件裡的 `pgrep -f 關鍵字` 一樣會比對到迴圈自己（2026-09-30 又踩一次，等背景工作改看輸出檔）（2026-09-30）
+- 帳號 API 金鑰能綁 Workers Custom Domain、改 Turnstile widget，但沒有 DNS／Redirect Rules／zone 設定權限：www 與 http→https 轉址寫在 `worker.ts`。Custom Domain 預設 http 也回 200，要自己轉。部署後轉址類斷言要等 `wait-live.py` 新版本生效後再驗，不然會被舊版本回應打假失敗（2026-09-30）
+- 正式站 Turnstile 要 token：Windows Chrome 以 `--remote-debugging-port=9222 --user-data-dir=暫存` 開，WSL 閘道 IP 會變（09-30 是 192.168.48.1），轉接 ps1 要照 `ip route` 重寫；CDP 下 `set_input_files` 傳 buffer 不傳路徑。`/login` 的 `%c%d font-size:0` console error 是 Turnstile 小框自己的，舊網址也有（2026-09-30）

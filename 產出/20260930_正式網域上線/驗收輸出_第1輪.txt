@@ -1,0 +1,58 @@
+PASS 首頁 1440px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/', 0, '')
+PASS 藝人目錄 1440px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/artists', 0, '')
+PASS 藝人頁 1440px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/artist/sunset-rollercoaster', 0, 'https://lemibox.com/artist/sunset-rollercoaster')
+PASS 藝人頁 1440px og:url 用新網域 https://lemibox.com/artist/sunset-rollercoaster
+PASS 收藏頁 1440px：200、留在 lemibox.com、無橫向溢出、內容正確 (200, 'https://lemibox.com/share/4', 0, 'https://lemibox.com/share/4')
+PASS 收藏頁 1440px og:url 用新網域 https://lemibox.com/share/4
+PASS 查證頁 1440px：200、留在 lemibox.com、無橫向溢出、內容正確 (200, 'https://lemibox.com/verify?c=AAFK9', 0, '')
+PASS 登入頁 1440px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/login', 0, '')
+PASS 註冊頁 1440px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/login?mode=register', 0, '')
+PASS 意見回饋 1440px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/feedback', 0, '')
+PASS 首頁 390px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/', 0, '')
+PASS 藝人目錄 390px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/artists', 0, '')
+PASS 藝人頁 390px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/artist/sunset-rollercoaster', 0, 'https://lemibox.com/artist/sunset-rollercoaster')
+PASS 藝人頁 390px og:url 用新網域 https://lemibox.com/artist/sunset-rollercoaster
+PASS 收藏頁 390px：200、留在 lemibox.com、無橫向溢出、內容正確 (200, 'https://lemibox.com/share/4', 0, 'https://lemibox.com/share/4')
+PASS 收藏頁 390px og:url 用新網域 https://lemibox.com/share/4
+PASS 查證頁 390px：200、留在 lemibox.com、無橫向溢出、內容正確 (200, 'https://lemibox.com/verify?c=AAFK9', 0, '')
+PASS 登入頁 390px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/login', 0, '')
+PASS 註冊頁 390px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/login?mode=register', 0, '')
+PASS 意見回饋 390px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/feedback', 0, '')
+PASS 首頁 360px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/', 0, '')
+PASS 藝人目錄 360px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/artists', 0, '')
+PASS 藝人頁 360px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/artist/sunset-rollercoaster', 0, 'https://lemibox.com/artist/sunset-rollercoaster')
+PASS 藝人頁 360px og:url 用新網域 https://lemibox.com/artist/sunset-rollercoaster
+PASS 收藏頁 360px：200、留在 lemibox.com、無橫向溢出、內容正確 (200, 'https://lemibox.com/share/4', 0, 'https://lemibox.com/share/4')
+PASS 收藏頁 360px og:url 用新網域 https://lemibox.com/share/4
+PASS 查證頁 360px：200、留在 lemibox.com、無橫向溢出、內容正確 (200, 'https://lemibox.com/verify?c=AAFK9', 0, '')
+PASS 登入頁 360px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/login', 0, '')
+PASS 註冊頁 360px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/login?mode=register', 0, '')
+PASS 意見回饋 360px：200、留在 lemibox.com、無橫向溢出 (200, 'https://lemibox.com/feedback', 0, '')
+FAIL 公開頁 console error 0（排除 Spotify 播放器） ['1440 https://lemibox.com/login: %c%d font-size:0;color:transparent NaN', '1440 https://lemibox.com/login: %c%d font-size:0;color:transparent NaN', '1440 https://lemibox.com/login?mode=register: %c%d font-size:0;color:transparent NaN', '1440 https://lemibox.com/login?mode=register: %c%d font-size:0
+PASS 圖片 預覽圖 og 200 image/* ('https://lemibox.com/img/p/efHF1UgtvxgnCtLD_Cpx9jvHF_og.jpg', 200, 'image/jpeg', 124171)
+PASS 圖片 縮圖 200 image/* ('https://lemibox.com/img/p/efHF1UgtvxgnCtLD_Cpx9jvHF_t.webp', 200, 'image/webp', 18856)
+PASS www.lemibox.com 301 到 apex（保留路徑與參數） (301, 'https://lemibox.com/share/4?a=1')
+FAIL http 轉 https (200, None)
+PASS 舊網址 workers.dev 照常 200（沒轉址） 200
+PASS 新網域 noindex 照舊（ALLOW_INDEXING=0） 
+(node:742) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+PASS 註冊送出成功、進入驗證碼畫面 驗證碼已寄到 zukawork0312+lemibox0930@gmail.com
+PASS 註冊驗證信真的送達（Resend last_event=delivered） ('01a0f247-a820-779d-a6ae-9313f6d33279', '樂迷藏 <noreply@notify.dblzm.com>', '樂迷藏驗證碼 785051', 'delivered')
+PASS 驗證後登入成功（/api/me 回帳號） https://lemibox.com/
+PASS session cookie 發在 lemibox.com、HttpOnly、Secure {'domain': 'lemibox.com', 'httpOnly': True, 'secure': True, 'sameSite': 'Lax'}
+PASS 登出後 /api/me 沒有帳號 
+PASS 登入成功 https://lemibox.com/
+PASS 重設密碼信真的送達（Resend last_event=delivered） ('01a0f248-10a8-75b8-92b8-945d7593cdb3', '樂迷藏 <noreply@notify.dblzm.com>', '樂迷藏重設密碼驗證碼 862886', 'delivered')
+PASS 重設密碼後直接登入 https://lemibox.com/
+PASS 舊密碼＋假 Turnstile token 被擋（非 200） 400
+PASS 上傳照片成功（帶查證碼） {'id': 'P4HNEJQCAj-OIlIT', 'code': '5BMMZ', 'url': '/img/p/P4HNEJQCAj-OIlIT.webp'}
+PASS 發布收藏成功 [201, '{"n":7}']
+PASS 新收藏單則頁 /share/7 照片載入 https://lemibox.com/share/7
+FAIL 新照片網址 200（燒好浮水印的檔） ('/img/p/P4HNEJQCAj-OIlIT.webp', 401, 22)
+PASS 新照片查證碼在 /verify 查得到 
+PASS 新收藏 390px 無橫向溢出 -15
+FAIL Chrome 操作全程 console error 0 ['https://lemibox.com/login?mode=register: %c%d font-size:0;color:transparent NaN', 'https://lemibox.com/login?mode=register: %c%d font-size:0;color:transparent NaN', 'https://lemibox.com/login: %c%d font-size:0;color:transparent NaN', 'https://lemibox.com/login: %c%d font-size:0;color:transparent N
+
+49/53 通過
+exit=0

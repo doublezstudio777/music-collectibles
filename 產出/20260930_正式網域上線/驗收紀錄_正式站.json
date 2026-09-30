@@ -1,0 +1,197 @@
+[
+ {
+  "項目": "首頁 1440px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/', 0, '')"
+ },
+ {
+  "項目": "藝人目錄 1440px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/artists', 0, '')"
+ },
+ {
+  "項目": "藝人頁 1440px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/artist/sunset-rollercoaster', 0, 'https://lemibox.com/artist/sunset-rollercoaster')"
+ },
+ {
+  "項目": "藝人頁 1440px og:url 用新網域",
+  "通過": true,
+  "證據": "https://lemibox.com/artist/sunset-rollercoaster"
+ },
+ {
+  "項目": "收藏頁 1440px：200、留在 lemibox.com、無橫向溢出、內容正確",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/share/4', 0, 'https://lemibox.com/share/4')"
+ },
+ {
+  "項目": "收藏頁 1440px og:url 用新網域",
+  "通過": true,
+  "證據": "https://lemibox.com/share/4"
+ },
+ {
+  "項目": "查證頁 1440px：200、留在 lemibox.com、無橫向溢出、內容正確",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/verify?c=AAFK9', 0, '')"
+ },
+ {
+  "項目": "登入頁 1440px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/login', 0, '')"
+ },
+ {
+  "項目": "註冊頁 1440px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/login?mode=register', 0, '')"
+ },
+ {
+  "項目": "意見回饋 1440px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/feedback', 0, '')"
+ },
+ {
+  "項目": "首頁 390px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/', 0, '')"
+ },
+ {
+  "項目": "藝人目錄 390px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/artists', 0, '')"
+ },
+ {
+  "項目": "藝人頁 390px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/artist/sunset-rollercoaster', 0, 'https://lemibox.com/artist/sunset-rollercoaster')"
+ },
+ {
+  "項目": "藝人頁 390px og:url 用新網域",
+  "通過": true,
+  "證據": "https://lemibox.com/artist/sunset-rollercoaster"
+ },
+ {
+  "項目": "收藏頁 390px：200、留在 lemibox.com、無橫向溢出、內容正確",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/share/4', 0, 'https://lemibox.com/share/4')"
+ },
+ {
+  "項目": "收藏頁 390px og:url 用新網域",
+  "通過": true,
+  "證據": "https://lemibox.com/share/4"
+ },
+ {
+  "項目": "查證頁 390px：200、留在 lemibox.com、無橫向溢出、內容正確",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/verify?c=AAFK9', 0, '')"
+ },
+ {
+  "項目": "登入頁 390px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/login', 0, '')"
+ },
+ {
+  "項目": "註冊頁 390px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/login?mode=register', 0, '')"
+ },
+ {
+  "項目": "意見回饋 390px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/feedback', 0, '')"
+ },
+ {
+  "項目": "首頁 360px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/', 0, '')"
+ },
+ {
+  "項目": "藝人目錄 360px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/artists', 0, '')"
+ },
+ {
+  "項目": "藝人頁 360px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/artist/sunset-rollercoaster', 0, 'https://lemibox.com/artist/sunset-rollercoaster')"
+ },
+ {
+  "項目": "藝人頁 360px og:url 用新網域",
+  "通過": true,
+  "證據": "https://lemibox.com/artist/sunset-rollercoaster"
+ },
+ {
+  "項目": "收藏頁 360px：200、留在 lemibox.com、無橫向溢出、內容正確",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/share/4', 0, 'https://lemibox.com/share/4')"
+ },
+ {
+  "項目": "收藏頁 360px og:url 用新網域",
+  "通過": true,
+  "證據": "https://lemibox.com/share/4"
+ },
+ {
+  "項目": "查證頁 360px：200、留在 lemibox.com、無橫向溢出、內容正確",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/verify?c=AAFK9', 0, '')"
+ },
+ {
+  "項目": "登入頁 360px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/login', 0, '')"
+ },
+ {
+  "項目": "註冊頁 360px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/login?mode=register', 0, '')"
+ },
+ {
+  "項目": "意見回饋 360px：200、留在 lemibox.com、無橫向溢出",
+  "通過": true,
+  "證據": "(200, 'https://lemibox.com/feedback', 0, '')"
+ },
+ {
+  "項目": "公開頁 console error 0（排除 Spotify 播放器）",
+  "通過": true,
+  "證據": "[]"
+ },
+ {
+  "項目": "圖片 預覽圖 og 200 image/*",
+  "通過": true,
+  "證據": "('https://lemibox.com/img/p/efHF1UgtvxgnCtLD_Cpx9jvHF_og.jpg', 200, 'image/jpeg', 124171)"
+ },
+ {
+  "項目": "圖片 縮圖 200 image/*",
+  "通過": true,
+  "證據": "('https://lemibox.com/img/p/efHF1UgtvxgnCtLD_Cpx9jvHF_t.webp', 200, 'image/webp', 18856)"
+ },
+ {
+  "項目": "www.lemibox.com 301 到 apex（保留路徑與參數）",
+  "通過": true,
+  "證據": "(301, 'https://lemibox.com/share/4?a=1')"
+ },
+ {
+  "項目": "http 轉 https",
+  "通過": true,
+  "證據": "(301, 'https://lemibox.com/')"
+ },
+ {
+  "項目": "舊網址 workers.dev 照常 200（沒轉址）",
+  "通過": true,
+  "證據": "200"
+ },
+ {
+  "項目": "新網域 noindex 照舊（ALLOW_INDEXING=0）",
+  "通過": true,
+  "證據": ""
+ },
+ {
+  "項目": "新照片縮圖沒登入 200 image/*",
+  "通過": true,
+  "證據": "('/img/p/P4HNEJQCAj-OIlIT_t.webp', 200, 18022)"
+ },
+ {
+  "項目": "新照片大圖沒登入 401（設計如此，大圖要登入）",
+  "通過": true,
+  "證據": "('/img/p/P4HNEJQCAj-OIlIT.webp', 401)"
+ }
+]

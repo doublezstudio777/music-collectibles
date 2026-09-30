@@ -96,9 +96,17 @@ function limitKey(req: Request, env: Env): string | null {
   return req.headers.get("cf-connecting-ip");
 }
 
+// 正式網域（2026-09-30 定案 lemibox.com）：www 綁在同一個 Worker（Custom Domain），這裡一律 301 到 apex。
+// http 也一律 301 到 https apex（Custom Domain 預設 http 照樣回 200，zone 的 Always Use HTTPS 沒開、金鑰也沒有改 zone 設定的權限）。
+// 帳號的 API 金鑰沒有 Redirect Rules 權限，改在 Worker 做；不碰 D1，不吃限流。舊的 workers.dev 網址不轉，照常服務
+const WWW_HOST = "www.lemibox.com";
+const APEX_HOST = "lemibox.com";
+const APEX = "https://lemibox.com";
+
 const worker = {
   async fetch(raw: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(raw.url);
+    if (url.hostname === WWW_HOST || (url.hostname === APEX_HOST && url.protocol === "http:")) return Response.redirect(APEX + url.pathname + url.search, 301);
     const ip = limitKey(raw, env);
     if (ip) {
       const wait = take(ip, weight(raw, url));

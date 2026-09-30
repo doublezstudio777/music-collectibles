@@ -42,7 +42,7 @@ const EDGE = 800;
 const QUALITY = 82;
 const BUCKET = "yinzang-photos";
 const STORAGE_LIMIT = 8 * 1024 ** 3;
-const UA = "YueMiCang/1.0 (https://yinzang.dblzm.workers.dev; doublezstudio777@gmail.com) artist-photo-import";
+const UA = "Lemibox/1.0 (https://lemibox.com; doublezstudio777@gmail.com) artist-photo-import";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /* ---------- wrangler ---------- */

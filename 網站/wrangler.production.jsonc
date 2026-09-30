@@ -1,4 +1,4 @@
-// 樂迷藏正式環境（Cloudflare Workers，yinzang.dblzm.workers.dev）。
+// 樂迷藏正式環境（Cloudflare Workers：正式網域 lemibox.com，舊網址 yinzang.dblzm.workers.dev 照常保留）。
 // 只有 scripts/deploy.sh 會用（YINZANG_DEPLOY=production）。本機 dev 不讀這份。
 // 已填（2026-09-27 首次部署）：account_id、database_id、TURNSTILE_SITE_KEY；雜湊次數依使用者決定用 5 萬次。步驟見 產出/20260927_部署手冊.md
 // 密鑰一律 `wrangler secret put`，不寫在這裡：TURNSTILE_SECRET、RESEND_API_KEY、BUDGET_WEBHOOK_SECRET
@@ -12,6 +12,12 @@
   "account_id": "48743ee150caa3577d8abd6e99196709",
   "workers_dev": true,
   "preview_urls": false,
+  // 正式網域（2026-09-30）：apex 與 www 都是 Custom Domain 綁這個 Worker，www 由 worker.ts 301 到 apex。
+  // 寫在這裡讓 wrangler deploy 維持綁定；DNS 與憑證由 Cloudflare 自動管理（帳號金鑰沒有 DNS 權限也能綁）
+  "routes": [
+    { "pattern": "lemibox.com", "custom_domain": true },
+    { "pattern": "www.lemibox.com", "custom_domain": true }
+  ],
   "d1_databases": [
     {
       "binding": "DB",
