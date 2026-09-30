@@ -171,7 +171,7 @@ ul { list-style: none; margin: 0; padding: 0; }
 }
 .nav-row { align-items: center; display: flex; gap: 24px; height: var(--nav-h); }
 .logo { --logo-nudge: -.75px; align-items: center; display: inline-flex; flex: none; font-size: 1.25rem; font-weight: 700; gap: 8px; letter-spacing: -.01em; }
-/* 插圖（2026-09-30）：viewBox 已貼齊墨跡置中，插圖墨跡中心比「樂迷藏」字的墨跡中心低 .75px（Noto Sans TC 700、20px），用 --logo-nudge 往上補；換字型或字級要重量（產出/20260930_Logo上線/_量測_導覽列置中.py） */
+/* 插圖（2026-09-30，B 版正方形紙套）：viewBox 已置中成正方形，插圖墨跡中心比「樂迷藏」字的墨跡中心低 .75px（Noto Sans TC 700、20px），用 --logo-nudge 往上補；換字型或字級要重量（產出/20260930_Logo上線/_量測_導覽列置中.py） */
 .logo-mark { display: block; flex: none; height: 30px; transform: translateY(var(--logo-nudge)); width: 30px; }
 .logo-text { display: block; line-height: 1; }
 .nav-search { flex: 1; max-width: 420px; }
@@ -1599,10 +1599,10 @@ p.fill-row { display: flex; }
   .nav-icon, .nav-msg { width: 40px; }
 }
 /* 320 級小手機（iPhone SE 一代）登入狀態仍超出 29px：頁首左右留白 18→12、插圖 30→26、炫收藏鈕左右內距縮小。
-   插圖縮小後墨跡偏移同比例變小（.75×26/30≈.65px），nudge 跟著改 */
+   量測 26px 時偏移仍是 .75px（偏移來自字在字框裡的位置，不是插圖），nudge 不變 */
 @media (max-width: 340px) {
   .nav .wrap { padding: 0 12px; }
-  .logo { --logo-nudge: -.65px; gap: 6px; }
+  .logo { --logo-nudge: -.75px; gap: 6px; }
   .logo-mark { height: 26px; width: 26px; }
   .nav-right .btn-p { padding-left: 10px; padding-right: 10px; }
 }
