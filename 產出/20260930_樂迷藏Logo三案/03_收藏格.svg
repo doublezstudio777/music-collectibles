@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="320" viewBox="0 0 800 320" role="img" aria-labelledby="title desc">
+  <title id="title">樂迷藏 Logo：收藏格</title>
+  <desc id="desc">四個收藏欄位中的一格以橘色標記，表現樂迷共同建立的收藏目錄。</desc>
+  <g transform="translate(76 78)">
+    <rect x="12" y="12" width="136" height="136" fill="none" stroke="#111111" stroke-width="12"/>
+    <path d="M80 20V140M20 80H140" fill="none" stroke="#111111" stroke-width="10"/>
+    <rect x="87" y="27" width="46" height="46" fill="#FF6A00"/>
+  </g>
+  <text x="314" y="218" fill="#111111" font-family="Noto Sans TC, PingFang TC, Microsoft JhengHei, sans-serif" font-size="112" font-weight="700" letter-spacing="6">樂迷藏</text>
+</svg>

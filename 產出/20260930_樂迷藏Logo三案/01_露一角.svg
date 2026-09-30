@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="320" viewBox="0 0 800 320" role="img" aria-labelledby="title desc">
+  <title id="title">樂迷藏 Logo：露一角</title>
+  <desc id="desc">直角收藏盒中露出一件橘色物件，搭配黑色樂迷藏字標。</desc>
+  <g transform="translate(76 78)">
+    <path d="M12 12H102M148 58V148H12V12" fill="none" stroke="#111111" stroke-width="12" stroke-linejoin="miter"/>
+    <rect x="102" y="12" width="46" height="46" fill="#FF6A00"/>
+    <path d="M34 48H94V108H34Z" fill="none" stroke="#111111" stroke-width="10"/>
+    <path d="M45 125H115" fill="none" stroke="#111111" stroke-width="10"/>
+  </g>
+  <text x="314" y="218" fill="#111111" font-family="Noto Sans TC, PingFang TC, Microsoft JhengHei, sans-serif" font-size="112" font-weight="700" letter-spacing="6">樂迷藏</text>
+</svg>

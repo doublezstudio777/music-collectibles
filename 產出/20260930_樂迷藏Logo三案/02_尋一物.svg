@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="320" viewBox="0 0 800 320" role="img" aria-labelledby="title desc">
+  <title id="title">樂迷藏 Logo：尋一物</title>
+  <desc id="desc">方形路線繞向一個橘色物件，表現尋找收藏和發現。</desc>
+  <g transform="translate(76 78)" fill="none" stroke="#111111" stroke-width="12" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M12 56V12H148V148H12V100"/>
+    <path d="M46 54V46H114V114H46V88"/>
+  </g>
+  <rect x="140" y="143" width="32" height="32" fill="#FF6A00"/>
+  <text x="314" y="218" fill="#111111" font-family="Noto Sans TC, PingFang TC, Microsoft JhengHei, sans-serif" font-size="112" font-weight="700" letter-spacing="6">樂迷藏</text>
+</svg>
