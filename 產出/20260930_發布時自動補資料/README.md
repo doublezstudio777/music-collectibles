@@ -1,6 +1,6 @@
 # 發布時自動補資料（三層方案第 1 層）
 
-狀態：**本機驗收完成、待部署**。分支 `feat/autofill`，沒合回 main、沒上正式站：`feat/my-page` 還沒合回 main，照派工規則不搶部署。
+狀態：**已上線**，Cloudflare Version ID `775794b6`（2026-10-01），遷移 0025。
 
 ## 做法
 
@@ -71,3 +71,27 @@
 
 - **遷移編號撞號**：`feat/my-page` 也用 0024（`0024_profile_links_fav_artists.sql`）。它先合回 main 的話，這邊 rebase 後要刪掉 `0024_autofill.sql` 與對應 snapshot／journal，重跑 `npm run db:generate -- --name autofill` 產生 0025
 - 部署後在正式站測一次，測試資料用完列清單再刪
+
+## 部署與正式站測試（2026-10-01）
+
+- rebase 到 main `4f4263b`，遷移改 0025；部署前備份 `備份/20261001-0003-remote`（另有 `20260930-2359-remote`）
+- `deploy.sh` 第 3 步備份的 D1 已匯出完整，但因 2 個 R2 檔（`v/Lj24xQ6VH9YzYVV-.webp`、`v/F2fJBa9zPnBj8PiK.webp`，都是 09-30 已刪除的大頭貼）不在而 exit 3。改手動照腳本第 4～7 步：套遷移 0025、部署、保存資產、等新版本生效、兩個網址煙霧測試（含瀏覽器）全過
+- 正式站測試：測試帳號 `u-aftest1001` 送出 ADOY →《Catnip》2017 → CD 韓版（條碼 8809447087986）。三筆都高信心：藝人團體／國外／別名 아도이／MBID；系列 MBID、類型改 EP；系列先建了 MusicBrainz 韓國首版，會員的韓版查到同一版後併進來（自動建的那筆收掉），補 2017、2017-05-23、Angel House、MBMC1536、紙盒（Digipak）、6 首。`/artist/adoy`、`/artist/adoy/1` 200
+
+### 正式站測試資料（未刪，等使用者決定）
+
+| 表 | 列 |
+|---|---|
+| users | `u-aftest1001` 1 列 |
+| sessions | 該帳號 1 列 |
+| score_events | 該帳號 4 列（新增 +15） |
+| user_scores | 該帳號 1 列 |
+| rate_limits | `submit:u-aftest1001` 1 列 |
+| catalog_additions | id 7、8、9 |
+| autofill_jobs | id 1、2、3 |
+| artists | `adoy` |
+| series | id 681（`adoy/1`） |
+| items | id 739 |
+| versions | id 1060、1061（1061 已軟刪除） |
+
+`autofill_state` 的 lock、mb_last 兩列是系統狀態，不算測試資料。

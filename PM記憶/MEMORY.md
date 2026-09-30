@@ -71,3 +71,4 @@
 - 跟另一個 PM 平行施工用 `git worktree`：新目錄沒有 `.wrangler/state` 與 `.deploy-assets`，本機 DB 用 migrate＋seed 重建、伺服器開別的 port（8795）；部署前從主目錄 `cp -a .deploy-assets`，合併後再拷回主目錄。正式站擋 `Python-urllib` UA（403），腳本打正式站要帶瀏覽器 UA；Chromium `post_data_buffer` 讀不到 multipart 裡的 Blob，驗上傳內容用 init script 包 `fetch` 記 FormData（2026-09-30）
 - 平行 worktree 開發要先看對方分支的 drizzle 遷移編號，兩邊各自 `db:generate` 都會拿到同一號；後合的那邊 rebase 後刪掉自己的遷移＋snapshot／journal 重產（2026-09-30）
 - 路由裡要背景做事用 `import { waitUntil } from "cloudflare:workers"`，本機 wrangler dev 也會跑；MusicBrainz 從本機連續查偶發 503，批次要有「等幾秒重試＋整批延後」兩層（2026-09-30）
+- `deploy.sh` 第 3 步備份遇到「已刪除照片的 R2 檔不在」會 exit 3；D1 已匯出完整時可照腳本第 4～7 步手動部署，煙霧測試用腳本複本改 VID 後以 --smoke-only 跑（複本要放 scripts/ 下，腳本會 cd 到上一層）（2026-10-01）
