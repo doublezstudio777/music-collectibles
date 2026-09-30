@@ -1441,6 +1441,26 @@ button.sf-row:hover, .sf-row[aria-pressed="true"] { background: var(--surface); 
 .add-form .input { max-width: 280px; }
 .add-form .add-year { max-width: 90px; }
 .add-edits { margin-top: 4px; }
+/* 後台自動補資料（2026-09-30） */
+.af { border-left: 2px solid var(--line); display: grid; font-size: var(--text-sm); gap: 6px; margin-top: 8px; padding-left: 10px; }
+.af-head { align-items: baseline; display: flex; flex-wrap: wrap; gap: 8px; }
+.af-badge { border: 1px solid var(--line); font-size: var(--text-xs); font-weight: 600; padding: 1px 6px; white-space: nowrap; }
+.af-high { border-color: var(--text); }
+.af-dup { border-color: var(--orange-text); color: var(--orange-text); }
+.af-badge.af-dup { font-weight: 600; }
+.af-queued, .af-none { color: var(--muted); }
+.af-summary { overflow-wrap: anywhere; }
+.af-fields { display: grid; gap: 2px; }
+.af-fields div { display: flex; gap: 8px; }
+.af-fields dt { color: var(--muted); flex: none; min-width: 7em; }
+.af-fields dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+p.af-dup { color: var(--text); }
+.af-src { display: flex; flex-wrap: wrap; gap: 4px 12px; overflow-wrap: anywhere; }
+.af-cands { display: grid; gap: 2px; list-style: none; margin: 0; padding: 0; }
+.af-cands li { overflow-wrap: anywhere; }
+.af-cands .btn-text { margin-left: 8px; }
+.af-acts { align-items: center; display: flex; flex-wrap: wrap; gap: 12px; }
+.af-recheck { margin-top: 0; }
 .owner-box { min-width: 0; }
 .owner-box .seg { align-self: stretch; display: flex; }
 .owner-box .seg button { flex: 1; min-width: 0; padding: 0 6px; }

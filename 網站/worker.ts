@@ -25,6 +25,7 @@ import handler from "vinext/server/fetch-handler";
 import { take, tooMany, weight } from "./lib/edge/limiter";
 import { cleanupOldRecords } from "./lib/server/cleanup";
 import { runSpotifyDraw } from "./lib/server/spotify-draw";
+import { runAutofill } from "./lib/server/autofill";
 import { recomputeScores } from "./lib/server/scores";
 
 type Env = { DB: D1Database; CF_VERSION_METADATA?: { id: string }; LOCAL_TEST?: string; GEO_DEFAULT?: string };
@@ -157,7 +158,20 @@ const worker = {
   // - 彙總會員分數、等級、稱號（lib/server/scores.ts；SQL 在 D1 裡跑，不吃 Worker CPU）
   // 兩件事各自獨立，失敗只記 console，不影響另一件與下一次排程。
   // - Spotify 自動抽歌（2026-09-30）：另一條 `*/5 18-20 * * *`，每 5 分鐘抽一批（lib/server/spotify-draw.ts）
+  // - 發布時自動補資料（2026-09-30）：`*/10 * * * *` 接手 waitUntil 沒跑完的工作（lib/server/autofill.ts），沒工作時只查一次 D1
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
+    if (event.cron === "*/10 * * * *") {
+      ctx.waitUntil(
+        runAutofill({ ms: 120_000, maxCalls: 45 })
+          .then((r) => {
+            if (r.done) console.log("[樂迷藏排程] 自動補資料", JSON.stringify(r));
+          })
+          .catch((e) => {
+            console.error("[樂迷藏排程] 自動補資料失敗", e);
+          }),
+      );
+      return;
+    }
     if (event.cron !== "0 18 * * *") {
       ctx.waitUntil(
         runSpotifyDraw({ now: event.scheduledTime })

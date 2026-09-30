@@ -15,6 +15,7 @@ import { ensureItem } from "@/lib/server/series-link";
 import { mergeArtists } from "@/lib/server/duplicates";
 import { creditCreate } from "@/lib/server/scores";
 import { HttpError } from "@/lib/server/trade";
+import { autofillFor, enqueueAutofill, requeueRef, type AdminAutofill } from "@/lib/server/autofill";
 
 export type AdditionType = "artist" | "series" | "version";
 const nowIso = () => new Date().toISOString();
@@ -41,6 +42,8 @@ export async function recordAddition(type: AdditionType, ref: string, u: User) {
     .returning({ id: catalogAdditions.id });
   // 新增 +15 當下入帳（2026-09-29）：藝人用新增紀錄的 id，系列、版本用自己的 id（跟每日彙總同一個來源鍵）
   if (r.length) await creditCreate(u.id, type, type === "artist" ? r[0].id : Number(ref));
+  // 發布時自動補資料（2026-09-30）：背景查 MusicBrainz／Wikidata，不卡表單；失敗不影響新增本身
+  if (r.length) await enqueueAutofill(r[0].id, type, ref).catch((e) => console.error("[自動補資料] 排工作失敗", e));
 }
 
 /** 表單用：這位會員自己新增過的（藝人 slug、系列鍵），這些在表單上是「改名」不是「改」 */
@@ -145,6 +148,7 @@ export async function renameAddition(u: User, rawType: unknown, rawRef: unknown,
         await db.update(shares).set({ about: JSON.stringify(next) }).where(eq(shares.no, s.no));
       }
       await db.insert(catalogAdditionEdits).values({ additionId: add.id, byId: u.id, fromName: a.name, toName: name });
+      await requeueRef("artist", ref);
     }
     return { type, slug: ref, name };
   }
@@ -157,6 +161,7 @@ export async function renameAddition(u: User, rawType: unknown, rawRef: unknown,
     await db.update(series).set({ title: name, year, name: full, updatedAt: at, lastEditBy: u.id }).where(eq(series.id, w.id));
     await recomposeSeriesShares(w.id, `${w.artistSlug}/${w.no}`, name);
     await db.insert(catalogAdditionEdits).values({ additionId: add.id, byId: u.id, fromName: w.title, toName: name, fromYear: w.year, toYear: year });
+    await requeueRef("series", String(w.id));
   }
   return { type, key: `${w.artistSlug}/${w.no}`, title: name, year, name: `${year}《${name}》${w.seriesType}` };
 }
@@ -205,6 +210,7 @@ async function renameVersion(u: User, rawRef: string, name: string, rawYear: unk
       await db.update(shares).set({ what: composeWhat({ series: v.seriesTitle, item: label, version: name }) }).where(eq(shares.no, s.no));
     }
     await db.insert(catalogAdditionEdits).values({ additionId: add.id, byId: u.id, fromName: v.edition, toName: name, fromYear: v.year, toYear: year });
+    await requeueRef("version", String(row.id));
   }
   return { type: "version" as const, key: v.key, itemId: v.itemId, version: { id: v.key.split("-").pop()!, edition: name, year, region, key: v.key } };
 }
@@ -228,6 +234,8 @@ export type AdminAddition = {
   used: number;
   gone: boolean;
   edits: { by: string; from: string; to: string; at: string }[];
+  /** 自動補資料的結果（沒有就是這筆在功能上線前新增的） */
+  autofill?: AdminAutofill;
 };
 
 export async function listAdditions(): Promise<AdminAddition[]> {
@@ -244,7 +252,9 @@ export async function listAdditions(): Promise<AdminAddition[]> {
   const vBy = new Map((await versionRows(rows.filter((r) => r.type === "version").map((r) => Number(r.ref)))).map((v) => [String(v.id), v]));
   const names = await userNames([...rows.flatMap((r) => [r.createdBy, r.confirmedBy ?? ""]), ...edits.map((e) => e.byId)]);
   const who = (id: string | null) => (id ? (names.get(id)?.name ?? "（已刪除）") : null);
-  return rows.map((r) => {
+  const af = await autofillFor(rows.map((r) => r.id));
+  return rows.map((r) => ({ ...one(r), autofill: af.get(r.id) }));
+  function one(r: (typeof rows)[number]): AdminAddition {
     const own = edits.filter((e) => e.additionId === r.id).map((e) => ({ by: who(e.byId) ?? "", from: e.fromYear || e.toYear ? `${e.fromName}（${e.fromYear || "不記得"}）` : e.fromName, to: e.fromYear || e.toYear ? `${e.toName}（${e.toYear || "不記得"}）` : e.toName, at: e.createdAt }));
     if (r.type === "artist") {
       const a = aBy.get(r.ref);
@@ -278,7 +288,7 @@ export async function listAdditions(): Promise<AdminAddition[]> {
       used: key ? shRows.filter((s) => s.seriesKey === key).length : 0,
       gone: !w || Boolean(w.deletedAt), edits: own,
     };
-  });
+  }
 }
 
 async function log(adminId: string, action: string, target: string, detail: Record<string, unknown>) {
