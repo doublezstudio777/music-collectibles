@@ -64,3 +64,5 @@
 - MusicBrainz 大批對應：金曲金音名單沒有作品欄，佐證改用「中文維基各屆條目入圍表格同列作品」＋「MB 的 Wikidata→zhwiki 條目＝網站維基條目」，209 位對上 106。`workersInvocationsAdaptive` 的 quantiles 沒有 cpuTimeMax（整個查詢回 data:null），只查 P50/P90/P99；`until` 迴圈條件裡的 `pgrep -f 關鍵字` 一樣會比對到迴圈自己（2026-09-30 又踩一次，等背景工作改看輸出檔）（2026-09-30）
 - 帳號 API 金鑰能綁 Workers Custom Domain、改 Turnstile widget，但沒有 DNS／Redirect Rules／zone 設定權限：www 與 http→https 轉址寫在 `worker.ts`。Custom Domain 預設 http 也回 200，要自己轉。部署後轉址類斷言要等 `wait-live.py` 新版本生效後再驗，不然會被舊版本回應打假失敗（2026-09-30）
 - 正式站 Turnstile 要 token：Windows Chrome 以 `--remote-debugging-port=9222 --user-data-dir=暫存` 開，WSL 閘道 IP 會變（09-30 是 192.168.48.1），轉接 ps1 要照 `ip route` 重寫；CDP 下 `set_input_files` 傳 buffer 不傳路徑。`/login` 的 `%c%d font-size:0` console error 是 Turnstile 小框自己的，舊網址也有（2026-09-30）
+- vinext 的 `metadata.icons` 會把圖示 `<link>` 串流到 `<body>` 再靠 JS 搬進 head，iOS／爬蟲讀原始 HTML 看不到；圖示 link 直接寫在 layout 的 `<head>`。Logo 跟中文字對齊：插圖 viewBox 置中後仍比字的墨跡中心低 .75px（Noto Sans TC 700 20px），偏移來自字不是圖；量墨跡用 4 倍截圖取非白像素上下緣（2026-09-30）
+- 派工中途收到「暫停」但已部署：不自己回退，先把改動放 wip 分支 push、在 00_現況.md 寫明正式站與 main 不一致，等指示（2026-09-30）

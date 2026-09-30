@@ -9,6 +9,7 @@ import { clearFollows } from "@/lib/state";
 import { logout, openPanel, useAccount } from "@/lib/account";
 import { avatarLabel } from "@/lib/avatar-label";
 import { SITE_NAME } from "@/lib/data";
+import { LogoMark } from "@/components/logo-mark";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -25,7 +26,8 @@ export function SiteHeader() {
     <header className="nav">
       <div className="wrap nav-row">
         <Link className="logo" href="/">
-          {SITE_NAME}
+          <LogoMark className="logo-mark" />
+          <span className="logo-text">{SITE_NAME}</span>
         </Link>
         {isForm ? (
           <Link className="nav-cancel" href="/">

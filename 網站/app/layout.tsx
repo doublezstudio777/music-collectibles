@@ -13,7 +13,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: { default: SITE_TITLE, template: `%s｜${SITE_NAME}` },
     description: SITE_DESC,
-    icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
     ...(indexingAllowed() ? {} : { robots: { index: false } }),
   };
 }
@@ -24,6 +23,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="zh-Hant-TW">
       <head>
+        {/* 2026-09-30 Logo 定案（B 版正方形紙套）：分頁用簡化小圖示（SVG 沒有底線；PNG 備援 16px 沒底線、32px 留加粗底線），iPhone 主畫面用完整插圖 180px。
+            直接寫在 <head>，不走 metadata.icons：vinext 會把 metadata 的圖示串流到 <body> 再靠 JS 搬，iOS 與爬蟲讀原始 HTML 看不到 */}
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+        <link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
