@@ -130,7 +130,7 @@ function Row({ r, done }: { r: AdminAddition; done: () => void }) {
           {r.gone || !r.href ? (
             <span>{r.name}（已不在）</span>
           ) : (
-            <Link className="link" href={r.href} target="_blank" data-testid="add-name">
+            <Link className="link" href={r.href} target="_blank" prefetch={false} data-testid="add-name">
               {r.name}
             </Link>
           )}
