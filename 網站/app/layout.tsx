@@ -21,7 +21,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   // 贊助：全站最不顯眼的小字連結，網址在環境變數 SPONSOR_URL，沒設就整個不出現（2026-09-28）
   const sponsor = sponsorUrl();
   return (
-    <html lang="zh-Hant-TW">
+    <html lang="zh-Hant-TW" suppressHydrationWarning>
       <head>
         {/* 2026-09-30 Logo 定案（B 版正方形紙套）：分頁用簡化小圖示（SVG 沒有底線；PNG 備援 16px 沒底線、32px 留加粗底線），iPhone 主畫面用完整插圖 180px。
             直接寫在 <head>，不走 metadata.icons：vinext 會把 metadata 的圖示串流到 <body> 再靠 JS 搬，iOS 與爬蟲讀原始 HTML 看不到 */}
@@ -29,6 +29,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
         <link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+        {/* 上次是登入狀態 → 第一個畫面就收起首頁訪客標語（見 lib/account.tsx rememberAuth、globals.css .home-tagline）。
+            html 的 data-auth 是這支腳本在 hydrate 前加的，所以 <html> 要 suppressHydrationWarning */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem("lmb_auth")==="user")document.documentElement.dataset.auth="user"}catch(e){}`,
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
