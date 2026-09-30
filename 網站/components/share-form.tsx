@@ -10,7 +10,9 @@ import {
   MISC_SERIES_TITLE,
   miscSeriesRef,
   norm,
+  PHOTO_LICENSE_URL,
   SERIES_KIND_LABEL,
+  SITE_NAME,
   type Kind,
   type SaleState,
 } from "@/lib/data";
@@ -713,6 +715,18 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
             "可以發布了"
           )}
         </span>
+      </span>
+      {/* 發布前的授權提示（2026-10-01 法務修正 M4，文字照法務審閱 D2）：CC 授權不可撤回，發布那一刻要看得到 */}
+      <span className="sf-license" data-testid="sf-license">
+        {edit ? "儲存" : "發布"}即表示這些照片是你本人拍攝，並同意以{" "}
+        <a className="link" href={PHOTO_LICENSE_URL} target="_blank" rel="license noopener">
+          CC BY-NC-ND 4.0
+        </a>{" "}
+        授權他人非商業分享（須標示你與{SITE_NAME}、不得修改）。這項授權發布後無法撤回。詳見
+        <a className="link" href="/terms#t7" target="_blank" rel="noopener">
+          使用條款
+        </a>
+        。
       </span>
       <span className="sf-sum-acts">
         <button type="submit" className="btn btn-p" disabled={busy || picker.pending > 0} data-testid="share-submit">

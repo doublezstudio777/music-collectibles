@@ -26,8 +26,11 @@ export async function generateMetadata({ params }: Props) {
   if (!a) return { title: "找不到藝人" };
   const o = overrideOf(ctx, `artist:${a.slug}`);
   const related = c.sharesWithTag(a.name);
-  // 藝人照片（2026-09-28）：有使用中的照片就當 og:image。這張不是會員的收藏，不燒浮水印；授權標示在頁面上
-  const photo = await activeArtistPhoto(a.slug);
+  // 藝人照片（2026-09-28）：有使用中的照片就當 og:image。這張不是會員的收藏，不燒浮水印；授權標示在頁面上。
+  // 2026-10-01 法務修正：維基共享資源的照片（CC BY-SA 等）不當預覽圖，貼到 FB、LINE 時旁邊沒有攝影者與授權標示；
+  // 只有會員投稿的照片（使用條款第 7 條授權樂迷藏產生連結預覽圖）才用，其他退回會員收藏照片或預設圖
+  const active = await activeArtistPhoto(a.slug);
+  const photo = active?.source === "member" ? active : null;
   return seoMeta({
     path: artistHref(a.slug),
     title: pick(o.title, artistTitle(a)),

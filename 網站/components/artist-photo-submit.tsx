@@ -105,7 +105,7 @@ export function ArtistPhotoSubmit({ slug, name }: { slug: string; name: string }
           <a className="link" href={PHOTO_LICENSE_URL} target="_blank" rel="license noopener">
             CC BY-NC-ND 4.0
           </a>{" "}
-          授權：可分享，但須標示原拍攝者與{SITE_NAME}出處、不得商業使用、不得修改
+          授權：可分享，但須標示原拍攝者與{SITE_NAME}出處、不得商業使用、不得修改。這項授權投稿後無法撤回
         </span>
       </label>
       <div className="artist-photo-occasion">

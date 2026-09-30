@@ -1,9 +1,10 @@
-import { fail, json, requireUser } from "@/lib/server/auth";
+import { requireConsented } from "@/lib/server/terms";
+import { fail, json } from "@/lib/server/auth";
 import { attachOgImage } from "@/lib/server/photos";
 
 /** multipart：photoId、og（1200×630 JPEG，浮水印已燒進去）。只給封面用：發文前、或編輯時換了封面 */
 export async function POST(req: Request) {
-  const s = await requireUser(req);
+  const s = await requireConsented(req);
   if (s instanceof Response) return s;
   let form: FormData;
   try {

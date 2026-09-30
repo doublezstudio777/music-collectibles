@@ -1,4 +1,5 @@
-import { fail, json, readBody, requireUser } from "@/lib/server/auth";
+import { requireConsented } from "@/lib/server/terms";
+import { fail, json, readBody } from "@/lib/server/auth";
 import { handle } from "@/lib/server/trade";
 import { edit, history, isLocked, loadPage, parseWikiTarget } from "@/lib/server/wiki";
 
@@ -13,7 +14,7 @@ export async function GET(req: Request) {
 
 /** 編輯：{ target, content: string[]（一段一個）, summary（必填）, baseId（開始編輯時的最新版本 id） } */
 export async function POST(req: Request) {
-  const s = await requireUser(req);
+  const s = await requireConsented(req);
   if (s instanceof Response) return s;
   const b = await readBody(req);
   return handle(async () => json(await edit(s.user, b.target, b.content, b.summary, b.baseId), 201));

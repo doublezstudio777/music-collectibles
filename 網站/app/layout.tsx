@@ -3,6 +3,7 @@ import Link from "next/link";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { AuthPanel } from "@/components/auth-panel";
+import { TermsConsent } from "@/components/terms-consent";
 import { sponsorUrl, turnstileSiteKey } from "@/lib/server/services";
 import { indexingAllowed } from "@/lib/server/guard";
 import { seoContext } from "@/lib/server/seo";
@@ -43,10 +44,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SiteHeader />
         {children}
         <AuthPanel siteKey={turnstileSiteKey()} />
+        <TermsConsent />
         <footer className="foot">
           <div className="wrap foot-row">
             <span>{SITE_NAME}</span>
-            <p className="foot-note">照片著作權屬上傳者，封面與藝人名稱屬原權利人。</p>
             <nav className="foot-links" aria-label="法務">
               <Link href="/guide">新手指南</Link>
               <Link href="/ranking">收藏榮譽榜</Link>
@@ -54,6 +55,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <Link href="/verify">照片查證</Link>
               <Link href="/privacy">隱私權政策</Link>
               <Link href="/terms">使用條款</Link>
+              <Link href="/takedown">權利侵害通知</Link>
             </nav>
             {sponsor ? (
               <a className="foot-sponsor" href={sponsor} target="_blank" rel="noopener noreferrer" data-testid="sponsor">
@@ -61,14 +63,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               </a>
             ) : null}
           </div>
-          {/* 版權與照片授權（2026-09-30 使用者核准）：會員照片 CC BY-NC-ND 4.0。標章是官方 88×31 圖檔放站內，不外連圖片 */}
+          {/* 版權與照片授權（2026-09-30 使用者核准）：會員照片 CC BY-NC-ND 4.0。標章是官方 88×31 圖檔放站內，不外連圖片。
+              2026-10-01 法務修正：文字照法務審閱 D4（原本上面那行「照片著作權屬上傳者…」併進來） */}
           <div className="wrap foot-cc" data-testid="foot-cc">
             <a href={PHOTO_LICENSE_URL} target="_blank" rel="license noopener" className="foot-cc-badge">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/brand/cc-by-nc-nd-88x31.png" alt="CC BY-NC-ND 4.0" width={88} height={31} />
             </a>
             <p>
-              © 2026 {SITE_NAME}　會員照片以 CC BY-NC-ND 4.0 授權：可分享，須標示原拍攝者與{SITE_NAME}出處，不得商業使用、不得修改。
+              © 2026 {SITE_NAME}　網站設計與資料之選擇編排屬{SITE_NAME}。會員照片著作權屬拍攝者，以 CC BY-NC-ND 4.0 授權：可分享，須標示拍攝者與{SITE_NAME}，不得商業使用、不得修改。藝人照片與簡介依各自標示的授權，專輯封面、商標與藝人名稱屬原權利人。
             </p>
           </div>
         </footer>

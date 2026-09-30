@@ -58,7 +58,8 @@ export function GuideContent({ headingLevel = 2 }: { headingLevel?: 2 | 3 }) {
       <section id="share" className="guide-sec">
         <H>炫收藏</H>
         <ul>
-          <li>照片：1～10 張，第一張為封面</li>
+          <li>照片：1～10 張，第一張為封面；只能放自己拍的照片</li>
+          <li>拍照前看一下背景，別拍到住家窗外、收件人姓名地址、實名票券上的個人資料</li>
           <li>必填：照片、藝人、品項</li>
           <li>選填：專輯或演唱會、版本、說明、標籤、出售方式</li>
           <li>發布後可編輯</li>

@@ -15,6 +15,7 @@ const TABS = [
   { href: "/admin/spotify-picks", label: "推薦歌曲" },
   { href: "/admin/seo", label: "SEO" },
   { href: "/admin/deletions", label: "刪帳申請" },
+  { href: "/admin/takedowns", label: "侵權通知" },
 ] as const;
 
 /**

@@ -1,4 +1,5 @@
-import { json, readBody, requireUser } from "@/lib/server/auth";
+import { requireConsented } from "@/lib/server/terms";
+import { json, readBody } from "@/lib/server/auth";
 import { submitContent } from "@/lib/server/moderation";
 import { handle } from "@/lib/server/trade";
 
@@ -7,7 +8,7 @@ import { handle } from "@/lib/server/trade";
  * 送出後是待審核，管理員在後台核准才出現。
  */
 export async function POST(req: Request) {
-  const s = await requireUser(req);
+  const s = await requireConsented(req);
   if (s instanceof Response) return s;
   const b = await readBody(req);
   return handle(async () => json(await submitContent(s.user, b.type, b), 201));

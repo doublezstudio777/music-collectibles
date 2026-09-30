@@ -1,0 +1,40 @@
+{
+  "目標": "local",
+  "dry_run": false,
+  "照片": [
+    {
+      "id": "HK9Yfsg4ck2uNMaf",
+      "帳號": "del-akndbtxpym",
+      "查證碼": "4VGUQ",
+      "新發查證碼": false,
+      "浮水印": {
+        "corner": "© @del-akndbtxpym · 樂迷藏 #4VGUQ",
+        "center": "樂迷藏 #4VGUQ"
+      },
+      "補燒舊照片": false,
+      "尺寸": "1200x900",
+      "舊": [
+        "p/HK9Yfsg4ck2uNMaf.webp",
+        "p/HK9Yfsg4ck2uNMaf_t.webp",
+        "p/HK9Yfsg4ck2uNMaf_og.jpg"
+      ],
+      "新": [
+        "p/HK9Yfsg4ck2uNMaf_VreKDxDJ.webp",
+        "p/HK9Yfsg4ck2uNMaf_VreKDxDJ_t.webp",
+        "p/HK9Yfsg4ck2uNMaf_VreKDxDJ_og.jpg"
+      ],
+      "原圖": "o/HK9Yfsg4ck2uNMaf.webp",
+      "bytes": {
+        "舊": 99344,
+        "新": 100960,
+        "差": 1616
+      }
+    }
+  ],
+  "失敗": [],
+  "R2計數": {
+    "前": 8669750,
+    "後": 8671366,
+    "上限": 8589934592
+  }
+}

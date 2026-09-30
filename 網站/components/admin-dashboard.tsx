@@ -19,6 +19,7 @@ type Queue = {
   artistPhotos?: number;
   errorReports?: number;
   feedback?: number;
+  takedowns?: number;
 };
 type StatsRes = { stats: Stats; cached: boolean; queue: Queue };
 type Usage = {
@@ -306,6 +307,10 @@ export function AdminDashboard() {
           <Link href="/admin/deletions" className="queue-item" data-testid="queue-deletions">
             <b className="num">{q.deletions ?? 0}</b>
             <span>刪帳申請</span>
+          </Link>
+          <Link href="/admin/takedowns" className="queue-item" data-testid="queue-takedowns">
+            <b className="num">{q.takedowns ?? 0}</b>
+            <span>侵權通知</span>
           </Link>
           <Link href="/admin/artist-photos" className="queue-item" data-testid="queue-artist-photos">
             <b className="num">{q.artistPhotos ?? 0}</b>

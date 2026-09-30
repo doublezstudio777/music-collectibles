@@ -1,4 +1,5 @@
-import { fail, json, requireUser } from "@/lib/server/auth";
+import { requireConsented } from "@/lib/server/terms";
+import { fail, json } from "@/lib/server/auth";
 import { submitArtistPhoto } from "@/lib/server/artist-photos";
 import { handle } from "@/lib/server/trade";
 
@@ -14,7 +15,7 @@ export async function POST(req: Request) {
   } catch {
     form = null;
   }
-  const s = await requireUser(req);
+  const s = await requireConsented(req);
   if (s instanceof Response) return s;
   if (!form) return fail(400, "BAD_REQUEST", "要用 multipart 上傳");
   const f = form;

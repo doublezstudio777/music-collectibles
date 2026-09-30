@@ -98,9 +98,13 @@ const tables = query(`SELECT name FROM sqlite_master WHERE type = 'table' AND na
 const counts = query(`SELECT ${tables.map((t) => `(SELECT COUNT(*) FROM "${t}") AS "${t}"`).join(", ")}`)[0];
 
 // 3. R2 照片：只下載本機沒有的
+// 2026-10-01：已刪除的照片（photos.deleted_at 有值）R2 檔案通常已經跟著刪掉，不再下載（數量記在 manifest 的 skippedDeleted）；
+// 同一個檔名只要還有一列沒刪除的照片指著就照常下載。還在用的照片下載失敗才讓備份失敗（exit 3，部署閘門會停）
 console.log("[3/4] 同步 R2 照片");
-const keys = query(`SELECT r2_key AS a, thumb_key AS b FROM photos`).flatMap((r) => [r.a, r.b]);
-const unique = [...new Set(keys)];
+const rows = query(`SELECT r2_key AS a, thumb_key AS b, deleted_at AS d FROM photos`);
+const liveKeys = new Set(rows.filter((r) => !r.d).flatMap((r) => [r.a, r.b]));
+const unique = [...liveKeys];
+const skippedDeleted = [...new Set(rows.filter((r) => r.d).flatMap((r) => [r.a, r.b]))].filter((k) => !liveKeys.has(k));
 const todo = unique.filter((k) => {
   const file = join(r2dir, ...k.split("/"));
   return !(existsSync(file) && statSync(file).size > 0);
@@ -128,7 +132,8 @@ await Promise.all(
     while (queue.length) await getOne(queue.shift());
   }),
 );
-console.log(`照片 ${unique.length} 個檔，這次新下載 ${fresh.length}，失敗 ${missing.length}`);
+const missingLive = missing;
+console.log(`照片 ${unique.length} 個檔，這次新下載 ${fresh.length}，失敗 ${missingLive.length}；已刪除照片的檔 ${skippedDeleted.length} 個不下載`);
 
 // 4. 孤兒檢查與筆數守恆
 console.log("[4/4] 孤兒檢查、筆數守恆");
@@ -151,15 +156,15 @@ const manifest = {
   where,
   sqlBytes: bytes,
   counts,
-  photos: { total: unique.length, downloaded: fresh.length, missing },
+  photos: { total: unique.length, downloaded: fresh.length, missing: missingLive, skippedDeleted: skippedDeleted.length },
   orphans,
   previous: prev ?? null,
   // 筆數變少的表：軟刪除不會讓筆數變少，變少＝有東西被真的刪掉（永久刪除空頁面、清過期 session 屬正常）
   shrunk,
 };
 writeFileSync(join(dir, "manifest.json"), JSON.stringify(manifest, null, 2));
-console.log(JSON.stringify({ dir, sqlBytes: bytes, tables: tables.length, photosNew: fresh.length, missing: missing.length, orphans, shrunk }, null, 2));
-if (missing.length) {
-  console.error(`有 ${missing.length} 張照片沒下載到，見 manifest.json`);
+console.log(JSON.stringify({ dir, sqlBytes: bytes, tables: tables.length, photosNew: fresh.length, missing: missingLive.length, skippedDeleted: skippedDeleted.length, orphans, shrunk }, null, 2));
+if (missingLive.length) {
+  console.error(`有 ${missingLive.length} 張還在用的照片沒下載到，見 manifest.json`);
   process.exit(3);
 }

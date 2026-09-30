@@ -1,4 +1,5 @@
-import { json, readBody, requireUser } from "@/lib/server/auth";
+import { requireConsented } from "@/lib/server/terms";
+import { json, readBody } from "@/lib/server/auth";
 import { handle, HttpError } from "@/lib/server/trade";
 import { placeOffer } from "@/lib/server/trade";
 import { tradeBlocked } from "@/lib/server/geo";
@@ -11,7 +12,7 @@ const num = async (p: Promise<Record<string, string>>, k: string) => {
 
 /** 出價或我要買：{ kind: offer|buy, price }，回傳 result＝對話 id */
 export async function POST(req: Request, ctx: { params: Promise<{ n: string }> }) {
-  const s = await requireUser(req);
+  const s = await requireConsented(req);
   if (s instanceof Response) return s;
   // 先把 body 讀完再回應（沒讀完就回 403，本機 Miniflare 同一條連線的下一個請求會 503）
   const body = await readBody(req);

@@ -2,7 +2,7 @@
 //
 // 收錄判斷（第二層，自動把關）。條件每次渲染重算，條件一變頁面就跟著變（整頁快取鍵含內容版本；
 // catalog_additions 沒有內容版本觸發器，確認新增後最多 5 分鐘生效，見 worker.ts 的 TTL）：
-// - 系列頁：內容太空（沒有收藏、沒有任何版本有曲目、系列介紹不到 30 字；「周邊與其他」只看有沒有收藏）、
+// - 系列頁：內容太空（沒有收藏、系列介紹不到 30 字；只有曲目不算，2026-10-01 使用者選 B 案；「周邊與其他」只看有沒有收藏）、
 //   待確認的新增、後台設定不收錄 → noindex
 // - 藝人頁：簡介不到 30 字、沒有收藏、底下沒有任何可收錄的主要系列 → 內容太空；待確認、後台設定 → noindex
 // - 收藏頁：檢舉達門檻（被鎖＝交易暫停）、沒照片而且內容不到 10 字 → noindex
@@ -35,8 +35,6 @@ export type SeoContext = {
   site: SeoSite;
   overrides: Map<string, SeoOverride>;
   pending: { artist: Set<string>; series: Set<string>; version: Set<string> };
-  /** 有曲目的系列（鍵 slug/no） */
-  tracked: Set<string>;
 };
 
 const parse = <T,>(s: string | null | undefined, d: T): T => {
@@ -47,10 +45,10 @@ const parse = <T,>(s: string | null | undefined, d: T): T => {
   }
 };
 
-/** 一次 batch 讀完：後台覆寫（settings 的 seo:*）、待確認的新增、有曲目的系列 */
+/** 一次 batch 讀完：後台覆寫（settings 的 seo:*）、待確認的新增（2026-10-01 B 案後不再讀「有曲目的系列」） */
 export const seoContext = cache(async (): Promise<SeoContext> => {
   const db = env.DB!;
-  const [s, p, t] = await db.batch([
+  const [s, p] = await db.batch([
     db.prepare(`SELECT key, value FROM settings WHERE key >= 'seo:' AND key < 'seo;'`),
     db.prepare(
       `SELECT 'artist' AS t, ca.ref AS k FROM catalog_additions ca WHERE ca.type = 'artist' AND ca.confirmed_at IS NULL
@@ -61,13 +59,6 @@ export const seoContext = cache(async (): Promise<SeoContext> => {
        SELECT 'version', w.artist_slug || '/' || w.no || '#' || i.item_id || '-' || v.version_id
          FROM catalog_additions ca JOIN versions v ON v.id = CAST(ca.ref AS INTEGER) JOIN items i ON i.id = v.item_ref JOIN series w ON w.id = i.series_id
          WHERE ca.type = 'version' AND ca.confirmed_at IS NULL`,
-    ),
-    db.prepare(
-      `SELECT DISTINCT w.artist_slug || '/' || w.no AS k FROM versions v
-         JOIN items i ON i.id = v.item_ref JOIN series w ON w.id = i.series_id
-       WHERE v.status = 'approved' AND v.deleted_at IS NULL AND v.hidden_at IS NULL
-         AND i.deleted_at IS NULL AND i.hidden_at IS NULL
-         AND ((v.track_list != '' AND v.track_list != '[]') OR (v.tracks != '' AND v.tracks != '—' AND v.tracks != '待查證'))`,
     ),
   ]);
   const rows = s.results as { key: string; value: string }[];
@@ -82,7 +73,7 @@ export const seoContext = cache(async (): Promise<SeoContext> => {
   }
   const pending = { artist: new Set<string>(), series: new Set<string>(), version: new Set<string>() };
   for (const r of p.results as { t: keyof typeof pending; k: string }[]) pending[r.t]?.add(r.k);
-  return { site, overrides, pending, tracked: new Set((t.results as { k: string }[]).map((r) => r.k)) };
+  return { site, overrides, pending };
 });
 
 export const overrideOf = (ctx: SeoContext, target: SeoTarget): SeoOverride => ctx.overrides.get(target) ?? {};
@@ -107,8 +98,9 @@ export function seriesIndex(c: Catalog, ctx: SeoContext, w: Series): IndexDecisi
   if (ctx.pending.series.has(key)) return no("待確認的新增");
   const shares = c.sharesOfSeries(w).filter((s) => !lockedShare(c, s)).length;
   if (w.kind === "misc") return shares ? YES : no("內容太空：周邊與其他沒有收藏");
-  if (shares || ctx.tracked.has(key) || textLen(w.body) >= THIN.bodyChars) return YES;
-  return no("內容太空：沒有收藏、沒有曲目、介紹不到 30 字");
+  // B 案（2026-10-01 使用者定案）：要有收藏，或 30 字以上的系列介紹；只有 MusicBrainz 曲目不算
+  if (shares || textLen(w.body) >= THIN.bodyChars) return YES;
+  return no("內容太空：沒有收藏、介紹不到 30 字");
 }
 
 export function artistIndex(c: Catalog, ctx: SeoContext, a: Artist): IndexDecision {

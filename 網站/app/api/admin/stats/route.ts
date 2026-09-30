@@ -6,6 +6,7 @@ import { pendingDeletionCount } from "@/lib/server/deletion";
 import { pendingArtistPhotoCount } from "@/lib/server/artist-photos";
 import { openErrorReportCount } from "@/lib/server/moderation";
 import { openFeedbackCount } from "@/lib/server/feedback";
+import { openNoticeCount } from "@/lib/server/copyright";
 
 /**
  * 儀表板：統計（10 分鐘快取，?fresh=1 重算）＋待處理佇列（每次即時）。只有管理員。
@@ -36,6 +37,8 @@ export async function GET(req: Request) {
     errorReports: await openErrorReportCount(),
     // 意見回饋（2026-09-29）：未處理件數
     feedback: await openFeedbackCount(),
+    // 權利侵害通知（2026-10-01）：待處理＋會員已提出回復通知
+    takedowns: await openNoticeCount(),
   };
   return json({ stats, cached, queue }, 200, { "Cache-Control": "no-store" });
 }

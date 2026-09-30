@@ -1,3 +1,4 @@
+import { requireConsented } from "@/lib/server/terms";
 import { json, readBody, requireUser } from "@/lib/server/auth";
 import { handle, HttpError, setSharePhotos, sharePhotoList } from "@/lib/server/trade";
 
@@ -16,7 +17,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ n: string }> })
 
 /** 作者存照片：{ photoIds: 新順序 }，原有的沒列進來就刪掉（R2 一起刪） */
 export async function PUT(req: Request, ctx: { params: Promise<{ n: string }> }) {
-  const s = await requireUser(req);
+  const s = await requireConsented(req);
   if (s instanceof Response) return s;
   const body = await readBody(req);
   return handle(async () => json(await setSharePhotos(s.user, await num(ctx.params, "n"), body.photoIds, new URL(req.url).origin)));

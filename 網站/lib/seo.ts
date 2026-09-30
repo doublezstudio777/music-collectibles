@@ -107,6 +107,6 @@ export const isSeoTarget = (t: string): t is SeoTarget =>
  * ALLOW_INDEXING=1 之後這些照樣加 X-Robots-Tag: noindex；沒開放時全站本來就 noindex。
  */
 const PRIVATE =
-  /^\/(?:(?:admin|api|settings|messages|search|me|login|u|tag|ranking|feedback|verify)(?:\/|$)|share\/(?:new|\d+\/edit)$|artist\/[^/]+(?:\/\d+)?\/history$)/;
+  /^\/(?:(?:admin|api|settings|messages|search|me|login|u|tag|ranking|feedback|verify|takedown)(?:\/|$)|share\/(?:new|\d+\/edit)$|artist\/[^/]+(?:\/\d+)?\/history$)/;
 export const isPrivatePath = (pathname: string, search = "") => PRIVATE.test(pathname) || /[?&]edit=/.test(search);
 

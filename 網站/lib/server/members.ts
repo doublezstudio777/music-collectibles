@@ -16,7 +16,7 @@ import { regionNames } from "@/lib/server/geo";
 export const PAGE_SIZE = 50;
 
 /** 停權原因（下拉選單） */
-export const SUSPEND_REASONS = { fraud: "詐騙", piracy: "販售盜版", sockpuppet: "分身刷分", spam: "洗版或騷擾", other: "其他" } as const;
+export const SUSPEND_REASONS = { fraud: "詐騙", piracy: "販售盜版", sockpuppet: "分身刷分", spam: "洗版或騷擾", copyright: "著作權侵權達三次", other: "其他" } as const;
 export type SuspendReason = keyof typeof SUSPEND_REASONS;
 export const suspendReasonText = (code: string, note: string) =>
   [SUSPEND_REASONS[code as SuspendReason] ?? code, note].filter(Boolean).join("：");

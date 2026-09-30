@@ -1,4 +1,5 @@
-import { json, readBody, requireUser } from "@/lib/server/auth";
+import { requireConsented } from "@/lib/server/terms";
+import { json, readBody } from "@/lib/server/auth";
 import { handle, HttpError } from "@/lib/server/trade";
 import { respondOffer } from "@/lib/server/trade";
 import { tradeBlocked } from "@/lib/server/geo";
@@ -11,7 +12,7 @@ const num = async (p: Promise<Record<string, string>>, k: string) => {
 
 /** 賣家接受或拒絕：{ answer: accepted|rejected } */
 export async function POST(req: Request, ctx: { params: Promise<{ id: string }> }) {
-  const s = await requireUser(req);
+  const s = await requireConsented(req);
   if (s instanceof Response) return s;
   const body = await readBody(req);
   // 接受要在台灣；拒絕不算交易，海外也可以

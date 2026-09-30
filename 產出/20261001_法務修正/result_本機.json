@@ -1,0 +1,340 @@
+{
+  "stamp": "1001011032",
+  "results": [
+    {
+      "name": "A1 兩頁都沒有「草稿」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A2 版本 1.0＋生效日 2026-10-01",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A3 條款與隱私權寫經營者",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A4 聯絡信箱 service@lemibox.com",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A5 首頁沒有達帛利字樣（頁尾維持 © 2026 樂迷藏）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A6 頁尾 D4：拍攝者＋選擇編排＋權利侵害通知連結",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A7 M7 禁售品：票券加價、已使用票根另寫、盜錄、私製、仿冒商標、個資",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A8 M4：文字授權、刪帳保留延續、本人拍攝、不可撤回、社群帳號轉貼",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A9 M5：第 11 條通知取下回復、三次終止、窗口",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A10 第 8 條委任只發通知、不含訴訟和解",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A11 M6：30 日內處理、匿名浮水印",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A12 M3：瀏覽次數 90 天、不再「待定」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A13 M3：利用地區、不提供的影響、特定目的代號、30 日回覆",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A14 隱私權：私訊檢舉與封鎖名單、同意紀錄、權利侵害通知資料",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A15 管轄新竹地院、沒有責任上限空格",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A16 /terms/history 200、列 1.0",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A17 /takedown 200、公告窗口、X-Robots-Tag noindex",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B1 API 沒勾 → 400 TERMS_REQUIRED、沒建帳號",
+      "ok": true,
+      "detail": "{\"error\":{\"code\":\"TERMS_REQUIRED\",\"message\":\"勾選同意使用條款與隱私權政策才能註冊\"}}"
+    },
+    {
+      "name": "B2 API 版本不對 → 409 TERMS_CHANGED",
+      "ok": true,
+      "detail": "{\"error\":{\"code\":\"TERMS_CHANGED\",\"message\":\"使用條款剛更新，重新整理頁面再註冊\"}}"
+    },
+    {
+      "name": "B3 註冊畫面有同意框，沒勾時送出鈕反灰",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B4 同意框文字：18 歲、兩個連結另開分頁、搜尋引擎收錄",
+      "ok": true,
+      "detail": "我已年滿 18 歲，或已取得法定代理人同意；我已閱讀並同意《使用條款》與《隱私權政策》，了解我的暱稱、大頭貼與發布的內容會公開顯示，並可能被搜尋引擎收錄。"
+    },
+    {
+      "name": "B5 勾選註冊成功，users 記版本與時間、terms_consents via=register",
+      "ok": true,
+      "detail": "('1.0', '2026-09-30T17:10:37.094Z', 'register|1.0')"
+    },
+    {
+      "name": "B6 新註冊會員登入後不跳補同意視窗",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "C1 沒同意的舊會員寫留言 → 403 TERMS_REQUIRED",
+      "ok": true,
+      "detail": "{\"error\":{\"code\":\"TERMS_REQUIRED\",\"message\":\"使用條款與隱私權政策已更新，同意後才能發布、出價或投稿\",\"version\":\"1.0\"}}"
+    },
+    {
+      "name": "C2 沒同意拿不到上傳查證碼（不能發布）",
+      "ok": true,
+      "detail": "403"
+    },
+    {
+      "name": "C3 /api/me termsOk=false",
+      "ok": true,
+      "detail": "{'id': 'ltb0f682e137ce', 'email': 'lold1001011032@legal.test', 'handle': 'lold1001011032', 'name': '法務011032', 'bio': '', 'role': 'user', 'verified': True, 'admin': False, 'deletionRequested': False, 'avatar': None, 'nameNextAt': None, 'termsOk': False}"
+    },
+    {
+      "name": "C4 登入後跳補同意視窗，D3 四點＋兩個按鈕",
+      "ok": true,
+      "detail": "×\n使用條款與隱私權政策已更新\n\n版本 1.0，2026-10-01 生效\n\n主要變更：\n\n你上傳的照片以 CC BY-NC-ND 4.0 授權他人分享，並授權樂迷藏在網站營運範圍內使用\n網站開放 Google 等搜尋引擎收錄公開頁面\n新增著作權侵權通知與處理程序\n刪除帳號在 30 日內處理，保留的照片會改成匿名浮水印\n\n全文：使用條款、隱私權政策。同意前可以繼續瀏覽，但不能發布、出價或投稿。\n\n閱讀並同意\n先不要，我想刪除帳號"
+    },
+    {
+      "name": "C5 稍後再說 → 關閉、可以繼續瀏覽",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "C6 同一分頁換頁不再自動跳",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "C7 想發布（上傳照片）被擋 → 補同意視窗再打開",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "C8 按同意 → users 1.0、terms_consents via=update",
+      "ok": true,
+      "detail": "('1.0', 'update|1.0')"
+    },
+    {
+      "name": "D1 發布鈕旁有 D2 授權提示（本人拍攝、CC BY-NC-ND、無法撤回）",
+      "ok": true,
+      "detail": "發布即表示這些照片是你本人拍攝，並同意以 CC BY-NC-ND 4.0 授權他人非商業分享（須標示你與樂迷藏、不得修改）。這項授權發布後無法撤回。詳見使用條款。"
+    },
+    {
+      "name": "D2 會員同意後可以發布",
+      "ok": true,
+      "detail": "http://127.0.0.1:8791/share/3108"
+    },
+    {
+      "name": "D3 手機 390：提示在黏底列裡、按鈕上方、不超出螢幕",
+      "ok": true,
+      "detail": "({'x': 0, 'y': 657.46875, 'width': 390, 'height': 142.53125}, {'x': 16, 'y': 668.46875, 'width': 358, 'height': 63}, {'x': 298, 'y': 744.734375, 'width': 76, 'height': 44})"
+    },
+    {
+      "name": "D3 手機 360：提示在黏底列裡、按鈕上方、不超出螢幕",
+      "ok": true,
+      "detail": "({'x': 0, 'y': 636.46875, 'width': 360, 'height': 163.53125}, {'x': 16, 'y': 647.46875, 'width': 328, 'height': 84}, {'x': 268, 'y': 744.734375, 'width': 76, 'height': 44})"
+    },
+    {
+      "name": "D4 GPS 實測：原始檔有 GPS，上傳後主圖、縮圖、原圖都沒有 EXIF／GPS",
+      "ok": true,
+      "detail": "{'src': True, 'main': False, 'thumb': False, 'orig': False}"
+    },
+    {
+      "name": "E1 通知送出，對到收藏與會員",
+      "ok": true,
+      "detail": "('pending', 'ltb0f682e137ce', '[3108]')"
+    },
+    {
+      "name": "E2 後台看得到通知（含通知人聯絡方式）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "E3 移除：收藏隱藏（404）、寄信給會員附回復通知網址、信裡沒有通知人 Email",
+      "ok": true,
+      "detail": "('2026-09-30T17:11:07.889Z', 404, '樂迷藏：你的內容因權利侵害通知已先移除（通知 #9）')"
+    },
+    {
+      "name": "E4 會員看得到通知內容（不含通知人 Email）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "E5 回復通知送出 → status=counter",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "E6 別的會員看不到這則通知（404）",
+      "ok": true,
+      "detail": "404"
+    },
+    {
+      "name": "E7 轉送回復通知：寄信給通知人（含回復內容、10 個工作日）、記下期限",
+      "ok": true,
+      "detail": "('2026-10-14T17:11:13.236Z', '樂迷藏：權利侵害通知 #9 的回復通知')"
+    },
+    {
+      "name": "E8 回復：收藏取消隱藏（200）",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "name": "E9 處理紀錄完整（送出→移除→寄信→回復通知→轉送→回復）",
+      "ok": true,
+      "detail": "['送出通知', '移除內容（隱藏收藏 #3108）', '已寄信通知 @lold1001011032', '會員送出回復通知', '轉送回復通知給通知人（已寄信），期限 2026-10-15', '回復內容（收藏 #3108 取消隱藏）']"
+    },
+    {
+      "name": "E10 計入三次 → 累計 3、自動停權（原因 copyright）、同一則不能重複計",
+      "ok": true,
+      "detail": "([200, 200, 200], 409, (3, 'suspended'), 'copyright')"
+    },
+    {
+      "name": "E11 已處理過的通知不能再按不成立",
+      "ok": true,
+      "detail": "409"
+    },
+    {
+      "name": "E12 沒勾聲明屬實 → 400",
+      "ok": true,
+      "detail": "{\"error\":{\"code\":\"INVALID\",\"message\":\"勾選聲明所述屬實\"}}"
+    },
+    {
+      "name": "F1 申請時勾一併刪除照片 → delete_photos=1",
+      "ok": true,
+      "detail": "{\"ok\":true,\"requestedAt\":\"2026-09-30T17:11:13.693Z\"}"
+    },
+    {
+      "name": "F2 申請頁寫 30 日內、可選一併刪照片、保留的照片改匿名",
+      "ok": true,
+      "detail": "刪除後會怎樣\nEmail、密碼、登入紀錄、所在地區、大頭貼、自我介紹、社群連結會刪除，之後不能再登入這個帳號\n暱稱改成「已刪除的會員」，帳號名換成一串代號\n炫收藏、編輯紀錄、留言、成交筆數會留在網站上，不再顯示是誰。想刪除特定內容，請在申請前自己刪除\n照片：可以在下面選擇一併刪除全部照片。保留的照片，浮水印上的帳號名會改成匿名代號\n出價、成交、私訊、檢舉與申訴紀錄保留到刪帳後 3 年，只用於處理交"
+    },
+    {
+      "name": "F3 後台顯示處理期限（申請後 30 日）、預設照會員選擇（保留照片＝不勾）",
+      "ok": true,
+      "detail": "法務011032\n@lold1001011032\nlold1001011032@legal.test\n\n申請 2026-10-01 01:11・註冊 2026-10-01 01:10・炫收藏 1 則・照片 1 張（0.1 MB）\n\n處理期限 2026-10-31（申請後 30 日）・會員選擇保留照片\n\n法務驗收刪帳\n\n連同照片一起刪除（照會員申請時的選擇）\n執行"
+    },
+    {
+      "name": "F4 執行後：帳號名換代號、reburnPending=1、後台出現待重燒提示與指令",
+      "ok": true,
+      "detail": "('del-akndbtxpym', {'sessions': 1, 'emailCodes': 0, 'userGeo': 0, 'userActivity': 1, 'rateLimits': 3, 'counters': 0, 'nameChanges': 0, 'blocks': 0, 'photos': 0, 'avatars': 0, 'adminLogRetargeted': 0, 'artistPhotos': 0, 'reburnPending': 1})"
+    },
+    {
+      "name": "F5 重燒腳本 --deletion：只重燒這位的 1 張、浮水印改成匿名代號、查證碼沿用",
+      "ok": true,
+      "detail": "(0, '© @del-akndbtxpym · 樂迷藏 #4VGUQ', '')"
+    },
+    {
+      "name": "F6 新檔名、舊主圖縮圖從 R2 刪掉",
+      "ok": true,
+      "detail": "('p/HK9Yfsg4ck2uNMaf.webp', 'p/HK9Yfsg4ck2uNMaf_VreKDxDJ.webp')"
+    },
+    {
+      "name": "F7 舊縮圖網址 404",
+      "ok": true,
+      "detail": "404"
+    },
+    {
+      "name": "F8 reburned_at 寫入",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "F9 後台待重燒提示不再列這筆、紀錄顯示浮水印已匿名",
+      "ok": true,
+      "detail": "浮水印待重燒24\n\n保留的照片浮水印還印著原帳號名，要從原圖重燒成匿名代號（使用條款第 15 條第 5 項）。在 網站/ 底下跑：\n\n@del-um6vicbzpt（? 張）：python3 scripts/reburn-watermark.py --remote --deletion 60\n@del-mwzfixbc2f（? 張）：python3 scripts/reburn-watermark"
+    },
+    {
+      "name": "F10 刪帳清掉他的封鎖名單（user_blocks blocker）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G /terms 1440 沒有橫向溢出",
+      "ok": true,
+      "detail": "1440"
+    },
+    {
+      "name": "G 頁尾 1440 每個元素都在畫面內",
+      "ok": true,
+      "detail": "[[152, 191], [763, 1288]]"
+    },
+    {
+      "name": "G /terms 390 沒有橫向溢出",
+      "ok": true,
+      "detail": "390"
+    },
+    {
+      "name": "G 頁尾 390 每個元素都在畫面內",
+      "ok": true,
+      "detail": "[[18, 57], [18, 96]]"
+    },
+    {
+      "name": "G /privacy 1440 沒有橫向溢出",
+      "ok": true,
+      "detail": "1440"
+    },
+    {
+      "name": "G /privacy 390 沒有橫向溢出",
+      "ok": true,
+      "detail": "390"
+    },
+    {
+      "name": "G /takedown 1440 沒有橫向溢出",
+      "ok": true,
+      "detail": "1440"
+    },
+    {
+      "name": "G /takedown 390 沒有橫向溢出",
+      "ok": true,
+      "detail": "390"
+    },
+    {
+      "name": "Z console error 0（排除故意觸發的 403／409）",
+      "ok": true,
+      "detail": "[]"
+    }
+  ]
+}

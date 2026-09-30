@@ -1,3 +1,4 @@
+import { requireConsented } from "@/lib/server/terms";
 import { fail, json, requireUser } from "@/lib/server/auth";
 import { acceptUpload, removeUnattached, isPaused, MAX_MAIN_BYTES, MAX_OG_BYTES, MAX_THUMB_BYTES, STORAGE_LIMIT, storageUsed } from "@/lib/server/photos";
 
@@ -14,7 +15,7 @@ export async function GET() {
  * 瀏覽器端先壓縮／畫好；伺服器端再看檔頭格式、大小、每日上限、總容量，不處理影像本身。
  */
 export async function POST(req: Request) {
-  const s = await requireUser(req);
+  const s = await requireConsented(req);
   if (s instanceof Response) return s;
   let form: FormData;
   try {

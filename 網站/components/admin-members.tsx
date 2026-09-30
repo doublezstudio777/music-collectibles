@@ -14,6 +14,7 @@ const REASONS = [
   ["piracy", "販售盜版"],
   ["sockpuppet", "分身刷分"],
   ["spam", "洗版或騷擾"],
+  ["copyright", "著作權侵權達三次"],
   ["other", "其他"],
 ] as const;
 

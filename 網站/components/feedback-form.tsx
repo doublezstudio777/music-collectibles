@@ -82,6 +82,15 @@ export function FeedbackForm({ initialKind }: { initialKind: FeedbackKind | null
           </label>
         ))}
       </fieldset>
+      {kind === "takedown" ? (
+        <p className="auth-note" data-testid="fb-takedown-hint">
+          認為站上的照片或內容侵害你的著作權、商標權或肖像權，請改用
+          <a className="link" href="/takedown">
+            權利侵害通知
+          </a>
+          ，會照使用條款第 11 條的程序處理。
+        </p>
+      ) : null}
       <label className="field-label" htmlFor="fb-body">
         內容
       </label>

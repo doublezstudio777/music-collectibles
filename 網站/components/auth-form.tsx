@@ -6,6 +6,7 @@
 import { useState } from "react";
 import { afterLogin, api, type Me, type PanelMode } from "@/lib/account";
 import { Turnstile } from "@/components/turnstile";
+import { TERMS_VERSION } from "@/lib/legal";
 
 type Props = {
   mode: PanelMode;
@@ -32,6 +33,8 @@ export function AuthForm({ mode, setMode, reason, initialEmail = "", idp, onDone
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [token, setToken] = useState("");
+  /** 註冊同意條款（2026-10-01 法務修正 M2，必勾；伺服器也檢查） */
+  const [agree, setAgree] = useState(false);
   const [resetKey, setResetKey] = useState(0);
   const [error, setError] = useState("");
   const [note, setNote] = useState("");
@@ -54,6 +57,10 @@ export function AuthForm({ mode, setMode, reason, initialEmail = "", idp, onDone
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    if (mode === "register" && !agree) {
+      setError("勾選同意使用條款與隱私權政策才能註冊");
+      return;
+    }
     if (needsTurnstile && !token) {
       setError("等機器人驗證跑完再送出");
       return;
@@ -70,7 +77,7 @@ export function AuthForm({ mode, setMode, reason, initialEmail = "", idp, onDone
         }
         setError(r.error.message);
       } else if (mode === "register") {
-        const r = await api("/api/auth/register", { body: { email, password, handle, name, turnstileToken: token } });
+        const r = await api("/api/auth/register", { body: { email, password, handle, name, turnstileToken: token, agreeTerms: agree, termsVersion: TERMS_VERSION } });
         if (r.ok) {
           go("verify");
           setNote(`驗證碼已寄到 ${email}`);
@@ -213,6 +220,23 @@ export function AuthForm({ mode, setMode, reason, initialEmail = "", idp, onDone
         </>
       ) : null}
 
+      {mode === "register" ? (
+        <label className="check auth-agree" data-testid="register-agree">
+          <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} data-testid="register-agree-box" />
+          <span>
+            我已年滿 18 歲，或已取得法定代理人同意；我已閱讀並同意
+            <a className="link" href="/terms" target="_blank" rel="noopener">
+              《使用條款》
+            </a>
+            與
+            <a className="link" href="/privacy" target="_blank" rel="noopener">
+              《隱私權政策》
+            </a>
+            ，了解我的暱稱、大頭貼與發布的內容會公開顯示，並可能被搜尋引擎收錄。
+          </span>
+        </label>
+      ) : null}
+
       {needsTurnstile ? <Turnstile onToken={setToken} resetKey={resetKey} /> : null}
 
       {error ? (
@@ -221,7 +245,7 @@ export function AuthForm({ mode, setMode, reason, initialEmail = "", idp, onDone
         </p>
       ) : null}
 
-      <button type="submit" className="btn btn-p btn-lg auth-submit" disabled={busy}>
+      <button type="submit" className="btn btn-p btn-lg auth-submit" disabled={busy || (mode === "register" && !agree)} data-testid="auth-submit">
         {mode === "forgot" ? "寄重設碼" : mode === "verify" ? "驗證並登入" : mode === "reset" ? "重設並登入" : TITLE[mode]}
       </button>
 

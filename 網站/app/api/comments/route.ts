@@ -1,4 +1,5 @@
-import { currentUser, json, readBody, requireUser } from "@/lib/server/auth";
+import { requireConsented } from "@/lib/server/terms";
+import { currentUser, json, readBody } from "@/lib/server/auth";
 import { listComments, postComment } from "@/lib/server/comments";
 import { handle } from "@/lib/server/trade";
 
@@ -14,7 +15,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const s = await requireUser(req);
+  const s = await requireConsented(req);
   if (s instanceof Response) return s;
   const b = await readBody(req);
   return handle(async () => json(await postComment(s.user, b.share, b.body), 201));

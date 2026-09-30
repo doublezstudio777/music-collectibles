@@ -18,7 +18,8 @@ const RESULT: [string, string][] = [
 /** 一筆待處理：勾「連同照片一起刪除」→ 打帳號名確認 → 執行（不能還原） */
 function Pending({ d, done }: { d: DeletionRow; done: () => void }) {
   const [step, setStep] = useState<"idle" | "confirm">("idle");
-  const [photos, setPhotos] = useState(false);
+  // 預設照會員申請時的選擇（2026-10-01 起會員自己選）
+  const [photos, setPhotos] = useState(d.deletePhotos);
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -40,10 +41,13 @@ function Pending({ d, done }: { d: DeletionRow; done: () => void }) {
       <p className="sub">
         申請 {time(d.createdAt)}・註冊 {time(d.user.createdAt)}・炫收藏 {d.user.posts} 則・照片 {d.user.photos} 張（{mb(d.user.photoBytes)}）
       </p>
+      <p className={d.overdue ? "field-error" : "sub"} data-testid="del-due">
+        處理期限 {time(d.dueAt).slice(0, 10)}（申請後 30 日）{d.overdue ? "・已逾期" : ""}・會員選擇{d.deletePhotos ? "一併刪除照片" : "保留照片"}
+      </p>
       <p className="del-reason">{d.reason}</p>
       <label className="check">
         <input type="checkbox" checked={photos} onChange={(e) => setPhotos(e.target.checked)} data-testid="del-photos" />
-        <span>連同照片一起刪除（本人明確要求時才勾）</span>
+        <span>連同照片一起刪除（照會員申請時的選擇）</span>
       </label>
       {step === "idle" ? (
         <div className="settings-row">
@@ -55,7 +59,7 @@ function Pending({ d, done }: { d: DeletionRow; done: () => void }) {
         <div className="del-confirm" data-testid="del-confirm-box">
           <p className="page-meta">
             執行後不能還原：Email、密碼、登入與活動紀錄、所在地區會刪除，暱稱改成「已刪除的會員」
-            {photos ? "，照片也會從儲存空間刪除" : "，照片保留"}。確認請打出帳號名「{d.user.handle}」。
+            {photos ? "，照片也會從儲存空間刪除" : "，照片保留（執行後要重燒浮水印，改成匿名代號）"}。確認請打出帳號名「{d.user.handle}」。
           </p>
           <div className="settings-row">
             <input className="input" value={confirm} onChange={(e) => setConfirm(e.target.value)} aria-label="確認帳號名" autoComplete="off" data-testid="del-confirm" />
@@ -88,6 +92,7 @@ export function AdminDeletions() {
   if (error) return <p className="empty">{error}</p>;
   if (!list) return null;
   const pending = list.filter((d) => d.status === "pending");
+  const reburn = list.filter((d) => d.status === "done" && !d.reburnedAt);
   const handled = list.filter((d) => d.status !== "pending");
   return (
     <div data-testid="deletions">
@@ -105,6 +110,21 @@ export function AdminDeletions() {
           <p className="empty">沒有待處理的申請</p>
         )}
       </section>
+      {reburn.length ? (
+        <section className="block" data-testid="del-reburn">
+          <h2 className="block-title">
+            浮水印待重燒<span className="count">{reburn.length}</span>
+          </h2>
+          <p className="page-meta">保留的照片浮水印還印著原帳號名，要從原圖重燒成匿名代號（使用條款第 15 條第 5 項）。在 網站/ 底下跑：</p>
+          <ul className="plain-list">
+            {reburn.map((d) => (
+              <li key={d.id}>
+                @{d.user.handle}（{d.result.reburnPending ?? "?"} 張）：<code className="mono">python3 scripts/reburn-watermark.py --remote --deletion {d.id}</code>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
       <section className="block">
         <h2 className="block-title">最近處理</h2>
         {handled.length ? (
@@ -129,7 +149,7 @@ export function AdminDeletions() {
                       {d.status === "done" ? (
                         <span className="sub">
                           {RESULT.map(([k, t]) => `${t} ${d.result[k] ?? 0}`).join("・")}
-                          {d.deletePhotos ? "・有勾照片" : "・照片保留"}
+                          {d.deletePhotos ? "・照片刪除" : d.reburnedAt ? "・照片保留（浮水印已匿名）" : "・照片保留（浮水印待重燒）"}
                         </span>
                       ) : null}
                     </td>

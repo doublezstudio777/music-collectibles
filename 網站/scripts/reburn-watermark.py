@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """收藏照片浮水印重燒（2026-09-29，浮水印改成燒進檔案）。
 
-兩種用途，同一支腳本：
+四種用途，同一支腳本：
   1. 舊照片補燒（一次性）：orig_key 還是空的舊照片，現在的主圖就是沒燒過的原圖。先把它複製到 R2 不公開的 o/，
      再從這份原圖燒浮水印。
   2. 站名或帳號名改了：從 o/ 的原圖把全部照片重燒一次（lib/data.ts 的 SITE_NAME 改好、部署完再跑）。
   3. 查證碼（2026-09-29）：還沒有查證碼的照片在這裡補發（寫進 photo_codes 與 photos.verify_code），浮水印是
      右下角「© @帳號 · 站名 #查證碼」＋中間斜字「站名 #查證碼」。已經有碼的照片重燒時沿用原本的碼。
+  4. 刪帳匿名化（2026-10-01 法務修正 M6）：管理員執行刪帳、會員選擇保留照片時，帳號名已換成匿名代號 del-xxxx，
+     但舊浮水印還印著原帳號名。--deletion {刪帳申請 id} 只重燒那位會員的照片（浮水印改成匿名代號），
+     全部成功後在 deletion_requests.reburned_at 記下時間，後台「刪帳申請」的待重燒提示就會消失。
 
 每張照片：
   - 從原圖在無頭瀏覽器裡燒出新的主圖、縮圖（有分享預覽圖的也重畫）。燒法是 esbuild 當場打包 lib/watermark-burn.ts，
@@ -19,6 +22,7 @@
 用法（在 網站/ 底下）：
   python3 scripts/reburn-watermark.py --remote [--dry-run] [--only 照片id] [--only-legacy]
   python3 scripts/reburn-watermark.py --local [--persist-to .wrangler/state] [--dry-run] [--only 照片id]
+  python3 scripts/reburn-watermark.py --remote --deletion 刪帳申請id   （刪帳後匿名化，見上面第 4 點）
 --remote 會先跑 scripts/backup.mjs --remote 做站外備份，失敗就不動。
 正式環境要有 CLOUDFLARE_API_TOKEN／CLOUDFLARE_ACCOUNT_ID（見部署手冊）。
 需要：pip3 install playwright && python3 -m playwright install chromium
@@ -48,6 +52,7 @@ ap.add_argument("--persist-to", default=".wrangler/state")
 ap.add_argument("--dry-run", action="store_true")
 ap.add_argument("--only", default="")
 ap.add_argument("--only-legacy", action="store_true", help="只補還沒有原圖的舊照片（orig_key 是空的）")
+ap.add_argument("--deletion", type=int, default=0, help="刪帳申請 id：只重燒那位已刪除會員的照片（浮水印改匿名代號），成功後寫 deletion_requests.reburned_at")
 ap.add_argument("--skip-backup", action="store_true", help="正式環境剛備份過才用")
 args = ap.parse_args()
 
@@ -161,6 +166,14 @@ def main():
             raise SystemExit("備份失敗，不動任何照片")
 
     where = "p.purpose = 'share' AND p.deleted_at IS NULL" + (f" AND p.id = {q(args.only)}" if args.only else "") + (" AND p.orig_key IS NULL" if args.only_legacy else "")
+    if args.deletion:
+        req = query(f"SELECT d.user_id, d.status, u.handle, u.status AS ustatus FROM deletion_requests d JOIN users u ON u.id = d.user_id WHERE d.id = {int(args.deletion)}")
+        if not req:
+            raise SystemExit(f"找不到刪帳申請 {args.deletion}")
+        if req[0]["status"] != "done" or req[0]["ustatus"] != "deleted" or not str(req[0]["handle"]).startswith("del-"):
+            raise SystemExit(f"刪帳申請 {args.deletion} 還沒執行完成（status={req[0]['status']}），不重燒")
+        where += f" AND p.owner_id = {q(req[0]['user_id'])}"
+        print(f"刪帳匿名化：申請 {args.deletion}，浮水印改成 @{req[0]['handle']}")
     rows = query(
         f"SELECT p.id, p.owner_id, p.r2_key, p.thumb_key, p.og_key, p.orig_key, p.verify_code, p.bytes, u.handle FROM photos p "
         f"LEFT JOIN users u ON u.id = p.owner_id WHERE {where} ORDER BY p.created_at"
@@ -259,6 +272,11 @@ def main():
     (work / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"完成 {len(report['照片'])} 張，失敗 {len(report['失敗'])} 張；R2 計數 {used:,} → {after:,}（上限 {STORAGE_LIMIT:,}）")
     print(f"報告：{work / 'report.json'}")
+    if args.deletion and not args.dry_run and not report["失敗"]:
+        wrangler("d1", "execute", "DB", *target, "--command",
+                 f"UPDATE deletion_requests SET reburned_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id = {int(args.deletion)}",
+                 *(["--yes"] if args.remote else []))
+        print(f"刪帳申請 {args.deletion} 已記下重燒完成")
     sys.exit(1 if report["失敗"] else 0)
 
 

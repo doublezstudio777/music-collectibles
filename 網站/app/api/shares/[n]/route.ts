@@ -1,4 +1,5 @@
-import { json, readBody, requireUser } from "@/lib/server/auth";
+import { requireConsented } from "@/lib/server/terms";
+import { json, readBody } from "@/lib/server/auth";
 import { handle, HttpError } from "@/lib/server/trade";
 import { getCatalog } from "@/lib/server/content";
 import { editShare, publicOffers, setSale } from "@/lib/server/trade";
@@ -23,7 +24,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ n: string }> }
 
 /** 作者改出售狀態：{ state: share|offer|sale, price? } */
 export async function PATCH(req: Request, ctx: { params: Promise<{ n: string }> }) {
-  const s = await requireUser(req);
+  const s = await requireConsented(req);
   if (s instanceof Response) return s;
   const body = await readBody(req);
   // 開放出價、定價出售、改價都算交易，要在台灣；改回純分享（下架）海外也可以
@@ -44,7 +45,7 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ n: string }> 
 export async function PUT(req: Request, ctx: { params: Promise<{ n: string }> }) {
   // 先把 body 讀完再判斷登入：沒讀完就回 401，本機 Miniflare 同一條連線的下一個請求會卡住
   const body = await readBody(req);
-  const s = await requireUser(req);
+  const s = await requireConsented(req);
   if (s instanceof Response) return s;
   const sale = body.sale as { state?: unknown } | undefined;
   if (sale && sale.state !== "share") {

@@ -54,6 +54,14 @@ export const users = sqliteTable(
     links: text("links").notNull().default("{}"),
     /** 最喜歡的藝人 JSON string[]（藝人 slug，最多 5 位，照使用者排的順序） */
     favArtists: text("fav_artists").notNull().default("[]"),
+    /**
+     * 2026-10-01 法務修正（drizzle/0027）：最近一次同意的使用條款／隱私權政策版本與時間。
+     * 跟 lib/legal.ts 的 TERMS_VERSION 不同＝還沒同意現行版本，不能發布、出價、投稿（瀏覽不擋）。每次同意另記一列 terms_consents
+     */
+    termsVersion: text("terms_version"),
+    termsAcceptedAt: text("terms_accepted_at"),
+    /** 經確認侵害他人著作權的次數（權利侵害通知成立時加 1，第 3 次停權；使用條款第 11 條） */
+    copyrightStrikes: integer("copyright_strikes").notNull().default(0),
   },
   (t) => [
     uniqueIndex("users_email_uq").on(t.email),
@@ -881,6 +889,8 @@ export const deletionRequests = sqliteTable(
     handledBy: text("handled_by"),
     deletePhotos: integer("delete_photos").notNull().default(0),
     result: text("result").notNull().default("{}"),
+    /** 2026-10-01：保留的照片浮水印已從原圖重燒成匿名代號的時間（scripts/reburn-watermark.py --deletion 寫入）；沒有要重燒的照片時執行當下就填 */
+    reburnedAt: text("reburned_at"),
   },
   (t) => [index("deletion_requests_status_idx").on(t.status, t.id), index("deletion_requests_user_idx").on(t.userId)],
 );
@@ -1210,4 +1220,56 @@ export const dmReports = sqliteTable(
     index("dm_reports_status_idx").on(t.status, t.id),
     index("dm_reports_reported_idx").on(t.reportedId),
   ],
+);
+
+/**
+ * 條款同意紀錄（2026-10-01，drizzle/0027）：只增不改。via：register（註冊勾選）｜update（舊會員補同意視窗）。
+ * 刪除帳號時保留（證明當時同意過哪一版），user_id 已是匿名帳號，不含 Email
+ */
+export const termsConsents = sqliteTable(
+  "terms_consents",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: text("user_id").notNull(),
+    version: text("version").notNull(),
+    via: text("via").notNull(),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [index("terms_consents_user_idx").on(t.userId, t.id)],
+);
+
+/**
+ * 權利侵害通知（2026-10-01，drizzle/0027；著作權法第 90 條之 4 起、使用條款第 11 條）。
+ * 流程：通知人在 /takedown 送出（不用登入）→ 管理員移除內容並通知會員（status=removed）或不成立（rejected）
+ * → 會員 10 日內可送回復通知（counter_at）→ 管理員轉送通知人（forwarded_at，restore_due＝10 個工作日後）
+ * → 期滿通知人沒提出起訴證明就回復（restored），有就維持（upheld）。
+ * 每一步都記在 events（JSON 陣列：{ at, by, action, note }），後台可以看完整處理過程。
+ * shares＝這則通知對到的炫收藏流水號（JSON 陣列，從網址解析）；member_id＝被通知的會員；strike＝有沒有計入侵權次數
+ */
+export const takedownNotices = sqliteTable(
+  "takedown_notices",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    status: text("status").notNull().default("pending"),
+    claimantName: text("claimant_name").notNull(),
+    claimantEmail: text("claimant_email").notNull(),
+    claimantPhone: text("claimant_phone").notNull().default(""),
+    claimantAddress: text("claimant_address").notNull().default(""),
+    role: text("role").notNull(),
+    rightType: text("right_type").notNull(),
+    work: text("work").notNull(),
+    urls: text("urls").notNull().default("[]"),
+    detail: text("detail").notNull(),
+    shares: text("shares").notNull().default("[]"),
+    memberId: text("member_id"),
+    counterText: text("counter_text"),
+    counterAt: text("counter_at"),
+    forwardedAt: text("forwarded_at"),
+    restoreDue: text("restore_due"),
+    strike: integer("strike").notNull().default(0),
+    events: text("events").notNull().default("[]"),
+    createdAt: text("created_at").notNull().default(now),
+    updatedAt: text("updated_at").notNull().default(now),
+  },
+  (t) => [index("takedown_notices_status_idx").on(t.status, t.id), index("takedown_notices_member_idx").on(t.memberId)],
 );

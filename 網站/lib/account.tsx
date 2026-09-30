@@ -22,6 +22,8 @@ export type Me = {
   avatar?: string | null;
   /** 下次可以改暱稱的時間（ISO）；現在就能改是 null */
   nameNextAt?: string | null;
+  /** 已同意現行版使用條款與隱私權政策（2026-10-01） */
+  termsOk?: boolean;
 };
 
 export type PanelMode = "login" | "register" | "verify" | "forgot" | "reset";
@@ -45,15 +47,17 @@ type Account = {
   panel: { mode: PanelMode; reason?: string; email?: string } | null;
   /** 最近一次寫入失敗的訊息 */
   error: string | null;
+  /** 條款補同意視窗開著（登入後發現沒同意現行版、或寫入 API 回 TERMS_REQUIRED 時打開） */
+  consent: boolean;
   /** 當下連線國家與能不能交易（交易只限台灣）；讀到之前當作可以，避免台灣使用者閃一下提示 */
   geo: { country: string; canTrade: boolean };
 };
 
 const EMPTY: Account = {
   status: "loading", me: null, liked: [], owned: [], wanted: [], follows: [], reported: [], appeals: [], unread: 0, dismissed: [],
-  panel: null, error: null, geo: { country: "", canTrade: true },
+  panel: null, error: null, consent: false, geo: { country: "", canTrade: true },
 };
-const SIGNED_OUT = { status: "anon" as const, me: null, liked: [], owned: [], wanted: [], follows: [], reported: [], appeals: [], unread: 0, dismissed: [] };
+const SIGNED_OUT = { status: "anon" as const, me: null, liked: [], owned: [], wanted: [], follows: [], reported: [], appeals: [], unread: 0, dismissed: [], consent: false };
 
 let acc: Account = EMPTY;
 let started = false;
@@ -79,7 +83,11 @@ export async function api<T>(path: string, init?: { method?: string; body?: unkn
       cache: "no-store",
     });
     const data = (await res.json().catch(() => ({}))) as { error?: ApiError };
-    if (!res.ok) return { ok: false, status: res.status, error: data.error ?? { code: "HTTP", message: "出了點問題，再試一次" } };
+    if (!res.ok) {
+      // 條款改版後還沒同意（2026-10-01）：打開補同意視窗，呼叫端照常顯示錯誤訊息
+      if (data.error?.code === "TERMS_REQUIRED") set({ consent: true });
+      return { ok: false, status: res.status, error: data.error ?? { code: "HTTP", message: "出了點問題，再試一次" } };
+    }
     return { ok: true, data: data as T };
   } catch {
     return { ok: false, status: 0, error: { code: "NETWORK", message: "連不上網站，檢查網路再試" } };
@@ -99,7 +107,30 @@ export async function refreshAccount() {
     set({ ...SIGNED_OUT, geo });
     return;
   }
-  set({ status: "user", me: r.data.user, ...r.data.state, geo });
+  set({ status: "user", me: r.data.user, ...r.data.state, geo, consent: r.data.user.termsOk === false && !consentDismissed() });
+}
+
+/* ---------- 條款補同意（2026-10-01） ---------- */
+
+// 按「稍後再說」後這個分頁不再自動跳（sessionStorage），寫入被擋時照樣會打開
+const DISMISS_KEY = "yz_terms_later";
+const consentDismissed = () => {
+  try {
+    return sessionStorage.getItem(DISMISS_KEY) === "1";
+  } catch {
+    return false;
+  }
+};
+
+export function closeConsent(later: boolean) {
+  if (later) {
+    try {
+      sessionStorage.setItem(DISMISS_KEY, "1");
+    } catch {
+      /* 無痕模式存不了就算了 */
+    }
+  }
+  set({ consent: false });
 }
 
 function subscribe(l: () => void) {
