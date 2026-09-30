@@ -1,0 +1,257 @@
+[
+ {
+  "name": "自我介紹在暱稱下方",
+  "ok": true,
+  "detail": "['avatar-box', 'name-box', 'bio-box', 'links-box', 'fav-box']"
+ },
+ {
+  "name": "自介含站外交易字眼被擋",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "自介超過 200 字：儲存鈕停用、字數變色",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "自介儲存",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "IG 欄填非白名單網址被擋（前端）",
+  "ok": true,
+  "detail": "Instagram 欄只收 instagram.com 的網址"
+ },
+ {
+  "name": "伺服器擋非白名單／http／javascript:／帳密網址",
+  "ok": true,
+  "detail": "[400, 400, 400, 400, 400, 400]"
+ },
+ {
+  "name": "四個連結儲存，沒寫 https 自動補",
+  "ok": true,
+  "detail": "https://instagram.com/lemi_test"
+ },
+ {
+  "name": "加了三位藝人",
+  "ok": true,
+  "detail": "['elephant-gym', '9m88', 'joanna-wang']"
+ },
+ {
+  "name": "往後移：第 1、2 位交換",
+  "ok": true,
+  "detail": "['9m88', 'elephant-gym', 'joanna-wang']"
+ },
+ {
+  "name": "移除第 3 位",
+  "ok": true,
+  "detail": "['9m88', 'elephant-gym']"
+ },
+ {
+  "name": "藝人順序存進伺服器",
+  "ok": true,
+  "detail": "[{\"slug\": \"9m88\", \"name\": \"9m88\"}, {\"slug\": \"elephant-gym\", \"name\": \"大象體操\"}]"
+ },
+ {
+  "name": "伺服器擋超過 5 位",
+  "ok": true,
+  "detail": "400"
+ },
+ {
+  "name": "按取消、Esc 都不上傳、頭像不變",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "桌機滑鼠拖曳（橫式照片左右移）",
+  "ok": true,
+  "detail": "{'z': 1, 'cx': 2016, 'cy': 1512, 'ready': '1'} → {'z': 1, 'cx': 1512, 'cy': 1512, 'ready': '1'}"
+ },
+ {
+  "name": "桌機滾輪放大",
+  "ok": true,
+  "detail": "z 1 → 1.822"
+ },
+ {
+  "name": "桌機滑桿縮放",
+  "ok": true,
+  "detail": "z 3"
+ },
+ {
+  "name": "桌機橫式 上傳成功 201",
+  "ok": true,
+  "detail": "201"
+ },
+ {
+  "name": "桌機橫式 只送一個裁切後的 WebP（原圖不上傳）",
+  "ok": true,
+  "detail": "[{\"size\": 1904, \"type\": \"image/webp\", \"name\": \"avatar.webp\", \"fields\": [\"image\"]}]"
+ },
+ {
+  "name": "桌機橫式 伺服器存的是 256×256 WEBP",
+  "ok": true,
+  "detail": "WEBP (256, 256)"
+ },
+ {
+  "name": "390 設定頁 沒有橫向溢出",
+  "ok": true,
+  "detail": "scrollWidth 390 / innerWidth 390"
+ },
+ {
+  "name": "390 超大 6000×8000 裁切視窗開得起來",
+  "ok": true,
+  "detail": "0.1 秒"
+ },
+ {
+  "name": "390 超大 6000×8000 雙指放大",
+  "ok": true,
+  "detail": "z 1 → 3"
+ },
+ {
+  "name": "390 超大 6000×8000 單指拖曳",
+  "ok": true,
+  "detail": "{'z': 3, 'cx': 3000, 'cy': 4000, 'ready': '1'} → {'z': 3, 'cx': 3304.9, 'cy': 4304.9, 'ready': '1'}"
+ },
+ {
+  "name": "390 超大 6000×8000 拖曳時頁面沒跟著捲",
+  "ok": true,
+  "detail": "scrollY 0"
+ },
+ {
+  "name": "390 超大 6000×8000 上傳成功 201",
+  "ok": true,
+  "detail": "201"
+ },
+ {
+  "name": "390 超大 6000×8000 只送一個裁切後的 WebP（原圖不上傳）",
+  "ok": true,
+  "detail": "[{\"size\": 1042, \"type\": \"image/webp\", \"name\": \"avatar.webp\", \"fields\": [\"image\"]}]"
+ },
+ {
+  "name": "390 超大 6000×8000 伺服器存的是 256×256 WEBP",
+  "ok": true,
+  "detail": "WEBP (256, 256)"
+ },
+ {
+  "name": "360 設定頁 沒有橫向溢出",
+  "ok": true,
+  "detail": "scrollWidth 360 / innerWidth 360"
+ },
+ {
+  "name": "360 裁切視窗塞得進螢幕",
+  "ok": true,
+  "detail": "12～348"
+ },
+ {
+  "name": "320 設定頁 沒有橫向溢出",
+  "ok": true,
+  "detail": "scrollWidth 320 / innerWidth 320"
+ },
+ {
+  "name": "320 裁切視窗塞得進螢幕",
+  "ok": true,
+  "detail": "12～308"
+ },
+ {
+  "name": "WebKit 雙指放大（合成觸控指標）",
+  "ok": true,
+  "detail": "z 1 → 3"
+ },
+ {
+  "name": "WebKit 單指拖曳（合成觸控指標）",
+  "ok": true,
+  "detail": "[1512, 2016] → [1665.7, 2169.7]"
+ },
+ {
+  "name": "WebKit 取景框 touch-action: none",
+  "ok": true,
+  "detail": "none"
+ },
+ {
+  "name": "WebKit 直式 上傳成功 201",
+  "ok": true,
+  "detail": "201"
+ },
+ {
+  "name": "WebKit 直式 只送一個裁切後的 WebP（原圖不上傳）",
+  "ok": true,
+  "detail": "[{\"size\": 1094, \"type\": \"image/webp\", \"name\": \"avatar.webp\", \"fields\": [\"image\"]}]"
+ },
+ {
+  "name": "WebKit 直式 伺服器存的是 256×256 WEBP",
+  "ok": true,
+  "detail": "WEBP (256, 256)"
+ },
+ {
+  "name": "個人頁自介保留換行",
+  "ok": true,
+  "detail": "'台中，收獨立樂團的實體。\\n卡帶為主，也收黑膠。\\n\\n驗收 1790783519'"
+ },
+ {
+  "name": "個人頁自介 white-space: pre-line",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "個人頁藝人標籤照順序、連到藝人頁",
+  "ok": true,
+  "detail": "[['9m88', '/artist/9m88'], ['elephant-gym', '/artist/elephant-gym']]"
+ },
+ {
+  "name": "個人頁四個社群圖示",
+  "ok": true,
+  "detail": "['ig', 'threads', 'youtube', 'facebook']"
+ },
+ {
+  "name": "社群連結 target=_blank rel=noopener nofollow ugc",
+  "ok": true,
+  "detail": "['ig', '_blank', 'noopener nofollow ugc', 'https://instagram.com/lemi_test']"
+ },
+ {
+  "name": "自己的頁面有「編輯個人資料」連到 /settings",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1440 個人頁 沒有橫向溢出",
+  "ok": true,
+  "detail": "scrollWidth 1440 / innerWidth 1440"
+ },
+ {
+  "name": "390 個人頁 沒有橫向溢出",
+  "ok": true,
+  "detail": "scrollWidth 390 / innerWidth 390"
+ },
+ {
+  "name": "360 個人頁 沒有橫向溢出",
+  "ok": true,
+  "detail": "scrollWidth 360 / innerWidth 360"
+ },
+ {
+  "name": "320 個人頁 沒有橫向溢出",
+  "ok": true,
+  "detail": "scrollWidth 320 / innerWidth 320"
+ },
+ {
+  "name": "看別人的個人頁沒有「編輯個人資料」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "未登入看個人頁沒有「編輯個人資料」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "未登入看得到自介、藝人、連結",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "沒有 console error",
+  "ok": true,
+  "detail": ""
+ }
+]

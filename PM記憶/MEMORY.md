@@ -68,3 +68,4 @@
 - vinext 的 `metadata.icons` 會把圖示 `<link>` 串流到 `<body>` 再靠 JS 搬進 head，iOS／爬蟲讀原始 HTML 看不到；圖示 link 直接寫在 layout 的 `<head>`。Logo 跟中文字對齊：插圖 viewBox 置中後仍比字的墨跡中心低 .75px（Noto Sans TC 700 20px），偏移來自字不是圖；量墨跡用 4 倍截圖取非白像素上下緣（2026-09-30）
 - 派工中途收到「暫停」但已部署：不自己回退，先把改動放 wip 分支 push、在 00_現況.md 寫明正式站與 main 不一致，等指示（2026-09-30）
 - Spotify Web API（development mode）有按 endpoint 分桶、以開發者帳號計的隱藏配額：Get Artist's Albums 約 100 次就 429＋Retry-After 約 86,000 秒（鎖 24 小時），其他 endpoint 照常。批次腳本間隔 1 秒、Retry-After >120 秒就存檔收工不要等；Get Artist's Albums 的 limit 上限也是 10（文件沒寫）。回應快取在 `網站/.cache/spotify/`，重跑讀快取（2026-09-30）
+- 跟另一個 PM 平行施工用 `git worktree`：新目錄沒有 `.wrangler/state` 與 `.deploy-assets`，本機 DB 用 migrate＋seed 重建、伺服器開別的 port（8795）；部署前從主目錄 `cp -a .deploy-assets`，合併後再拷回主目錄。正式站擋 `Python-urllib` UA（403），腳本打正式站要帶瀏覽器 UA；Chromium `post_data_buffer` 讀不到 multipart 裡的 Blob，驗上傳內容用 init script 包 `fetch` 記 FormData（2026-09-30）
