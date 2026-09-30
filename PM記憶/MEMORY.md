@@ -38,6 +38,7 @@
 - 手機長按拖曳用 Playwright CDP `Input.dispatchTouchEvent`（touchStart→等 600ms→分段 touchMove→touchEnd）驗得到，頁面捲動要在元件上掛非 passive 的 touchmove 擋；上傳單張失敗用 `page.route` 對第 N 個 POST `abort()` 模擬。別對既有檔跑 `prettier --write`，會整檔重排出幾百行假 diff（2026-09-28）
 - 維基 `pageimages` 預設只回自由授權的圖，要數「因授權排除」得用 `pilicense=any`；台灣政府機關上傳的照片授權是「Attribution」（GWOIA），不是 CC。驗 R2 檔真的刪了用 `wrangler r2 object get … --local --persist-to .wrangler/state --pipe`，看 /img/ 404 只證明 D1 擋住；正式站容量對帳用 Cloudflare API 列 bucket 物件加總（2026-09-28）
 - 同一天反覆跑驗收會用完本機「辨識細節每日 100 次」，系列頁 `/api/details` 429 讓 console error 斷言假失敗：清 `counters` 的 `quota:detail:%` 並重啟 8791（額度另有記憶體快取）；設定類表單別把會變的值放進 `key`（暱稱改了整塊重掛，「已儲存」會被清掉）（2026-09-28）
+- iPhone 版面問題用 Playwright WebKit＋`device_scale_factor=3` 重現（WSL 先 `sudo python3 -m playwright install-deps webkit`），1x／2x 或 Chromium 常重現不出來；虛線框寬度一律整數 px（WebKit 3x 下 1.5px dashed 左右不畫）；元素截圖量框線取最外 4 條像素線，只看最外一條會誤判；用戶截圖先確認是不是登入狀態（2026-09-30）
 - 手機版看到「橫向排列被切」不要預設改成格狀，先確認側滑是不是刻意設計（本站作品／藝人卡片列本來就設計成側滑瀏覽）；真正該修的是出血到螢幕邊緣＋scroll-snap＋滑到底留白，不是拿掉橫向捲動（2026-09-28，被用戶當場糾正一次）
 - 整頁快取的頁面要顯示「只有訪客／只有登入者」才看得到的內容：不要條件式卸載節點（會造成快取版跟登入狀態疊加時的版面跳動），改成節點永遠渲染、佔位永遠不變，只切換 `opacity`／`data-visible`，靠既有 `useAccount()`（`/api/me`）判斷；伺服器輸出與 hydration 第一次都要是「隱藏」那個狀態，避免登入者看到訪客內容閃一下。新增可整頁快取的路徑記得同步改 `worker.ts` 的 `CACHEABLE` regex 跟開頭註解（2026-09-28）
 - 中西文夾雜的段落（中文句子裡插英文名/括號註記）右側常出現大段異常空白：瀏覽器把括號＋英文當成不可斷字整體，行尾空間不夠就整串推下一行；`.prose p` 之類正文區塊統一加 `overflow-wrap: anywhere` 解決，量測時用 Range rect 逐行量右緣才看得出來，`getBoundingClientRect()` 量整個段落容器只會顯示容器本身是滿版、看不出行內空白（2026-09-28）
