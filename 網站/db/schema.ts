@@ -1110,3 +1110,46 @@ export const spotifyAlbums = sqliteTable("spotify_albums", {
   tracks: text("tracks").notNull().default("[]"),
   fetchedAt: text("fetched_at").notNull().default(now),
 });
+
+/* =====================================================================
+ * 發布時自動補資料（2026-09-30，drizzle/0024 起的下一號）：兩張新表，都沒有內容版本觸發器。
+ * 會員（或管理員）在炫收藏表單新增藝人、系列、版本時排一筆工作，Worker 在背景查 MusicBrainz／Wikidata：
+ *   高信心（條碼吻合，或名稱＋年份＋作品吻合）→ 只補空白欄位（applied 存改前的值，駁回時還原）
+ *   低信心 → 只列候選連結；查不到 → 標未查到。細節見 lib/server/autofill.ts 開頭
+ * ===================================================================== */
+
+/**
+ * 一筆新增一筆工作（addition_id 對 catalog_additions.id）。
+ * status：queued｜done｜error；confidence：high｜low｜none｜dup（跟既有資料重複，建議改掛）；
+ * decision：NULL｜approved｜rejected（管理員在後台按的）。
+ * result：JSON { summary, fields: {欄位: 值}[], sources: {label,url}[], candidates: {label,url,note,mbid?}[], dup?: {into,label,url} }
+ * applied：JSON 改前的值與這次建的版本／品項 id（駁回時照這份還原）
+ */
+export const autofillJobs = sqliteTable(
+  "autofill_jobs",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    additionId: integer("addition_id").notNull(),
+    type: text("type").notNull(),
+    ref: text("ref").notNull(),
+    status: text("status").notNull().default("queued"),
+    confidence: text("confidence"),
+    result: text("result").notNull().default("{}"),
+    applied: text("applied").notNull().default("{}"),
+    decision: text("decision"),
+    /** 管理員手動指定的 MBID 或條碼（重查時帶入） */
+    hint: text("hint"),
+    tries: integer("tries").notNull().default(0),
+    nextAt: text("next_at").notNull().default(now),
+    createdAt: text("created_at").notNull().default(now),
+    updatedAt: text("updated_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("autofill_jobs_addition_uq").on(t.additionId), index("autofill_jobs_status_idx").on(t.status, t.nextAt)],
+);
+
+/** 自動補資料的狀態（鎖與 MusicBrainz 上次呼叫時間）：key＝lock｜mb_last */
+export const autofillState = sqliteTable("autofill_state", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: text("updated_at").notNull().default(now),
+});

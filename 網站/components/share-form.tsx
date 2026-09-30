@@ -197,16 +197,20 @@ function NameBox({
   );
 }
 
-/** 新增版本的虛線框：版本名稱必填，年份、地區選填；新增後立即可用（事後審），自己新增的永遠可以改名 */
-function NewVersionBox({ onSave, onCancel }: { onSave: (f: { edition: string; year: string; region: string }) => Promise<string | null>; onCancel: () => void }) {
-  const [f, setF] = useState({ edition: "", year: "", region: "" });
+/**
+ * 新增版本的虛線框：版本名稱必填，年份、地區、條碼選填；新增後立即可用（事後審），自己新增的永遠可以改名。
+ * 條碼（2026-09-30 自動補資料）：有填的話背景用條碼去 MusicBrainz 對，對上就補齊發行日、曲目等
+ */
+function NewVersionBox({ onSave, onCancel }: { onSave: (f: { edition: string; year: string; region: string; barcode: string }) => Promise<string | null>; onCancel: () => void }) {
+  const [f, setF] = useState({ edition: "", year: "", region: "", barcode: "" });
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const save = async () => {
     if (!f.edition.trim()) return setError("填版本名稱");
     if (f.year.trim() && !/^\d{4}$/.test(f.year.trim())) return setError("年份填西元四位數，不知道就空著");
     setBusy(true);
-    const err = await onSave({ edition: f.edition.trim(), year: f.year.trim(), region: f.region.trim() });
+    if (f.barcode && (f.barcode.length < 8 || f.barcode.length > 14)) return setError("條碼是封底條碼下方 8～14 位數字，不確定就空著");
+    const err = await onSave({ edition: f.edition.trim(), year: f.year.trim(), region: f.region.trim(), barcode: f.barcode });
     setBusy(false);
     if (err) setError(err);
   };
@@ -232,6 +236,16 @@ function NewVersionBox({ onSave, onCancel }: { onSave: (f: { edition: string; ye
         <input className="input" inputMode="numeric" maxLength={4} placeholder="年份（選填）" value={f.year} onChange={(e) => setF({ ...f, year: e.target.value.replace(/[^\d]/g, "") })} aria-label="年份" data-testid="new-version-year" />
         <input className="input" maxLength={20} placeholder="地區（選填）" value={f.region} onChange={(e) => setF({ ...f, region: e.target.value })} aria-label="地區" data-testid="new-version-region" />
       </div>
+      <input
+        className="input"
+        inputMode="numeric"
+        maxLength={14}
+        placeholder="條碼數字（選填，封底條碼下方那串）"
+        value={f.barcode}
+        onChange={(e) => setF({ ...f, barcode: e.target.value.replace(/[^\d]/g, "") })}
+        aria-label="條碼"
+        data-testid="new-version-barcode"
+      />
       {error ? <p className="field-error">{error}</p> : null}
       <span className="sf-box-acts">
         <button type="button" className="btn btn-line" onClick={save} disabled={busy} data-testid="new-version-save">
@@ -483,7 +497,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
     setVersionOpen(false);
     setNewVersion(false);
   };
-  const createVersion = async (f: { edition: string; year: string; region: string }) => {
+  const createVersion = async (f: { edition: string; year: string; region: string; barcode: string }) => {
     if (!series || !kind) return "先選專輯";
     const r = await api<{ itemId: string; existing?: boolean; version: Omit<VOpt, "itemId"> }>("/api/catalog/submit", {
       body: { type: "version", seriesKey: series.key, kind, ...f },

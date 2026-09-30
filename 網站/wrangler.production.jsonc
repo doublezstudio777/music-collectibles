@@ -31,7 +31,8 @@
   // （lib/server/cleanup.ts、worker.ts 的 scheduled）。18:00 UTC＝台灣時間凌晨 2 點，流量低。
   // Cron Trigger 免費方案可用（同一個 Worker 最多 5 條），不用升級。
   // Spotify 自動抽歌（2026-09-30）：台灣時間 02:00～04:55 每 5 分鐘一批（lib/server/spotify-draw.ts）。worker.ts 用 event.cron 分辨兩條
-  "triggers": { "crons": ["0 18 * * *", "*/5 18-20 * * *"] },
+  // 發布時自動補資料（2026-09-30）：每 10 分鐘接手背景沒跑完的查詢（lib/server/autofill.ts），沒工作時只查一次 D1
+  "triggers": { "crons": ["0 18 * * *", "*/5 18-20 * * *", "*/10 * * * *"] },
   "vars": {
     "TURNSTILE_SITE_KEY": "0x4AAAAAAFEx6pj-sHlnKx92",
     "ADMIN_EMAILS": "zukawork0312@gmail.com",

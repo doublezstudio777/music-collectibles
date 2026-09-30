@@ -5,6 +5,105 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/account";
 import type { AdminAddition } from "@/lib/server/additions";
 
+const CONF: Record<string, string> = { high: "高信心，已預填", low: "低信心，只列候選", none: "未查到", dup: "跟既有資料重複" };
+
+/** 自動補資料（2026-09-30）：信心等級、預填了什麼、來源、候選；可駁回預填或重查（可指定 MBID／條碼） */
+function Autofill({ r, run, busy }: { r: AdminAddition; run: (body: Record<string, unknown>) => Promise<void>; busy: boolean }) {
+  const [hint, setHint] = useState("");
+  const [open, setOpen] = useState(false);
+  const af = r.autofill;
+  if (!af) return <p className="sub af-none">自動補資料：功能上線前新增的，沒有查</p>;
+  const queued = af.status === "queued";
+  const label = queued ? "查詢中" : af.status === "error" ? "查詢失敗" : (CONF[af.confidence ?? ""] ?? "—");
+  const res = af.result;
+  const prefilled = af.confidence === "high" && res.fields.length > 0 && af.decision !== "rejected";
+  return (
+    <div className="af" data-testid="af" data-status={af.status} data-confidence={af.confidence ?? ""} data-decision={af.decision ?? ""}>
+      <p className="af-head">
+        <span className={`af-badge af-${queued ? "queued" : (af.confidence ?? "none")}`} data-testid="af-badge">
+          {label}
+        </span>
+        {af.decision === "rejected" ? <span className="sub-inline">　已駁回預填</span> : af.decision === "approved" ? <span className="sub-inline">　已核准</span> : null}
+        {!queued && res.summary ? <span className="af-summary">{res.summary}</span> : null}
+      </p>
+      {res.fields.length && af.decision !== "rejected" ? (
+        <dl className="af-fields" data-testid="af-fields">
+          {res.fields.map((f, i) => (
+            <div key={i}>
+              <dt>{f.label}</dt>
+              <dd>{f.value}</dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
+      {res.dup ? (
+        <p className="af-dup" data-testid="af-dup" data-into={res.dup.into}>
+          建議改掛到：
+          {res.dup.url ? (
+            <a className="link" href={res.dup.url} target="_blank" rel="noreferrer">
+              {res.dup.label}
+            </a>
+          ) : (
+            res.dup.label
+          )}
+          （{res.dup.into}）
+        </p>
+      ) : null}
+      {res.sources.length ? (
+        <p className="af-src" data-testid="af-sources">
+          來源：
+          {res.sources.map((x, i) => (
+            <a key={i} className="link" href={x.url} target="_blank" rel="noreferrer">
+              {x.label}
+            </a>
+          ))}
+        </p>
+      ) : null}
+      {res.candidates.length ? (
+        <ul className="af-cands" data-testid="af-cands">
+          {res.candidates.slice(0, 8).map((c, i) => (
+            <li key={i}>
+              <a className="link" href={c.url} target="_blank" rel="noreferrer">
+                {c.label}
+              </a>
+              {c.note ? <span className="sub-inline">　{c.note}</span> : null}
+              {c.mbid && af.confidence !== "high" ? (
+                <button type="button" className="btn-text" disabled={busy} onClick={() => run({ action: "recheck", hint: c.mbid })} data-testid="af-use">
+                  用這筆
+                </button>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {!queued ? (
+        <div className="af-acts">
+          {prefilled ? (
+            <button type="button" className="btn-text" disabled={busy} onClick={() => run({ action: "reject" })} data-testid="af-reject">
+              駁回預填
+            </button>
+          ) : null}
+          {open ? (
+            <span className="add-form af-recheck">
+              <input className="input input-sm" value={hint} onChange={(e) => setHint(e.target.value)} placeholder="MusicBrainz 代碼或條碼（可空白）" aria-label="指定 MusicBrainz 代碼或條碼" data-testid="af-hint" />
+              <button type="button" className="btn btn-line" disabled={busy} onClick={() => run({ action: "recheck", hint })} data-testid="af-recheck-go">
+                重查
+              </button>
+              <button type="button" className="btn-text" onClick={() => setOpen(false)}>
+                取消
+              </button>
+            </span>
+          ) : (
+            <button type="button" className="btn-text" onClick={() => setOpen(true)} data-testid="af-recheck">
+              重查
+            </button>
+          )}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 const time = (iso: string) => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 16).replace("T", " ");
 
 function Row({ r, done }: { r: AdminAddition; done: () => void }) {
@@ -52,6 +151,7 @@ function Row({ r, done }: { r: AdminAddition; done: () => void }) {
             ))}
           </ul>
         ) : null}
+        <Autofill r={r} run={run} busy={busy} />
         {mode === "rename" ? (
           <div className="add-form">
             <input className="input input-sm" value={name} onChange={(e) => setName(e.target.value)} aria-label="名稱" data-testid="add-rename-name" />
@@ -89,8 +189,14 @@ function Row({ r, done }: { r: AdminAddition; done: () => void }) {
                 改回待確認
               </button>
             ) : (
-              <button type="button" className="btn btn-line" disabled={busy || r.gone} onClick={() => run({ action: "confirm" })} data-testid="add-confirm">
-                沒問題
+              <button
+                type="button"
+                className="btn btn-line"
+                disabled={busy || r.gone || r.autofill?.status === "queued"}
+                onClick={() => run({ action: r.autofill ? "approve" : "confirm" })}
+                data-testid="add-confirm"
+              >
+                {r.autofill?.confidence === "dup" && r.autofill.result.dup && !r.autofill.decision ? "核准（改掛過去）" : "核准"}
               </button>
             )}
             {!r.gone ? (
@@ -98,8 +204,16 @@ function Row({ r, done }: { r: AdminAddition; done: () => void }) {
                 <button type="button" className="btn-text" onClick={() => setMode("rename")} data-testid="add-rename">
                   修改名稱
                 </button>
-                <button type="button" className="btn-text" onClick={() => setMode("merge")} data-testid="add-merge">
-                  合併到既有的
+                <button
+                  type="button"
+                  className="btn-text"
+                  onClick={() => {
+                    if (!into && r.autofill?.result.dup) setInto(r.autofill.result.dup.into);
+                    setMode("merge");
+                  }}
+                  data-testid="add-merge"
+                >
+                  改掛到既有的
                 </button>
               </>
             ) : null}
@@ -123,6 +237,20 @@ export function AdminAdditions() {
   useEffect(() => {
     void load();
   }, [load]);
+  // 有工作還在查：每 4 秒重讀，最多 2 分鐘
+  const [polls, setPolls] = useState(0);
+  const waiting = Boolean(list?.some((r) => r.autofill?.status === "queued"));
+  useEffect(() => {
+    if (!waiting) setPolls(0);
+  }, [waiting]);
+  useEffect(() => {
+    if (!waiting || polls >= 30) return;
+    const t = setTimeout(() => {
+      setPolls((n) => n + 1);
+      void load();
+    }, 4000);
+    return () => clearTimeout(t);
+  }, [waiting, polls, load]);
   if (error) return <p className="empty">{error}</p>;
   if (!list) return <p className="empty">讀取中</p>;
   const section = (title: string, rows: AdminAddition[], empty: string, testid: string) => (
