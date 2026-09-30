@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="176" height="176" viewBox="2.5 -6 176 176" role="img" aria-label="樂迷藏">
+  <circle cx="112" cy="77" r="54" fill="#FF6A00" stroke="#111111" stroke-width="8"/>
+  <circle cx="112" cy="77" r="8" fill="#FFFFFF" stroke="#111111" stroke-width="5"/>
+  <rect x="15" y="20" width="102" height="124" fill="#FFFFFF" stroke="#111111" stroke-width="8"/>
+  <path d="M31 40H76M31 53H63M31 124H100" fill="none" stroke="#111111" stroke-width="7"/>
+  <rect x="31" y="73" width="34" height="34" fill="#FF6A00"/>
+</svg>
