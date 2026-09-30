@@ -3,7 +3,7 @@ import { pageData } from "@/lib/server/viewer";
 import { ShareWall, type WallFilter, type WallSort } from "@/components/share-wall";
 import { HomeTagline } from "@/components/home-tagline";
 import { HomePick, type PickSong } from "@/components/home-pick";
-import { enabledPicks } from "@/lib/server/spotify-picks";
+import { homePicks } from "@/lib/server/spotify-picks";
 import { GENDER_LABEL, REGION_LABEL, SITE_TITLE, type ArtistGender } from "@/lib/data";
 
 type Props = { searchParams: Promise<{ state?: string; sort?: string; page?: string }> };
@@ -16,10 +16,10 @@ export default async function Home({ searchParams }: Props) {
   const sort: WallSort = q.sort === "likes" ? "likes" : q.sort === "new" ? "new" : "following";
   const page = Math.max(1, Number.parseInt(q.page ?? "1", 10) || 1);
   const { c } = await pageData();
-  // 首頁上方（2026-09-29）：一首歌＋藝人分類。只推薦藝人目錄看得到的藝人
+  // 首頁上方（2026-09-29）：一首歌＋藝人分類。只推薦藝人目錄看得到的藝人（歌來自每天自動抽歌，沒有的藝人用手動歌單，2026-09-30）
   const dir = c.artistDirectory();
   const bySlug = new Map(dir.map((d) => [d.artist.slug, d]));
-  const songs: PickSong[] = (await enabledPicks()).flatMap((p) => {
+  const songs: PickSong[] = (await homePicks()).flatMap((p) => {
     const d = bySlug.get(p.artistSlug);
     if (!d) return [];
     const a = d.artist;

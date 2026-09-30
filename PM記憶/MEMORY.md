@@ -66,3 +66,4 @@
 - 正式站 Turnstile 要 token：Windows Chrome 以 `--remote-debugging-port=9222 --user-data-dir=暫存` 開，WSL 閘道 IP 會變（09-30 是 192.168.48.1），轉接 ps1 要照 `ip route` 重寫；CDP 下 `set_input_files` 傳 buffer 不傳路徑。`/login` 的 `%c%d font-size:0` console error 是 Turnstile 小框自己的，舊網址也有（2026-09-30）
 - vinext 的 `metadata.icons` 會把圖示 `<link>` 串流到 `<body>` 再靠 JS 搬進 head，iOS／爬蟲讀原始 HTML 看不到；圖示 link 直接寫在 layout 的 `<head>`。Logo 跟中文字對齊：插圖 viewBox 置中後仍比字的墨跡中心低 .75px（Noto Sans TC 700 20px），偏移來自字不是圖；量墨跡用 4 倍截圖取非白像素上下緣（2026-09-30）
 - 派工中途收到「暫停」但已部署：不自己回退，先把改動放 wip 分支 push、在 00_現況.md 寫明正式站與 main 不一致，等指示（2026-09-30）
+- Spotify Web API（development mode）有按 endpoint 分桶、以開發者帳號計的隱藏配額：Get Artist's Albums 約 100 次就 429＋Retry-After 約 86,000 秒（鎖 24 小時），其他 endpoint 照常。批次腳本間隔 1 秒、Retry-After >120 秒就存檔收工不要等；Get Artist's Albums 的 limit 上限也是 10（文件沒寫）。回應快取在 `網站/.cache/spotify/`，重跑讀快取（2026-09-30）

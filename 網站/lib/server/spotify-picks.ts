@@ -1,15 +1,31 @@
 // 首頁推薦歌曲（2026-09-29）：首頁上方 Spotify 嵌入播放器的歌單，後台「推薦歌曲」管理。
+// 2026-09-30 起這張手動歌單改當備援：有自動抽歌的藝人用抽到的歌（lib/server/spotify-draw.ts），見 homePicks。
 // 首頁整頁快取：伺服器只輸出整份啟用歌單，隨機挑與「換一首」都在瀏覽器端做；
 // 歌單任何變動由 spotify_picks 的觸發器讓 content_version 加 1（遷移 0021），首頁換新快取。
-import { and, asc, eq, sql } from "drizzle-orm";
+import { and, asc, eq, isNotNull, sql } from "drizzle-orm";
 import { getDb } from "@/db";
-import { adminLog, artists, spotifyPicks } from "@/db/schema";
+import { adminLog, artists, spotifyArtists, spotifyPicks } from "@/db/schema";
 import type { User } from "@/lib/server/auth";
 import { HttpError } from "@/lib/server/trade";
 
 export type PickRow = typeof spotifyPicks.$inferSelect;
 
-/** 首頁：啟用中的歌（依排序） */
+/**
+ * 首頁歌單（2026-09-30 起）：有 Spotify 自動抽歌的藝人用「今天抽到的那一首」（spotify_artists.track_id），
+ * 其他藝人（對不到 Spotify、還沒抽過）才用這張手動歌單當備援。順序固定（伺服器輸出後在瀏覽器端依日期挑，見 home-pick.tsx）。
+ */
+export async function homePicks() {
+  const auto = await getDb()
+    .select({ artistSlug: spotifyArtists.artistSlug, trackId: spotifyArtists.trackId })
+    .from(spotifyArtists)
+    .where(and(eq(spotifyArtists.enabled, 1), isNotNull(spotifyArtists.trackId)))
+    .orderBy(asc(spotifyArtists.artistSlug));
+  const has = new Set(auto.map((a) => a.artistSlug));
+  const manual = (await enabledPicks()).filter((p) => !has.has(p.artistSlug));
+  return [...auto.map((a) => ({ artistSlug: a.artistSlug, trackId: a.trackId! })), ...manual];
+}
+
+/** 啟用中的手動歌（依排序） */
 export async function enabledPicks() {
   return getDb()
     .select({ artistSlug: spotifyPicks.artistSlug, trackId: spotifyPicks.trackId })

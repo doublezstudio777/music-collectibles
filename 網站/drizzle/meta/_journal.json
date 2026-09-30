@@ -155,6 +155,20 @@
       "when": 1790693777318,
       "tag": "0021_spotify_picks",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "6",
+      "when": 1790775277347,
+      "tag": "0022_spotify_draw",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "6",
+      "when": 1790775506381,
+      "tag": "0023_spotify_albums",
+      "breakpoints": true
     }
   ]
 }

@@ -1,7 +1,7 @@
 // 樂迷藏正式環境（Cloudflare Workers：正式網域 lemibox.com，舊網址 yinzang.dblzm.workers.dev 照常保留）。
 // 只有 scripts/deploy.sh 會用（YINZANG_DEPLOY=production）。本機 dev 不讀這份。
 // 已填（2026-09-27 首次部署）：account_id、database_id、TURNSTILE_SITE_KEY；雜湊次數依使用者決定用 5 萬次。步驟見 產出/20260927_部署手冊.md
-// 密鑰一律 `wrangler secret put`，不寫在這裡：TURNSTILE_SECRET、RESEND_API_KEY、BUDGET_WEBHOOK_SECRET
+// 密鑰一律 `wrangler secret put`，不寫在這裡：TURNSTILE_SECRET、RESEND_API_KEY、BUDGET_WEBHOOK_SECRET、SPOTIFY_CLIENT_ID、SPOTIFY_CLIENT_SECRET
 {
   "name": "yinzang",
   "main": "./worker.ts",
@@ -30,7 +30,8 @@
   // 每天一次，資料保存期限清理（上線後雜項，2026-09-28）：user_activity／user_geo／rate_limits 超過 90 天的列清掉
   // （lib/server/cleanup.ts、worker.ts 的 scheduled）。18:00 UTC＝台灣時間凌晨 2 點，流量低。
   // Cron Trigger 免費方案可用（同一個 Worker 最多 5 條），不用升級。
-  "triggers": { "crons": ["0 18 * * *"] },
+  // Spotify 自動抽歌（2026-09-30）：台灣時間 02:00～04:55 每 5 分鐘一批（lib/server/spotify-draw.ts）。worker.ts 用 event.cron 分辨兩條
+  "triggers": { "crons": ["0 18 * * *", "*/5 18-20 * * *"] },
   "vars": {
     "TURNSTILE_SITE_KEY": "0x4AAAAAAFEx6pj-sHlnKx92",
     "ADMIN_EMAILS": "zukawork0312@gmail.com",

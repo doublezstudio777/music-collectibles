@@ -1049,3 +1049,64 @@ export const spotifyPicks = sqliteTable(
   },
   (t) => [uniqueIndex("spotify_picks_artist_track_uq").on(t.artistSlug, t.trackId), index("spotify_picks_enabled_idx").on(t.enabled, t.sort)],
 );
+
+/**
+ * Spotify 自動抽歌（2026-09-30）：站上藝人 ↔ Spotify 藝人 ID，加上每天抽歌的狀態。
+ * 對應由 scripts/spotify-match.mjs 寫入（MusicBrainz 連結／手動歌單／搜尋比對，不確定的不配）。
+ * 排程（lib/server/spotify-draw.ts）每天替每位啟用的藝人從完整作品裡隨機抽一首，寫進 track_id 等欄位與 spotify_draws。
+ * 刻意不設 content_version 觸發器：一晚抽完才由排程加 1 一次，避免整頁快取與內容目錄一晚重建幾十次。
+ */
+export const spotifyArtists = sqliteTable("spotify_artists", {
+  artistSlug: text("artist_slug").primaryKey(),
+  spotifyId: text("spotify_id").notNull(),
+  /** musicbrainz｜picks｜search｜manual */
+  source: text("source").notNull(),
+  evidence: text("evidence").notNull().default(""),
+  enabled: integer("enabled").notNull().default(1),
+  /** JSON string[]：專輯＋單曲 ID（market=TW），7 天更新一次 */
+  albums: text("albums"),
+  albumsAt: text("albums_at"),
+  /** 最近一次抽歌的台灣日期 YYYY-MM-DD（沒抽到也記，隔天再抽） */
+  drawnOn: text("drawn_on"),
+  /** 目前這位藝人的那一首（首頁用） */
+  trackId: text("track_id"),
+  title: text("title"),
+  albumName: text("album_name"),
+  updatedAt: text("updated_at").notNull().default(now),
+});
+
+/** 抽歌池：每次抽到的歌都留一列（歷史，也用來避免同一位連續抽到同一首） */
+export const spotifyDraws = sqliteTable(
+  "spotify_draws",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    artistSlug: text("artist_slug").notNull(),
+    trackId: text("track_id").notNull(),
+    title: text("title").notNull().default(""),
+    albumId: text("album_id").notNull().default(""),
+    albumName: text("album_name").notNull().default(""),
+    /** 台灣日期 YYYY-MM-DD */
+    drawnOn: text("drawn_on").notNull(),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [index("spotify_draws_artist_idx").on(t.artistSlug, t.id), index("spotify_draws_day_idx").on(t.drawnOn)],
+);
+
+/** 抽歌排程狀態（key-value）：backoff_until（429 退避到何時）、pending_bump、last_run */
+export const spotifyState = sqliteTable("spotify_state", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: text("updated_at").notNull().default(now),
+});
+
+/**
+ * Spotify 專輯曲目快取（2026-09-30）：development mode 的配額按 endpoint 分桶、數字不公開
+ * （實測 Get Artist's Albums 約 100 次就被鎖 24 小時），抓過的專輯曲目永久存著，之後從這裡抽不再打 Spotify。
+ * tracks：JSON [{ i: 歌曲ID, n: 曲名, a: 演出者ID[] }]，已先排除伴奏／純音樂／Instrumental／Karaoke 與台灣不能播的。
+ */
+export const spotifyAlbums = sqliteTable("spotify_albums", {
+  albumId: text("album_id").primaryKey(),
+  name: text("name").notNull().default(""),
+  tracks: text("tracks").notNull().default("[]"),
+  fetchedAt: text("fetched_at").notNull().default(now),
+});

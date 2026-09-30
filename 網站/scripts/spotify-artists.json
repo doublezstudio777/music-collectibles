@@ -1,0 +1,912 @@
+{
+ "_說明": "藝人識別碼 → Spotify 藝人 ID（scripts/spotify-match.mjs 產生；只有公開 ID，沒有金鑰）",
+ "產生時間": "2026-09-30T13:41:44.172Z",
+ "artists": {
+  "163braces": {
+   "spotifyId": "6gtUGnqU4qnJ2ZB2bvp5TZ",
+   "spotifyName": "163 braces",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：海螺記"
+  },
+  "2change": {
+   "spotifyId": "5EJ5TTpIgJqzboMNbGb48G",
+   "spotifyName": "2CHANGE",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：YUHUM、THE ONE GOT C.H.A.N.G.E.s."
+  },
+  "9m88": {
+   "spotifyId": "4PjY2961rc0MHE9zHYWEnH",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 55baa3aa-1914-4a9c-a0ec-636eaaaba904 的 Spotify 連結"
+  },
+  "a-bu-si-ta-na-bi-ma": {
+   "spotifyId": "4mxP6XgX0kUYlpKlcOHVGx",
+   "spotifyName": "阿布絲・塔娜比瑪",
+   "source": "search",
+   "evidence": "搜尋同名（3 位同名，只有這位有作品交集），作品交集：QUEENDOM、QUEENDOM 王國"
+  },
+  "a-lin": {
+   "spotifyId": "28gf2piFx6cAKOMIwcky5a",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz ba6b5808-3be3-42af-8296-8f4e826b2b64 的 Spotify 連結"
+  },
+  "aden": {
+   "spotifyId": "4ecBfM4xa6ZLDr7P8lsyTV",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 74ced67f-8eda-4ec8-8cca-1278d0b081ad 的 Spotify 連結"
+  },
+  "amei": {
+   "spotifyId": "6noxsCszBEEK04kCehugOp",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz aeacef89-e4f3-415e-ac9b-0864f438e6a3 的 Spotify 連結"
+  },
+  "ana": {
+   "spotifyId": "4FltjZrBvXgVkoN591o4jR",
+   "spotifyName": "ana",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Final Girl"
+  },
+  "andr": {
+   "spotifyId": "2hEgcLvKaP0WVJbmmNpkVt",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 032b49d3-27f8-4799-92ba-ba9a474e7f71 的 Spotify 連結"
+  },
+  "aoi": {
+   "spotifyId": "7ktAsKYEFwtaMgXZgYCfu5",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 2b65bd16-8b35-4634-bb61-b63eebcdae1d 的 Spotify 連結"
+  },
+  "arase": {
+   "spotifyId": "6rrjmBq0goGULFffuUERZV",
+   "spotifyName": "Arase阿拉斯",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：AKA"
+  },
+  "az": {
+   "spotifyId": "20tREv54XdXoRSTGp6EGRy",
+   "spotifyName": "AZ李孝祖",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：美式教育PAMERICAH"
+  },
+  "ba-shi-ba-ke-ba-le-zi": {
+   "spotifyId": "7tYJYd9Xr6O4I0uQE2ZGd0",
+   "spotifyName": "八十八顆芭樂籽",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：浪漫野球戰士列傳、比獸還帥"
+  },
+  "bai-bing-bing": {
+   "spotifyId": "3porOD7rtKeDVkYf3pJhq6",
+   "spotifyName": "白冰冰",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：喝酒講酒話"
+  },
+  "bai-he-hua": {
+   "spotifyId": "4JGHOtt9Kj0EKZFjF8cmeL",
+   "spotifyName": "百合花",
+   "source": "search",
+   "evidence": "搜尋同名（3 位同名，只有這位有作品交集），作品交集：萬事美妙、出來"
+  },
+  "cai-jia-zhen": {
+   "spotifyId": "22v6AgV8hdNbJC51hqTLeH",
+   "spotifyName": "蔡家蓁",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：彼个秘密"
+  },
+  "cao-dong-mei-you-pai-dui": {
+   "spotifyId": "3HXSUfI76zVZk71UMAeVfp",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 1636f82a-b541-4867-9eb7-e4b224552eef 的 Spotify 連結"
+  },
+  "carris-tsai": {
+   "spotifyId": "5jZkkQlg3sVBkz7iqR5O5a",
+   "spotifyName": "蔡秋鳳",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：戲台"
+  },
+  "ceng-wei-zhong": {
+   "spotifyId": "7zY8finbugZLFpNfwNe4qW",
+   "spotifyName": "曾瑋中",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：頇顢"
+  },
+  "cha-lao-ba-xi-wa-li": {
+   "spotifyId": "6prtwS8KeIeRmT4UAEqL3a",
+   "spotifyName": "查勞.巴西瓦里",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Kami Kami 我們我們"
+  },
+  "chen-jian-qi": {
+   "spotifyId": "0AeMrbKRLvN2r1aNiLGYlZ",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 9ff97154-977f-4a3e-be84-bf8c1608fdae 的 Spotify 連結"
+  },
+  "chen-qi-zhen": {
+   "spotifyId": "4m0xrEWYU0yCUFMaga015T",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 3a71842d-b291-4991-a30d-9d8328a26d3e 的 Spotify 連結"
+  },
+  "chen-shan-ni": {
+   "spotifyId": "50DjkxUjr341CAWEf6mEXS",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 5a82e569-9482-4435-bed4-3b033368bf09 的 Spotify 連結"
+  },
+  "chen-xian-jing": {
+   "spotifyId": "4wbipbaGeTXkuF5paNuJqB",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz c3f98554-2ffa-426e-a8db-b9389d992405 的 Spotify 連結"
+  },
+  "chen-xiao-xia": {
+   "spotifyId": "1A3CfsrpXmrbeDy4LycyPk",
+   "spotifyName": "陳小霞",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：老翅膀"
+  },
+  "chen-xin-yue": {
+   "spotifyId": "01u3qI3xMGFvktXyRSMGRZ",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 4b7fed70-fad2-474d-a900-05f12297aa26 的 Spotify 連結"
+  },
+  "chen-yi-heng": {
+   "spotifyId": "26ptiw0RrtrYZcRPPGHj5G",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 383462c7-fd1f-4162-ae5d-64ece50e69a1 的 Spotify 連結"
+  },
+  "chen-yi-ting": {
+   "spotifyId": "2j5zQPE6D0FUJn2BaSLgdR",
+   "spotifyName": "陳怡婷",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：三十幾"
+  },
+  "chunyan": {
+   "spotifyId": "20Ire8k6z7JX4iCFunLxxA",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 22a2e32d-cbc1-40ca-84cd-a0e45d020d12 的 Spotify 連結"
+  },
+  "cicada": {
+   "spotifyId": "5Od6qTN5QeUH6CyXaaZusC",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 66dcb8ed-ca1f-4115-b8e0-17e7438e8b0e 的 Spotify 連結"
+  },
+  "cj-mit": {
+   "spotifyId": "0syb7CIJ6dOAGPeUmxJH0x",
+   "spotifyName": "CJ MiT",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：我說"
+  },
+  "collage": {
+   "spotifyId": "1YtYHaWLV0IU7SwhvG6Luk",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 31678e44-9f4f-41eb-ad90-556e011bf38c 的 Spotify 連結"
+  },
+  "dan-dan-mao-mao": {
+   "spotifyId": "05QFcOrtgGZRcTtfmge8ZW",
+   "spotifyName": "丹丹猫猫",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：RUN, DON'T WALK"
+  },
+  "dan-yi-chun": {
+   "spotifyId": "7rXM91kSsqGzvYANukdQJD",
+   "spotifyName": "單依純",
+   "source": "search",
+   "evidence": "搜尋同名（3 位同名，只有這位有作品交集），作品交集：純妹妹"
+  },
+  "dang-dai-dian-ying-da-shi": {
+   "spotifyId": "1Zho9gJQQCYaLYKkmWp337",
+   "spotifyName": "當代電影大師",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：你在注視那遙遠的地方"
+  },
+  "deca-joins": {
+   "spotifyId": "5wbF4yfjaOjTSkrnucKA77",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 0ec64e22-aa09-48d3-9ec6-2f3f8575554f 的 Spotify 連結"
+  },
+  "dj-mr-gin": {
+   "spotifyId": "6MKzM3qdx7k5WRQa1BBZIP",
+   "spotifyName": "DJ MR.GIN",
+   "source": "picks",
+   "evidence": "手動歌單 5 首的第一位演出者都是「DJ MR.GIN」"
+  },
+  "dong-li-huo-che": {
+   "spotifyId": "6zCAdMK7SVxKyGMnAc26Cy",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 03fe65c7-b16f-4cce-9ab0-41907195bb3b 的 Spotify 連結"
+  },
+  "double-j": {
+   "spotifyId": "0NzcQo5gooNhYRtnx4YTQ7",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz eff2e455-53e9-4006-be4c-2f550f3fd8b2 的 Spotify 連結"
+  },
+  "e-so": {
+   "spotifyId": "2qXGNIlmY3JrYkxOWyXZsd",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz b7726f24-00fd-48e7-be31-afb644af9003 的 Spotify 連結"
+  },
+  "eason-chan": {
+   "spotifyId": "2QcZxAgcs2I1q7CtCkl6MI",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 86119d30-d930-4e65-a97a-e31e22388166 的 Spotify 連結"
+  },
+  "elephant-gym": {
+   "spotifyId": "2rqNUPgkBgbhcRabUQ5C9g",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 9fdc68d1-98ac-463c-a309-181b58c74aed 的 Spotify 連結"
+  },
+  "ena-mori": {
+   "spotifyId": "5FW3vzEP2gQB3RQRNmR6ON",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz abf5ab8f-5119-490e-9b75-13fed72bd95c 的 Spotify 連結"
+  },
+  "energy": {
+   "spotifyId": "6GUGvmk5XZesTWRQdkp69u",
+   "spotifyName": "Energy",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：星期五晚上 (慶功16蹲版)、Here I Am、星期五晚上"
+  },
+  "fang-pin-rong": {
+   "spotifyId": "4Z5hQV5kCmLtsWuhHvIVJ9",
+   "spotifyName": "方品融",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：VISION"
+  },
+  "feng-xiao-yue": {
+   "spotifyId": "3pr7TMfQrob0tDAfN3UeUh",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 43097778-4ff9-465d-a182-e27af5168a8b 的 Spotify 連結"
+  },
+  "funkymo": {
+   "spotifyId": "4qYwZQPZRdnMnjnlXWM19A",
+   "spotifyName": "FunkyMo",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：物件，所在"
+  },
+  "gao-wu-ren": {
+   "spotifyId": "6xErgeZYatiaQ36SB5bvi8",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 9607d222-f506-4106-8131-87a344d732ca 的 Spotify 連結"
+  },
+  "genblue": {
+   "spotifyId": "73QQqobizk6EGabqlA5GKz",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz e8e40508-1ffe-4fa1-a68c-b507bfe5abc4 的 Spotify 連結"
+  },
+  "gordon": {
+   "spotifyId": "4L4ArdVJzY6Uxbd82fJjqu",
+   "spotifyName": "Gordon",
+   "source": "picks",
+   "evidence": "手動歌單 5 首的第一位演出者都是「Gordon」"
+  },
+  "gummy-b": {
+   "spotifyId": "041GibkKYtPdNlIAqxs1gs",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 5ad24e4a-225d-4324-9818-174bb75634f7 的 Spotify 連結"
+  },
+  "guts": {
+   "spotifyId": "1BhfLtbUmju5XfwMQ9TJdQ",
+   "spotifyName": "G.U.T.S",
+   "source": "picks",
+   "evidence": "手動歌單 5 首的第一位演出者都是「G.U.T.S」"
+  },
+  "hong-pei-yu": {
+   "spotifyId": "0rARfHZ4ZteUlzbAuxUwAs",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz ee08ac3e-dff3-4574-8d8c-10990b7740be 的 Spotify 連結"
+  },
+  "huang-fei": {
+   "spotifyId": "2CU2lSPK28TDbkHRNvM5Ms",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 632f9bf6-2e29-4918-a464-b4a19d77fdc9 的 Spotify 連結"
+  },
+  "huang-rui-feng": {
+   "spotifyId": "349u1x1jZkGvkZ6lnglR4U",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 1ec1d4a4-37c8-4e30-90e7-3d86a94b99bc 的 Spotify 連結"
+  },
+  "huang-yu-han": {
+   "spotifyId": "58na39JAZ12nojYGPuqdWg",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 3a9b4b79-7078-4002-82c6-450ddbd7f7a4 的 Spotify 連結"
+  },
+  "ice-paper": {
+   "spotifyId": "35kMWGEVOOesE5U0CdP3Zo",
+   "spotifyName": "Ice Paper",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：心如止水"
+  },
+  "icyball": {
+   "spotifyId": "4GsjZQZJ3viOq4Uw8wZDbW",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz e6b4faa3-2a04-4441-984a-40fd2444269d 的 Spotify 連結"
+  },
+  "ivana-wong": {
+   "spotifyId": "27WDr8Ky1j0LtgY82Ttk5S",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz f9794046-1b0a-4f6d-b9d0-fdfc85e8f33b 的 Spotify 連結"
+  },
+  "jade": {
+   "spotifyId": "2CP7We7wDMW76lotAw85aR",
+   "spotifyName": "JADE",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：Creeper"
+  },
+  "jj-lin": {
+   "spotifyId": "7Dx7RhX0mFuXhCOUgB01uM",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz e5d8c705-8ea4-4820-b11d-fbf580d85ce4 的 Spotify 連結"
+  },
+  "joanna-wang": {
+   "spotifyId": "1km0aro5NJuoX5dE0Mub5C",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 7f381e24-31b2-4321-a82f-012245a2c620 的 Spotify 連結"
+  },
+  "jocelyn9-4-0": {
+   "spotifyId": "4xu7XEr8It4loGPeZnJcqZ",
+   "spotifyName": "Jocelyn 9.4.0",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Sweet Spot"
+  },
+  "joyce": {
+   "spotifyId": "2rnMTHqTdSXZ9h9drhPanv",
+   "spotifyName": "JOYCE 就以斯",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：才華換桃花"
+  },
+  "jud": {
+   "spotifyId": "12oXAua3nGur2Ma3WHyCro",
+   "spotifyName": "JUD 陳泳希",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：當我不敢說 Weak Messages Create Bad Situations、JUD 陳泳希 首張迷你專輯、當我不敢說+"
+  },
+  "kang-shi-tan-de-bian-hua-qiu": {
+   "spotifyId": "4fmdz90I7bCk35iK6GZ9fK",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz cff696d7-d383-4654-b4a7-078e1a321842 的 Spotify 連結"
+  },
+  "karencici": {
+   "spotifyId": "6v6qfXRvTRGGsmGfDvtMIK",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz cffc644c-6608-4d5e-8b6a-3e5bdd0ea96f 的 Spotify 連結"
+  },
+  "ke-zhi-tang": {
+   "spotifyId": "3KdU8KfkDy7xHmQS00B5wd",
+   "spotifyName": "柯智棠",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：My Nova、This is My World"
+  },
+  "kenzy": {
+   "spotifyId": "5WdyavkKCvFR3g9BFkjDwk",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 13415872-6e61-4428-83ce-ba2f5a540cd0 的 Spotify 連結"
+  },
+  "khalil-fong": {
+   "spotifyId": "1YrtUPrWcPfgdl9BaD9nhd",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 081f97c3-2ae9-4698-aa43-88ccb58af4d5 的 Spotify 連結"
+  },
+  "kong-long-de-pi": {
+   "spotifyId": "6zp0iXMIvLZ7oVeTk0Nt0J",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 8450cc38-85c7-4dec-a3e9-2fc47917c79d 的 Spotify 連結"
+  },
+  "lao-wang-le-dui": {
+   "spotifyId": "4MRQK5pLyNbcOW493n55iT",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 52d7718d-fb8e-4bb9-adce-41e7151f847e 的 Spotify 連結"
+  },
+  "leo": {
+   "spotifyId": "5Zn94mKQQYVZUvhiIXeXdP",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz acf92994-57ba-4b36-9a04-28a943db5cba 的 Spotify 連結"
+  },
+  "li-rong-hao": {
+   "spotifyId": "0rTP0x4vRFSDbhtqcCqc8K",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 82c314c4-0498-466a-9093-79cef38875a0 的 Spotify 連結"
+  },
+  "li-zhu-xin": {
+   "spotifyId": "0qI7jcxX3CFiafnkAe7Rjp",
+   "spotifyName": "李竺芯",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Suí 水"
+  },
+  "limi": {
+   "spotifyId": "72sxxI0pU2GRC8CNmpqZB2",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz c96757bf-4b81-4761-ba65-03812721b773 的 Spotify 連結"
+  },
+  "lin-jun-yi": {
+   "spotifyId": "2nY9hs8z9QM5Ajgq68hRoT",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 4e84a0df-fb58-4bd5-b4bc-81391d26dfe2 的 Spotify 連結"
+  },
+  "lin-mei-xiu": {
+   "spotifyId": "18JwxWy4I6v4yEjc5zUkPi",
+   "spotifyName": "林美秀",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：Lady Pum Pum"
+  },
+  "lu-bo-he-chang-tuan": {
+   "spotifyId": "0oHVKYA9iMLex4WC2ckCGo",
+   "spotifyName": "露波合唱團",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：美麗新世界"
+  },
+  "lu-guang-zhong": {
+   "spotifyId": "2JBUyLiFvpFPWdZGqIGYLD",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 2ccc975f-ea40-4f0e-b861-8d80f967fe81 的 Spotify 連結"
+  },
+  "lulu-lin": {
+   "spotifyId": "39XlIxY2Aen2Bt30FAbOLn",
+   "spotifyName": "林沛蕎",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Chill 幻"
+  },
+  "luo-si-rong": {
+   "spotifyId": "0z2qcS9QXlgFGIH2kcIj1t",
+   "spotifyName": "羅思容",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：女兒的九十九種藍——聽見零雨"
+  },
+  "makav": {
+   "spotifyId": "6dI8nYKfnYDpPr3Z4shaLm",
+   "spotifyName": "Makav 真愛",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：寶藏 Treasure"
+  },
+  "marz23": {
+   "spotifyId": "4XBG26mgvzGqT09eopG4d9",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 0a73d0c9-a78b-487b-9b91-13874d1d9f18 的 Spotify 連結"
+  },
+  "matzka": {
+   "spotifyId": "2UqJqFqLbXtMZKN5QAfing",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz d696aa9a-f70f-49ba-8b4a-1fc4a4c421cb 的 Spotify 連結"
+  },
+  "mc-hotdog": {
+   "spotifyId": "4maR8o69pil8CrclOiFVVW",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 69905894-f909-4583-b76c-5dcc24b70932 的 Spotify 連結"
+  },
+  "mei-xiu-ji-tuan": {
+   "spotifyId": "3n16EAnJtz6SZGx2zJssrI",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 6ee811ab-8a41-4fec-8221-5b51189e8d8b 的 Spotify 連結"
+  },
+  "mi-sha": {
+   "spotifyId": "0u09vLMjZb18BncJI6zBrA",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz d2823169-cfa9-4406-828b-dd84afaf2326 的 Spotify 連結"
+  },
+  "mie-huo-qi": {
+   "spotifyId": "7qBIgabdHdcr6NLujDxWAU",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 655ba39c-f754-4ed1-adac-4b2258598ade 的 Spotify 連結"
+  },
+  "miss-ko": {
+   "spotifyId": "4qsJVo9DrBRnCzp3itrjdg",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz a9400a25-2c3e-4594-95ea-79849dbd5ae7 的 Spotify 連結"
+  },
+  "mixer": {
+   "spotifyId": "4AWa6pcQK9J9aSAN67cLHv",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz c245230b-f02f-4d01-8ad4-e8e219113875 的 Spotify 連結"
+  },
+  "mj116": {
+   "spotifyId": "7aMQdNM05rPkcHS1ethHUx",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 5fbab346-06f9-4b98-a916-02d08ebb7257 的 Spotify 連結"
+  },
+  "muta": {
+   "spotifyId": "4pWDJ1CIEJGf6AzU1HIDgM",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 4f531606-e7ae-47bd-9bb6-f270468b5798 的 Spotify 連結"
+  },
+  "nong-cun-wu-zhuang-qing-nian": {
+   "spotifyId": "5OMLBbk6IzeEniWMhwglHM",
+   "spotifyName": "農村武裝青年",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：予你的歌 Hōo Lí ê Kua、幸福在哪裡?"
+  },
+  "o-kai-singers": {
+   "spotifyId": "2tbTWhND9ys5PeE1CcwPWH",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz bd9dd73e-8454-4d4c-9c5f-d4625189ba4f 的 Spotify 連結"
+  },
+  "ozi": {
+   "spotifyId": "7Icsejk4pdIhkq2KO5A0jD",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 21686a1f-65ff-45b9-b5e2-9bc891791b33 的 Spotify 連結"
+  },
+  "peng-bai-yi": {
+   "spotifyId": "5aacxSews2ZIWSR23ywXAz",
+   "spotifyName": "彭柏邑",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：客耀"
+  },
+  "peng-jia-hui": {
+   "spotifyId": "7B4GBM2vQJvwyghdsvEV77",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz c57b5549-95c5-4b92-8b63-f3a6d4009444 的 Spotify 連結"
+  },
+  "penny-tai": {
+   "spotifyId": "0qmPs7q4bykvrS8NMZk7ud",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz ef7870d0-1c7e-4327-a989-1f92b4dd35f5 的 Spotify 連結"
+  },
+  "pia": {
+   "spotifyId": "1icD6XHYvJ381imDgXexLD",
+   "spotifyName": "PiA吳蓓雅",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：離婚初體驗"
+  },
+  "piao-liu-chu-kou": {
+   "spotifyId": "2MTlHJpV27LEGE9HYVBGxy",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 7dc43706-3f4b-4f01-8c8c-2210ff746280 的 Spotify 連結"
+  },
+  "po-hou": {
+   "spotifyId": "0GNy0qW4CXYY1PYFMZVoBK",
+   "spotifyName": "潑猴",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：最後一舞"
+  },
+  "polin": {
+   "spotifyId": "42UhEbkOaTEwJKWmf7xlfZ",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 89ff5809-438e-46da-8f36-e8c7f176a2eb 的 Spotify 連結"
+  },
+  "qiu-li-ting": {
+   "spotifyId": "6mdV49yQxgiThoy7Ax4Vrd",
+   "spotifyName": "邱立婷",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：交織的平行、給幸福的一封信"
+  },
+  "qiu-lin": {
+   "spotifyId": "1nItCTNyQRMbtCn0op9m3t",
+   "spotifyName": "秋林",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：夢裡夢外"
+  },
+  "qiu-shu-chan": {
+   "spotifyId": "16kMpdfHTTmwcRByPpBiEa",
+   "spotifyName": "邱淑蟬",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：繭的形狀、所在"
+  },
+  "robot-swing": {
+   "spotifyId": "75MsybpGuMiLCp76Ou0LTV",
+   "spotifyName": "Robot Swing",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Override!、IS IT ALIVE? (Live at Yuchen Cinema Studio)"
+  },
+  "sandy-lam": {
+   "spotifyId": "3K2hOAx9MPhduvDf2qguro",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 280697d2-164d-4477-971d-06b91e57c6a5 的 Spotify 連結"
+  },
+  "sangpuy": {
+   "spotifyId": "0Ot0iFI0JTxh3XUS3vRo8Z",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz a67cc2cb-23b2-4aa9-a196-860f4d6e9cf7 的 Spotify 連結"
+  },
+  "sarah": {
+   "spotifyId": "3IYmKNTLMRm9lR9lJ3sqHZ",
+   "spotifyName": "陳以諾Sarah",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：慢花誌"
+  },
+  "savage-m": {
+   "spotifyId": "0N7qBbcs5Ij44dxbAKy2Sl",
+   "spotifyName": "馬克SAVAGE.M",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：海口"
+  },
+  "shi-shi": {
+   "spotifyId": "4XKp9GFAQfsh2NflSRnHQi",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 0efd51ac-9864-4f4c-bcd7-4c80e20edf5e 的 Spotify 連結"
+  },
+  "silica-gel": {
+   "spotifyId": "2kxVxKOgoefmgkwoHipHsn",
+   "spotifyName": "Silica Gel",
+   "source": "search",
+   "evidence": "搜尋同名（6 位同名，只有這位有作品交集），作品交集：POWER ANDRE 99"
+  },
+  "since-chou": {
+   "spotifyId": "2eYVJwq3xrMAUfM9OFmzR9",
+   "spotifyName": "周自從",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：人造人間"
+  },
+  "smashregz": {
+   "spotifyId": "5a0J3Y8z0bQ3wxO0TzArDy",
+   "spotifyName": "SmashRegz",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：三不管"
+  },
+  "soft-lipa": {
+   "spotifyId": "3Xp3DA50zRP4TYOtNR7k1T",
+   "spotifyName": "Soft Lipa",
+   "source": "picks",
+   "evidence": "手動歌單 5 首的第一位演出者都是「Soft Lipa」"
+  },
+  "someshiit": {
+   "spotifyId": "1Se0FtmWSFmL81n85repGg",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz d902e912-001e-4776-bf50-f71d3e53c971 的 Spotify 連結"
+  },
+  "sorry-youth": {
+   "spotifyId": "6c4IBMTcnFDhsKHXNSBBvp",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 6857b9ae-4908-40fc-90e2-f6add97870fa 的 Spotify 連結"
+  },
+  "sowut": {
+   "spotifyId": "7moEUZ6Zu2o5F8XQxQphRn",
+   "spotifyName": "SOWUT",
+   "source": "picks",
+   "evidence": "手動歌單 3 首的第一位演出者都是「SOWUT」"
+  },
+  "su-ming-yuan": {
+   "spotifyId": "2eBf7OQG2b0uSFgBwBIDUN",
+   "spotifyName": "蘇明淵",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：主題歌、善良的歹人、心內烏空"
+  },
+  "sunset-rollercoaster": {
+   "spotifyId": "7BqRcZsHYYQeqMAOp7e532",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 75c5edb5-796d-46f3-bac3-9b59da658023 的 Spotify 連結"
+  },
+  "tanya-chua": {
+   "spotifyId": "376pcuw4IgWBMOUwCr8kIm",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 03a265bd-30be-4929-a220-0f583cc5160a 的 Spotify 連結"
+  },
+  "terence-lam": {
+   "spotifyId": "3tvtGR8HzMHDbkLeZrFiBI",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 12317920-4c88-4a1f-a610-824858501e16 的 Spotify 連結"
+  },
+  "tizzy-bac": {
+   "spotifyId": "6Rv0ndBVPEQJ7KagPDtC5H",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 597b05aa-d273-48c2-b151-a912e0ed942b 的 Spotify 連結"
+  },
+  "traego": {
+   "spotifyId": "3LvnOpBMEBaUpGeTBASdT3",
+   "spotifyName": "粹垢 TRAEGO",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：純粹污垢、Hakka Sucker"
+  },
+  "trash": {
+   "spotifyId": "3KZMUYrA5eIfgZdIFRmNe4",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz dadb8aab-8560-40b9-b777-ca1bdc02c76d 的 Spotify 連結"
+  },
+  "tru": {
+   "spotifyId": "3ZOx15S9yfBFkDVFtF7QN3",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 13b43831-3577-481c-a202-e6e6119484b4 的 Spotify 連結"
+  },
+  "usay-kawlu": {
+   "spotifyId": "52D6gr3G6xkMKDXsT7XZfi",
+   "spotifyName": "舞思愛",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：美感 Harateng no Pangcah"
+  },
+  "vash-hsu": {
+   "spotifyId": "2xZkWvVTxC65o3dqETdfPm",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 2dac2759-0954-4a23-bc7f-7d28371a8578 的 Spotify 連結"
+  },
+  "wang-hui-zhu": {
+   "spotifyId": "25tE1FD2cGV7NaKnJqWsbx",
+   "spotifyName": "王彙筑",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：滴滴答答、高麗菜粥 (feat. 洪佩瑜)"
+  },
+  "wang-xin-ling": {
+   "spotifyId": "3AroL2oDPiAnMpTmIQv3KP",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz ebf7170c-82b9-49bb-b392-4777c99b231c 的 Spotify 連結"
+  },
+  "wei-ru-xuan": {
+   "spotifyId": "190bkHbFrRvEhcB7Zpuv3y",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 3821e3ac-4d91-40b8-a669-f58d1fe2c0c4 的 Spotify 連結"
+  },
+  "wu-wang-he-zuo-she": {
+   "spotifyId": "6py5j29igdKEvG75sZpTbW",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 7c62c7cc-c814-4d3b-a56f-701475e03bff 的 Spotify 連結"
+  },
+  "xiao-huang-qi": {
+   "spotifyId": "0E6oEhZZtQvj811iXQFLrB",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 7e976329-efbe-4846-a134-553ce2e95b84 的 Spotify 連結"
+  },
+  "xie-ming-you": {
+   "spotifyId": "38kvukZeDwVBlhLnVVCKWw",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz e9cf6928-04e7-4394-9164-decf7bdd6784 的 Spotify 連結"
+  },
+  "xiong-mei-ling": {
+   "spotifyId": "2T0eWqzeSTncLF4X8wAOeY",
+   "spotifyName": "熊美玲",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：秋離、一路平安"
+  },
+  "xu-fu-kai": {
+   "spotifyId": "1cfpx67CNTohABdelcfXdL",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 9d34a284-219d-4b39-be36-f4d8c7110b2e 的 Spotify 連結"
+  },
+  "yang-nai-wen": {
+   "spotifyId": "2Vl4kZKeQslEl4P0ATWuue",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 4a54c00d-1b27-4100-9830-11fbbed577af 的 Spotify 連結"
+  },
+  "yang-shi-xuan": {
+   "spotifyId": "3UNkNsSnAqS0q26PLrIv2n",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 9cb85b01-4e87-47e1-8d2e-aa6712657b98 的 Spotify 連結"
+  },
+  "yang-su-hao": {
+   "spotifyId": "5kantIA1sW9wi3V00TUS6f",
+   "spotifyName": "楊肅浩",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：像咱這款人、噶瑪蘭的風吹"
+  },
+  "yellow": {
+   "spotifyId": "6iUs0Aijnu60VAAf8Aj2YM",
+   "spotifyName": "YELLOW黃宣",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：輕功水上飄"
+  },
+  "yi-zi-le-tuan": {
+   "spotifyId": "4IlxI05VmVDx8ShdgKEnLK",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 03a25129-3371-4ab4-b30b-f5d9dcfbec7c 的 Spotify 連結"
+  },
+  "yuan-ya-wei": {
+   "spotifyId": "70paW48PtCtUjtndElrjrL",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz ff81994b-bc0b-4952-b0ac-8fd9ad03e899 的 Spotify 連結"
+  },
+  "zhan-ya-wen": {
+   "spotifyId": "7uzUuvl79ISbTXl2C7P5pu",
+   "spotifyName": "詹雅雯",
+   "source": "search",
+   "evidence": "搜尋同名（3 位同名，只有這位有作品交集），作品交集：演一首歌"
+  },
+  "zhang-zhen-yue": {
+   "spotifyId": "6PNEi9i2MxUgRufqYr76Xt",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 6eba638e-ae15-405d-99ec-ec66ff3f0361 的 Spotify 連結"
+  },
+  "zhao-yi-fan": {
+   "spotifyId": "4aayM0ChfIX46qI4eBCgMN",
+   "spotifyName": "趙翊帆",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：LUNARFACE"
+  },
+  "zheng-ping": {
+   "spotifyId": "35JXihSrgmmn61jLn2FmqG",
+   "spotifyName": "鄭平",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：簡單一句話"
+  },
+  "zheng-yi-nong": {
+   "spotifyId": "0mVEQWHpQc30NdVqwtj8WJ",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz a1168584-1163-49b5-81ce-f7c289720cac 的 Spotify 連結"
+  },
+  "zhou-tang-hao": {
+   "spotifyId": "1fHw35wWkpOw05sswFSl70",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 42da93c2-837a-42cd-8f82-f27ab035bc3e 的 Spotify 連結"
+  },
+  "zhou-yun-peng": {
+   "spotifyId": "0dmiv2QPPnG4JlJ05QH6nh",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz e3587c0a-2f41-4bf3-bd61-1145ec9e685b 的 Spotify 連結"
+  },
+  "zou-xu": {
+   "spotifyId": "7lk9vXaiJOXeKd2ms7Ohh0",
+   "spotifyName": "鄒序",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：把水開著"
+  }
+ }
+}

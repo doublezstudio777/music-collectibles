@@ -32,5 +32,8 @@ declare namespace Cloudflare {
     /** 管理後台用量：Cloudflare GraphQL Analytics 唯讀金鑰（secret，權限只要 Account Analytics: Read）。沒設顯示「未設定」 */
     CF_ANALYTICS_TOKEN?: string;
     CF_ACCOUNT_ID?: string;
+    /** Spotify 自動抽歌（2026-09-30）：Client Credentials 金鑰（secret）。沒設排程直接跳過，首頁用手動歌單 */
+    SPOTIFY_CLIENT_ID?: string;
+    SPOTIFY_CLIENT_SECRET?: string;
   }
 }

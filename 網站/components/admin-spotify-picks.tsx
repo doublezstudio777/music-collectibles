@@ -59,6 +59,49 @@ function Row({ p, reload }: { p: AdminPick; reload: () => void }) {
   );
 }
 
+type DrawStatus = {
+  day: string;
+  enabled: number;
+  withTrack: number;
+  withAlbumList: number;
+  albumsCached: number;
+  poolRows: number;
+  poolTracks: number;
+  drawnToday: number;
+  usedToday: { artist_albums: number; album: number };
+  limits: { artist_albums: number; album: number };
+  backoff: { artist_albums: string | null; album: string | null };
+  hasKey: boolean;
+};
+
+/** 自動抽歌狀態（2026-09-30）：唯讀，排程每天台灣 02:00～04:55 自己跑 */
+function DrawBox() {
+  const [st, setSt] = useState<DrawStatus | null>(null);
+  useEffect(() => {
+    void api<DrawStatus>("/api/admin/spotify-draw").then((r) => {
+      if (r.ok) setSt(r.data);
+    });
+  }, []);
+  if (!st) return null;
+  const locked = (v: string | null) => (v ? `（鎖到 ${new Date(v).toLocaleString("zh-TW", { hour12: false })}）` : "");
+  return (
+    <section className="block" data-testid="sp-auto">
+      <h2 className="block-title">自動抽歌</h2>
+      <p className="sub">
+        {st.hasKey
+          ? `對應到 Spotify 的藝人 ${st.enabled} 位，已有歌 ${st.withTrack} 位；今天（${st.day}）抽了 ${st.drawnToday} 首。抽歌池累計 ${st.poolRows} 次、${st.poolTracks} 首不同的歌；已存專輯清單 ${st.withAlbumList} 位、專輯曲目 ${st.albumsCached} 張。`
+          : "還沒設定 Spotify 金鑰，首頁只用下面的手動歌單。"}
+      </p>
+      {st.hasKey ? (
+        <p className="sub">
+          {`今天用掉的 Spotify 額度：專輯清單 ${st.usedToday.artist_albums}/${st.limits.artist_albums}${locked(st.backoff.artist_albums)}、專輯曲目 ${st.usedToday.album}/${st.limits.album}${locked(st.backoff.album)}`}
+        </p>
+      ) : null}
+      <p className="sub">下面的手動歌單改當備援：只有對不到 Spotify、或還沒抽過歌的藝人，首頁才用手動歌單的歌。</p>
+    </section>
+  );
+}
+
 /** 後台「推薦歌曲」：首頁上方播放器的歌單 */
 export function AdminSpotifyPicks() {
   const [list, setList] = useState<AdminPick[] | null>(null);
@@ -97,6 +140,7 @@ export function AdminSpotifyPicks() {
   const onCount = list.filter((p) => p.enabled === 1).length;
   return (
     <>
+      <DrawBox />
       <section className="block sp-add" data-testid="sp-add">
         <h2 className="block-title">新增</h2>
         <form className="sp-form" onSubmit={add}>
