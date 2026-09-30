@@ -49,11 +49,27 @@
 
 截圖在 `img/`（JPEG 品質 80）。「delivered」是 Resend 回報 Gmail 收件伺服器已收下，進收件匣還是垃圾信要到信箱看。
 
-## 正式站留下的測試資料（待使用者決定刪不刪）
+## 測試資料已刪除（2026-09-30 使用者同意）
 
-- 會員 `lmbtest0930`（Email `zukawork0312+lemibox0930@gmail.com`）與其 session
-- 收藏 `/share/7`（落日飛車，內文「正式網域驗收測試，驗完會刪」），**目前公開看得到**
-- 照片 `P4HNEJQCAj-OIlIT`（R2 主圖、縮圖、預覽圖、`o/` 原圖）
+刪前備份 `D:\OneDrive\Claude-Data\_個人資料\音藏\備份\20260930-2041-remote\`。D1 用一句多語句（同一個交易）刪，條件全部帶這個帳號的 id：
+
+| 表 | 刪除列數 |
+|---|---|
+| users | 1（`Esfw8PAqJn2Ins5a`／lmbtest0930） |
+| shares | 1（no=7） |
+| photos | 1（`P4HNEJQCAj-OIlIT`） |
+| photo_codes | 1（5BMMZ） |
+| email_codes | 2（verify、reset） |
+| sessions | 1 |
+| rate_limits | 4（forgot-email、vcode、upload、share 當日計數） |
+| user_activity | 1 |
+| user_geo | 1 |
+
+刪前刪後各表總數的差剛好等於上表，其他會員與收藏沒動。沒有分數、排行、讚、留言相關的列。彙總修正：`counters.r2_bytes` 13,044,951 → 12,862,585（扣 182,366＝這張照片三個檔）；`content_version` 由觸發器自動加（2830→2833），整頁快取跟著換。
+
+R2 刪除：`p/P4HNEJQCAj-OIlIT.webp`（92,194）、`p/P4HNEJQCAj-OIlIT_t.webp`（18,022）、`o/P4HNEJQCAj-OIlIT.webp`（72,150）；這張照片沒有 og 圖（`og_key` 為空）。刪後 bucket 88 個物件、12,862,585 bytes＝D1 計數。
+
+驗證：`/share/7` 404（新舊網址都是）、三個照片網址 404、`/u/lmbtest0930` 404、`/verify?c=5BMMZ` 顯示查無；首頁、`/?sort=new`、藝人目錄、落日飛車藝人頁、榮譽榜、`/share/4` 的 HTML 都找不到 lmbtest0930、`/share/7`、照片檔名。全庫 52 張表重掃 0 筆。
 
 ## 沒做、建議
 
