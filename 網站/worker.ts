@@ -150,12 +150,12 @@ const worker = {
   async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
     ctx.waitUntil(
       cleanupOldRecords().catch((e) => {
-        console.error("[音藏排程] 清理過期紀錄失敗", e);
+        console.error("[樂迷藏排程] 清理過期紀錄失敗", e);
       }),
     );
     ctx.waitUntil(
       recomputeScores().catch((e) => {
-        console.error("[音藏排程] 彙總分數失敗", e);
+        console.error("[樂迷藏排程] 彙總分數失敗", e);
       }),
     );
   },

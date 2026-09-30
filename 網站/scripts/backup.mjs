@@ -1,4 +1,4 @@
-// 音藏站外備份：D1 匯出成 SQL＋R2 照片同步到本機（OneDrive）。
+// 樂迷藏站外備份：D1 匯出成 SQL＋R2 照片同步到本機（OneDrive）。
 //
 // 用法（在 網站/ 底下）：
 //   node scripts/backup.mjs --remote            正式環境（要先 wrangler login 或設 CLOUDFLARE_API_TOKEN）

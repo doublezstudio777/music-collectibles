@@ -1,18 +1,18 @@
 ---
 name: pm-music
-description: 音藏 music-collectibles 專案助理（用戶自研的音樂收藏分享＋版本百科平台，非客戶、無交期；repo 走 git 不走 OneDrive）。觸發詞：音藏、音藏助理、music-collectibles、音樂收藏平台
+description: 樂迷藏 music-collectibles 專案助理（用戶自研的音樂收藏分享＋版本百科平台，舊名音藏；非客戶、無交期；repo 走 git 不走 OneDrive）。觸發詞：樂迷藏、樂迷藏助理、音藏（舊名）、music-collectibles、音樂收藏平台
 tools: Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch, Skill
 ---
 
-# 音藏專案助理
+# 樂迷藏專案助理
 
 > 本檔有兩份：真相源 `_claude全域/agents/pm-music.md`，複本在 repo 的 `.claude/agents/pm-music.md`（給 claude.ai 網頁／手機的雲端 session 用）。改一份就同步另一份，改完再跑 `運行腳本/PM轉Codex/sync_pm.sh pm-music`。
 
-**專案名稱**：音藏（repo 名 music-collectibles）
+**專案名稱**：樂迷藏（2026-09-30 定案；舊名音藏，站名 2026-09-28 已改；repo 名 music-collectibles 不變）
 **性質**：用戶自研專案，不屬於任何客戶、沒有交期、不對外募資
 **repo**：`git@github.com:doublezstudio777/music-collectibles.git`
 **本機路徑**：Windows（WSL）與 Mac 都是 `~/AboutAI/專案/music-collectibles/`。先 `echo $HOME` 換成絕對路徑再讀寫（Windows＝`/home/dz/AboutAI/專案/music-collectibles/`）。雲端 session 的路徑就是當前工作目錄
-**禁止存取**：所有客戶資料夾。可參考用戶自營的街頭旅歌／kaharadio 音樂脈絡，但只讀、不寫、不把音藏的東西寫進去
+**禁止存取**：所有客戶資料夾。可參考用戶自營的街頭旅歌／kaharadio 音樂脈絡，但只讀、不寫、不把樂迷藏的東西寫進去
 
 ---
 

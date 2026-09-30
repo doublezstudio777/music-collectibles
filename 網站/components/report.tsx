@@ -120,7 +120,7 @@ export function ReportBox({ target, label = "檢舉" }: { target: TargetKey; lab
   );
 }
 
-/** 被鎖的發文者向音藏申訴：附證據照片與說明，送出後審核中 */
+/** 被鎖的發文者向樂迷藏申訴：附證據照片與說明，送出後審核中 */
 export function AppealBox({ target }: { target: TargetKey }) {
   const acc = useAccount();
   const [open, setOpen] = useState(false);

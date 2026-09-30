@@ -1,5 +1,5 @@
 @echo off
-rem 音藏正式部署（Windows）。實際流程在 deploy.sh，這支交給 Git Bash／WSL 執行，確保閘門行為一致。
+rem 樂迷藏正式部署（Windows）。實際流程在 deploy.sh，這支交給 Git Bash／WSL 執行，確保閘門行為一致。
 rem 用法：scripts\deploy.bat [--first]
 chcp 65001 >nul
 cd /d "%~dp0.."

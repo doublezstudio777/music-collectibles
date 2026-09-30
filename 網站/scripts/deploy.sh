@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 音藏正式部署（Cloudflare Workers：yinzang.dblzm.workers.dev）。
+# 樂迷藏正式部署（Cloudflare Workers：yinzang.dblzm.workers.dev）。
 # 順序是閘門：任何一步失敗就停，後面不會跑。先套遷移、再部署程式；遷移前先做站外備份。
 #
 # 用法（在 網站/ 底下，已 wrangler login 或設好 CLOUDFLARE_API_TOKEN）：

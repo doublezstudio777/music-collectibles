@@ -1,4 +1,4 @@
-// 音藏 D1 資料表（drizzle）。
+// 樂迷藏 D1 資料表（drizzle）。
 //
 // 硬約束：資料永久保存。改結構只能新增遷移（npm run db:generate 產生 drizzle/00xx_*.sql），
 // 只做「加表、加欄位、加索引」這類不重建表的變更；禁止 drop／rename 既有表與欄位，

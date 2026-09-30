@@ -40,7 +40,7 @@ const uid = (handle) => `demo-${handle}`;
 /* ---------- 帳號 ---------- */
 const pw = await hashPassword("yinzang-demo");
 const extra = [
-  { handle: "yzadmin", name: "音藏管理員", bio: "本機測試管理員", verified: true, email: "admin@demo.yinzang.test" },
+  { handle: "yzadmin", name: "樂迷藏管理員", bio: "本機測試管理員", verified: true, email: "admin@demo.yinzang.test" },
   ...Array.from({ length: 12 }, (_, i) => {
     const h = `r${String(i + 1).padStart(2, "0")}`;
     return { handle: h, name: `路人${h.slice(1)}`, bio: "示範檢舉用", verified: true };

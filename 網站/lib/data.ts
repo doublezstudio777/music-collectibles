@@ -1,4 +1,4 @@
-// 音藏 — 資料型別與不需要查資料庫的純函式（網址、鍵、標籤文字）。
+// 樂迷藏 — 資料型別與不需要查資料庫的純函式（網址、鍵、標籤文字）。
 //
 // 第 2b 階段起內容全部在 D1：伺服器端由 lib/server/content.ts 讀出來組成 lib/catalog.ts 的 Catalog，
 // 頁面用 Catalog 查；示範內容只在 scripts/demo-data.ts，只有本機 seed 會用，網站程式不 import。
@@ -410,7 +410,7 @@ export type HoldingView = {
  * - 只有認證帳號可檢舉，每個帳號對同一對象一次
  * - 達門檻（預設 10，可在管理後台調）＝醒目標示＋不能定價與出價＋既有出價凍結，內容照常可看
  * - 品項或版本被鎖，底下所有收藏都不能交易
- * - 被鎖的發文者向音藏申訴，管理者看過才解鎖，不自動解鎖
+ * - 被鎖的發文者向樂迷藏申訴，管理者看過才解鎖，不自動解鎖
  */
 
 export type ReportReason = "fake" | "scam" | "never" | "improper" | "other";

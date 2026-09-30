@@ -20,7 +20,7 @@ export interface Mailer {
 /** 本機：印在跑 dev server 的終端機。驗收腳本從這一行抓驗證碼 */
 const consoleMailer: Mailer = {
   async send(mail) {
-    console.log(`[音藏寄信] to=${mail.to} subject=${mail.subject}\n${mail.text}\n[音藏寄信結束]`);
+    console.log(`[樂迷藏寄信] to=${mail.to} subject=${mail.subject}\n${mail.text}\n[樂迷藏寄信結束]`);
   },
 };
 
@@ -45,10 +45,10 @@ function resendMailer(key: string): Mailer {
       const data = (await res.json().catch(() => ({}))) as { id?: string; message?: string; name?: string };
       if (!res.ok) {
         // 不印信件內容（有驗證碼），只印錯誤
-        console.error(`[音藏寄信] Resend 失敗 status=${res.status} ${data.name ?? ""} ${data.message ?? ""}`);
+        console.error(`[樂迷藏寄信] Resend 失敗 status=${res.status} ${data.name ?? ""} ${data.message ?? ""}`);
         throw new Error("寄信失敗");
       }
-      console.log(`[音藏寄信] Resend 已送出 id=${data.id} to=${mail.to}`);
+      console.log(`[樂迷藏寄信] Resend 已送出 id=${data.id} to=${mail.to}`);
     },
   };
 }

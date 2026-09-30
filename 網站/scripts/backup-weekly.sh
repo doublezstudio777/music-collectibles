@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 音藏每週備份（給 Windows 工作排程器經 wsl.exe 呼叫）。
+# 樂迷藏每週備份（給 Windows 工作排程器經 wsl.exe 呼叫）。
 # 從 _私人/cloudflare.txt 讀 CLOUDFLARE_API_TOKEN、CLOUDFLARE_ACCOUNT_ID（不印出），跑正式環境備份，結果附加到備份資料夾的 backup.log。
 # 憑證檔位置可用環境變數 YINZANG_CF_ENV 改；預設是 Windows 主力機的 OneDrive 路徑。
 set -euo pipefail

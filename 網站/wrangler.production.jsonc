@@ -1,4 +1,4 @@
-// 音藏正式環境（Cloudflare Workers，yinzang.dblzm.workers.dev）。
+// 樂迷藏正式環境（Cloudflare Workers，yinzang.dblzm.workers.dev）。
 // 只有 scripts/deploy.sh 會用（YINZANG_DEPLOY=production）。本機 dev 不讀這份。
 // 已填（2026-09-27 首次部署）：account_id、database_id、TURNSTILE_SITE_KEY；雜湊次數依使用者決定用 5 萬次。步驟見 產出/20260927_部署手冊.md
 // 密鑰一律 `wrangler secret put`，不寫在這裡：TURNSTILE_SECRET、RESEND_API_KEY、BUDGET_WEBHOOK_SECRET
