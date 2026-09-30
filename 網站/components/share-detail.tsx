@@ -776,9 +776,7 @@ export function ShareDetail({
         <h1 className="page-title">{share.what}</h1>
         <div className="detail-by">
           <Link className="who" href={userHref(share.author.handle)}>
-            <span className="ava ava-sm" aria-hidden="true">
-              {share.author.initials}
-            </span>
+            <Ava name={share.author.name} src={share.author.avatar} />
             <span className="who-name">{share.author.name}</span>
           </Link>
           <LevelTag badge={share.author.badge} />

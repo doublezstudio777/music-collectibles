@@ -1,0 +1,97 @@
+[
+ {
+  "name": "首頁卡片頭像跟作者個人頁一致（有大頭貼顯示圖、沒有顯示首字）",
+  "ok": true,
+  "detail": "24 張卡、4 張有大頭貼；不一致 []"
+ },
+ {
+  "name": "首頁至少有一張卡片是大頭貼",
+  "ok": true,
+  "detail": "[{'handle': 'xiaomeng', 'img': '/img/v/PqwqVp68DVWQ1I2T.webp', 'text': None, 'n': '/share/1'}]"
+ },
+ {
+  "name": "單則頁作者欄 有大頭貼",
+  "ok": true,
+  "detail": "/share/1 /img/v/PqwqVp68DVWQ1I2T.webp"
+ },
+ {
+  "name": "單則頁作者欄 沒大頭貼",
+  "ok": true,
+  "detail": "/share/92 None"
+ },
+ {
+  "name": "換大頭貼後首頁卡片換成新的那張",
+  "ok": true,
+  "detail": "['/img/v/PqwqVp68DVWQ1I2T.webp'] → ['/img/v/TX5k3o1ILwWLD7oq.webp']（新 /img/v/TX5k3o1ILwWLD7oq.webp）"
+ },
+ {
+  "name": "首頁整頁快取有在運作（第二次讀是 HIT）",
+  "ok": true,
+  "detail": "HIT"
+ },
+ {
+  "name": "WebKit 390 訪客：第一個畫面就有標語",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124}"
+ },
+ {
+  "name": "WebKit 390 訪客：標語含「關於我們」、之後位置不動",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124} → {'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124, 'text': '別讓一張專輯的來歷，只有少數人知道。\\n關於我們\\n\\n', 'auth': None}"
+ },
+ {
+  "name": "WebKit 390 訪客：<html> 沒有 data-auth",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "WebKit 390 登入：第一個畫面就有標語",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124}"
+ },
+ {
+  "name": "WebKit 390 登入：標語含「關於我們」、之後位置不動",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124} → {'top': 81, 'h': 23, 'op': '1', 'disp': 'flex', 'band': 124, 'text': '別讓一張專輯的來歷，只有少數人知道。\\n關於我們\\n\\n', 'auth': None}"
+ },
+ {
+  "name": "WebKit 390 登入：<html> 沒有 data-auth",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "WebKit 320 訪客：第一個畫面就有標語",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157}"
+ },
+ {
+  "name": "WebKit 320 訪客：標語含「關於我們」、之後位置不動",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157} → {'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157, 'text': '別讓一張專輯的來歷，只有少數人知道。\\n關於我們\\n\\n', 'auth': None}"
+ },
+ {
+  "name": "WebKit 320 訪客：<html> 沒有 data-auth",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "WebKit 320 登入：第一個畫面就有標語",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157}"
+ },
+ {
+  "name": "WebKit 320 登入：標語含「關於我們」、之後位置不動",
+  "ok": true,
+  "detail": "{'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157} → {'top': 81, 'h': 56, 'op': '1', 'disp': 'flex', 'band': 157, 'text': '別讓一張專輯的來歷，只有少數人知道。\\n關於我們\\n\\n', 'auth': None}"
+ },
+ {
+  "name": "WebKit 320 登入：<html> 沒有 data-auth",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "沒有 console error",
+  "ok": true,
+  "detail": ""
+ }
+]

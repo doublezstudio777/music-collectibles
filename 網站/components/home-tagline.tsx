@@ -1,19 +1,13 @@
-"use client";
-
-// 首頁標語，只給訪客看（首頁整頁快取，登入者與訪客拿到同一份 HTML，顯示與否交給瀏覽器端判斷）。
-// 節點一律渲染、佔位不變，只切換 opacity：避免登入狀態讀出來的那一刻畫面跳動，
-// 也避免登入者看到訪客標語閃一下（未讀出登入狀態前預設隱藏）。
-// 確定是登入者就整條收起（data-state="user"，見 globals.css），不留空白；上次是登入的人由 <html data-auth> 第一個畫面就收起。
+// 首頁標語＋「關於我們」（2026-09-30 使用者定案：訪客與登入會員一律顯示）。
+// 伺服器直接畫、不看登入狀態：首頁整頁快取給誰都同一份 HTML，第一個畫面就在，不會閃也不會跳。
+// 之前「登入者收起」的做法（opacity 切換、<html data-auth>、localStorage lmb_auth）已撤掉。
 import Link from "next/link";
-import { useAccount } from "@/lib/account";
 
 export function HomeTagline() {
-  const acc = useAccount();
-  const visible = acc.status === "anon";
   return (
-    <p className="home-tagline" data-visible={visible} data-state={acc.status}>
+    <p className="home-tagline" data-testid="home-tagline">
       <span>別讓一張專輯的來歷，只有少數人知道。</span>
-      <Link href="/about" className="home-tagline-link" tabIndex={visible ? 0 : -1} aria-hidden={!visible}>
+      <Link href="/about" className="home-tagline-link">
         關於我們
       </Link>
     </p>

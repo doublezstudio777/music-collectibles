@@ -220,19 +220,9 @@ ul { list-style: none; margin: 0; padding: 0; }
 
 .page { padding: 40px 32px 96px; }
 .page-wall { padding-top: 24px; }
-/* 首頁標語：只給訪客看，節點一律在，靠 opacity 切換避免版面跳動（見 home-tagline.tsx） */
-.home-tagline {
-  align-items: baseline; color: var(--muted); display: flex; flex-wrap: wrap; font-size: var(--text-sm);
-  gap: 10px; margin-bottom: 20px; opacity: 0; pointer-events: none; transition: opacity 200ms cubic-bezier(.22, 1, .36, 1);
-}
-.home-tagline[data-visible="true"] { opacity: 1; pointer-events: auto; }
+/* 首頁標語：訪客與登入會員一律顯示（2026-09-30 使用者定案，見 home-tagline.tsx） */
+.home-tagline { align-items: baseline; color: var(--muted); display: flex; flex-wrap: wrap; font-size: var(--text-sm); gap: 10px; margin-bottom: 20px; }
 .home-tagline-link { color: var(--text); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
-@media (prefers-reduced-motion: reduce) { .home-tagline { transition: none; } }
-/* 登入者整條收起（2026-09-30 iPhone 回報「頁首下一條空白」）：原本只切 opacity 仍佔位，登入者看到頁首與灰色帶之間一條空白。
-   data-auth 由 layout.tsx head 小腳本（讀上次狀態）與 lib/account.tsx（讀到 /api/me 後）設定 */
-html[data-auth="user"] .home-tagline, .home-tagline[data-state="user"] { display: none; }
-/* 標語收起後灰色帶直接貼頁首，不留 page-wall 上方 24px 白條 */
-html[data-auth="user"] .page-wall:has(> .home-tagline), .page-wall:has(> .home-tagline[data-state="user"]) { padding-top: 0; }
 .page-narrow { max-width: 680px; }
 .page-head { margin-bottom: 32px; }
 .head-split { align-items: flex-end; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; }

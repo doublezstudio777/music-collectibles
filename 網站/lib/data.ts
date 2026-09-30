@@ -277,6 +277,8 @@ export type Share = {
   authorName?: string;
   /** 發文者的等級小標籤（「收藏家 Lv.3」／「館長」），目錄建立時算好 */
   authorBadge?: string;
+  /** 發文者的大頭貼網址（2026-09-30）；沒有就不帶，前端顯示暱稱首字 */
+  authorAvatar?: string;
   link?: { series: string; item?: string; version?: string };
   sale?: Sale;
   /** 管理員標為「辨識參考」的照片（2026-09-28 起改由管理員標記；shares.ref_photo 舊值不再使用） */
@@ -373,7 +375,7 @@ export type ShareView = {
   photos?: SharePhoto[];
   /** 封面的查證碼（單則頁照片下方顯示；只有單則頁帶） */
   code?: string;
-  author: { handle: string; name: string; initials: string; badge?: string };
+  author: { handle: string; name: string; initials: string; badge?: string; avatar?: string };
   link?: { href: string; label: string; seriesKey: string; itemId?: string; versionId?: string };
   sale: Sale;
   /** 跟哪些藝人有關（跟誰有關＋標籤撞名），首頁「追蹤中」用 */

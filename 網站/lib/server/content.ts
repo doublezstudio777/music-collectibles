@@ -123,7 +123,7 @@ async function build(): Promise<Catalog> {
     // 等級小標籤跟著目錄一起算（2026-09-29）：卡片、單則頁從快取的 HTML 直接帶，不另外發請求；
     // user_scores 沒有內容版本觸發器，分數變了等下一次內容變動才換，不為等級讓整頁快取失效
     db
-      .select({ id: users.id, handle: users.handle, name: users.name, email: users.email, emailVerifiedAt: users.emailVerifiedAt, score: userScores.score, override: levelOverrides.level })
+      .select({ id: users.id, handle: users.handle, name: users.name, avatarKey: users.avatarKey, email: users.email, emailVerifiedAt: users.emailVerifiedAt, score: userScores.score, override: levelOverrides.level })
       .from(users)
       .leftJoin(userScores, eq(userScores.userId, users.id))
       .leftJoin(levelOverrides, eq(levelOverrides.userId, users.id)),
@@ -135,6 +135,11 @@ async function build(): Promise<Catalog> {
   const userById = new Map(uRows.map((u) => [u.id, u]));
   const handleOf = (id: string | null) => (id ? (userById.get(id)?.handle ?? "") : "");
   const nameOf = (id: string | null) => (id ? (userById.get(id)?.name ?? "") : "");
+  // 卡片、單則頁作者欄的大頭貼（2026-09-30）。換大頭貼寫 users.avatar_key，有內容版本觸發器，目錄與整頁快取跟著換新
+  const avatarOf = (id: string | null) => {
+    const k = id ? userById.get(id)?.avatarKey : null;
+    return k ? `/img/${k}` : undefined;
+  };
   const badgeOf = (id: string | null) => {
     const u = id ? userById.get(id) : undefined;
     return u ? badgeText(u.score ?? 0, isAdmin(u), u.override) : "";
@@ -268,6 +273,7 @@ async function build(): Promise<Catalog> {
         author: handleOf(s.authorId),
         authorName: nameOf(s.authorId),
         authorBadge: badgeOf(s.authorId),
+        ...(avatarOf(s.authorId) ? { authorAvatar: avatarOf(s.authorId) } : {}),
         time: relTime(s.createdAt, now),
         order: Date.parse(s.createdAt) || s.no,
         what: s.customWhat || s.what,

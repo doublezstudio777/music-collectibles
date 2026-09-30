@@ -61,26 +61,8 @@ let pending: ((afterLogin: boolean) => void) | null = null;
 const listeners = new Set<() => void>();
 const set = (patch: Partial<Account>) => {
   acc = { ...acc, ...patch };
-  if (patch.status && patch.status !== "loading") rememberAuth(patch.status);
   listeners.forEach((l) => l());
 };
-
-/** 登入狀態記一份在 localStorage＋<html data-auth>：首頁整頁快取、登入狀態要等 /api/me，
- *  layout.tsx 的 head 小腳本讀這份，讓「上次是登入」的人第一個畫面就不留訪客標語的空白（2026-09-30） */
-export const AUTH_HINT_KEY = "lmb_auth";
-function rememberAuth(status: "anon" | "user") {
-  try {
-    if (status === "user") {
-      localStorage.setItem(AUTH_HINT_KEY, "user");
-      document.documentElement.dataset.auth = "user";
-    } else {
-      localStorage.removeItem(AUTH_HINT_KEY);
-      delete document.documentElement.dataset.auth;
-    }
-  } catch {
-    // 無痕模式等讀寫不到 localStorage 就算了，只是回到登入狀態讀出後才收起
-  }
-}
 
 type ApiError = { code: string; message: string; email?: string; wait?: number };
 export type ApiResult<T> = { ok: true; data: T } | { ok: false; status: number; error: ApiError };

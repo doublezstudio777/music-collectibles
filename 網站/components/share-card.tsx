@@ -1,5 +1,6 @@
 "use client";
 
+import { Ava } from "@/components/ava";
 import Image from "next/image";
 import Link from "next/link";
 import { priceText, shareHref, tagHref, userHref, type Lock, type Sale, type ShareView } from "@/lib/data";
@@ -145,9 +146,7 @@ export function ShareCard({ share }: { share: ShareView }) {
       <TagList about={share.about} tags={share.tags} links={share.tagLinks} />
       <footer className="card-foot">
         <Link className="who" href={userHref(share.author.handle)}>
-          <span className="ava ava-sm" aria-hidden="true">
-            {share.author.initials}
-          </span>
+          <Ava name={share.author.name} src={share.author.avatar} />
           <span className="who-name">{share.author.name}</span>
         </Link>
         <LevelTag badge={share.author.badge} card />
