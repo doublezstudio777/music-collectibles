@@ -72,3 +72,4 @@
 - 平行 worktree 開發要先看對方分支的 drizzle 遷移編號，兩邊各自 `db:generate` 都會拿到同一號；後合的那邊 rebase 後刪掉自己的遷移＋snapshot／journal 重產（2026-09-30）
 - 路由裡要背景做事用 `import { waitUntil } from "cloudflare:workers"`，本機 wrangler dev 也會跑；MusicBrainz 從本機連續查偶發 503，批次要有「等幾秒重試＋整批延後」兩層（2026-09-30）
 - `deploy.sh` 第 3 步備份遇到「已刪除照片的 R2 檔不在」會 exit 3；D1 已匯出完整時可照腳本第 4～7 步手動部署，煙霧測試用腳本複本改 VID 後以 --smoke-only 跑（複本要放 scripts/ 下，腳本會 cd 到上一層）（2026-10-01）
+- 平行分支遷移撞號：rebase 時 `drizzle/meta/_journal.json`、快照一律取 main 的，刪掉自己的 .sql 與快照，再 `drizzle-kit generate --name 同名` 重產（手補的資料 SQL 要再貼回）；解 schema.ts 衝突別用 regex 抓 `=======`，檔內註解分隔線也是一串等號，要整行比對。正式站驗收等元素出現再判斷，不要固定 sleep（私訊 API 單次約 2.6 秒）（2026-10-01）
