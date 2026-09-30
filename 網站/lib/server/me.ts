@@ -62,16 +62,16 @@ async function tradeState(userId: string) {
   const [r, a, u] = await db.batch([
     db.select({ t: reports.target }).from(reports).where(eq(reports.reporterId, userId)),
     db.select({ target: appeals.target, status: appeals.status }).from(appeals).where(eq(appeals.byId, userId)),
-    // 我參與的對話（我是買家，或我是那則的作者）裡，別人發的、比我讀到的新的訊息
+    // 我參與的對話（我是買家／發起人、直接私訊的對方，或我是那則的作者）裡，別人發的、比我讀到的新的訊息；算對話數
     db
       .select({ n: sql<number>`count(distinct ${threads.id})` })
       .from(threads)
-      .innerJoin(shares, eq(shares.no, threads.shareNo))
+      .leftJoin(shares, eq(shares.no, threads.shareNo))
       .innerJoin(messages, eq(messages.threadId, threads.id))
       .leftJoin(threadReads, and(eq(threadReads.threadId, threads.id), eq(threadReads.userId, userId)))
       .where(
         and(
-          or(eq(threads.buyerId, userId), eq(shares.authorId, userId)),
+          or(eq(threads.buyerId, userId), eq(threads.peerId, userId), and(sql`${threads.shareNo} > 0`, eq(shares.authorId, userId))),
           or(isNull(messages.fromId), ne(messages.fromId, userId)),
           gt(messages.id, sql`coalesce(${threadReads.lastMessageId}, 0)`),
         ),

@@ -12,7 +12,7 @@ export function LikesWall({ all }: { all: ShareView[] }) {
   if (status === "anon") {
     return (
       <p className="empty">
-        登入後才看得到自己的喜愛清單
+        登入後才看得到自己的願望清單
         <button type="button" className="btn btn-p empty-btn" onClick={() => openPanel("login")}>
           登入
         </button>

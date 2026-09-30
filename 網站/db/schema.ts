@@ -453,7 +453,13 @@ export const offers = sqliteTable(
   (t) => [index("offers_share_idx").on(t.shareNo), index("offers_buyer_idx").on(t.buyerId)],
 );
 
-/** 私訊只能從一則收藏發起：一位買家對一則收藏一條 */
+/**
+ * 私訊對話。兩種：
+ * - 收藏相關（share_no > 0）：一位買家（發起人）對一則收藏一條，另一方是那則的作者
+ * - 直接私訊（2026-10-01，drizzle/0025_dm；share_no＝0）：從個人頁「傳訊息」發起，不綁收藏。
+ *   buyer_id＝發起人、peer_id＝對方；pair_key＝兩人 id 排序後用 | 接起來，一對人只有一條
+ * started_at：第一則訊息的時間（每日開新對話上限用，發起人＝buyer_id）
+ */
 export const threads = sqliteTable(
   "threads",
   {
@@ -462,8 +468,17 @@ export const threads = sqliteTable(
     buyerId: text("buyer_id").notNull(),
     createdAt: text("created_at").notNull().default(now),
     updatedAt: text("updated_at").notNull().default(now),
+    peerId: text("peer_id"),
+    pairKey: text("pair_key"),
+    startedAt: text("started_at"),
   },
-  (t) => [uniqueIndex("threads_share_buyer_uq").on(t.shareNo, t.buyerId), index("threads_buyer_idx").on(t.buyerId)],
+  (t) => [
+    uniqueIndex("threads_share_buyer_uq").on(t.shareNo, t.buyerId).where(sql`share_no > 0`),
+    uniqueIndex("threads_pair_uq").on(t.pairKey).where(sql`pair_key IS NOT NULL`),
+    index("threads_buyer_idx").on(t.buyerId),
+    index("threads_peer_idx").on(t.peerId),
+    index("threads_started_idx").on(t.buyerId, t.startedAt),
+  ],
 );
 
 /** from_id 為 NULL＝系統訊息（灰字）；offer_id 有值＝結構化出價 */
@@ -1160,3 +1175,39 @@ export const autofillState = sqliteTable("autofill_state", {
   value: text("value").notNull(),
   updatedAt: text("updated_at").notNull().default(now),
 });
+
+/** 私訊封鎖（2026-10-01）：blocker 封鎖 blocked 後，兩人之間都不能再傳訊息、開新對話；設定頁可解除 */
+export const userBlocks = sqliteTable(
+  "user_blocks",
+  {
+    blockerId: text("blocker_id").notNull(),
+    blockedId: text("blocked_id").notNull(),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [primaryKey({ columns: [t.blockerId, t.blockedId] }), index("user_blocks_blocked_idx").on(t.blockedId)],
+);
+
+/**
+ * 私訊檢舉（2026-10-01）：一人對一條對話一次。後台只看誰檢舉誰、理由與補充，不讀訊息內容。
+ * reason：harass｜scam｜spam｜other；status：open｜done
+ */
+export const dmReports = sqliteTable(
+  "dm_reports",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    threadId: integer("thread_id").notNull(),
+    reporterId: text("reporter_id").notNull(),
+    reportedId: text("reported_id").notNull(),
+    reason: text("reason").notNull(),
+    note: text("note").notNull().default(""),
+    status: text("status").notNull().default("open"),
+    handledBy: text("handled_by"),
+    handledAt: text("handled_at"),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [
+    uniqueIndex("dm_reports_thread_reporter_uq").on(t.threadId, t.reporterId),
+    index("dm_reports_status_idx").on(t.status, t.id),
+    index("dm_reports_reported_idx").on(t.reportedId),
+  ],
+);

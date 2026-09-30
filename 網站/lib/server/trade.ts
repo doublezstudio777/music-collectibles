@@ -18,6 +18,7 @@ import { hit } from "@/lib/server/services";
 import { fail, isAdmin, type User } from "@/lib/server/auth";
 import { recordDeal, voidDeals } from "@/lib/server/prices";
 import { regionNames } from "@/lib/server/geo";
+import { assertVerified, beforeSend, blockState, assertNotBlocked, reportedThreads, reportThread } from "@/lib/server/dm";
 import { userBadges } from "@/lib/server/scores";
 
 export class HttpError extends Error {
@@ -405,12 +406,14 @@ export async function placeOffer(u: User, no: number, kind: unknown, price: unkn
   await assertNotLocked(s);
   if (!(await hit(`offer:${u.id}`, 60, 3600))) throw new HttpError(429, "RATE_LIMITED", "出價太頻繁，等一下再試");
   const db = getDb();
+  await assertNotBlocked(u.id, s.authorId);
   const t = await ensureThread(no, u.id);
   const live = await db
     .select()
     .from(offers)
     .where(and(eq(offers.shareNo, no), eq(offers.buyerId, u.id), inArray(offers.status, ["open", "accepted"])));
   if (kind === "buy" && live.some((o) => o.kind === "buy")) return t.id;
+  await beforeSend(u, t, s.authorId);
   if (live.length) {
     await db
       .update(offers)
@@ -511,32 +514,58 @@ export async function publicOffers(no: number): Promise<PublicOffer[]> {
 
 /* ---------- 私訊 ---------- */
 
-/** 問賣家：開一條對話但不出價 */
+/** 問賣家／私訊（單則頁）：開一條綁這則收藏的對話但不出價。純分享、已售出的也可以 */
 export async function openThread(u: User, no: number) {
   const s = await shareRow(no);
   if (s.authorId === u.id) throw new HttpError(403, "FORBIDDEN", "這是你自己的收藏");
+  assertVerified(u);
+  const [found] = await getDb()
+    .select({ id: threads.id })
+    .from(threads)
+    .where(and(eq(threads.shareNo, no), eq(threads.buyerId, u.id)));
+  if (found) return found.id;
+  await assertNotBlocked(u.id, s.authorId);
   return (await ensureThread(no, u.id)).id;
 }
+
+type ThreadRow = typeof threads.$inferSelect;
+
+/** 對話的另一方：收藏相關＝買家↔作者；直接私訊＝發起人↔對方 */
+const otherOf = (t: ThreadRow, authorId: string | null, meId: string) => {
+  const b = t.shareNo > 0 ? (authorId ?? "") : (t.peerId ?? "");
+  return t.buyerId === meId ? b : t.buyerId;
+};
 
 async function threadFor(u: User, id: number) {
   const db = getDb();
   const [row] = await db
     .select({ t: threads, authorId: shares.authorId })
     .from(threads)
-    .innerJoin(shares, eq(shares.no, threads.shareNo))
+    .leftJoin(shares, eq(shares.no, threads.shareNo))
     .where(eq(threads.id, id));
-  if (!row || (row.t.buyerId !== u.id && row.authorId !== u.id)) throw new HttpError(404, "NOT_FOUND", "找不到這段對話");
-  return { ...row.t, sellerId: row.authorId };
+  if (!row) throw new HttpError(404, "NOT_FOUND", "找不到這段對話");
+  const direct = row.t.shareNo === 0;
+  const second = direct ? row.t.peerId : row.authorId;
+  if (row.t.buyerId !== u.id && second !== u.id) throw new HttpError(404, "NOT_FOUND", "找不到這段對話");
+  return { ...row.t, direct, sellerId: second ?? "", otherId: otherOf(row.t, row.authorId, u.id) };
 }
 
 export async function sendText(u: User, id: number, text: unknown) {
   const t = await threadFor(u, id);
   const body = typeof text === "string" ? text.trim().slice(0, 1000) : "";
   if (!body) throw new HttpError(400, "INVALID", "寫點什麼再送出");
+  assertVerified(u);
   if (!(await hit(`msg:${u.id}`, 120, 3600))) throw new HttpError(429, "RATE_LIMITED", "訊息太頻繁，等一下再試");
+  await beforeSend(u, t, t.otherId);
   const db = getDb();
   await db.insert(messages).values({ threadId: t.id, fromId: u.id, text: body });
   await db.update(threads).set({ updatedAt: nowIso() }).where(eq(threads.id, t.id));
+}
+
+/** 檢舉對話的另一方（不讀內容） */
+export async function reportThreadOf(u: User, id: number, reason: unknown, note: unknown) {
+  const t = await threadFor(u, id);
+  await reportThread(u, t, t.otherId, reason, note);
 }
 
 async function markRead(userId: string, threadId: number, lastId: number) {
@@ -554,61 +583,94 @@ export type ThreadMessage = {
   time: string;
 };
 
-/** 我的對話列表（買家或賣家）＋每條最後一則與未讀 */
-export async function myThreads(u: User) {
+export type ThreadRowView = {
+  id: number;
+  /** 0＝直接私訊 */
+  shareNo: number;
+  what: string;
+  thumb: string | null;
+  iAmSeller: boolean;
+  other: { handle: string; name: string; avatar: string | null };
+  otherRegion: string;
+  lastFrom: string;
+  preview: string;
+  time: string;
+  /** 對方（或系統）比我讀到的新的訊息則數 */
+  unread: number;
+};
+
+/** 我的對話列表：收藏相關與直接私訊放一起，依最新一則訊息排序 */
+export async function myThreads(u: User): Promise<ThreadRowView[]> {
   const db = getDb();
   const list = await db
-    .select({ t: threads, authorId: shares.authorId, what: sql<string>`coalesce(${shares.customWhat}, ${shares.what})` })
+    .select({ t: threads, authorId: shares.authorId, what: sql<string | null>`coalesce(${shares.customWhat}, ${shares.what})` })
     .from(threads)
-    .innerJoin(shares, eq(shares.no, threads.shareNo))
-    .where(or(eq(threads.buyerId, u.id), eq(shares.authorId, u.id)))
+    .leftJoin(shares, eq(shares.no, threads.shareNo))
+    .where(or(eq(threads.buyerId, u.id), eq(threads.peerId, u.id), and(sql`${threads.shareNo} > 0`, eq(shares.authorId, u.id))))
     .orderBy(desc(threads.updatedAt));
   if (!list.length) return [];
   const ids = list.map((x) => x.t.id);
-  const [msgs, reads] = await db.batch([
-    db.select().from(messages).where(inArray(messages.threadId, ids)).orderBy(asc(messages.id)),
-    db.select().from(threadReads).where(and(eq(threadReads.userId, u.id), inArray(threadReads.threadId, ids))),
-  ]);
+  const msgs: (typeof messages.$inferSelect)[] = [];
+  const reads: (typeof threadReads.$inferSelect)[] = [];
+  for (let i = 0; i < ids.length; i += 90) {
+    const part = ids.slice(i, i + 90);
+    const [m, r] = await db.batch([
+      db.select().from(messages).where(inArray(messages.threadId, part)).orderBy(asc(messages.id)),
+      db.select().from(threadReads).where(and(eq(threadReads.userId, u.id), inArray(threadReads.threadId, part))),
+    ]);
+    msgs.push(...m);
+    reads.push(...r);
+  }
   const offerIds = msgs.map((m) => m.offerId).filter((x): x is number => x !== null);
-  const offerRows = offerIds.length ? await db.select().from(offers).where(inArray(offers.id, offerIds)) : [];
-  const others = list.map((x) => (x.authorId === u.id ? x.t.buyerId : x.authorId));
-  const [names, regions] = await Promise.all([
-    userNames([...list.map((x) => x.t.buyerId), ...list.map((x) => x.authorId)]),
-    regionNames(others),
-  ]);
-  const nos = Array.from(new Set(list.map((x) => x.t.shareNo)));
-  const pics = await db
-    .select({ n: photos.shareNo, key: photos.thumbKey, sort: photos.sort })
-    .from(photos)
-    .where(and(inArray(photos.shareNo, nos), isNull(photos.deletedAt)))
-    .orderBy(asc(photos.sort));
+  const offerRows: (typeof offers.$inferSelect)[] = [];
+  for (let i = 0; i < offerIds.length; i += 90) offerRows.push(...(await db.select().from(offers).where(inArray(offers.id, offerIds.slice(i, i + 90)))));
+  const others = list.map((x) => otherOf(x.t, x.authorId, u.id));
+  const [names, regions] = await Promise.all([userNames([...others, ...msgs.map((m) => m.fromId ?? "")]), regionNames(others)]);
+  const nos = Array.from(new Set(list.map((x) => x.t.shareNo).filter((n) => n > 0)));
+  const pics: { n: number | null; key: string | null }[] = [];
+  for (let i = 0; i < nos.length; i += 90)
+    pics.push(
+      ...(await db
+        .select({ n: photos.shareNo, key: photos.thumbKey })
+        .from(photos)
+        .where(and(inArray(photos.shareNo, nos.slice(i, i + 90)), isNull(photos.deletedAt)))
+        .orderBy(asc(photos.sort))),
+    );
   const now = Date.now();
+  const byThread = new Map<number, (typeof msgs)[number][]>();
+  msgs.forEach((m) => byThread.set(m.threadId, [...(byThread.get(m.threadId) ?? []), m]));
   return list
-    .map(({ t, authorId, what }) => {
-      const mine = msgs.filter((m) => m.threadId === t.id);
+    .map(({ t, authorId, what }, i) => {
+      const mine = byThread.get(t.id) ?? [];
       const last = [...mine].reverse().find((m) => m.fromId !== null);
+      const newest = mine[mine.length - 1];
       const read = reads.find((r) => r.threadId === t.id)?.lastMessageId ?? 0;
-      const unread = mine.some((m) => m.id > read && m.fromId !== u.id);
-      const iAmSeller = authorId === u.id;
-      const other = names.get(iAmSeller ? t.buyerId : authorId) ?? { handle: "", name: "（已刪除）" };
+      const unread = mine.filter((m) => m.id > read && m.fromId !== u.id).length;
+      const direct = t.shareNo === 0;
+      const otherId = others[i];
       const lo = last?.offerId ? offerRows.find((o) => o.id === last.offerId) : undefined;
+      const pic = direct ? undefined : pics.find((p) => p.n === t.shareNo && p.key);
       return {
-        id: t.id,
-        shareNo: t.shareNo,
-        what,
-        thumb: pics.find((p) => p.n === t.shareNo)?.key ? `/img/${pics.find((p) => p.n === t.shareNo)?.key}` : null,
-        iAmSeller,
-        other,
-        otherRegion: regions.get(iAmSeller ? t.buyerId : authorId) ?? "",
-        lastFrom: last?.fromId ? (names.get(last.fromId)?.name ?? "") : "",
-        preview: lo ? `${lo.kind === "buy" ? "我要買" : "出價"} ${priceText(lo.price)}` : (last?.text ?? ""),
-        time: last ? relTime(last.createdAt, now) : "",
-        unread,
+        row: {
+          id: t.id,
+          shareNo: t.shareNo,
+          what: direct ? "" : (what ?? ""),
+          thumb: pic?.key ? `/img/${pic.key}` : null,
+          iAmSeller: !direct && authorId === u.id,
+          other: names.get(otherId) ?? { handle: "", name: "（已刪除）", avatar: null },
+          otherRegion: regions.get(otherId) ?? "",
+          lastFrom: last?.fromId ? (last.fromId === u.id ? "你" : (names.get(last.fromId)?.name ?? "")) : "",
+          preview: lo ? `${lo.kind === "buy" ? "我要買" : "出價"} ${priceText(lo.price)}` : (last?.text ?? ""),
+          time: newest ? relTime(newest.createdAt, now) : "",
+          unread,
+        },
+        order: newest?.id ?? 0,
         empty: mine.length === 0,
       };
     })
     .filter((x) => !x.empty)
-    .sort((a, b) => Number(b.unread) - Number(a.unread));
+    .sort((a, b) => b.order - a.order)
+    .map((x) => x.row);
 }
 
 export async function threadDetail(u: User, id: number) {
@@ -617,7 +679,12 @@ export async function threadDetail(u: User, id: number) {
   const msgs = await db.select().from(messages).where(eq(messages.threadId, id)).orderBy(asc(messages.id));
   const offerIds = msgs.map((m) => m.offerId).filter((x): x is number => x !== null);
   const offerRows = offerIds.length ? await db.select().from(offers).where(inArray(offers.id, offerIds)) : [];
-  const [names, regions] = await Promise.all([userNames([t.buyerId, t.sellerId]), regionNames([t.buyerId, t.sellerId])]);
+  const [names, regions, blocked, reported] = await Promise.all([
+    userNames([t.buyerId, t.sellerId]),
+    regionNames([t.buyerId, t.sellerId]),
+    blockState(u.id, t.otherId),
+    reportedThreads(u.id, [t.id]),
+  ]);
   const now = Date.now();
   if (msgs.length) await markRead(u.id, id, msgs[msgs.length - 1].id);
   const out: ThreadMessage[] = msgs.map((m) => {
@@ -630,14 +697,21 @@ export async function threadDetail(u: User, id: number) {
       time: relTime(m.createdAt, now),
     };
   });
+  const gone = { handle: "", name: "（已刪除）", avatar: null };
   return {
     id: t.id,
     shareNo: t.shareNo,
-    iAmSeller: t.sellerId === u.id,
-    buyer: names.get(t.buyerId) ?? { handle: "", name: "（已刪除）" },
-    seller: names.get(t.sellerId) ?? { handle: "", name: "（已刪除）" },
+    direct: t.direct,
+    iAmSeller: !t.direct && t.sellerId === u.id,
+    buyer: names.get(t.buyerId) ?? gone,
+    seller: names.get(t.sellerId) ?? gone,
+    other: names.get(t.otherId) ?? gone,
     buyerRegion: regions.get(t.buyerId) ?? "",
     sellerRegion: regions.get(t.sellerId) ?? "",
+    otherRegion: regions.get(t.otherId) ?? "",
+    /** me＝我封鎖對方、them＝對方封鎖我 */
+    blocked,
+    reported: reported.has(t.id),
     messages: out,
   };
 }

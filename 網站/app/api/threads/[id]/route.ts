@@ -2,7 +2,7 @@ import { json, requireUser } from "@/lib/server/auth";
 import { getCatalog } from "@/lib/server/content";
 import { handle, HttpError, publicOffers, threadDetail } from "@/lib/server/trade";
 
-/** 一段對話＋那則收藏的現況（出售狀態、鎖定）。讀了就標已讀 */
+/** 一段對話＋那則收藏的現況（出售狀態、鎖定）；直接私訊沒有收藏（share＝null）。讀了就標已讀 */
 export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }) {
   const s = await requireUser(req);
   if (s instanceof Response) return s;
@@ -10,6 +10,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
     const id = Number((await ctx.params).id);
     if (!Number.isInteger(id) || id <= 0) throw new HttpError(404, "NOT_FOUND", "找不到這段對話");
     const t = await threadDetail(s.user, id);
+    if (t.direct) return json({ thread: t, share: null, offers: [] });
     const c = await getCatalog();
     const share = c.getShare(t.shareNo);
     if (!share) throw new HttpError(404, "NOT_FOUND", "這則收藏已經不在了");

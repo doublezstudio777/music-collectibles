@@ -14,6 +14,7 @@ import { LikeButton } from "@/components/like-button";
 import { Photo, TagList } from "@/components/share-card";
 import { ShareActions, type ShareInfo } from "@/components/share-actions";
 import { LevelTag } from "@/components/level-tag";
+import { DmButton } from "@/components/dm-button";
 
 /** 金額輸入：只收正整數 */
 export function parsePrice(raw: string) {
@@ -575,12 +576,18 @@ function BuyBox({ share, sale, offers }: { share: ShareView; sale: Sale; offers:
             {error ? <p className="field-error">{error}</p> : null}
           </form>
         ) : (
-          <div className="deal-actions one">
+          <div className="deal-actions">
             <button type="button" className="btn btn-p btn-lg" onClick={() => setOpen(true)}>
               出價
             </button>
+            <DmButton to={{ share: share.n }} label="問賣家" className="btn btn-line btn-lg" testid="dm-share" />
           </div>
         )}
+        {!canTrade ? (
+          <div className="deal-actions one">
+            <DmButton to={{ share: share.n }} label="問賣家" className="btn btn-line btn-lg" testid="dm-share" />
+          </div>
+        ) : null}
       </div>
     );
   }
@@ -612,9 +619,7 @@ function BuyBox({ share, sale, offers }: { share: ShareView; sale: Sale; offers:
               我要買
             </button>
           ) : null}
-          <button type="button" className="btn btn-line btn-lg" onClick={() => go(`/api/shares/${share.n}/threads`, {}, "登入後才能私訊")}>
-            問賣家
-          </button>
+          <DmButton to={{ share: share.n }} label="問賣家" className="btn btn-line btn-lg" testid="dm-share" />
         </div>
         {error ? <p className="field-error">{error}</p> : null}
       </div>
@@ -797,6 +802,12 @@ export function ShareDetail({
         ) : (
           <BuyBox share={share} sale={sale} offers={offers} />
         )}
+        {/* 私訊（2026-10-01）：出售中的在交易區叫「問賣家」，其他（純分享、已售出、交易暫停）在這裡叫「私訊」 */}
+        {ready && !mine && (frozen || sale.state === "share" || sale.state === "sold") ? (
+          <div className="dm-row">
+            <DmButton to={{ share: share.n }} label="私訊" testid="dm-share" />
+          </div>
+        ) : null}
         {fake && share.link ? (
           <p className="fake-note">
             <span className="flag flag-fake">有已知仿冒</span>

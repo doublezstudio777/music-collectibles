@@ -1,0 +1,387 @@
+[
+ {
+  "name": "1a 頁首私訊：文字「私訊」、連 /messages",
+  "ok": true,
+  "detail": "私訊"
+ },
+ {
+  "name": "1b 頁首願望清單：文字「願望清單」、連 /me/likes",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1c 沒有「聊聊」字樣",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1d 選單「願望清單」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "1e 願望清單頁標題",
+  "ok": true,
+  "detail": "願望清單｜樂迷藏"
+ },
+ {
+  "name": "2a 純分享收藏有「私訊」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "2b 定價出售維持「問賣家」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "2c 開放出價也有「問賣家」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "2d 別人的個人頁有「傳訊息」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "2e 自己的收藏沒有私訊鈕",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "2f 自己的個人頁沒有傳訊息",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "2g 從純分享收藏開的對話釘住那則",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "2h 同一對人不同收藏＝不同對話",
+  "ok": true,
+  "detail": "13 vs 14"
+ },
+ {
+  "name": "2i 同一則再按一次回到同一條",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "2j 個人頁開的是直接私訊（不綁收藏）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "2k 直接私訊資料：share_no=0、peer＝站長、started_at 有值",
+  "ok": true,
+  "detail": "{\"share_no\": 0, \"buyer_id\": \"dmtest-a\", \"peer_id\": \"_mVdpM87Csonq7po\", \"pair_key\": \"_mVdpM87Csonq7po|dmtest-a\", \"started_at\": \"2026-09-30T16:16:58.671Z\"}"
+ },
+ {
+  "name": "3a 賣家頁首未讀 3（對話數）",
+  "ok": true,
+  "detail": "3"
+ },
+ {
+  "name": "3b 未讀是橘色方塊",
+  "ok": true,
+  "detail": "rgb(255, 106, 0)"
+ },
+ {
+  "name": "3c 列表三條，依最新訊息排序（直接私訊最新在最上）",
+  "ok": true,
+  "detail": "[15, 14, 13]"
+ },
+ {
+  "name": "3d 直接私訊顯示大頭貼、收藏相關顯示縮圖＋標題",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "3e 未讀加粗",
+  "ok": true,
+  "detail": "700"
+ },
+ {
+  "name": "3f 讀了一條，未讀變 2",
+  "ok": true,
+  "detail": "2"
+ },
+ {
+  "name": "3g 回覆後對方未讀 1",
+  "ok": true,
+  "detail": "1"
+ },
+ {
+  "name": "3h 讀完未讀歸零（方塊消失）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "4a 沒驗證 Email：開對話被擋，提示驗證",
+  "ok": true,
+  "detail": "驗證 Email 後才能私訊\n驗證 Email"
+ },
+ {
+  "name": "4b 沒驗證 Email：API 也擋",
+  "ok": true,
+  "detail": "{'status': 403, 'body': {'error': {'code': 'EMAIL_UNVERIFIED', 'message': '驗證 Email 後才能私訊'}}}"
+ },
+ {
+  "name": "5a 後台上限預設 10",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5b 後台改成 2",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5c 第三個新對話被擋",
+  "ok": true,
+  "detail": "今天已經開了 2 個新對話，明天再試；已經在聊的對話不受影響"
+ },
+ {
+  "name": "5d 已經在聊的不受限",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "5e 對方回覆不算對方開新對話",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "6a 封鎖後自己這邊顯示「你已封鎖」＋解除鈕",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "6b 被封鎖的一方看到無法傳訊息、沒有輸入框",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "6c 被封鎖：API 送訊息 403",
+  "ok": true,
+  "detail": "{'status': 403, 'body': {'error': {'code': 'BLOCKED', 'message': '目前無法傳訊息給這位會員'}}}"
+ },
+ {
+  "name": "6d 被封鎖：其他既有對話也不能傳",
+  "ok": true,
+  "detail": "{'status': 403, 'body': {'error': {'code': 'BLOCKED', 'message': '目前無法傳訊息給這位會員'}}}"
+ },
+ {
+  "name": "6e 被封鎖：不能開新對話",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "6f 被封鎖：也不能出價（出價會進私訊）",
+  "ok": true,
+  "detail": "{'status': 403, 'body': {'error': {'code': 'BLOCKED', 'message': '目前無法傳訊息給這位會員'}}}"
+ },
+ {
+  "name": "6g 封鎖的人自己也不能傳（要先解除）",
+  "ok": true,
+  "detail": "{'status': 403, 'body': {'error': {'code': 'BLOCKED_BY_ME', 'message': '你已封鎖這位會員，解除封鎖後才能傳訊息'}}}"
+ },
+ {
+  "name": "6h 設定頁封鎖名單列出甲",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "6i 解除後名單空",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "6j 解除後甲可以再傳",
+  "ok": true,
+  "detail": "{'status': 200, 'body': {'ok': True}}"
+ },
+ {
+  "name": "7a 檢舉後變「已檢舉」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "7b 同一條只能檢舉一次",
+  "ok": true,
+  "detail": "{'status': 409, 'body': {'error': {'code': 'ALREADY_REPORTED', 'message': '已經檢舉過這段對話'}}}"
+ },
+ {
+  "name": "7c 不是對話的人不能檢舉",
+  "ok": true,
+  "detail": "{'status': 404, 'body': {'error': {'code': 'NOT_FOUND', 'message': '找不到這段對話'}}}"
+ },
+ {
+  "name": "7d 後台看得到檢舉人、被檢舉、理由、補充",
+  "ok": true,
+  "detail": "剛剛\t民生鄰居\t私訊測試甲 | 累計 1 次 | \t騷擾 |  | 一直傳廣告連結 |  | \t直接私訊\t標為已處理"
+ },
+ {
+  "name": "7e 後台不顯示訊息內容",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "7f 後台可標為已處理",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "7g 非管理員讀不到後台 API",
+  "ok": true,
+  "detail": "403"
+ },
+ {
+  "name": "8 Chromium 390 登入 頁首放得下（一行、不重疊、不超出）",
+  "ok": true,
+  "detail": "{\"maxRight\": 372, \"minLeft\": 18, \"overlap\": 0, \"rows\": 1, \"logoH\": 30, \"docW\": 390, \"items\": [\"logo:18-115\", \"nav-icon:132-172\", \"nav-link:174-214\", \"nav-link:216-256\", \"btn:262-326\", \"me-menu:332-372\"]}"
+ },
+ {
+  "name": "8 390 手機圖示都有 aria-label",
+  "ok": true,
+  "detail": "['搜尋', '私訊，3 個對話未讀', '願望清單', '炫收藏', '民生鄰居，我的選單', '我的頁面', '願望清單', '私訊', '收藏榮譽榜', '設定', '清掉追蹤', '登出']"
+ },
+ {
+  "name": "8 390 手機只放圖示",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "8 Chromium 390 訪客 頁首放得下（一行、不重疊、不超出）",
+  "ok": true,
+  "detail": "{\"maxRight\": 372, \"minLeft\": 18, \"overlap\": 0, \"rows\": 1, \"logoH\": 30, \"docW\": 390, \"items\": [\"logo:18-115\", \"nav-icon:144-184\", \"nav-link:186-226\", \"nav-link:228-268\", \"btn:274-338\", \"nav-login:344-372\"]}"
+ },
+ {
+  "name": "8 Chromium 360 登入 頁首放得下（一行、不重疊、不超出）",
+  "ok": true,
+  "detail": "{\"maxRight\": 342, \"minLeft\": 18, \"overlap\": 0, \"rows\": 1, \"logoH\": 30, \"docW\": 360, \"items\": [\"logo:18-115\", \"nav-icon:132-170\", \"nav-link:172-210\", \"nav-link:212-250\", \"btn:256-296\", \"me-menu:302-342\"]}"
+ },
+ {
+  "name": "8 360 手機圖示都有 aria-label",
+  "ok": true,
+  "detail": "['搜尋', '私訊，2 個對話未讀', '願望清單', '炫收藏', '民生鄰居，我的選單', '我的頁面', '願望清單', '私訊', '收藏榮譽榜', '設定', '清掉追蹤', '登出']"
+ },
+ {
+  "name": "8 360 手機只放圖示",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "8 Chromium 360 訪客 頁首放得下（一行、不重疊、不超出）",
+  "ok": true,
+  "detail": "{\"maxRight\": 342, \"minLeft\": 18, \"overlap\": 0, \"rows\": 1, \"logoH\": 30, \"docW\": 360, \"items\": [\"logo:18-115\", \"nav-icon:144-182\", \"nav-link:184-222\", \"nav-link:224-262\", \"btn:268-308\", \"nav-login:314-342\"]}"
+ },
+ {
+  "name": "8 Chromium 320 登入 頁首放得下（一行、不重疊、不超出）",
+  "ok": true,
+  "detail": "{\"maxRight\": 311.40625, \"minLeft\": 12, \"overlap\": 0, \"rows\": 1, \"logoH\": 26, \"docW\": 320, \"items\": [\"logo:12-103\", \"nav-icon:111-147\", \"nav-link:149-185\", \"nav-link:187-223\", \"btn:227-267\", \"me-menu:271-311\"]}"
+ },
+ {
+  "name": "8 320 手機圖示都有 aria-label",
+  "ok": true,
+  "detail": "['搜尋', '私訊，2 個對話未讀', '願望清單', '炫收藏', '民生鄰居，我的選單', '我的頁面', '願望清單', '私訊', '收藏榮譽榜', '設定', '清掉追蹤', '登出']"
+ },
+ {
+  "name": "8 320 手機只放圖示",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "8 Chromium 320 訪客 頁首放得下（一行、不重疊、不超出）",
+  "ok": true,
+  "detail": "{\"maxRight\": 308, \"minLeft\": 12, \"overlap\": 0, \"rows\": 1, \"logoH\": 26, \"docW\": 320, \"items\": [\"logo:12-103\", \"nav-icon:120-156\", \"nav-link:158-194\", \"nav-link:196-232\", \"btn:236-276\", \"nav-login:280-308\"]}"
+ },
+ {
+  "name": "9 WebKit 1440 登入 頁首放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 1288, \"minLeft\": 152, \"overlap\": 0, \"rows\": 1, \"logoH\": 30, \"docW\": 1440, \"items\": [\"logo:152-249\", \"nav-link:972-1040\", \"nav-link:1052-1148\", \"btn:1160-1236\", \"me-menu:1248-1288\"]}"
+ },
+ {
+  "name": "9 WebKit 1440 私訊列表不溢出",
+  "ok": true,
+  "detail": "1440"
+ },
+ {
+  "name": "9 WebKit 1440 對話不溢出",
+  "ok": true,
+  "detail": "1440"
+ },
+ {
+  "name": "9 WebKit 1440 訪客 頁首放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 1288, \"minLeft\": 152, \"overlap\": 0, \"rows\": 1, \"logoH\": 30, \"docW\": 1440, \"items\": [\"logo:152-249\", \"nav-link:984-1052\", \"nav-link:1064-1160\", \"btn:1172-1248\", \"nav-login:1260-1288\"]}"
+ },
+ {
+  "name": "9 WebKit 390 登入 頁首放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 372, \"minLeft\": 18, \"overlap\": 0, \"rows\": 1, \"logoH\": 30, \"docW\": 390, \"items\": [\"logo:18-115\", \"nav-icon:132-172\", \"nav-link:174-214\", \"nav-link:216-256\", \"btn:262-326\", \"me-menu:332-372\"]}"
+ },
+ {
+  "name": "9 WebKit 390 私訊列表不溢出",
+  "ok": true,
+  "detail": "390"
+ },
+ {
+  "name": "9 WebKit 390 對話不溢出",
+  "ok": true,
+  "detail": "390"
+ },
+ {
+  "name": "9 WebKit 390 訪客 頁首放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 372, \"minLeft\": 18, \"overlap\": 0, \"rows\": 1, \"logoH\": 30, \"docW\": 390, \"items\": [\"logo:18-115\", \"nav-icon:144-184\", \"nav-link:186-226\", \"nav-link:228-268\", \"btn:274-338\", \"nav-login:344-372\"]}"
+ },
+ {
+  "name": "9 WebKit 360 登入 頁首放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 342, \"minLeft\": 18, \"overlap\": 0, \"rows\": 1, \"logoH\": 30, \"docW\": 360, \"items\": [\"logo:18-115\", \"nav-icon:132-170\", \"nav-link:172-210\", \"nav-link:212-250\", \"btn:256-296\", \"me-menu:302-342\"]}"
+ },
+ {
+  "name": "9 WebKit 360 私訊列表不溢出",
+  "ok": true,
+  "detail": "360"
+ },
+ {
+  "name": "9 WebKit 360 對話不溢出",
+  "ok": true,
+  "detail": "360"
+ },
+ {
+  "name": "9 WebKit 360 訪客 頁首放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 342, \"minLeft\": 18, \"overlap\": 0, \"rows\": 1, \"logoH\": 30, \"docW\": 360, \"items\": [\"logo:18-115\", \"nav-icon:144-182\", \"nav-link:184-222\", \"nav-link:224-262\", \"btn:268-308\", \"nav-login:314-342\"]}"
+ },
+ {
+  "name": "9 WebKit 320 登入 頁首放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 311.40625, \"minLeft\": 12, \"overlap\": 0, \"rows\": 1, \"logoH\": 26, \"docW\": 320, \"items\": [\"logo:12-103\", \"nav-icon:111-147\", \"nav-link:149-185\", \"nav-link:187-223\", \"btn:227-267\", \"me-menu:271-311\"]}"
+ },
+ {
+  "name": "9 WebKit 320 私訊列表不溢出",
+  "ok": true,
+  "detail": "320"
+ },
+ {
+  "name": "9 WebKit 320 對話不溢出",
+  "ok": true,
+  "detail": "320"
+ },
+ {
+  "name": "9 WebKit 320 訪客 頁首放得下",
+  "ok": true,
+  "detail": "{\"maxRight\": 308, \"minLeft\": 12, \"overlap\": 0, \"rows\": 1, \"logoH\": 26, \"docW\": 320, \"items\": [\"logo:12-103\", \"nav-icon:120-156\", \"nav-link:158-194\", \"nav-link:196-232\", \"btn:236-276\", \"nav-login:280-308\"]}"
+ },
+ {
+  "name": "console 沒有錯誤（照片 404 除外）",
+  "ok": true,
+  "detail": ""
+ }
+]

@@ -65,7 +65,7 @@ export async function searchMembers(query: string, status: string, page: number)
                 (SELECT COUNT(*) FROM shares s WHERE s.author_id = u.id AND s.deleted_at IS NULL) AS posts,
                 (SELECT COUNT(*) FROM deals d WHERE d.voided_at IS NULL AND (d.seller_id = u.id OR d.buyer_id = u.id)) AS deals,
                 (SELECT COUNT(*) FROM reports r JOIN shares s2 ON r.target = 'share:' || s2.no WHERE s2.author_id = u.id) AS reported,
-                (SELECT COUNT(*) FROM threads t JOIN shares s3 ON s3.no = t.share_no WHERE t.buyer_id = u.id OR s3.author_id = u.id) AS threads,
+                (SELECT COUNT(*) FROM threads t LEFT JOIN shares s3 ON s3.no = t.share_no AND t.share_no > 0 WHERE t.buyer_id = u.id OR t.peer_id = u.id OR s3.author_id = u.id) AS threads,
                 COALESCE(sc.score, 0) AS score, lo.level AS override, lo.reason AS overrideReason,
                 (SELECT su.reason || char(31) || su.note FROM suspensions su WHERE su.user_id = u.id AND su.ended_at IS NULL ORDER BY su.id DESC LIMIT 1) AS susp
          FROM users u LEFT JOIN user_scores sc ON sc.user_id = u.id LEFT JOIN level_overrides lo ON lo.user_id = u.id ${where} ORDER BY u.created_at DESC LIMIT ?4 OFFSET ?5`,

@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { userHref } from "@/lib/data";
 import { api, openPanel, refreshAccount, setMe, useAccount, type Me } from "@/lib/account";
 import { Ava } from "@/components/ava";
 import { SaveMsg, useSave } from "@/components/save-status";
@@ -108,6 +109,55 @@ function AvatarBox({ me }: { me: Me }) {
   );
 }
 
+type Blocked = { handle: string; name: string; avatar: string | null; time: string };
+
+/** 封鎖名單（2026-10-01）：私訊裡封鎖的會員，可以在這裡解除 */
+function BlocksBox() {
+  const [list, setList] = useState<Blocked[] | null>(null);
+  const [v, setV] = useState(0);
+  const { busy, msg, run } = useSave();
+  useEffect(() => {
+    let alive = true;
+    api<{ blocks: Blocked[] }>("/api/me/blocks").then((r) => {
+      if (alive) setList(r.ok ? r.data.blocks : []);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [v]);
+  const unblock = (b: Blocked) =>
+    void run(async () => {
+      const r = await api("/api/me/blocks", { body: { handle: b.handle, blocked: false } });
+      if (!r.ok) return { ok: false, text: r.error.message };
+      setV((x) => x + 1);
+      return { ok: true, text: `已解除封鎖 ${b.name}` };
+    });
+  return (
+    <section className="block settings-block" data-testid="blocks-box">
+      <h2 className="block-title">封鎖名單</h2>
+      {list === null ? null : list.length === 0 ? (
+        <p className="page-meta">沒有封鎖任何人</p>
+      ) : (
+        <ul className="block-list">
+          {list.map((b) => (
+            <li key={b.handle} data-handle={b.handle}>
+              <Link className="block-who" href={userHref(b.handle)}>
+                <Ava name={b.name} src={b.avatar} />
+                <span>{b.name}</span>
+              </Link>
+              <span className="block-when">{b.time}</span>
+              <button type="button" className="btn btn-line" onClick={() => unblock(b)} disabled={busy} data-testid="unblock">
+                解除封鎖
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <SaveMsg {...msg} testid="blocks-msg" />
+    </section>
+  );
+}
+
 function PasswordBox() {
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
@@ -188,6 +238,7 @@ export function SettingsForm() {
       {/* key 只用 id：暱稱改了不能讓這塊重掛，不然「已儲存」會跟著消失（2026-09-28 使用者回報改了沒反應） */}
       <NameBox key={me.id} me={me} />
       <ProfileExtras key={`p-${me.id}`} />
+      <BlocksBox />
       <PasswordBox />
       <SessionsBox />
       <p className="settings-delete">

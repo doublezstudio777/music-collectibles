@@ -19,6 +19,7 @@ import { HoldingsList } from "@/components/holdings-list";
 import { SaleWall } from "@/components/sale-wall";
 import { ShareWall } from "@/components/share-wall";
 import { SocialIcons } from "@/components/social-icons";
+import { DmButton } from "@/components/dm-button";
 import { parseFavs, parseLinks, type Links } from "@/lib/profile-rules";
 
 type Props = { params: Promise<{ handle: string }> };
@@ -181,13 +182,20 @@ export default async function UserPage({ params }: Props) {
           ) : null}
           <SocialIcons links={user.links} />
         </div>
+        {user.deleted ? null : (
+          <NotSelf handle={user.handle}>
+            <div className="head-actions">
+              <DmButton to={{ user: user.handle }} label="傳訊息" testid="dm-user" />
+            </div>
+          </NotSelf>
+        )}
         <SelfOnly handle={user.handle}>
           <div className="head-actions">
             <Link className="btn btn-line" href="/settings" data-testid="edit-profile">
               編輯個人資料
             </Link>
             <Link className="btn btn-line" href="/me/likes">
-              喜愛清單
+              願望清單
             </Link>
             <GuideButton />
           </div>

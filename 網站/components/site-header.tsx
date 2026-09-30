@@ -2,20 +2,71 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRef } from "react";
-import { Mail, Search } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { Plus, Search } from "lucide-react";
 import { userHref } from "@/lib/data";
 import { clearFollows } from "@/lib/state";
-import { logout, openPanel, useAccount } from "@/lib/account";
+import { logout, openPanel, refreshAccount, useAccount } from "@/lib/account";
 import { avatarLabel } from "@/lib/avatar-label";
 import { SITE_NAME } from "@/lib/data";
 import { LogoMark } from "@/components/logo-mark";
+
+/** 私訊：直角對話框，線條跟其他圖示同粗細 */
+function ChatIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="nav-svg">
+      <path d="M3.5 4.5h17v12h-10l-4.5 3.5v-3.5h-2.5z" />
+      <path d="M8 9.5h8M8 12.5h5" />
+    </svg>
+  );
+}
+
+/** 願望清單：跟點讚同一顆愛心 */
+function HeartIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="nav-svg">
+      <path d="M12 20.5s-7-4.6-9.5-9A5.5 5.5 0 0 1 12 5.5a5.5 5.5 0 0 1 9.5 6c-2.5 4.4-9.5 9-9.5 9z" />
+    </svg>
+  );
+}
+
+/** 未讀：橘色小方塊＋數字（對話數），超過 99 顯示 99+ */
+export function UnreadBadge({ n, className = "" }: { n: number; className?: string }) {
+  if (n <= 0) return null;
+  return (
+    <span className={`unread-badge ${className}`} aria-hidden="true" data-testid="unread-badge">
+      {n > 99 ? "99+" : n}
+    </span>
+  );
+}
+
+// 換頁或切回分頁時重讀未讀數，最多 15 秒一次（/api/me 不便宜，不做輪詢）
+let lastRefresh = 0;
+const refreshSoon = () => {
+  if (Date.now() - lastRefresh < 15_000) return;
+  lastRefresh = Date.now();
+  void refreshAccount();
+};
 
 export function SiteHeader() {
   const pathname = usePathname();
   const menu = useRef<HTMLDetailsElement>(null);
   const acc = useAccount();
-  const unread = acc.unread > 0;
+  const unread = acc.status === "user" ? acc.unread : 0;
+  useEffect(() => {
+    if (!lastRefresh) {
+      lastRefresh = Date.now();
+      return;
+    }
+    refreshSoon();
+  }, [pathname]);
+  useEffect(() => {
+    const onVis = () => {
+      if (document.visibilityState === "visible") refreshSoon();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, []);
   const isForm = pathname === "/share/new";
   const label = acc.me ? avatarLabel(acc.me.name) : null;
   const close = () => {
@@ -42,12 +93,34 @@ export function SiteHeader() {
               <Link className="nav-icon" href="/search" aria-label="搜尋">
                 <Search aria-hidden="true" />
               </Link>
-              <Link className="nav-msg" href="/messages" aria-label={unread ? "私訊，有未讀" : "私訊"}>
-                <Mail aria-hidden="true" />
-                {unread ? <span className="unread-dot" aria-hidden="true" /> : null}
+              <Link
+                className="nav-link"
+                href="/messages"
+                aria-label={unread ? `私訊，${unread} 個對話未讀` : "私訊"}
+                aria-current={pathname.startsWith("/messages") ? "page" : undefined}
+                data-testid="nav-dm"
+              >
+                <span className="nav-ico">
+                  <ChatIcon />
+                  <UnreadBadge n={unread} />
+                </span>
+                <span className="nav-link-text">私訊</span>
               </Link>
-              <Link className="btn btn-p" href="/share/new">
-                炫收藏
+              <Link
+                className="nav-link"
+                href="/me/likes"
+                aria-label="願望清單"
+                aria-current={pathname === "/me/likes" ? "page" : undefined}
+                data-testid="nav-wish"
+              >
+                <span className="nav-ico">
+                  <HeartIcon />
+                </span>
+                <span className="nav-link-text">願望清單</span>
+              </Link>
+              <Link className="btn btn-p nav-share" href="/share/new" aria-label="炫收藏">
+                <span className="nav-share-text">炫收藏</span>
+                <Plus className="nav-share-ico" aria-hidden="true" />
               </Link>
               {acc.status === "loading" ? <span className="ava ava-wait" aria-hidden="true" /> : null}
               {acc.status === "anon" ? (
@@ -80,7 +153,7 @@ export function SiteHeader() {
                     我的頁面
                   </Link>
                   <Link href="/me/likes" onClick={close}>
-                    喜愛清單
+                    願望清單
                   </Link>
                   <Link href="/messages" onClick={close}>
                     私訊

@@ -6,6 +6,7 @@ const TABS = [
   { href: "/admin", label: "儀表板" },
   { href: "/admin/moderation", label: "審核與下架" },
   { href: "/admin/error-reports", label: "錯誤回報" },
+  { href: "/admin/dm-reports", label: "私訊檢舉" },
   { href: "/admin/feedback", label: "意見回饋" },
   { href: "/admin/additions", label: "待確認的新增" },
   { href: "/admin/members", label: "會員" },
