@@ -486,6 +486,9 @@ function mergeSeries({ query, wrangler, target, q, norm, manual, dry, summary, r
       st.push(`UPDATE ${table} SET ${col} = ${q(newKey)} WHERE ${col} = ${q(oldKey)}`);
       st.push(`UPDATE ${table} SET ${col} = ${q(newKey + "#")} || substr(${col}, ${oldKey.length + 2}) WHERE substr(${col}, 1, ${oldKey.length + 1}) = ${q(oldKey + "#")}`);
     }
+    // 合集標記（2026-10-01）：同一則合集同一個鍵只有一列，撞到就保留原本那列
+    st.push(`UPDATE OR IGNORE collection_tags SET target_key = ${q(newKey)} WHERE target_key = ${q(oldKey)}`);
+    st.push(`UPDATE OR IGNORE collection_tags SET target_key = ${q(newKey + "#")} || substr(target_key, ${oldKey.length + 2}) WHERE substr(target_key, 1, ${oldKey.length + 1}) = ${q(oldKey + "#")}`);
     for (const table of ["reports", "appeals", "target_decisions", "page_locks", "revisions"]) {
       if (table === "target_decisions" || table === "page_locks") {
         // 一個對象一列：into 已經有就保留 into 的，from 那列留著不動（不刪，守恆），只是不再有人查

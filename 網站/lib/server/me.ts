@@ -92,6 +92,14 @@ export const validSlug = (v: unknown): v is string => typeof v === "string" && /
 export const validVersionKey = (v: unknown): v is string =>
   typeof v === "string" && v.length <= 160 && /^[a-z0-9-]+\/\d+#[a-z0-9-]+$/.test(v);
 
+/**
+ * 我有／想要的鍵（2026-10-01 一次發多張）：版本鍵 `{藝人}/{號}#{品項}-{版本}`，
+ * 或「不確定版本」＝系列鍵 `{藝人}/{號}`、品項鍵 `{藝人}/{號}#{品項}`（同一張專輯有 CD 和黑膠時，知道是哪一種但不確定版本）
+ */
+export const validHoldingKey = (v: unknown): v is string =>
+  typeof v === "string" && v.length <= 160 && /^[a-z0-9-]+\/\d+(?:#[a-z0-9]+(?:-[a-z0-9]+)?)?$/.test(v);
+export const holdingLevel = (key: string): "series" | "item" | "version" => (!key.includes("#") ? "series" : key.includes("-", key.indexOf("#")) ? "version" : "item");
+
 /* ---------- 存在性檢查（點讚、我有、想要、追蹤、檢舉共用） ---------- */
 
 export async function shareExists(no: number) {

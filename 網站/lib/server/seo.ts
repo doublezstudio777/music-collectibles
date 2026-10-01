@@ -108,7 +108,8 @@ export function seriesIndex(c: Catalog, ctx: SeoContext, w: Series): IndexDecisi
   const key = `${w.artistSlug}/${w.no}`;
   if (overrideOf(ctx, `series:${key}`).noindex) return no("後台設定不收錄");
   if (ctx.pending.series.has(key)) return no("待確認的新增");
-  const shares = c.sharesOfSeries(w).filter((s) => !lockedShare(c, s)).length;
+  // 被標在全家福合集裡也算有收藏（2026-10-01；collectionsOf 已排除被鎖的）
+  const shares = c.sharesOfSeries(w).filter((s) => !lockedShare(c, s)).length + c.collectionsOf(w).length;
   if (w.kind === "misc") return shares ? YES : no("內容太空：周邊與其他沒有收藏");
   // A 案（2026-10-01 晚間使用者定案，取代同日的 B 案）：有收藏、有曲目、介紹 30 字以上，任一個就收錄
   if (shares || ctx.tracked.has(key) || textLen(w.body) >= THIN.bodyChars) return YES;

@@ -41,6 +41,17 @@ export function SaleSlots({ sale, locked = false }: { sale: Sale; locked?: boole
   );
 }
 
+/** 全家福合集（2026-10-01）：狀態槽位同一個位子，灰底黑字「合集 8 張」；合集不能交易，不會跟出售狀態撞 */
+export function CollectionSlot({ count }: { count: number }) {
+  return (
+    <span className="slots">
+      <span className="slot slot-collection" data-testid="slot-collection">
+        合集 <span className="num">{count}</span> 張
+      </span>
+    </span>
+  );
+}
+
 /** 封面左上的警示：被鎖、有已知仿冒 */
 export function Flags({ lock, fake }: { lock: Lock | null; fake: boolean }) {
   if (!lock && !fake) return null;
@@ -99,7 +110,7 @@ export function Photo({
         {!src && share.kind ? <b className="photo-kind">{share.kind}</b> : null}
       </span>
       <Flags lock={lock} fake={share.hasFakes} />
-      {sale ? <SaleSlots sale={sale} locked={Boolean(lock)} /> : null}
+      {share.collection ? <CollectionSlot count={share.collection.count} /> : sale ? <SaleSlots sale={sale} locked={Boolean(lock)} /> : null}
     </span>
   );
 }
@@ -133,8 +144,9 @@ export function ShareCard({ share }: { share: ShareView }) {
   const lock = share.lock;
   return (
     <article
-      className={sale.state === "sold" ? "card is-sold" : "card"}
+      className={sale.state === "sold" ? "card is-sold" : share.collection ? "card is-collection" : "card"}
       data-sale={sale.state}
+      data-post={share.collection ? "collection" : undefined}
       data-locked={lock ? "true" : undefined}
       data-fake={share.hasFakes ? "true" : undefined}
     >

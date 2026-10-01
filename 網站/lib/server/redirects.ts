@@ -73,6 +73,8 @@ export async function renameArtist(admin: User, rawFrom: unknown, rawTo: unknown
     run(`UPDATE ${table} SET ${col} = ?2 || substr(${col}, ?3) WHERE substr(${col}, 1, ?3) = ?1`, `${from}/`, `${to}/`, n + 1);
   prefixed("shares", "series_key");
   prefixed("holdings", "target_key");
+  // 合集標記（2026-10-01）：同一則合集同一個鍵只有一列，撞到就保留原本那列
+  run(`UPDATE OR IGNORE collection_tags SET target_key = ?2 || substr(target_key, ?3) WHERE substr(target_key, 1, ?3) = ?1`, `${from}/`, `${to}/`, n + 1);
   prefixed("deals", "version_key");
   run(`UPDATE follows SET artist_slug = ?2 WHERE artist_slug = ?1`, from, to);
   run(`UPDATE artist_dismissals SET artist_slug = ?2 WHERE artist_slug = ?1`, from, to);

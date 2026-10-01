@@ -224,6 +224,20 @@ export function toggleHolding(bucket: "owned" | "wanted", key: string) {
   });
 }
 
+/**
+ * 一次登記多個「我有」（2026-10-01 合集「把這些也登記成擁有」）：只加不減。
+ * 回傳實際登記的鍵與找不到的鍵；畫面上的我有清單跟著補上
+ */
+export async function addOwnedMany(keys: string[]): Promise<{ ok: true; added: string[]; missing: string[] } | { ok: false; message: string }> {
+  const r = await api<{ added: string[]; missing: string[] }>("/api/me/holdings/batch", { body: { keys } });
+  if (!r.ok) {
+    if (r.status === 401) await refreshAccount();
+    return { ok: false, message: r.error.message };
+  }
+  set({ owned: Array.from(new Set([...acc.owned, ...r.data.added])) });
+  return { ok: true, ...r.data };
+}
+
 export function toggleFollow(slug: string) {
   requireLogin("登入後才能追蹤藝人", (late) => {
     const on = late || !acc.follows.includes(slug);

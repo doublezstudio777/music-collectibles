@@ -1885,3 +1885,155 @@ p.fill-row { display: flex; }
   .market-stats > div { align-items: baseline; gap: 12px; grid-template-columns: 80px minmax(0, 1fr); padding: 10px 0; }
   .market-date { display: inline; margin-left: 8px; }
 }
+
+/* ============================================================
+   一次發多張（2026-10-01）：我收藏了哪些、批次發文、全家福合集
+   ============================================================ */
+
+/* 卡片：合集用狀態槽位同一個位子，灰底黑字（跟四種出售狀態都不撞色） */
+.slot-collection { background: var(--surface2); color: var(--text); }
+.slot-collection .num { font-family: var(--font-mono); }
+
+/* 炫收藏表單頁首：標題＋「發合集」 */
+.sf-head { align-items: center; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; margin-bottom: 0; }
+.sf-head .page-title { margin-bottom: 0; }
+
+/* ---------- 勾選清單（我收藏了哪些、合集標記） ---------- */
+.pl { border-top: 1px solid var(--line); }
+.pl-series { border-bottom: 1px solid var(--line); padding: 14px 0 16px; }
+.pl-head { align-items: baseline; display: flex; font-size: var(--text-base); font-weight: 700; gap: 10px; margin-bottom: 10px; }
+.pl-year { color: var(--muted); flex: none; font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 400; width: 40px; }
+.pl-title { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.pl-kind { color: var(--muted); flex: none; font-size: var(--text-xs); font-weight: 500; }
+.pl .picks { padding-left: 50px; }
+.pick-unsure { color: var(--muted); font-weight: 500; }
+.pick-unsure[aria-pressed="true"] { color: #fff; }
+.pl-add { background: var(--surface); border: 1px dashed var(--text); display: grid; flex-basis: 100%; gap: 10px; padding: 12px; }
+.pl-add .input { background: var(--bg); }
+.pl-add .pick { background: var(--bg); }
+.pl-add .pick[aria-pressed="true"] { background: var(--text); }
+.pl-add-row { display: grid; gap: 8px; grid-template-columns: minmax(0, 1fr) 90px; }
+.pl-add-acts { align-items: center; display: flex; flex-wrap: wrap; gap: 12px; }
+.pl-add-series { border-top: 1px solid var(--line); }
+.pl-add-box { margin-bottom: 16px; }
+
+/* ---------- 我收藏了哪些 ---------- */
+body:has(.own-page) { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+.own-head { margin-bottom: 20px; }
+.own-login { margin-bottom: 16px; }
+.own-bar {
+  align-items: center; background: var(--bg); border-top: 1px solid var(--text); bottom: 0; display: flex; gap: 10px; left: 0;
+  padding: 10px max(16px, calc((100vw - 1200px) / 2 + 32px)) calc(10px + env(safe-area-inset-bottom)); position: fixed; right: 0; z-index: 40;
+}
+.own-count { color: var(--muted); flex: 1; font-size: var(--text-sm); min-width: 0; }
+.own-count b { color: var(--text); }
+.own-bar .btn { flex: none; }
+
+/* 個人頁「我收藏的 Hyukoh：12 張」：只寫張數，不放分母、進度條 */
+.own-group + .own-group { margin-top: 28px; }
+.own-group-head { align-items: baseline; display: flex; gap: 12px; justify-content: space-between; margin-bottom: 8px; }
+.own-group-title { font-size: var(--text-base); font-weight: 700; overflow-wrap: anywhere; }
+.own-group-head .link { flex: none; font-size: var(--text-xs); }
+
+/* ---------- 全家福合集：單則頁 ---------- */
+.cphotos { display: grid; gap: 20px; }
+.cphoto-fig { margin: 0; }
+/* 照原比例顯示（不裁正方形），號碼標記用照片寬高的百分比定位 */
+.cphoto { background: var(--surface); display: block; position: relative; width: 100%; }
+.cphoto img { display: block; height: auto; user-select: none; width: 100%; -webkit-user-select: none; }
+.cphoto.is-placing { cursor: crosshair; outline: 2px solid var(--text); outline-offset: 2px; }
+/* 號碼：黑底白字直角方塊，白色 1px 外框讓它在深色照片上也看得到；按的範圍 36px */
+.cpin {
+  align-items: center; background: var(--text); color: #fff; display: flex; font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+  height: 24px; justify-content: center; left: 0; min-width: 24px; outline: 1px solid #fff; padding: 0 4px; position: absolute; top: 0;
+  transform: translate(-50%, -50%); z-index: 1;
+}
+.cpin::after { content: ""; inset: -6px; position: absolute; }
+.cpin.is-on { background: #fff; color: var(--text); outline: 2px solid var(--text); z-index: 2; }
+.cphoto-cap { align-items: center; display: flex; flex-wrap: wrap; gap: 4px 16px; justify-content: space-between; }
+.cphoto-cap .photo-code { margin: 0; }
+.cphoto-open { min-height: 40px; }
+.collection-kind { color: var(--muted); font-size: var(--text-sm); font-weight: 600; margin-bottom: 6px; }
+.collection-kind .num { font-family: var(--font-mono); }
+.collection-owner { margin-bottom: 20px; }
+.collection-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.collection-acts .btn { background: var(--bg); }
+.collection-acts .btn[aria-pressed="true"] { background: var(--text); color: #fff; }
+.ctags { margin-top: 28px; }
+.ctag-list { border-top: 1px solid var(--line); list-style: none; margin: 0; padding: 0; }
+.ctag { align-items: center; border-bottom: 1px solid var(--line); display: flex; gap: 12px; min-height: 52px; padding: 8px 0; }
+.ctag.is-on { background: var(--surface); }
+.ctag-n {
+  align-items: center; border: 1px solid var(--line); color: var(--muted); display: inline-flex; flex: none; font-family: var(--font-mono);
+  font-size: 12px; font-weight: 700; height: 28px; justify-content: center; min-width: 28px;
+}
+.ctag-n.is-pinned { background: var(--text); border-color: var(--text); color: #fff; }
+button.ctag-n:disabled { cursor: default; }
+.ctag-text { display: grid; gap: 2px; min-width: 0; }
+.ctag-album { font-weight: 600; overflow-wrap: anywhere; }
+.ctag-ver { color: var(--muted); font-size: var(--text-xs); overflow-wrap: anywhere; }
+.ctag-check { accent-color: var(--text); flex: none; height: 20px; width: 20px; }
+.collection-pickbar {
+  align-items: center; background: var(--bg); border: 1px solid var(--text); bottom: 12px; display: flex; gap: 12px;
+  justify-content: space-between; margin-top: 16px; padding: 10px 12px; position: sticky; z-index: 5;
+}
+
+/* ---------- 全家福合集：發文表單 ---------- */
+.cf-placing {
+  align-items: center; background: var(--text); color: #fff; display: flex; font-size: var(--text-sm); font-weight: 600; gap: 12px;
+  justify-content: space-between; margin: 12px 0 0; padding: 4px 4px 4px 12px; position: sticky; top: calc(var(--nav-h) + 4px); z-index: 6;
+}
+.cf-placing .btn-text { color: #fff; min-height: 36px; padding: 0 8px; }
+.cf-stage { display: grid; gap: 12px; margin-top: 12px; }
+.cf-tags { border-top: 1px solid var(--line); list-style: none; margin: 0 0 16px; padding: 0; }
+.cf-tag { align-items: center; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 6px 12px; padding: 8px 0; }
+.cf-tag.is-on { background: var(--surface); }
+.cf-tag-label { flex: 1 1 180px; font-size: var(--text-sm); font-weight: 600; min-width: 0; overflow-wrap: anywhere; }
+.cf-tag-acts { align-items: center; display: flex; flex-wrap: wrap; gap: 4px 8px; margin-left: auto; }
+.cf-tag-acts .btn-text { min-height: 40px; }
+.cf-mini { border: 1px solid var(--line); font-size: var(--text-sm); height: 40px; width: 40px; }
+.cf-mini:hover:not(:disabled) { border-color: var(--text); }
+.cf-mini:disabled { color: var(--line); }
+.cf-artists { display: grid; gap: 8px; margin-bottom: 12px; }
+.cf-nohit { margin: 0; }
+.cf-list { margin-top: 4px; }
+
+/* ---------- 批次發文 ---------- */
+.bp-restored { align-items: center; background: var(--surface); display: flex; flex-wrap: wrap; font-size: var(--text-sm); gap: 4px 12px; justify-content: space-between; margin: 16px 0 0; padding: 4px 4px 4px 12px; }
+.bp-common { border-bottom: 2px solid var(--text); display: grid; gap: 10px; padding-bottom: 16px; }
+.bp-common .field-label { margin-bottom: 0; }
+.bp-quota { color: var(--muted); font-size: var(--text-sm); }
+.bp-quota b { color: var(--text); }
+.bp-list { list-style: none; margin: 0; padding: 0; }
+.bp-entry { border-bottom: 1px solid var(--line); display: grid; gap: 12px; padding: 20px 0; }
+.bp-entry.is-over { background: var(--surface); padding-left: 12px; padding-right: 12px; }
+.bp-head { align-items: baseline; display: flex; gap: 10px; }
+.bp-n { color: var(--muted); flex: none; font-family: var(--font-mono); font-size: var(--text-xs); min-width: 1.5em; }
+.bp-label { flex: 1; font-size: var(--text-base); min-width: 0; overflow-wrap: anywhere; }
+.bp-remove { flex: none; font-weight: 500; min-height: 40px; }
+.bp-story { min-height: 64px; }
+.bp-trade { align-items: center; display: flex; flex-wrap: wrap; gap: 10px; }
+.bp-trade .money { flex: 1 1 160px; max-width: 240px; }
+.seg-sm button { min-height: 40px; padding: 0 12px; }
+.bp-over { background: var(--text); color: #fff; font-size: var(--text-sm); font-weight: 600; padding: 8px 12px; }
+.bp-results { border: 1px solid var(--text); margin-top: 16px; padding: 16px; }
+.bp-results .block-title { margin-bottom: 8px; }
+.bp-results .block-title + .bp-res-list + .block-title { margin-top: 16px; }
+.bp-res-list { display: grid; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.bp-res-list .sub { margin-top: 2px; }
+
+/* 系列頁：版本標題旁「出現在 N 個合集中」 */
+.ver-collections { color: var(--muted); font-size: var(--text-sm); font-weight: 500; margin-left: 8px; text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 700px) {
+  .pl .picks { padding-left: 0; }
+  .pl-add-row { grid-template-columns: minmax(0, 1fr) 76px; }
+  .own-bar { padding-left: 16px; padding-right: 16px; }
+  .ctag { gap: 10px; }
+  .cf-tag-acts { margin-left: 0; width: 100%; }
+  .bp-trade .money { max-width: none; }
+}
+@media (max-width: 389px) {
+  .own-bar .btn { padding: 0 12px; }
+  .seg-sm button { padding: 0 9px; }
+}

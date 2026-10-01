@@ -43,6 +43,8 @@ export async function handle(fn: () => Promise<Response>) {
 
 const nowIso = () => new Date().toISOString();
 export const MAX_PRICE = 10_000_000;
+/** 每人每天最多發幾則（一般收藏與合集合計；一次發多張也是一張算一則） */
+export const SHARE_DAILY = 30;
 export const validPrice = (v: unknown): v is number => typeof v === "number" && Number.isInteger(v) && v > 0 && v <= MAX_PRICE;
 
 export async function shareRow(no: number): Promise<ShareRow> {
@@ -58,6 +60,11 @@ async function assertNotLocked(s: ShareRow) {
   const lock = await lockForShare(s);
   if (lock) throw new HttpError(423, "LOCKED", `${lock.label}，交易暫停`);
 }
+
+/** 全家福合集（2026-10-01）純展示：不能改出售狀態、出價、定價 */
+export const assertNotCollection = (s: Pick<ShareRow, "postType">) => {
+  if (s.postType === "collection") throw new HttpError(409, "COLLECTION", "合集只能分享，不能出價或定價");
+};
 
 const assertAuthor = (s: ShareRow, u: User) => {
   if (s.authorId !== u.id) throw new HttpError(403, "FORBIDDEN", "只有這則的作者可以這樣做");
@@ -188,7 +195,7 @@ export async function createShare(u: User, body: Record<string, unknown>) {
   if (pics.length === 0) errors.photo = "至少放一張照片";
   const content = await resolveContent(u.id, body, errors);
   const day = nowIso().slice(0, 10);
-  if (!(await hit(`share:${u.id}:${day}`, 30, 86400))) throw new HttpError(429, "RATE_LIMITED", "今天發太多則了，明天再來");
+  if (!(await hit(`share:${u.id}:${day}`, SHARE_DAILY, 86400))) throw new HttpError(429, "RATE_LIMITED", `今天已經發了 ${SHARE_DAILY} 則，明天再來`);
 
   const db = getDb();
   const [created] = await db
@@ -225,6 +232,8 @@ export async function editShare(u: User, no: number, body: Record<string, unknow
   const s = await shareRow(no);
   const admin = isAdmin(u);
   if (s.authorId !== u.id && !admin) throw new HttpError(403, "FORBIDDEN", "只有發文者可以編輯這則");
+  // 合集有自己的編輯（lib/server/collections.ts），這支的欄位（品項、系列、出售狀態）合集都沒有
+  assertNotCollection(s);
   const lock = await lockForShare(s);
   if (lock) throw new HttpError(423, "LOCKED", `${lock.label}，暫時不能編輯`);
   const errors: Record<string, string> = {};
@@ -353,6 +362,7 @@ const stateWord: Record<SaleState, string> = {
 export async function setSale(u: User, no: number, state: unknown, price: unknown) {
   const s = await shareRow(no);
   assertAuthor(s, u);
+  assertNotCollection(s);
   if (s.saleState === "sold") throw new HttpError(409, "SOLD", "已售出，要先改回出售中");
   if (state !== "share" && state !== "offer" && state !== "sale") throw new HttpError(400, "BAD_REQUEST", "參數不對");
   if (state === "sale" && !validPrice(price)) throw new HttpError(400, "INVALID", "填一個整數金額");

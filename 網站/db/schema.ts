@@ -9,7 +9,7 @@
 // 刻意不設外鍵：之後加內容表不必重建這幾張表，內容也一律軟刪除，不會留下孤兒。
 
 import { sql } from "drizzle-orm";
-import { index, integer, primaryKey, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { index, integer, primaryKey, real, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 const now = sql`(strftime('%Y-%m-%dT%H:%M:%fZ','now'))`;
 
@@ -379,6 +379,11 @@ export const shares = sqliteTable(
     pendingSeriesId: integer("pending_series_id"),
     /** 發文者自己改的標題（2026-09-28 上傳表單改版）；NULL＝用自動組的 what。系統重組標題只動 what，不動這欄 */
     customWhat: text("custom_what"),
+    /**
+     * 2026-10-01 一次發多張（drizzle/0028）：single＝一般收藏；collection＝全家福合集（一張或幾張大合照＋標記裡面有哪些專輯，
+     * 純展示，不能出價、不能定價，標記在 collection_tags）。合集也是一則 shares，照片、查證碼、檢舉、留言、讚、刪帳重燒全部共用
+     */
+    postType: text("post_type").notNull().default("single"),
   },
   (t) => [
     index("shares_author_idx").on(t.authorId),
@@ -1272,4 +1277,25 @@ export const takedownNotices = sqliteTable(
     updatedAt: text("updated_at").notNull().default(now),
   },
   (t) => [index("takedown_notices_status_idx").on(t.status, t.id), index("takedown_notices_member_idx").on(t.memberId)],
+);
+
+/**
+ * 全家福合集的標記（2026-10-01，drizzle/0028）：一則合集標了哪些專輯。
+ * target_key＝系列鍵 `{藝人}/{流水號}`（不確定版本）或版本鍵 `{藝人}/{流水號}#{品項}-{版本}`；同一則同一個鍵只有一列。
+ * photo_id／x／y 選填：在照片上點的位置（照片左上角為 0、右下角為 1 的比例），只列清單時是 NULL。
+ * 有內容版本觸發器（合集頁、系列頁「出現在 N 個合集中」都在整頁快取裡）。
+ */
+export const collectionTags = sqliteTable(
+  "collection_tags",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    shareNo: integer("share_no").notNull(),
+    targetKey: text("target_key").notNull(),
+    sort: integer("sort").notNull().default(0),
+    photoId: text("photo_id"),
+    x: real("x"),
+    y: real("y"),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("collection_tags_share_target_uq").on(t.shareNo, t.targetKey), index("collection_tags_target_idx").on(t.targetKey)],
 );

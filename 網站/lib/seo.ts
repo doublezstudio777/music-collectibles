@@ -78,6 +78,24 @@ export function shareDescription(p: ShareParts, year: string, story: string, fal
 }
 
 /**
+ * 全家福合集頁（2026-10-01）：標題「Hyukoh、ADOY 收藏合集 8 張｜民生鄰居」；發文者自訂了標題就用那個。
+ * 描述「民生鄰居的收藏合照，裡面有 Hyukoh《23》、ADOY《Catnip》等 8 張。」再接說明前 30 字
+ */
+export function collectionTitle(p: { artists: string[]; count: number; custom?: string; author: string }) {
+  const who = p.artists.length > 3 ? `${p.artists.slice(0, 3).join("、")}等` : p.artists.join("、");
+  const head = p.custom ? oneLine(p.custom) : `${who} 收藏合集 ${p.count} 張`;
+  return `${head}｜${p.author}`;
+}
+
+export function collectionDescription(p: { albums: string[]; count: number; author: string; story: string }) {
+  const uniq = Array.from(new Set(p.albums));
+  const list = uniq.slice(0, 4).join("、");
+  const tail = uniq.length > 4 || p.count > uniq.slice(0, 4).length ? `等 ${p.count} 張` : `共 ${p.count} 張`;
+  const s = plainText(p.story);
+  return clipWidth(`${p.author}的收藏合照，裡面有${list}${tail}。${s ? clipWidth(s, 30) : ""}`.replace(/。$/, "。"), DESC_MAX);
+}
+
+/**
  * 收藏照片的 alt：「Hyukoh《23》2020 韓國再版 CD，民生鄰居的收藏照片」；多張加第幾張。
  * 發文者自訂的標題也吃（what），藝人名取「跟誰有關」
  */
@@ -107,6 +125,6 @@ export const isSeoTarget = (t: string): t is SeoTarget =>
  * ALLOW_INDEXING=1 之後這些照樣加 X-Robots-Tag: noindex；沒開放時全站本來就 noindex。
  */
 const PRIVATE =
-  /^\/(?:(?:admin|api|settings|messages|search|me|login|u|tag|ranking|feedback|verify|takedown)(?:\/|$)|share\/(?:new|\d+\/edit)$|artist\/[^/]+(?:\/\d+)?\/history$)/;
+  /^\/(?:(?:admin|api|settings|messages|search|me|login|u|tag|ranking|feedback|verify|takedown)(?:\/|$)|share\/(?:new|batch|collection|\d+\/edit)$|artist\/[^/]+(?:\/\d+)?\/history$)/;
 export const isPrivatePath = (pathname: string, search = "") => PRIVATE.test(pathname) || /[?&]edit=/.test(search);
 

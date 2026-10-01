@@ -5,6 +5,8 @@ import { getViewer, pageData } from "@/lib/server/viewer";
 import { ShareForm } from "@/components/share-form";
 import { pendingSeriesOf } from "@/lib/server/series-link";
 import { myAdditions } from "@/lib/server/additions";
+import { CollectionForm } from "@/components/collection-form";
+import { collectionTagList } from "@/lib/server/collections";
 
 export const metadata = { title: "編輯收藏" };
 
@@ -47,6 +49,28 @@ export default async function EditSharePage({ params }: Props) {
           {view.lock.label}，暫時不能編輯
         </p>
         {back}
+      </main>
+    );
+  }
+  // 全家福合集（2026-10-01）：自己的表單（照片＋標記＋說明，沒有出售狀態）
+  if (share.collection) {
+    const tags = await collectionTagList(n);
+    return (
+      <main className="wrap page sf-page">
+        <h1 className="page-title">編輯合集</h1>
+        <CollectionForm
+          edit={{
+            n,
+            story: share.story,
+            customTitle: share.autoWhat ? share.what : "",
+            tags: tags.flatMap((t) => {
+              const v = c.collectionTagView(t.key);
+              return v
+                ? [{ key: t.key, label: v.label, artist: v.artist, ...(t.photo && t.x !== null && t.y !== null ? { photo: t.photo, x: t.x, y: t.y } : {}) }]
+                : [];
+            }),
+          }}
+        />
       </main>
     );
   }

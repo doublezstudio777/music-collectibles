@@ -89,6 +89,10 @@ export default async function ArtistPage({ params, searchParams }: Props) {
         </div>
         <div className="head-actions">
           <FollowButton slug={artist.slug} name={artist.name} />
+          {/* 一次勾選「我有」（2026-10-01）：個人頁面，不在整頁快取裡 */}
+          <Link className="btn btn-line" href={`/me/owned/${artist.slug}`} data-testid="owned-entry">
+            我收藏了哪些
+          </Link>
           <CopyLink />
           <Link className="btn btn-line" href={`${self}?edit=1#intro`} data-testid="edit-link">
             編輯

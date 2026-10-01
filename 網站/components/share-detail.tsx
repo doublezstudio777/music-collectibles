@@ -54,7 +54,7 @@ export function MoneyInput({
  * 用 fetch 取檔才看得到 401／429 的說明；浮水印已燒進檔案（2026-09-29）。
  * 多張時可以左右切換（按鈕、方向鍵、手機左右滑）。
  */
-function Lightbox({
+export function Lightbox({
   list,
   start,
   alt,
@@ -343,7 +343,7 @@ function PhotoCode({ code }: { code?: string }) {
 }
 
 /** 最後編輯時間：台灣時間 YYYY/MM/DD HH:mm（伺服器與瀏覽器都用同一個時區算，不會 hydration 不一致） */
-function EditedTime({ iso }: { iso: string }) {
+export function EditedTime({ iso }: { iso: string }) {
   const d = new Date(new Date(iso).getTime() + 8 * 3600 * 1000);
   const p = (x: number) => String(x).padStart(2, "0");
   const text = `${d.getUTCFullYear()}/${p(d.getUTCMonth() + 1)}/${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())}`;

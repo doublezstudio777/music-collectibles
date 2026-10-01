@@ -11,6 +11,7 @@ import { and, count, eq, getTableColumns, inArray, isNull } from "drizzle-orm";
 import { getDb } from "@/db";
 import {
   artists as tArtists,
+  collectionTags,
   contentVersion,
   holdings,
   items as tItems,
@@ -41,6 +42,7 @@ import {
   type Artist,
   type ArtistGender,
   type ArtistRegion,
+  type CollectionData,
   type DataStatus,
   type Item,
   type Lock,
@@ -111,7 +113,7 @@ export async function lockForShare(s: Pick<ShareRow, "no" | "seriesKey" | "itemI
 
 async function build(): Promise<Catalog> {
   const db = getDb();
-  const [aRows, sRows, iRows, vRows, mRows, fRows, shRows, uRows, pRows, likeRows, holdRows] = await db.batch([
+  const [aRows, sRows, iRows, vRows, mRows, fRows, shRows, uRows, pRows, likeRows, holdRows, ctRows] = await db.batch([
     db.select().from(tArtists).where(and(eq(tArtists.status, "approved"), isNull(tArtists.deletedAt), isNull(tArtists.hiddenAt))),
     db.select().from(tSeries).where(and(eq(tSeries.status, "approved"), isNull(tSeries.deletedAt), isNull(tSeries.hiddenAt))),
     db.select().from(tItems).where(and(eq(tItems.status, "approved"), isNull(tItems.deletedAt), isNull(tItems.hiddenAt))),
@@ -130,6 +132,8 @@ async function build(): Promise<Catalog> {
     db.select().from(photos).where(and(eq(photos.purpose, "share"), isNull(photos.deletedAt))),
     db.select({ n: likes.shareNo, c: count() }).from(likes).groupBy(likes.shareNo),
     db.select({ key: holdings.targetKey, kind: holdings.kind, c: count() }).from(holdings).groupBy(holdings.targetKey, holdings.kind),
+    // 全家福合集的標記（2026-10-01）
+    db.select().from(collectionTags).orderBy(collectionTags.shareNo, collectionTags.sort),
   ]);
 
   const userById = new Map(uRows.map((u) => [u.id, u]));
@@ -236,6 +240,13 @@ async function build(): Promise<Catalog> {
       color: v.color,
     });
   }
+  // 「有，但不確定版本」（系列層、品項層的我有，2026-10-01）：系列頁「N 人有」加上這些人
+  for (const w of seriesList) {
+    const sk = `${w.artistSlug}/${w.no}`;
+    const n = others(`owned:${sk}`) + w.items.reduce((a, it) => a + others(`owned:${sk}#${it.id}`), 0);
+    if (n) w.looseOwners = n;
+  }
+
   // 沒有任何版本的品項不出現（待審的版本不算）；例外：有炫收藏掛在上面的（2026-09-28 周邊選擇流程：
   // 發毛巾掛到演唱會、系列裡還沒有毛巾這個品項時會自動建品項，版本等人補，品項要先看得到）
   const itemsWithShares = new Set(
@@ -260,6 +271,20 @@ async function build(): Promise<Catalog> {
     return idx.length
       ? { refIdx: idx, refPhotos: idx.map((i) => ({ image: photoUrl(list[i].r2Key), thumb: photoUrl(list[i].thumbKey) })) }
       : {};
+  };
+
+  const tagsBy = new Map<number, (typeof ctRows)[number][]>();
+  for (const t of ctRows) tagsBy.set(t.shareNo, [...(tagsBy.get(t.shareNo) ?? []), t]);
+  /** 合集：全部照片（含尺寸）＋標記；照片上的位置換成照片順序的 index，照片被刪掉的標記只留在清單 */
+  const collectionOf = (no: number): CollectionData => {
+    const gallery = galleryBy.get(no) ?? [];
+    return {
+      gallery: gallery.map((g) => ({ image: photoUrl(g.r2Key), thumb: photoUrl(g.thumbKey), w: g.width, h: g.height, ...(g.verifyCode ? { code: g.verifyCode } : {}) })),
+      tags: (tagsBy.get(no) ?? []).map((t) => {
+        const i = t.photoId ? gallery.findIndex((g) => g.id === t.photoId) : -1;
+        return i >= 0 && t.x !== null && t.y !== null ? { key: t.targetKey, photo: i, x: t.x, y: t.y } : { key: t.targetKey };
+      }),
+    };
   };
 
   const now = Date.now();
@@ -297,6 +322,7 @@ async function build(): Promise<Catalog> {
           : {}),
         ...refsOf(galleryBy.get(s.no) ?? []),
         ...(s.editedAt ? { editedAt: s.editedAt } : {}),
+        ...(s.postType === "collection" ? { collection: collectionOf(s.no) } : {}),
         ...(s.seriesKey
           ? { link: { series: s.seriesKey, ...(s.itemId ? { item: s.itemId } : {}), ...(s.versionId ? { version: s.versionId } : {}) } }
           : {}),

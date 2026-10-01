@@ -1,3 +1,4 @@
+import Link from "@/components/link";
 import { getViewer, pageData } from "@/lib/server/viewer";
 import { ShareForm } from "@/components/share-form";
 import { myAdditions } from "@/lib/server/additions";
@@ -13,7 +14,13 @@ export default async function NewSharePage() {
   const viewer = await getViewer();
   return (
     <main className="wrap page sf-page">
-      <h1 className="page-title">炫收藏</h1>
+      <header className="page-head sf-head">
+        <h1 className="page-title">炫收藏</h1>
+        {/* 一張大合照標很多張專輯（2026-10-01 全家福合集） */}
+        <Link className="btn btn-line" href="/share/collection" data-testid="to-collection">
+          發合集
+        </Link>
+      </header>
       <ShareForm options={c.formOptions(viewer?.handle)} mine={viewer ? await myAdditions(viewer.id) : undefined} />
     </main>
   );

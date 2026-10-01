@@ -53,7 +53,7 @@ import { seriesTracks, type VersionTracks } from "@/lib/server/tracks";
 import { diffText, diffTracks, parseTracks, trackCount } from "@/lib/tracks";
 import type { PriceSummary } from "@/lib/prices";
 import { LockBanner, ReportBox } from "@/components/report";
-import { ItemLooseWall, VersionWall } from "@/components/share-wall";
+import { ItemLooseWall, ShareWall, VersionWall } from "@/components/share-wall";
 import { IdentifyDetails } from "@/components/identify-details";
 import { SeriesTile } from "@/components/work-cover";
 import { seriesContributors } from "@/lib/server/contributors";
@@ -240,10 +240,13 @@ function VersionBlock({
   price,
   tracks,
   editor,
+  collections = 0,
 }: {
   series: Series;
   item: Item;
   v: Version;
+  /** 這個版本被標在幾個合集裡（2026-10-01） */
+  collections?: number;
   related: Share[];
   view: (s: Share) => ShareView;
   locks: LockData;
@@ -262,6 +265,11 @@ function VersionBlock({
         {v.edition}
         {v.fakes?.length ? <span className="flag flag-fake">有已知仿冒</span> : null}
         <OwnersCount vkey={vkey} owners={v.owners} />
+        {collections ? (
+          <a className="ver-collections" href="#collections" data-testid="ver-collections">
+            出現在 <span className="num">{collections}</span> 個合集中
+          </a>
+        ) : null}
       </h3>
       <LockBanner target={versionTarget(vkey)} locked={isTargetLocked(locks, versionTarget(vkey))} />
       <FieldFill vkey={vkey} fields={PUBLIC_FILL.filter((f) => isBlank(f, v[f]))} />
@@ -404,7 +412,10 @@ export default async function SeriesPage({ params, searchParams }: Props) {
   const credits = c.creditNames(series);
   const related = c.sharesOfSeries(series);
   const versions = series.items.flatMap((i) => i.versions);
-  const owners = versions.reduce((n, v) => n + v.owners, 0);
+  // 「有，但不確定版本」的也算（2026-10-01 一次勾選我有）
+  const owners = versions.reduce((n, v) => n + v.owners, 0) + (series.looseOwners ?? 0);
+  // 被標在哪些全家福合集裡（2026-10-01）：系列頁內連回合集
+  const collections = c.collectionsOf(series);
   // 這位藝人的其他系列：共同署名的每位各一區；隱藏、待審的系列本來就不在目錄裡。依發行年（舊到新，沒填年份的放最後）
   const yearOf = (w: Series) => (/^\d{4}$/.test(w.year) ? Number(w.year) : 9999);
   const selfCover = c.seriesCover(series);
@@ -477,6 +488,14 @@ export default async function SeriesPage({ params, searchParams }: Props) {
           <p className="page-meta">
             <span className="num">{owners}</span> 人有 · <span className="num">{wanted}</span> 人想要 ·{" "}
             <span className="num">{related.length}</span> 則炫收藏
+            {collections.length ? (
+              <>
+                {" · "}
+                <a className="link" href="#collections" data-testid="series-collections-count">
+                  出現在 <span className="num">{collections.length}</span> 個合集中
+                </a>
+              </>
+            ) : null}
           </p>
           {/^\d{4}/.test(series.year) || series.kind === "misc" ? null : <YearFill skey={skey} />}
         </div>
@@ -571,6 +590,7 @@ export default async function SeriesPage({ params, searchParams }: Props) {
                 price={prices.get(versionKey(series, it, v))}
                 tracks={tracks.get(versionAnchor(it, v))}
                 editor={tt && tm && tm[1] === it.id && tm[2] === v.id ? { baseId: tracksBase, locked: tracksLocked } : null}
+                collections={collections.filter((s) => s.collection?.tags.some((t) => t.key === versionKey(series, it, v))).length}
               />
             ))}
             <ItemLooseWall shares={loose.map(c.toShareView)} />
@@ -578,6 +598,15 @@ export default async function SeriesPage({ params, searchParams }: Props) {
           </section>
         );
       })}
+
+      {collections.length ? (
+        <section className="block" id="collections" data-testid="series-collections">
+          <h2 className="block-title">
+            出現在 <span className="num">{collections.length}</span> 個合集中
+          </h2>
+          <ShareWall shares={collections.map(c.toShareView)} />
+        </section>
+      ) : null}
 
       {contributors.total ? (
         <section className="block contributors" id="contributors" data-testid="contributors">

@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import {
   composeWhat,
   isRecordKind,
-  itemInVersion,
   KINDS,
   MISC_SERIES_TITLE,
   miscSeriesRef,
@@ -13,6 +12,7 @@ import {
   PHOTO_LICENSE_URL,
   SERIES_KIND_LABEL,
   SITE_NAME,
+  versionLabel,
   type Kind,
   type SaleState,
 } from "@/lib/data";
@@ -41,12 +41,8 @@ export type Mine = { artists: string[]; series: string[]; versions?: string[] };
 /** 版本選項：品項＋版本（同一張專輯可能有兩個同類品項，版本清單攤平在一起） */
 type VOpt = { itemId: string; id: string; edition: string; year: string; region: string; key: string };
 
-/** 版本的口語名稱：「2019 台灣 一般版 CD」「日版 CD」；年份、地區、品項已在名稱裡就不重複 */
-export function versionLabel(v: Pick<VOpt, "edition" | "year" | "region">, item: string) {
-  const e = v.edition.trim();
-  const head = [v.year && !e.includes(v.year) ? v.year : "", v.region && !e.includes(v.region) ? v.region : "", e].filter(Boolean).join(" ");
-  return item && !itemInVersion(item, head) ? `${head} ${item}` : head;
-}
+/** 版本的口語名稱：搬到 lib/data.ts（2026-10-01 合集、我收藏了哪些也要用） */
+export { versionLabel };
 
 const MEASURE: Partial<Record<Kind, string>> = { 毛巾: "條", "T 恤": "件", 海報: "張", 場刊: "本" };
 const ROWS = 6;

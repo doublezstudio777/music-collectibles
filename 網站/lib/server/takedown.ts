@@ -121,6 +121,8 @@ async function blockersFor(exacts: string[], artist?: { name: string; aliases: s
       ...(vid ? [vid] : []),
     );
     holdingsN += await q(`SELECT COUNT(*) AS n FROM holdings WHERE target_key = ?1 OR target_key LIKE ?2`, p, `${p}${anchor ? "-" : "#"}%`);
+    // 合集標記（2026-10-01）也算「有人用到」，跟我有／想要一起計
+    holdingsN += await q(`SELECT COUNT(*) AS n FROM collection_tags WHERE target_key = ?1 OR target_key LIKE ?2`, p, `${p}${anchor ? "-" : "#"}%`);
     reportsN += await q(`SELECT COUNT(*) AS n FROM reports WHERE target LIKE ?1 OR target LIKE ?2`, `%:${p}`, `%:${p}${anchor ? "-" : "#"}%`);
   }
   let mentions = 0;

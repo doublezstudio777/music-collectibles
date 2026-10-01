@@ -138,6 +138,22 @@ export const composeWhat = (p: { series?: string; item?: string; version?: strin
     ? titleSegments(p.series, p.item ?? "", p.version ?? "").join("・")
     : [(p.about ?? []).join("、"), p.kind ?? ""].filter(Boolean).join("・");
 
+/** 版本的口語名稱：「2019 台灣 一般版 CD」「日版 CD」；年份、地區、品項已在名稱裡就不重複（表單、合集、我收藏了哪些共用） */
+export function versionLabel(v: { edition: string; year: string; region: string }, item: string) {
+  const e = v.edition.trim();
+  const head = [v.year && !e.includes(v.year) ? v.year : "", v.region && !e.includes(v.region) ? v.region : "", e].filter(Boolean).join(" ");
+  return item && !itemInVersion(item, head) ? `${head} ${item}` : head;
+}
+
+/**
+ * 全家福合集的自動標題（2026-10-01）：「Hyukoh、ADOY・合集 8 張」；藝人超過三位寫「A、B、C 等 5 位・合集 14 張」。
+ * 發文者可以自己改（shares.custom_what），系統只重組這個
+ */
+export const collectionWhat = (artists: string[], n: number) => {
+  const who = artists.length > 3 ? `${artists.slice(0, 3).join("、")} 等 ${artists.length} 位` : artists.join("、");
+  return [who, `合集 ${n} 張`].filter(Boolean).join("・");
+};
+
 /** 藝人・系列・品項・版本（品項已在版本名稱裡就省略）；四段都空時退回「某某的收藏」 */
 export const shareDesc = (p: ShareParts, author: string) =>
   [p.artist, ...titleSegments(p.series, p.item, p.version)].filter(Boolean).join("・") || `${author} 的${KIND_LABEL_FALLBACK}`;
@@ -234,6 +250,8 @@ export type Series = {
   lastEdit: { by: string; date: string };
   /** MusicBrainz release-group MBID */
   mbid?: string;
+  /** 2026-10-01：其他人登記「有，但不確定版本」（系列層、品項層）的人數；系列頁「N 人有」加上這個 */
+  looseOwners?: number;
 };
 
 /** 出售狀態：純分享（預設）／開放出價／定價出售／已售出。錢貨不經過平台，成交後雙方自己約 */
@@ -288,6 +306,8 @@ export type Share = {
   /** 發文者的大頭貼網址（2026-09-30）；沒有就不帶，前端顯示暱稱首字 */
   authorAvatar?: string;
   link?: { series: string; item?: string; version?: string };
+  /** 全家福合集（2026-10-01）：標記與全部照片（含尺寸，照片上的位置標記要照原比例畫）。一般收藏沒有這欄 */
+  collection?: CollectionData;
   sale?: Sale;
   /** 管理員標為「辨識參考」的照片（2026-09-28 起改由管理員標記；shares.ref_photo 舊值不再使用） */
   refPhotos?: SharePhoto[];
@@ -295,6 +315,22 @@ export type Share = {
   refIdx?: number[];
   /** 發文者最後一次編輯內容或照片的時間（ISO）；沒編輯過就沒有 */
   editedAt?: string;
+};
+
+/** 合集照片：依順序，第一張是封面 */
+export type CollectionPhoto = { image: string; thumb: string; w: number; h: number; code?: string };
+/** 合集標記：key＝系列鍵（不確定版本）、品項鍵或版本鍵；photo＝標在第幾張照片（照片順序的 index），x、y 是 0～1 的比例 */
+export type CollectionTag = { key: string; photo?: number; x?: number; y?: number };
+export type CollectionData = { tags: CollectionTag[]; gallery: CollectionPhoto[] };
+/** 合集標記的顯示列（單則頁清單、照片上的號碼） */
+export type CollectionTagView = CollectionTag & {
+  /** 「Hyukoh《23》2020 韓國再版 CD」；不確定版本寫「…（不確定版本）」 */
+  label: string;
+  artist: string;
+  album: string;
+  version: string;
+  href: string;
+  seriesKey: string;
 };
 
 /** 示範資料用的使用者形狀（scripts/demo-data.ts）；網站本身的帳號在 D1 users 表 */
@@ -398,6 +434,8 @@ export type ShareView = {
   refIdx?: number[];
   /** 單則頁才有：發文者最後編輯時間（ISO） */
   editedAt?: string;
+  /** 全家福合集（2026-10-01）：卡片只帶張數；單則頁另外帶照片與標記 */
+  collection?: { count: number; gallery?: CollectionPhoto[]; tags?: CollectionTagView[] };
 };
 
 /** 我有／想要清單列（個人頁用） */
@@ -412,6 +450,11 @@ export type HoldingView = {
   catalog: string;
   href: string;
   color: string;
+  /** 2026-10-01：歸在哪位藝人底下（系列的第一位署名），個人頁依藝人分組用 */
+  artistSlug?: string;
+  artistName?: string;
+  /** 2026-10-01：沒選到版本（系列層或品項層的「不確定版本」） */
+  unsure?: boolean;
 };
 
 /* ---------- 檢舉、鎖定、申訴 ----------

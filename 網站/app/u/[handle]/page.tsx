@@ -132,8 +132,8 @@ export default async function UserPage({ params }: Props) {
   // 最喜歡的藝人：照本人排的順序，已隱藏、刪除或前台看不到藝人頁的不顯示
   const favs = user.favs.map((slug) => c.visibleArtist(slug)).filter((a) => a !== undefined);
   const own = c.shares.filter((s) => s.author === user.handle).map(c.toShareView);
-  // 我有／想要的版本：別人看用伺服器給的清單；本人看時按鈕即時變，所以把全部版本的列都給
-  const catalog = c.holdingViews(c.seriesList.flatMap((w) => w.items.flatMap((it) => it.versions.map((v) => `${w.artistSlug}/${w.no}#${it.id}-${v.id}`))));
+  // 我有／想要：伺服器只算這位會員目前標的那些（2026-10-01 起不再把全站版本都給，本人剛勾的由前端另外補）
+  const views = c.holdingViews(Array.from(new Set([...user.owned, ...user.wanted])));
 
   return (
     <main className="wrap page">
@@ -227,7 +227,7 @@ export default async function UserPage({ params }: Props) {
             <FollowList artists={c.artists.map((a) => ({ slug: a.slug, name: a.name, tagline: a.tagline }))} />
           </SelfOnly>
 
-          <HoldingsList handle={user.handle} owned={user.owned} wanted={user.wanted} catalog={catalog} />
+          <HoldingsList handle={user.handle} name={user.name} owned={user.owned} wanted={user.wanted} views={views} />
         </>
       )}
     </main>

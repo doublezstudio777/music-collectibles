@@ -184,6 +184,9 @@ export async function mergeArtists(admin: User, rawKeep: unknown, rawLose: unkno
       run(`UPDATE ${table} SET ${col} = ?2 WHERE ${col} = ?1`, oldKey, newKey);
       run(`UPDATE ${table} SET ${col} = ?2 || substr(${col}, ?3) WHERE substr(${col}, 1, ?4) = ?1`, oldPrefix, newPrefix, oldPrefix.length + 1, oldPrefix.length);
     }
+    // 合集標記（2026-10-01）：同一則合集同一個鍵只有一列，撞到就保留原本那列
+    run(`UPDATE OR IGNORE collection_tags SET target_key = ?2 WHERE target_key = ?1`, oldKey, newKey);
+    run(`UPDATE OR IGNORE collection_tags SET target_key = ?2 || substr(target_key, ?3) WHERE substr(target_key, 1, ?4) = ?1`, `${oldKey}#`, `${newKey}#`, oldKey.length + 2, oldKey.length + 1);
     for (const table of ["reports", "appeals", "target_decisions", "page_locks", "revisions"]) {
       run(`UPDATE ${table} SET target = ?2 WHERE target = ?1`, `series:${oldKey}`, `series:${newKey}`);
       for (const p of ["item:", "version:"]) {

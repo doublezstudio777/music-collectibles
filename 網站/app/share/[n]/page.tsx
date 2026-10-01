@@ -2,11 +2,12 @@ import Link from "@/components/link";
 import { notFound } from "next/navigation";
 import { SITE_DESC, shareDesc, shareHref, type Share } from "@/lib/data";
 import { ARTISTS_CRUMB, HOME_CRUMB, artistCrumb, breadcrumbLd, ldJson, seriesCrumb, shareCrumb, shareIndex, seoMeta } from "@/lib/server/seo";
-import { releaseLine, sharePhotoAlt, shareDescription, shareTitle } from "@/lib/seo";
+import { collectionDescription, collectionTitle, releaseLine, sharePhotoAlt, shareDescription, shareTitle } from "@/lib/seo";
 import { ogPhoto, type Catalog } from "@/lib/catalog";
 import { pageData, siteOrigin } from "@/lib/server/viewer";
 import { publicOffers } from "@/lib/server/trade";
 import { ShareDetail } from "@/components/share-detail";
+import { CollectionDetail } from "@/components/collection-detail";
 import { ShareWall } from "@/components/share-wall";
 import { ShareComments } from "@/components/share-comments";
 import { ShareQuestion } from "@/components/share-question";
@@ -25,8 +26,21 @@ export async function generateMetadata({ params }: Props) {
   if (c.toShareView(s).lock) {
     return seoMeta({ path, title: "一則炫收藏", description: SITE_DESC, photo: null, type: "article", index: false });
   }
-  const parts = c.shareParts(s);
   const author = s.authorName ?? s.author;
+  // 全家福合集（2026-10-01）：標題、描述用標記的專輯組
+  if (s.collection) {
+    const tags = s.collection.tags.map((t) => c.collectionTagView(t.key)).filter((t) => t !== null);
+    return seoMeta({
+      path,
+      title: collectionTitle({ artists: s.about, count: tags.length, custom: s.autoWhat ? s.what : undefined, author }),
+      description: collectionDescription({ albums: tags.map((t) => `${t.artist}《${t.album}》`), count: tags.length, author, story: s.story }),
+      photo: ogPhoto(s),
+      type: "article",
+      index: decision.index,
+      alt: `${s.what}，${author}的收藏合照`,
+    });
+  }
+  const parts = c.shareParts(s);
   const title = shareTitle(parts, s.what, author);
   return seoMeta({
     path,
@@ -59,7 +73,7 @@ export default async function SharePage({ params }: Props) {
   // 被鎖定的不給分享（分享按鈕不出現）
   const shareInfo = view.lock
     ? null
-    : { url: `${origin}${shareHref(n)}`, title: share.what, text: shareDesc(c.shareParts(share), view.author.name) };
+    : { url: `${origin}${shareHref(n)}`, title: share.what, text: share.collection ? `${share.what}｜${view.author.name}的收藏合照` : shareDesc(c.shareParts(share), view.author.name) };
 
   // 麵包屑（結構化資料）：首頁 › 藝人 › 第一位有公開頁的相關藝人 › 系列 › 這則
   const w = share.link ? c.getSeriesByKey(share.link.series) : undefined;
@@ -76,7 +90,11 @@ export default async function SharePage({ params }: Props) {
   return (
     <main className="wrap page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson([breadcrumbLd(crumbs)]) }} />
-      <ShareDetail share={view} offers={await publicOffers(n)} shareInfo={shareInfo} />
+      {share.collection ? (
+        <CollectionDetail share={view} shareInfo={shareInfo} />
+      ) : (
+        <ShareDetail share={view} offers={await publicOffers(n)} shareInfo={shareInfo} />
+      )}
       {/* 留言不在整頁快取裡，前端另外打 /api/comments 載入 */}
       <ShareComments share={n} />
       {c.relatedFor(share).map((b) => (

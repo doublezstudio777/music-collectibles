@@ -20,7 +20,9 @@ import {
   tagHref,
   versionHref,
   versionKey,
+  versionLabel,
   type Artist,
+  type CollectionTagView,
   type ArtistGender,
   type ArtistRegion,
   type HoldingView,
@@ -246,6 +248,7 @@ export class Catalog {
       hasFakes: this.linkHasFakes(link),
       lock: lockFor(this.lockData, s.n, link),
       ...this.#tagLinksOf(s),
+      ...(s.collection ? { collection: { count: s.collection.tags.length } } : {}),
     };
   };
 
@@ -271,7 +274,105 @@ export class Catalog {
     ...(s.code ? { code: s.code } : {}),
     ...(s.refIdx?.length ? { refIdx: s.refIdx } : {}),
     ...(s.editedAt ? { editedAt: s.editedAt } : {}),
+    ...(s.collection
+      ? {
+          collection: {
+            count: s.collection.tags.length,
+            gallery: s.collection.gallery,
+            tags: s.collection.tags.map((t) => this.collectionTagView(t.key, t)).filter((t): t is CollectionTagView => t !== null),
+          },
+        }
+      : {}),
   });
+
+  /* ---------- 全家福合集、我有（2026-10-01 一次發多張） ---------- */
+
+  /**
+   * 系列鍵、品項鍵、版本鍵 → 顯示用的一列：藝人、專輯、版本（不確定版本也寫出來）、連結。
+   * 找不到（被隱藏、刪除）回 null
+   */
+  keyView = (key: string) => {
+    const [sk, anchor] = key.split("#");
+    const w = this.getSeriesByKey(sk);
+    if (!w) return null;
+    const artist = this.creditNames(w).map((a) => a.name).join("、");
+    const first = this.creditNames(w)[0];
+    const base = { seriesKey: sk, artist, artistSlug: first?.slug ?? w.artistSlug, artistName: first?.name ?? artist, album: w.title, series: w };
+    if (!anchor) return { ...base, version: "不確定版本", href: seriesHref(w), unsure: true, item: undefined, v: undefined };
+    const [itemId, vid] = anchor.split("-");
+    const it = getItem(w, itemId);
+    if (!it) return null;
+    if (!vid) return { ...base, version: `${it.kind}・不確定版本`, href: itemHref(w, it), unsure: true, item: it, v: undefined };
+    const v = it.versions.find((x) => x.id === vid);
+    if (!v) return null;
+    return { ...base, version: versionLabel(v, it.kind), href: versionHref(w, it, v), unsure: false, item: it, v };
+  };
+
+  collectionTagView = (key: string, pos: { photo?: number; x?: number; y?: number } = {}): CollectionTagView | null => {
+    const r = this.keyView(key);
+    if (!r) return null;
+    return {
+      key,
+      ...(pos.photo !== undefined ? { photo: pos.photo, x: pos.x, y: pos.y } : {}),
+      label: `${r.artist}《${r.album}》${r.version}`,
+      artist: r.artist,
+      album: r.album,
+      version: r.version,
+      href: r.href,
+      seriesKey: r.seriesKey,
+    };
+  };
+
+  /**
+   * 一位藝人的全部系列＞品項＞版本，勾選用（我收藏了哪些、合集標記）。新的在前，「周邊與其他」排最後。
+   * 版本名稱用口語名（2019 台灣 一般版 CD）
+   */
+  pickSeriesOf = (slug: string): PickSeries[] => {
+    const yearOf = (w: Series) => (/^\d{4}/.test(w.year) ? Number(w.year.slice(0, 4)) : -1);
+    return this.mainSeriesOf(slug)
+      .sort((x, y) => (x.kind === "misc" ? 1 : 0) - (y.kind === "misc" ? 1 : 0) || (yearOf(x) < 0 ? 1 : 0) - (yearOf(y) < 0 ? 1 : 0) || yearOf(y) - yearOf(x) || y.no - x.no)
+      .map((w) => ({
+        key: seriesKey(w),
+        title: w.title,
+        year: w.year.slice(0, 4),
+        kind: w.kind,
+        artist: this.creditNames(w).map((a) => a.name).join("、"),
+        items: w.items.map((it) => ({
+          id: it.id,
+          kind: it.kind,
+          versions: it.versions.map((v) => ({ id: v.id, key: versionKey(w, it, v), label: versionLabel(v, it.kind) })),
+        })),
+      }));
+  };
+
+  /**
+   * 批次發文的一張（2026-10-01）：鍵 → 發文要帶的系列／品項／版本、跟誰有關、可選的類型。
+   * 系列層（不確定版本）的類型要發文者挑：列系列裡已有的品項類型，唱片類系列沒有任何品項時預設 CD
+   */
+  batchEntryOf = (key: string): BatchEntry | null => {
+    const r = this.keyView(key);
+    if (!r) return null;
+    const about = this.creditNames(r.series).map((a) => a.name);
+    const kinds = Array.from(new Set(r.series.items.map((it) => it.kind as string)));
+    const base = { key, label: `${r.artist}《${r.album}》${r.version}`, about, seriesKey: r.seriesKey };
+    if (r.item) return { ...base, itemId: r.item.id, ...(r.v ? { versionId: r.v.id } : {}), kind: r.item.kind, kinds: [r.item.kind] };
+    const options = kinds.length ? kinds : r.series.kind === "tour" || r.series.kind === "misc" || r.series.kind === "brand" ? ["其他周邊"] : ["CD"];
+    return { ...base, kind: options[0], kinds: options, itemIds: Object.fromEntries(r.series.items.map((it) => [it.kind, it.id])) };
+  };
+
+  /** 系列鍵 → 標了這個系列（或底下任一品項、版本）的合集，新的在前 */
+  #collectionsBySeries = () =>
+    this.#lazy("collectionsBySeries", () => {
+      const m = new Map<string, Share[]>();
+      for (const s of this.shares) {
+        if (!s.collection) continue;
+        for (const sk of new Set(s.collection.tags.map((t) => t.key.split("#")[0]))) m.set(sk, [...(m.get(sk) ?? []), s]);
+      }
+      return m;
+    });
+
+  /** 被標記的專輯頁「出現在 N 個合集中」：被鎖定（檢舉達門檻）的不算 */
+  collectionsOf = (w: Series) => (this.#collectionsBySeries().get(seriesKey(w)) ?? []).filter((s) => !this.toShareView(s).lock);
 
   /** 編輯表單：這則「跟誰有關」對得到的藝人（不在預設清單裡也要能拼出系列選項） */
   formArtistsFor = (names: string[]) =>
@@ -305,19 +406,23 @@ export class Catalog {
     return s ? ogPhoto(s) : null;
   };
 
+  /** 我有／想要清單的一列。2026-10-01 起系列鍵、品項鍵（不確定版本）也收 */
   toHoldingView = (key: string): HoldingView | null => {
-    const r = this.resolveVersionKey(key);
+    const r = this.keyView(key);
     if (!r) return null;
     return {
       key,
       title: r.series.title,
-      artists: this.creditNames(r.series).map((a) => a.name).join("、"),
-      edition: r.version.edition,
-      year: r.version.year,
-      format: r.item.kind,
+      artists: r.artist,
+      edition: r.unsure ? "不確定版本" : (r.v?.edition ?? ""),
+      year: r.v?.year ?? r.series.year.slice(0, 4),
+      format: r.item?.kind ?? "",
       catalog: "",
-      href: versionHref(r.series, r.item, r.version),
-      color: r.version.color,
+      href: r.href,
+      color: r.v?.color ?? "",
+      artistSlug: r.artistSlug,
+      artistName: r.artistName,
+      ...(r.unsure ? { unsure: true } : {}),
     };
   };
 
@@ -504,6 +609,31 @@ export class Catalog {
 }
 
 export type FormOptions = ReturnType<Catalog["formOptions"]>;
+
+/** 批次發文的一張 */
+export type BatchEntry = {
+  key: string;
+  label: string;
+  about: string[];
+  seriesKey: string;
+  itemId?: string;
+  versionId?: string;
+  kind: string;
+  /** 可以挑的類型（只有系列層才會有兩個以上） */
+  kinds: string[];
+  /** 系列層：類型 → 系列裡既有的品項 id（挑了有的就掛上去，沒有的伺服器自動建） */
+  itemIds?: Record<string, string>;
+};
+
+/** 勾選用的系列（我收藏了哪些、合集標記、批次發文） */
+export type PickSeries = {
+  key: string;
+  title: string;
+  year: string;
+  kind: string;
+  artist: string;
+  items: { id: string; kind: string; versions: { id: string; key: string; label: string }[] }[];
+};
 
 /**
  * 連結預覽用照片：有分享預覽圖（1200×630 JPEG，浮水印已燒進去，上線後雜項 2026-09-28）優先用那張；
