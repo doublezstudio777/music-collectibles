@@ -82,3 +82,4 @@
 - 查「哪條路由 exceededResources」：GraphQL `workersInvocationsAdaptive` 沒有路徑維度，只能看 datetimeMinute＋coloCode 抓「同分鐘同機房一串」；cron 另查 `workersInvocationsScheduled`（有 cpuTimeUs）。每請求 CPU 用 `wrangler tail --format json` 的 `cpuTime`，以 cf-ray 對 Playwright 回應表頭；tail 流量一大會漏事件，對不到的不能當 0（2026-10-01）
 - vinext `<Link>` 預設進畫面就預取、每個預取都是一次 RSC 渲染，免費方案會被一頁 10～30 個預取打爆（1102）；全站 Link 一律從 `@/components/link` import（預設 prefetch=false），curl 只打整頁 HTML 看不出來，要用瀏覽器數 `_rsc` 請求（2026-10-01）
 - 正式站量登入後 CPU 不用走 Turnstile：D1 直接插臨時 users＋sessions（sessions.id＝token 的 SHA-256），量完把 session 設過期，帳號列回報等使用者回「刪」；users 寫入會讓 content_version +1、全站快取失效，量測第一輪會偏高（2026-10-01）
+- iPhone 段落右側整塊空白但元素寬度正常：先查 `text-wrap: pretty`（WebKit 會每行都縮短求平均，Chromium 只調末幾行所以重現不出來），量法是 Range 逐行右緣；WebKit 不支援 `text-justify: inter-character`，中文左右對齊只會撐大空格，別用。手機斷點規則若寫在檔案前段，後面同權重的基礎規則（如 `gap`）會蓋掉它（2026-10-01）

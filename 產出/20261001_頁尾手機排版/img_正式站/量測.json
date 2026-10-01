@@ -1,0 +1,238 @@
+{
+ "webkit_390": {
+  "ccLines": 5,
+  "ccGapPerLine": [
+   3.7,
+   0.1,
+   3,
+   3
+  ],
+  "ccMaxGap": 3.7,
+  "pLeft": 18,
+  "contL": 18,
+  "contR": 372,
+  "linksLeft": 18,
+  "linkRows": 2,
+  "rowRightGap": [
+   59.9,
+   119
+  ],
+  "minLinkH": 40,
+  "splitLinks": [],
+  "footH": 310,
+  "hscroll": false,
+  "consoleErrors": []
+ },
+ "webkit_375": {
+  "ccLines": 5,
+  "ccGapPerLine": [
+   1.7,
+   11.1,
+   1,
+   1
+  ],
+  "ccMaxGap": 11.1,
+  "pLeft": 18,
+  "contL": 18,
+  "contR": 357,
+  "linksLeft": 18,
+  "linkRows": 2,
+  "rowRightGap": [
+   44.9,
+   104
+  ],
+  "minLinkH": 40,
+  "splitLinks": [],
+  "footH": 310,
+  "hscroll": false,
+  "consoleErrors": []
+ },
+ "webkit_360": {
+  "ccLines": 5,
+  "ccGapPerLine": [
+   25.7,
+   12.7,
+   25,
+   12
+  ],
+  "ccMaxGap": 25.7,
+  "pLeft": 18,
+  "contL": 18,
+  "contR": 342,
+  "linksLeft": 18,
+  "linkRows": 2,
+  "rowRightGap": [
+   29.9,
+   89
+  ],
+  "minLinkH": 40,
+  "splitLinks": [],
+  "footH": 310,
+  "hscroll": false,
+  "consoleErrors": []
+ },
+ "webkit_320": {
+  "ccLines": 6,
+  "ccGapPerLine": [
+   11.7,
+   14.4,
+   4.7,
+   11,
+   11
+  ],
+  "ccMaxGap": 14.4,
+  "pLeft": 18,
+  "contL": 18,
+  "contR": 302,
+  "linksLeft": 18,
+  "linkRows": 3,
+  "rowRightGap": [
+   62,
+   75,
+   206
+  ],
+  "minLinkH": 40,
+  "splitLinks": [],
+  "footH": 370,
+  "hscroll": false,
+  "consoleErrors": []
+ },
+ "webkit_1440": {
+  "ccLines": 2,
+  "ccGapPerLine": [
+   6.8
+  ],
+  "ccMaxGap": 6.8,
+  "pLeft": 252,
+  "contL": 152,
+  "contR": 1288,
+  "linksLeft": 762.890625,
+  "linkRows": 1,
+  "rowRightGap": [
+   0
+  ],
+  "minLinkH": 21,
+  "splitLinks": [],
+  "footH": 134,
+  "hscroll": false,
+  "consoleErrors": []
+ },
+ "chromium_390": {
+  "ccLines": 5,
+  "ccGapPerLine": [
+   3,
+   22,
+   3,
+   3
+  ],
+  "ccMaxGap": 22,
+  "pLeft": 18,
+  "contL": 18,
+  "contR": 372,
+  "linksLeft": 18,
+  "linkRows": 2,
+  "rowRightGap": [
+   60,
+   119
+  ],
+  "minLinkH": 40,
+  "splitLinks": [],
+  "footH": 314.421875,
+  "hscroll": false,
+  "consoleErrors": []
+ },
+ "chromium_375": {
+  "ccLines": 5,
+  "ccGapPerLine": [
+   1,
+   7,
+   1,
+   1
+  ],
+  "ccMaxGap": 7,
+  "pLeft": 18,
+  "contL": 18,
+  "contR": 357,
+  "linksLeft": 18,
+  "linkRows": 2,
+  "rowRightGap": [
+   45,
+   104
+  ],
+  "minLinkH": 40,
+  "splitLinks": [],
+  "footH": 314.421875,
+  "hscroll": false,
+  "consoleErrors": []
+ },
+ "chromium_360": {
+  "ccLines": 5,
+  "ccGapPerLine": [
+   25,
+   9,
+   25,
+   12
+  ],
+  "ccMaxGap": 25,
+  "pLeft": 18,
+  "contL": 18,
+  "contR": 342,
+  "linksLeft": 18,
+  "linkRows": 2,
+  "rowRightGap": [
+   30,
+   89
+  ],
+  "minLinkH": 40,
+  "splitLinks": [],
+  "footH": 314.421875,
+  "hscroll": false,
+  "consoleErrors": []
+ },
+ "chromium_320": {
+  "ccLines": 6,
+  "ccGapPerLine": [
+   11,
+   12,
+   3,
+   11,
+   11
+  ],
+  "ccMaxGap": 12,
+  "pLeft": 18,
+  "contL": 18,
+  "contR": 302,
+  "linksLeft": 18,
+  "linkRows": 3,
+  "rowRightGap": [
+   62,
+   75,
+   206
+  ],
+  "minLinkH": 40,
+  "splitLinks": [],
+  "footH": 375.21875,
+  "hscroll": false,
+  "consoleErrors": []
+ },
+ "chromium_1440": {
+  "ccLines": 2,
+  "ccGapPerLine": [
+   2
+  ],
+  "ccMaxGap": 2,
+  "pLeft": 252,
+  "contL": 152,
+  "contR": 1288,
+  "linksLeft": 763,
+  "linkRows": 1,
+  "rowRightGap": [
+   0
+  ],
+  "minLinkH": 21.4375,
+  "splitLinks": [],
+  "footH": 135.59375,
+  "hscroll": false,
+  "consoleErrors": []
+ }
+}
