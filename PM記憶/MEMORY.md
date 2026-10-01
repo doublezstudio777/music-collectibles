@@ -84,3 +84,4 @@
 - 正式站量登入後 CPU 不用走 Turnstile：D1 直接插臨時 users＋sessions（sessions.id＝token 的 SHA-256），量完把 session 設過期，帳號列回報等使用者回「刪」；users 寫入會讓 content_version +1、全站快取失效，量測第一輪會偏高（2026-10-01）
 - iPhone 段落右側整塊空白但元素寬度正常：先查 `text-wrap: pretty`（WebKit 會每行都縮短求平均，Chromium 只調末幾行所以重現不出來），量法是 Range 逐行右緣；WebKit 不支援 `text-justify: inter-character`，中文左右對齊只會撐大空格，別用。手機斷點規則若寫在檔案前段，後面同權重的基礎規則（如 `gap`）會蓋掉它（2026-10-01）
 - 要看每頁「自動產生的文字」實際長怎樣：用 scratchpad 還原正式站備份＋開建置版，從 sitemap 抓全部系列頁算重複度（678 頁約 20 秒），比只看樣板可靠；`.prose p` 左右對齊在 WebKit 會撐大英文名旁的空白，自動組的句子要靠左（2026-10-01）
+- 驗收會新增系列的腳本重跑時，上一輪的空專輯排在清單最上面，選版本要用 `:has([data-testid=pl-chip]:not(.pick-unsure))` 篩有版本的系列；正式站驗收的 session token 每次隨機、3 小時過期，不寫死可猜的字串（2026-10-01）

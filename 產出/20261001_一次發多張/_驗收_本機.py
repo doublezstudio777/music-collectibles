@@ -13,6 +13,7 @@ import hashlib
 import json
 import os
 import re
+import secrets
 import subprocess
 import sys
 import time
@@ -21,22 +22,31 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-BASE = sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:8798"
+REMOTE = os.environ.get("REMOTE") == "1"
+BASE = sys.argv[1] if len(sys.argv) > 1 else ("https://lemibox.com" if REMOTE else "http://127.0.0.1:8798")
 HERE = Path(__file__).resolve().parent
 SITE = HERE.parent.parent / "網站"
-OUT = HERE / "img"
+OUT = HERE / ("img_正式站" if REMOTE else "img")
 OUT.mkdir(exist_ok=True)
 DBDIR = os.environ.get("DBDIR", str(SITE / ".wrangler/state"))
 IMG = Path(os.environ.get("IMGDIR", "/tmp/bp-img"))
-HOST = "127.0.0.1"
+HOST = "lemibox.com" if REMOTE else "127.0.0.1"
+UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36"
 DAY = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 TOMORROW = (datetime.now(timezone.utc) + timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
-USERS = {
-    "a": ("u-bptest1001", "bptest", "批次測試甲", "bptest@example.invalid"),
-    "b": ("u-bptest1002", "bptest2", "批次測試乙", "bptest2@example.invalid"),
-}
-TOKENS = {k: f"bptesttoken{k}{'x' * 40}" for k in USERS}
+# 正式站用另一組帳號（lmbtestbp…），驗完列清單等使用者回「刪」
+USERS = (
+    {"a": ("u-lmbtestbp1001", "lmbtestbp1001", "批次測試甲", "lmbtestbp1001@example.invalid"),
+     "b": ("u-lmbtestbp1002", "lmbtestbp1002", "批次測試乙", "lmbtestbp1002@example.invalid")}
+    if REMOTE
+    else {"a": ("u-bptest1001", "bptest", "批次測試甲", "bptest@example.invalid"),
+          "b": ("u-bptest1002", "bptest2", "批次測試乙", "bptest2@example.invalid")}
+)
+HANDLE = USERS["a"][1]
+# 正式站的 session token 每次隨機產生、3 小時後過期（不留可猜的登入憑證）
+TOKENS = {k: (secrets.token_hex(24) if REMOTE else f"bptesttoken{k}{'x' * 40}") for k in USERS}
+SESSION_EXP = (datetime.now(timezone.utc) + timedelta(hours=3)).strftime("%Y-%m-%dT%H:%M:%S.000Z") if REMOTE else "2026-12-31T00:00:00.000Z"
 UID = USERS["a"][0]
 GROUP_POS = [(0.16875, 0.2530), (0.4, 0.2530), (0.63125, 0.2530), (0.8625, 0.2530)]
 
@@ -51,8 +61,9 @@ def check(name: str, ok: bool, detail: str = "") -> bool:
 
 def sql(q: str):
     r = subprocess.run(
-        ["node", "--import", "./scripts/sites-env.mjs", "./node_modules/wrangler/bin/wrangler.js", "d1", "execute", "DB", "--local",
-         "--config", "wrangler.local.jsonc", "--persist-to", DBDIR, "--json", "--command", q],
+        ["node", "--import", "./scripts/sites-env.mjs", "./node_modules/wrangler/bin/wrangler.js", "d1", "execute", "DB",
+         *(["--remote", "--config", "wrangler.production.jsonc"] if REMOTE else ["--local", "--config", "wrangler.local.jsonc", "--persist-to", DBDIR]),
+         "--json", "--command", q],
         cwd=SITE, check=True, capture_output=True, text=True,
     )
     return json.loads(r.stdout)[-1]["results"]
@@ -71,21 +82,22 @@ def setup():
     sql(f"DELETE FROM photos WHERE owner_id IN ({ids})")
     sql(f"DELETE FROM photo_codes WHERE owner_id IN ({ids})")
     sql(f"DELETE FROM holdings WHERE user_id IN ({ids})")
-    sql(f"DELETE FROM rate_limits WHERE key LIKE '%bptest100%'")
+    sql(f"DELETE FROM rate_limits WHERE key LIKE '%{UID}%' OR key LIKE '%{USERS['b'][0]}%'")
     for k, (uid, handle, name, email) in USERS.items():
         sql(
             f"INSERT OR IGNORE INTO users (id, email, email_verified_at, password_hash, handle, name, name_key, terms_version, terms_accepted_at) "
             f"VALUES ('{uid}', '{email}', '2026-10-01T00:00:00.000Z', '!test', '{handle}', '{name}', '{name}', '1.0', '2026-10-01T00:00:00.000Z')"
         )
         h = hashlib.sha256(TOKENS[k].encode()).hexdigest()
-        sql(f"INSERT OR REPLACE INTO sessions (id, user_id, expires_at) VALUES ('{h}', '{uid}', '2026-12-31T00:00:00.000Z')")
+        sql(f"INSERT OR REPLACE INTO sessions (id, user_id, expires_at) VALUES ('{h}', '{uid}', '{SESSION_EXP}')")
 
 
 def ctx_for(browser, who, width=1440, height=900, scale=1, mobile=False):
-    c = browser.new_context(viewport={"width": width, "height": height}, device_scale_factor=scale, is_mobile=mobile, has_touch=mobile)
-    cookies = [{"name": "yz_test_country", "value": "TW", "domain": HOST, "path": "/"}]
+    extra = {"user_agent": UA} if REMOTE and not mobile else {}
+    c = browser.new_context(viewport={"width": width, "height": height}, device_scale_factor=scale, is_mobile=mobile, has_touch=mobile, **extra)
+    cookies = [] if REMOTE else [{"name": "yz_test_country", "value": "TW", "domain": HOST, "path": "/"}]
     if who:
-        cookies.append({"name": "yz_session", "value": TOKENS[who], "domain": HOST, "path": "/", "httpOnly": True})
+        cookies.append({"name": "yz_session", "value": TOKENS[who], "domain": HOST, "path": "/", "httpOnly": True, "secure": REMOTE})
     c.add_cookies(cookies)
     return c
 
@@ -106,6 +118,8 @@ def page_of(c):
 
 
 def go(p, path: str):
+    if REMOTE:
+        time.sleep(1.2)  # 正式站 IP 限流 10 秒 30 頁
     p.goto(BASE + path, wait_until="load")
     p.wait_for_function("document.fonts.ready.then(() => true)")
     try:
@@ -194,7 +208,7 @@ def flow1(browser):
         chip.click()
     check("1h 取消勾選會刪掉、再勾回來", n == 4 and sql(f"SELECT count(*) AS n FROM holdings WHERE user_id = '{UID}'")[0]["n"] == 5)
 
-    go(p, "/u/bptest")
+    go(p, f"/u/{HANDLE}")
     p.locator('[data-testid="owned-group-title"]').first.wait_for()
     t = p.locator('[data-testid="owned-group-title"]').first.inner_text()
     check("1i 個人頁依藝人分組「我收藏的 林俊傑：5 張」", re.fullmatch(r"我收藏的 林俊傑：5 張", t.strip()) is not None, t)
@@ -272,7 +286,7 @@ def flow2(browser, picked):
         sk, _, anchor = k.partition("#")
         want[sk] = tuple(anchor.split("-")) if anchor else ("cd", None)
     check("2q 掛到選好的系列／版本", all(want.get(sk) == (it, v) for sk, it, v in linked), str(linked))
-    draft = p.evaluate("JSON.parse(localStorage.getItem('yz_batch:bptest') || 'null')")
+    draft = p.evaluate("JSON.parse(localStorage.getItem('yz_batch:" + HANDLE + "') || 'null')")
     check("2r 發不了的那張留在草稿", draft is not None and len(draft["rows"]) == 1)
     go(p, f"/share/{rows[0]['no']}")
     check("2s 發好的收藏頁有查證碼", p.locator('[data-testid="photo-code"]').count() == 1)
@@ -408,7 +422,7 @@ def flow3(webkit, chromium):
     go(q, f"/share/{n}")
     q.locator('[data-testid="dm-share"]').wait_for()
     check("3D 別的會員：可以私訊、沒有發文者操作", q.locator('[data-testid="collection-owner"]').count() == 0)
-    go(q, "/u/bptest")
+    go(q, f"/u/{HANDLE}")
     check("3E 個人頁炫收藏牆有合集卡片", q.locator('article.card[data-post="collection"]').count() == 1)
     c.close()
     # 編輯合集：改說明、拿掉一個標記
@@ -433,7 +447,7 @@ def shots(webkit, coll_n, share_nos):
     pages = [
         ("藝人頁入口", "/artist/jj-lin"),
         ("我收藏了哪些", "/me/owned/jj-lin"),
-        ("個人頁我有", "/u/bptest#owned"),
+        ("個人頁我有", f"/u/{HANDLE}#owned"),
         ("批次發文", "/share/batch?keys=" + "%2C".join(["hyukoh%2F1%23cd-v3", "jj-lin%2F21%23cd-v1", "jj-lin%2F20"])),
         ("合集發文", "/share/collection?artist=hyukoh"),
         ("合集頁", f"/share/{coll_n}"),
@@ -473,7 +487,7 @@ def main():
     check("5 console error 0", not ERRORS, "\n".join(ERRORS[:8]))
     passed = sum(1 for r in results if r[1])
     print(f"\n{passed}/{len(results)} PASS")
-    (HERE / "result_本機.json").write_text(json.dumps({"base": BASE, "passed": passed, "total": len(results), "results": results, "errors": ERRORS, "collection": coll, "shares": nos}, ensure_ascii=False, indent=1), encoding="utf-8")
+    (HERE / ("result_正式站.json" if REMOTE else "result_本機.json")).write_text(json.dumps({"base": BASE, "passed": passed, "total": len(results), "results": results, "errors": ERRORS, "collection": coll, "shares": nos}, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
 if __name__ == "__main__":
