@@ -1,0 +1,2653 @@
+{
+ "base": "http://127.0.0.1:8797",
+ "at": "2026-10-01 14:54",
+ "pass": 247,
+ "fail": 0,
+ "results": [
+  {
+   "id": "多版本-intro",
+   "name": "介紹句存在、沒有破折號（專輯名本身除外）",
+   "ok": true,
+   "detail": "林憶蓮的專輯《憶蓮》在1987年2月發行，收錄10首歌。目前登記的版本有7個，都是香港發行，格式有CD、黑膠、SACD和卡帶。"
+  },
+  {
+   "id": "多版本-desc",
+   "name": "description 跟介紹句同源、不含價格、在 head",
+   "ok": true,
+   "detail": "林憶蓮的專輯《憶蓮》在1987年2月發行，收錄10首歌。樂迷藏整理7個版本（香港；CD、黑膠、SACD）。"
+  },
+  {
+   "id": "多版本-ld",
+   "name": "結構化資料沒有 Product／Offer／價格",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "多版本-robots",
+   "name": "ALLOW_INDEXING=1：這頁可收錄（沒有 noindex）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "多版本-market",
+   "name": "站上行情沒有顯示",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "多版本-rows",
+   "name": "版本比較表至少 2 列",
+   "ok": true,
+   "detail": "7"
+  },
+  {
+   "id": "多版本-noid",
+   "name": "版本比較表沒有目錄號、條碼",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "多版本-390-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-18"
+  },
+  {
+   "id": "多版本-390-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "多版本-390-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "多版本-390-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "多版本-390-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     204.4,
+     81.2,
+     60.2,
+     114.8,
+     61.6,
+     53.2,
+     159.6
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 354,
+     "scroll": 735
+    },
+    "pageOverflow": 0,
+    "newOverflow": -18,
+    "overflowFrom": [],
+    "introLines": 3,
+    "introGaps": [
+     4.3,
+     8.9
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "多版本-390-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [204.4, 81.2, 60.2, 114.8, 61.6, 53.2, 159.6], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 354, \"scroll\": 735}, \"pageOverflow\": 0, \"newOverflow\": -18, \"overflowFrom\": [], \"introLines\": 3, \"introGaps\": [4.3, 8.9], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "多版本-320-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-4.3"
+  },
+  {
+   "id": "多版本-320-page-overflow",
+   "name": "整頁橫向溢出（記錄）",
+   "ok": true,
+   "detail": "21px，來源 ['block prose > P 林憶蓮的專輯《憶蓮》在1987年2月發行', ' > DD 1987', ' > DD 1987-02']"
+  },
+  {
+   "id": "多版本-320-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "多版本-320-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "多版本-320-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "多版本-320-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     204.4,
+     81.2,
+     60.2,
+     114.8,
+     61.6,
+     53.2,
+     159.6
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 284,
+     "scroll": 735
+    },
+    "pageOverflow": 21,
+    "newOverflow": -4.3,
+    "overflowFrom": [
+     "block prose > P 林憶蓮的專輯《憶蓮》在1987年2月發行",
+     " > DD 1987",
+     " > DD 1987-02"
+    ],
+    "introLines": 4,
+    "introGaps": [
+     14.9,
+     -13.7,
+     36.8
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "多版本-320-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [204.4, 81.2, 60.2, 114.8, 61.6, 53.2, 159.6], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 284, \"scroll\": 735}, \"pageOverflow\": 21, \"newOverflow\": -4.3, \"overflowFrom\": [\"block prose > P 林憶蓮的專輯《憶蓮》在1987年2月發行\", \" > DD 1987\", \" > DD 1987-02\"], \"introLines\": 4, \"introGaps\": [14.9, -13.7, 36.8], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "多版本-1440-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-366"
+  },
+  {
+   "id": "多版本-1440-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "多版本-1440-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "多版本-1440-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "多版本-1440-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     204.4,
+     81.2,
+     60.2,
+     114.8,
+     61.6,
+     53.2,
+     159.6
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 735,
+     "scroll": 735
+    },
+    "pageOverflow": 0,
+    "newOverflow": -366,
+    "overflowFrom": [],
+    "introLines": 1,
+    "introGaps": [],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "多版本-1440-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [204.4, 81.2, 60.2, 114.8, 61.6, 53.2, 159.6], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 735, \"scroll\": 735}, \"pageOverflow\": 0, \"newOverflow\": -366, \"overflowFrom\": [], \"introLines\": 1, \"introGaps\": [], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "單版本-intro",
+   "name": "介紹句存在、沒有破折號（專輯名本身除外）",
+   "ok": true,
+   "detail": "陳綺貞在2009年推出專輯《太陽》，收錄11首歌。目前收錄的版本是2009年台灣首版 CD，由Team Ear Music發行。"
+  },
+  {
+   "id": "單版本-desc",
+   "name": "description 跟介紹句同源、不含價格、在 head",
+   "ok": true,
+   "detail": "陳綺貞在2009年推出專輯《太陽》，收錄11首歌。版本是2009年台灣首版 CD，Team Ear Music發行。"
+  },
+  {
+   "id": "單版本-ld",
+   "name": "結構化資料沒有 Product／Offer／價格",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "單版本-robots",
+   "name": "ALLOW_INDEXING=1：這頁可收錄（沒有 noindex）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "單版本-market",
+   "name": "站上行情沒有顯示",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "單版本-rows",
+   "name": "版本比較表 1 列",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "id": "單版本-noid",
+   "name": "版本比較表沒有目錄號、條碼",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "單版本-390-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-15.1"
+  },
+  {
+   "id": "單版本-390-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "單版本-390-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "單版本-390-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "單版本-390-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     154,
+     81.2,
+     60.2,
+     151.2,
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 354,
+     "scroll": 553
+    },
+    "pageOverflow": 0,
+    "newOverflow": -15.1,
+    "overflowFrom": [
+     "block prose > P 陳綺貞在2009年推出專輯《太陽》，收錄"
+    ],
+    "introLines": 3,
+    "introGaps": [
+     -2.9,
+     4.8
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "單版本-390-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [154, 81.2, 60.2, 151.2, 53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 354, \"scroll\": 553}, \"pageOverflow\": 0, \"newOverflow\": -15.1, \"overflowFrom\": [\"block prose > P 陳綺貞在2009年推出專輯《太陽》，收錄\"], \"introLines\": 3, \"introGaps\": [-2.9, 4.8], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "單版本-320-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-18"
+  },
+  {
+   "id": "單版本-320-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "單版本-320-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "單版本-320-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "單版本-320-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     154,
+     81.2,
+     60.2,
+     151.2,
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 284,
+     "scroll": 553
+    },
+    "pageOverflow": 0,
+    "newOverflow": -18,
+    "overflowFrom": [
+     " > DD 2009",
+     " > DD 2009-01-22",
+     " > DD Team Ear Music"
+    ],
+    "introLines": 3,
+    "introGaps": [
+     4.1,
+     7.1
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "單版本-320-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [154, 81.2, 60.2, 151.2, 53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 284, \"scroll\": 553}, \"pageOverflow\": 0, \"newOverflow\": -18, \"overflowFrom\": [\" > DD 2009\", \" > DD 2009-01-22\", \" > DD Team Ear Music\"], \"introLines\": 3, \"introGaps\": [4.1, 7.1], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "單版本-1440-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-455"
+  },
+  {
+   "id": "單版本-1440-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "單版本-1440-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "單版本-1440-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "單版本-1440-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     154,
+     81.2,
+     60.2,
+     151.2,
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 553,
+     "scroll": 553
+    },
+    "pageOverflow": 0,
+    "newOverflow": -455,
+    "overflowFrom": [],
+    "introLines": 1,
+    "introGaps": [],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "單版本-1440-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [154, 81.2, 60.2, 151.2, 53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 553, \"scroll\": 553}, \"pageOverflow\": 0, \"newOverflow\": -455, \"overflowFrom\": [], \"introLines\": 1, \"introGaps\": [], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "有行情_開價-intro",
+   "name": "介紹句存在、沒有破折號（專輯名本身除外）",
+   "ok": true,
+   "detail": "《23》是Hyukoh 2017年發行的專輯，收錄12首歌。站上整理了4個版本，發行地區包括韓國和日本，格式有CD和黑膠。目前有1人想要，炫收藏1則。"
+  },
+  {
+   "id": "有行情_開價-desc",
+   "name": "description 跟介紹句同源、不含價格、在 head",
+   "ok": true,
+   "detail": "《23》是Hyukoh 2017年發行的專輯，收錄12首歌。樂迷藏整理4個版本（韓國、日本；CD、黑膠）。1人想要、1則樂迷收藏、1件出售中。"
+  },
+  {
+   "id": "有行情_開價-ld",
+   "name": "結構化資料沒有 Product／Offer／價格",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有行情_開價-robots",
+   "name": "ALLOW_INDEXING=1：這頁可收錄（沒有 noindex）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "有行情_開價-market",
+   "name": "站上行情有顯示",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有行情_開價-nosnippet",
+   "name": "站上行情帶 data-nosnippet",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有行情_開價-rows",
+   "name": "版本比較表至少 2 列",
+   "ok": true,
+   "detail": "4"
+  },
+  {
+   "id": "有行情_開價-noid",
+   "name": "版本比較表沒有目錄號、條碼",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有行情_開價-390-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-18"
+  },
+  {
+   "id": "有行情_開價-390-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "有行情_開價-390-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有行情_開價-390-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "有行情_開價-390-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     196,
+     81.2,
+     60.2,
+     471.8,
+     53.2,
+     53.2,
+     81.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 354,
+     "scroll": 997
+    },
+    "pageOverflow": 0,
+    "newOverflow": -18,
+    "overflowFrom": [],
+    "introLines": 4,
+    "introGaps": [
+     12.3,
+     7.7,
+     13.7
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "有行情_開價-390-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [196, 81.2, 60.2, 471.8, 53.2, 53.2, 81.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 354, \"scroll\": 997}, \"pageOverflow\": 0, \"newOverflow\": -18, \"overflowFrom\": [], \"introLines\": 4, \"introGaps\": [12.3, 7.7, 13.7], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "有行情_開價-320-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-6.8"
+  },
+  {
+   "id": "有行情_開價-320-page-overflow",
+   "name": "整頁橫向溢出（記錄）",
+   "ok": true,
+   "detail": "41px，來源 ['block prose > P 《23》是Hyukoh 2017年發行的', ' > DD 2018', ' > DD 2018-10-10']"
+  },
+  {
+   "id": "有行情_開價-320-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "有行情_開價-320-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有行情_開價-320-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "有行情_開價-320-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     196,
+     81.2,
+     60.2,
+     471.8,
+     53.2,
+     53.2,
+     81.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 284,
+     "scroll": 997
+    },
+    "pageOverflow": 41,
+    "newOverflow": -6.8,
+    "overflowFrom": [
+     "block prose > P 《23》是Hyukoh 2017年發行的",
+     " > DD 2018",
+     " > DD 2018-10-10"
+    ],
+    "introLines": 4,
+    "introGaps": [
+     6.5,
+     1.4,
+     -11.2
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "有行情_開價-320-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [196, 81.2, 60.2, 471.8, 53.2, 53.2, 81.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 284, \"scroll\": 997}, \"pageOverflow\": 41, \"newOverflow\": -6.8, \"overflowFrom\": [\"block prose > P 《23》是Hyukoh 2017年發行的\", \" > DD 2018\", \" > DD 2018-10-10\"], \"introLines\": 4, \"introGaps\": [6.5, 1.4, -11.2], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "有行情_開價-1440-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-152"
+  },
+  {
+   "id": "有行情_開價-1440-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "有行情_開價-1440-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有行情_開價-1440-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "有行情_開價-1440-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     196,
+     81.2,
+     60.2,
+     471.8,
+     53.2,
+     53.2,
+     81.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 997,
+     "scroll": 997
+    },
+    "pageOverflow": 0,
+    "newOverflow": -152,
+    "overflowFrom": [],
+    "introLines": 1,
+    "introGaps": [],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "有行情_開價-1440-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [196, 81.2, 60.2, 471.8, 53.2, 53.2, 81.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 997, \"scroll\": 997}, \"pageOverflow\": 0, \"newOverflow\": -152, \"overflowFrom\": [], \"introLines\": 1, \"introGaps\": [], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "有行情_成交-intro",
+   "name": "介紹句存在、沒有破折號（專輯名本身除外）",
+   "ok": true,
+   "detail": "《My jinji》是落日飛車2016年發行的專輯。目前收錄的版本是日版。樂迷分享的炫收藏有1則。"
+  },
+  {
+   "id": "有行情_成交-desc",
+   "name": "description 跟介紹句同源、不含價格、在 head",
+   "ok": true,
+   "detail": "《My jinji》是落日飛車2016年發行的專輯。版本是日版。1則樂迷收藏。"
+  },
+  {
+   "id": "有行情_成交-ld",
+   "name": "結構化資料沒有 Product／Offer／價格",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有行情_成交-robots",
+   "name": "ALLOW_INDEXING=1：這頁可收錄（沒有 noindex）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "有行情_成交-market",
+   "name": "站上行情有顯示",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有行情_成交-nosnippet",
+   "name": "站上行情帶 data-nosnippet",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有行情_成交-noid",
+   "name": "版本比較表沒有目錄號、條碼",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有行情_成交-390-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-18"
+  },
+  {
+   "id": "有行情_成交-390-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "有行情_成交-390-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有行情_成交-390-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "有行情_成交-390-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 106,
+     "scroll": 106
+    },
+    "pageOverflow": 0,
+    "newOverflow": -18,
+    "overflowFrom": [],
+    "introLines": 2,
+    "introGaps": [
+     8.7
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "有行情_成交-390-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 106, \"scroll\": 106}, \"pageOverflow\": 0, \"newOverflow\": -18, \"overflowFrom\": [], \"introLines\": 2, \"introGaps\": [8.7], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "有行情_成交-320-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-18"
+  },
+  {
+   "id": "有行情_成交-320-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "有行情_成交-320-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有行情_成交-320-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "有行情_成交-320-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 106,
+     "scroll": 106
+    },
+    "pageOverflow": 0,
+    "newOverflow": -18,
+    "overflowFrom": [],
+    "introLines": 3,
+    "introGaps": [
+     2.7,
+     12
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "有行情_成交-320-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 106, \"scroll\": 106}, \"pageOverflow\": 0, \"newOverflow\": -18, \"overflowFrom\": [], \"introLines\": 3, \"introGaps\": [2.7, 12], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "有行情_成交-1440-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-152"
+  },
+  {
+   "id": "有行情_成交-1440-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "有行情_成交-1440-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有行情_成交-1440-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "有行情_成交-1440-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 106,
+     "scroll": 106
+    },
+    "pageOverflow": 0,
+    "newOverflow": -152,
+    "overflowFrom": [],
+    "introLines": 1,
+    "introGaps": [],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "有行情_成交-1440-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 106, \"scroll\": 106}, \"pageOverflow\": 0, \"newOverflow\": -152, \"overflowFrom\": [], \"introLines\": 1, \"introGaps\": [], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "沒行情-intro",
+   "name": "介紹句存在、沒有破折號（專輯名本身除外）",
+   "ok": true,
+   "detail": "《在哪裡》是魏如萱2011年的EP，收錄5首歌。目前收錄的版本是2011年台灣首版 CD，由AsiaMuse發行。"
+  },
+  {
+   "id": "沒行情-desc",
+   "name": "description 跟介紹句同源、不含價格、在 head",
+   "ok": true,
+   "detail": "《在哪裡》是魏如萱2011年的EP，收錄5首歌。版本是2011年台灣首版 CD，AsiaMuse發行。"
+  },
+  {
+   "id": "沒行情-ld",
+   "name": "結構化資料沒有 Product／Offer／價格",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒行情-robots",
+   "name": "ALLOW_INDEXING=1：這頁可收錄（沒有 noindex）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "沒行情-market",
+   "name": "站上行情沒有顯示",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒行情-noid",
+   "name": "版本比較表沒有目錄號、條碼",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒行情-390-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-18"
+  },
+  {
+   "id": "沒行情-390-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "沒行情-390-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒行情-390-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "沒行情-390-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     154,
+     81.2,
+     60.2,
+     98,
+     53.2,
+     53.2,
+     67.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 354,
+     "scroll": 567
+    },
+    "pageOverflow": 0,
+    "newOverflow": -18,
+    "overflowFrom": [],
+    "introLines": 3,
+    "introGaps": [
+     3.8,
+     69.4
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "沒行情-390-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [154, 81.2, 60.2, 98, 53.2, 53.2, 67.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 354, \"scroll\": 567}, \"pageOverflow\": 0, \"newOverflow\": -18, \"overflowFrom\": [], \"introLines\": 3, \"introGaps\": [3.8, 69.4], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "沒行情-320-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-18"
+  },
+  {
+   "id": "沒行情-320-page-overflow",
+   "name": "整頁橫向溢出（記錄）",
+   "ok": true,
+   "detail": "19px，來源 [' > DD 2011', ' > DD 2011-01-23', ' > DD AsiaMuse']"
+  },
+  {
+   "id": "沒行情-320-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "沒行情-320-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒行情-320-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "沒行情-320-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     154,
+     81.2,
+     60.2,
+     98,
+     53.2,
+     53.2,
+     67.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 284,
+     "scroll": 567
+    },
+    "pageOverflow": 19,
+    "newOverflow": -18,
+    "overflowFrom": [
+     " > DD 2011",
+     " > DD 2011-01-23",
+     " > DD AsiaMuse"
+    ],
+    "introLines": 3,
+    "introGaps": [
+     7.3,
+     1.6
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "沒行情-320-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [154, 81.2, 60.2, 98, 53.2, 53.2, 67.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 284, \"scroll\": 567}, \"pageOverflow\": 19, \"newOverflow\": -18, \"overflowFrom\": [\" > DD 2011\", \" > DD 2011-01-23\", \" > DD AsiaMuse\"], \"introLines\": 3, \"introGaps\": [7.3, 1.6], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "沒行情-1440-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-531.2"
+  },
+  {
+   "id": "沒行情-1440-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "沒行情-1440-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒行情-1440-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "沒行情-1440-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     154,
+     81.2,
+     60.2,
+     98,
+     53.2,
+     53.2,
+     67.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 567,
+     "scroll": 567
+    },
+    "pageOverflow": 0,
+    "newOverflow": -531.2,
+    "overflowFrom": [],
+    "introLines": 1,
+    "introGaps": [],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "沒行情-1440-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [154, 81.2, 60.2, 98, 53.2, 53.2, 67.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 567, \"scroll\": 567}, \"pageOverflow\": 0, \"newOverflow\": -531.2, \"overflowFrom\": [], \"introLines\": 1, \"introGaps\": [], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "單曲-intro",
+   "name": "介紹句存在、沒有破折號（專輯名本身除外）",
+   "ok": true,
+   "detail": "《だからって...》是林憶蓮1993年發行的單曲，裡面有3首歌。目前收錄的版本是1993年日本首版 CD，由Pioneer LDC發行。"
+  },
+  {
+   "id": "單曲-desc",
+   "name": "description 跟介紹句同源、不含價格、在 head",
+   "ok": true,
+   "detail": "《だからって...》是林憶蓮1993年發行的單曲，裡面有3首歌。版本是1993年日本首版 CD，Pioneer LDC發行。"
+  },
+  {
+   "id": "單曲-ld",
+   "name": "結構化資料沒有 Product／Offer／價格",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "單曲-robots",
+   "name": "ALLOW_INDEXING=1：這頁可收錄（沒有 noindex）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "單曲-market",
+   "name": "站上行情沒有顯示",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "單曲-kind",
+   "name": "介紹句寫出單曲",
+   "ok": true,
+   "detail": "《だからって...》是林憶蓮1993年發行的單曲，裡面有3首歌。目前收錄的版本是1993年日本首版 CD，由Pioneer LDC發行。"
+  },
+  {
+   "id": "單曲-noid",
+   "name": "版本比較表沒有目錄號、條碼",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "單曲-390-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-18"
+  },
+  {
+   "id": "單曲-390-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "單曲-390-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "單曲-390-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "單曲-390-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     154,
+     81.2,
+     60.2,
+     124.6,
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 354,
+     "scroll": 526
+    },
+    "pageOverflow": 0,
+    "newOverflow": -18,
+    "overflowFrom": [],
+    "introLines": 3,
+    "introGaps": [
+     15.9,
+     3.9
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "單曲-390-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [154, 81.2, 60.2, 124.6, 53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 354, \"scroll\": 526}, \"pageOverflow\": 0, \"newOverflow\": -18, \"overflowFrom\": [], \"introLines\": 3, \"introGaps\": [15.9, 3.9], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "單曲-320-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-18"
+  },
+  {
+   "id": "單曲-320-page-overflow",
+   "name": "整頁橫向溢出（記錄）",
+   "ok": true,
+   "detail": "5px，來源 [' > DD 1993', ' > DD 1993-10-27', ' > DD Pioneer LDC']"
+  },
+  {
+   "id": "單曲-320-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "單曲-320-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "單曲-320-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "單曲-320-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     154,
+     81.2,
+     60.2,
+     124.6,
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 284,
+     "scroll": 526
+    },
+    "pageOverflow": 5,
+    "newOverflow": -18,
+    "overflowFrom": [
+     " > DD 1993",
+     " > DD 1993-10-27",
+     " > DD Pioneer LDC"
+    ],
+    "introLines": 4,
+    "introGaps": [
+     9.9,
+     2.1,
+     34.2
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "單曲-320-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [154, 81.2, 60.2, 124.6, 53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 284, \"scroll\": 526}, \"pageOverflow\": 5, \"newOverflow\": -18, \"overflowFrom\": [\" > DD 1993\", \" > DD 1993-10-27\", \" > DD Pioneer LDC\"], \"introLines\": 4, \"introGaps\": [9.9, 2.1, 34.2], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "單曲-1440-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-397.5"
+  },
+  {
+   "id": "單曲-1440-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "單曲-1440-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "單曲-1440-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "單曲-1440-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     154,
+     81.2,
+     60.2,
+     124.6,
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 526,
+     "scroll": 526
+    },
+    "pageOverflow": 0,
+    "newOverflow": -397.5,
+    "overflowFrom": [],
+    "introLines": 1,
+    "introGaps": [],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "單曲-1440-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [154, 81.2, 60.2, 124.6, 53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 526, \"scroll\": 526}, \"pageOverflow\": 0, \"newOverflow\": -397.5, \"overflowFrom\": [], \"introLines\": 1, \"introGaps\": [], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "EP-intro",
+   "name": "介紹句存在、沒有破折號（專輯名本身除外）",
+   "ok": true,
+   "detail": "國蛋的EP《GDN Express》在2014年10月發行，全張5首歌。站上整理了2個版本，都是台灣發行，從2014年一路出到2024年。"
+  },
+  {
+   "id": "EP-desc",
+   "name": "description 跟介紹句同源、不含價格、在 head",
+   "ok": true,
+   "detail": "國蛋的EP《GDN Express》在2014年10月發行，全張5首歌。樂迷藏整理2個版本（台灣）。其他周邊・2014・顏社企業有限公司：USB隨身碟形式(M/Stick)發行的EP 黑膠・2024・顏…"
+  },
+  {
+   "id": "EP-ld",
+   "name": "結構化資料沒有 Product／Offer／價格",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "EP-robots",
+   "name": "ALLOW_INDEXING=1：這頁可收錄（沒有 noindex）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "EP-market",
+   "name": "站上行情沒有顯示",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "EP-kind",
+   "name": "介紹句寫出EP",
+   "ok": true,
+   "detail": "國蛋的EP《GDN Express》在2014年10月發行，全張5首歌。站上整理了2個版本，都是台灣發行，從2014年一路出到2024年。"
+  },
+  {
+   "id": "EP-noid",
+   "name": "版本比較表沒有目錄號、條碼",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "EP-390-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-16.7"
+  },
+  {
+   "id": "EP-390-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "EP-390-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "EP-390-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "EP-390-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     117.6,
+     81.2,
+     60.2,
+     137.2,
+     81.2,
+     53.2,
+     103.6
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 354,
+     "scroll": 634
+    },
+    "pageOverflow": 0,
+    "newOverflow": -16.7,
+    "overflowFrom": [
+     "block prose > P 國蛋的EP《GDN Express》在2",
+     "block prose > P 資料來源：https://www.dis"
+    ],
+    "introLines": 3,
+    "introGaps": [
+     4.7,
+     -1.3
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "EP-390-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [117.6, 81.2, 60.2, 137.2, 81.2, 53.2, 103.6], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 354, \"scroll\": 634}, \"pageOverflow\": 0, \"newOverflow\": -16.7, \"overflowFrom\": [\"block prose > P 國蛋的EP《GDN Express》在2\", \"block prose > P 資料來源：https://www.dis\"], \"introLines\": 3, \"introGaps\": [4.7, -1.3], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "EP-320-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-18"
+  },
+  {
+   "id": "EP-320-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "EP-320-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "EP-320-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "EP-320-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     117.6,
+     81.2,
+     60.2,
+     137.2,
+     81.2,
+     53.2,
+     103.6
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 284,
+     "scroll": 634
+    },
+    "pageOverflow": 0,
+    "newOverflow": -18,
+    "overflowFrom": [
+     " > DD 2024",
+     " > DD 2014",
+     " > DD 2014-10-10"
+    ],
+    "introLines": 4,
+    "introGaps": [
+     15.3,
+     8.1,
+     7.3
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "EP-320-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [117.6, 81.2, 60.2, 137.2, 81.2, 53.2, 103.6], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 284, \"scroll\": 634}, \"pageOverflow\": 0, \"newOverflow\": -18, \"overflowFrom\": [\" > DD 2024\", \" > DD 2014\", \" > DD 2014-10-10\"], \"introLines\": 4, \"introGaps\": [15.3, 8.1, 7.3], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "EP-1440-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-379.1"
+  },
+  {
+   "id": "EP-1440-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "EP-1440-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "EP-1440-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "EP-1440-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     117.6,
+     81.2,
+     60.2,
+     137.2,
+     81.2,
+     53.2,
+     103.6
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 634,
+     "scroll": 634
+    },
+    "pageOverflow": 0,
+    "newOverflow": -379.1,
+    "overflowFrom": [],
+    "introLines": 1,
+    "introGaps": [],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "EP-1440-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [117.6, 81.2, 60.2, 137.2, 81.2, 53.2, 103.6], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 634, \"scroll\": 634}, \"pageOverflow\": 0, \"newOverflow\": -379.1, \"overflowFrom\": [], \"introLines\": 1, \"introGaps\": [], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "沒發行日-intro",
+   "name": "介紹句存在、沒有破折號（專輯名本身除外）",
+   "ok": true,
+   "detail": "張惠妹的專輯《你和我的时光》，目前查不到發行年份，收錄3首歌。站上目前只有一個版本，CD。"
+  },
+  {
+   "id": "沒發行日-desc",
+   "name": "description 跟介紹句同源、不含價格、在 head",
+   "ok": true,
+   "detail": "張惠妹的專輯《你和我的时光》，目前查不到發行年份，收錄3首歌。版本是CD。"
+  },
+  {
+   "id": "沒發行日-ld",
+   "name": "結構化資料沒有 Product／Offer／價格",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒發行日-robots",
+   "name": "ALLOW_INDEXING=1：這頁可收錄（沒有 noindex）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "沒發行日-market",
+   "name": "站上行情沒有顯示",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒發行日-noyear",
+   "name": "沒有發行日的寫法",
+   "ok": true,
+   "detail": "張惠妹的專輯《你和我的时光》，目前查不到發行年份，收錄3首歌。站上目前只有一個版本，CD。"
+  },
+  {
+   "id": "沒發行日-noid",
+   "name": "版本比較表沒有目錄號、條碼",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒發行日-390-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-18.9"
+  },
+  {
+   "id": "沒發行日-390-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "沒發行日-390-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒發行日-390-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "沒發行日-390-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     53.2,
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 160,
+     "scroll": 160
+    },
+    "pageOverflow": 0,
+    "newOverflow": -18.9,
+    "overflowFrom": [],
+    "introLines": 2,
+    "introGaps": [
+     2
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "沒發行日-390-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [53.2, 53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 160, \"scroll\": 160}, \"pageOverflow\": 0, \"newOverflow\": -18.9, \"overflowFrom\": [], \"introLines\": 2, \"introGaps\": [2], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "沒發行日-320-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-20.1"
+  },
+  {
+   "id": "沒發行日-320-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "沒發行日-320-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒發行日-320-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "沒發行日-320-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     53.2,
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 160,
+     "scroll": 160
+    },
+    "pageOverflow": 0,
+    "newOverflow": -20.1,
+    "overflowFrom": [],
+    "introLines": 3,
+    "introGaps": [
+     12,
+     2.1
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "沒發行日-320-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [53.2, 53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 160, \"scroll\": 160}, \"pageOverflow\": 0, \"newOverflow\": -20.1, \"overflowFrom\": [], \"introLines\": 3, \"introGaps\": [12, 2.1], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "沒發行日-1440-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-582.9"
+  },
+  {
+   "id": "沒發行日-1440-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "沒發行日-1440-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒發行日-1440-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "沒發行日-1440-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     53.2,
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 160,
+     "scroll": 160
+    },
+    "pageOverflow": 0,
+    "newOverflow": -582.9,
+    "overflowFrom": [],
+    "introLines": 1,
+    "introGaps": [],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "沒發行日-1440-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [53.2, 53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 160, \"scroll\": 160}, \"pageOverflow\": 0, \"newOverflow\": -582.9, \"overflowFrom\": [], \"introLines\": 1, \"introGaps\": [], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "有收藏-intro",
+   "name": "介紹句存在、沒有破折號（專輯名本身除外）",
+   "ok": true,
+   "detail": "《男孩》是路壹 Lu1在2015年5月推出的專輯，收錄16首歌。站上目前只有一個版本，2015年台灣首版 CD，由顏社發行。樂迷藏裡有2人登記擁有、1人想要，炫收藏1則。"
+  },
+  {
+   "id": "有收藏-desc",
+   "name": "description 跟介紹句同源、不含價格、在 head",
+   "ok": true,
+   "detail": "《男孩》是路壹 Lu1在2015年5月推出的專輯，收錄16首歌。版本是2015年台灣首版 CD，顏社發行。2人登記擁有、1人想要、1則樂迷收藏、1件出售中。"
+  },
+  {
+   "id": "有收藏-ld",
+   "name": "結構化資料沒有 Product／Offer／價格",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有收藏-robots",
+   "name": "ALLOW_INDEXING=1：這頁可收錄（沒有 noindex）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "有收藏-market",
+   "name": "站上行情有顯示",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有收藏-nosnippet",
+   "name": "站上行情帶 data-nosnippet",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有收藏-people",
+   "name": "收藏與想要人數有寫進介紹句",
+   "ok": true,
+   "detail": "《男孩》是路壹 Lu1在2015年5月推出的專輯，收錄16首歌。站上目前只有一個版本，2015年台灣首版 CD，由顏社發行。樂迷藏裡有2人登記擁有、1人想要，炫收藏1則。"
+  },
+  {
+   "id": "有收藏-noid",
+   "name": "版本比較表沒有目錄號、條碼",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有收藏-390-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-14.5"
+  },
+  {
+   "id": "有收藏-390-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "有收藏-390-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有收藏-390-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "有收藏-390-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     154,
+     81.2,
+     60.2,
+     81.2,
+     53.2,
+     53.2,
+     137.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 354,
+     "scroll": 620
+    },
+    "pageOverflow": 0,
+    "newOverflow": -14.5,
+    "overflowFrom": [
+     "block prose > P 《男孩》是路壹 Lu1在2015年5月推"
+    ],
+    "introLines": 4,
+    "introGaps": [
+     7.1,
+     13.7,
+     -3.5
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "有收藏-390-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [154, 81.2, 60.2, 81.2, 53.2, 53.2, 137.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 354, \"scroll\": 620}, \"pageOverflow\": 0, \"newOverflow\": -14.5, \"overflowFrom\": [\"block prose > P 《男孩》是路壹 Lu1在2015年5月推\"], \"introLines\": 4, \"introGaps\": [7.1, 13.7, -3.5], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "有收藏-320-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-13.7"
+  },
+  {
+   "id": "有收藏-320-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "有收藏-320-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有收藏-320-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "有收藏-320-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     154,
+     81.2,
+     60.2,
+     81.2,
+     53.2,
+     53.2,
+     137.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 284,
+     "scroll": 620
+    },
+    "pageOverflow": 0,
+    "newOverflow": -13.7,
+    "overflowFrom": [
+     "block prose > P 《男孩》是路壹 Lu1在2015年5月推",
+     " > DD 2015",
+     " > DD 2015-05-30"
+    ],
+    "introLines": 5,
+    "introGaps": [
+     1.1,
+     11.6,
+     12.4,
+     -4.3
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "有收藏-320-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [154, 81.2, 60.2, 81.2, 53.2, 53.2, 137.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 284, \"scroll\": 620}, \"pageOverflow\": 0, \"newOverflow\": -13.7, \"overflowFrom\": [\"block prose > P 《男孩》是路壹 Lu1在2015年5月推\", \" > DD 2015\", \" > DD 2015-05-30\"], \"introLines\": 5, \"introGaps\": [1.1, 11.6, 12.4, -4.3], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "有收藏-1440-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-152"
+  },
+  {
+   "id": "有收藏-1440-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "有收藏-1440-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "有收藏-1440-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "有收藏-1440-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     154,
+     81.2,
+     60.2,
+     81.2,
+     53.2,
+     53.2,
+     137.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 620,
+     "scroll": 620
+    },
+    "pageOverflow": 0,
+    "newOverflow": -152,
+    "overflowFrom": [],
+    "introLines": 2,
+    "introGaps": [
+     4.9
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "有收藏-1440-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [154, 81.2, 60.2, 81.2, 53.2, 53.2, 137.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 620, \"scroll\": 620}, \"pageOverflow\": 0, \"newOverflow\": -152, \"overflowFrom\": [], \"introLines\": 2, \"introGaps\": [4.9], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "沒收藏-intro",
+   "name": "介紹句存在、沒有破折號（專輯名本身除外）",
+   "ok": true,
+   "detail": "陳珊妮在1996年推出專輯《四季末的唱遊》，一共10首。站上目前只有一個版本，1996年台灣首版 CD。"
+  },
+  {
+   "id": "沒收藏-desc",
+   "name": "description 跟介紹句同源、不含價格、在 head",
+   "ok": true,
+   "detail": "陳珊妮在1996年推出專輯《四季末的唱遊》，一共10首。版本是1996年台灣首版 CD。"
+  },
+  {
+   "id": "沒收藏-ld",
+   "name": "結構化資料沒有 Product／Offer／價格",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒收藏-robots",
+   "name": "ALLOW_INDEXING=1：這頁可收錄（沒有 noindex）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "沒收藏-market",
+   "name": "站上行情沒有顯示",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒收藏-people",
+   "name": "收藏與想要人數沒有寫進介紹句",
+   "ok": true,
+   "detail": "陳珊妮在1996年推出專輯《四季末的唱遊》，一共10首。站上目前只有一個版本，1996年台灣首版 CD。"
+  },
+  {
+   "id": "沒收藏-noid",
+   "name": "版本比較表沒有目錄號、條碼",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒收藏-390-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-18"
+  },
+  {
+   "id": "沒收藏-390-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "沒收藏-390-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒收藏-390-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "沒收藏-390-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     154,
+     81.2,
+     60.2,
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 354,
+     "scroll": 402
+    },
+    "pageOverflow": 0,
+    "newOverflow": -18,
+    "overflowFrom": [],
+    "introLines": 3,
+    "introGaps": [
+     13.7,
+     13.1
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "沒收藏-390-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [154, 81.2, 60.2, 53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 354, \"scroll\": 402}, \"pageOverflow\": 0, \"newOverflow\": -18, \"overflowFrom\": [], \"introLines\": 3, \"introGaps\": [13.7, 13.1], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "沒收藏-320-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-18"
+  },
+  {
+   "id": "沒收藏-320-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "沒收藏-320-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒收藏-320-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "沒收藏-320-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     154,
+     81.2,
+     60.2,
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 284,
+     "scroll": 402
+    },
+    "pageOverflow": 0,
+    "newOverflow": -18,
+    "overflowFrom": [
+     " > DD 1996",
+     " > DD 1996-10"
+    ],
+    "introLines": 3,
+    "introGaps": [
+     7.7,
+     11.4
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "沒收藏-320-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [154, 81.2, 60.2, 53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 284, \"scroll\": 402}, \"pageOverflow\": 0, \"newOverflow\": -18, \"overflowFrom\": [\" > DD 1996\", \" > DD 1996-10\"], \"introLines\": 3, \"introGaps\": [7.7, 11.4], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "沒收藏-1440-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-547.1"
+  },
+  {
+   "id": "沒收藏-1440-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "沒收藏-1440-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "沒收藏-1440-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "沒收藏-1440-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     154,
+     81.2,
+     60.2,
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 402,
+     "scroll": 402
+    },
+    "pageOverflow": 0,
+    "newOverflow": -547.1,
+    "overflowFrom": [],
+    "introLines": 1,
+    "introGaps": [],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "沒收藏-1440-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [154, 81.2, 60.2, 53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 402, \"scroll\": 402}, \"pageOverflow\": 0, \"newOverflow\": -547.1, \"overflowFrom\": [], \"introLines\": 1, \"introGaps\": [], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "只有曲目-intro",
+   "name": "介紹句存在、沒有破折號（專輯名本身除外）",
+   "ok": true,
+   "detail": "《就是喜歡你》是張震嶽1993年發行的專輯，一共12首。站上目前只有一個版本，1998年台灣再版 CD（中價版），由魔岩唱片發行。"
+  },
+  {
+   "id": "只有曲目-desc",
+   "name": "description 跟介紹句同源、不含價格、在 head",
+   "ok": true,
+   "detail": "《就是喜歡你》是張震嶽1993年發行的專輯，一共12首。版本是1998年台灣再版 CD（中價版），魔岩唱片發行。"
+  },
+  {
+   "id": "只有曲目-ld",
+   "name": "結構化資料沒有 Product／Offer／價格",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "只有曲目-robots",
+   "name": "ALLOW_INDEXING=1：這頁可收錄（沒有 noindex）",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "只有曲目-market",
+   "name": "站上行情沒有顯示",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "只有曲目-people",
+   "name": "收藏與想要人數沒有寫進介紹句",
+   "ok": true,
+   "detail": "《就是喜歡你》是張震嶽1993年發行的專輯，一共12首。站上目前只有一個版本，1998年台灣再版 CD（中價版），由魔岩唱片發行。"
+  },
+  {
+   "id": "只有曲目-noid",
+   "name": "版本比較表沒有目錄號、條碼",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "只有曲目-390-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-18"
+  },
+  {
+   "id": "只有曲目-390-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "只有曲目-390-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "只有曲目-390-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "只有曲目-390-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     224,
+     81.2,
+     60.2,
+     81.2,
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 354,
+     "scroll": 553
+    },
+    "pageOverflow": 0,
+    "newOverflow": -18,
+    "overflowFrom": [],
+    "introLines": 3,
+    "introGaps": [
+     13.8,
+     13.5
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "只有曲目-390-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [224, 81.2, 60.2, 81.2, 53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 354, \"scroll\": 553}, \"pageOverflow\": 0, \"newOverflow\": -18, \"overflowFrom\": [], \"introLines\": 3, \"introGaps\": [13.8, 13.5], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "只有曲目-320-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-18"
+  },
+  {
+   "id": "只有曲目-320-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "只有曲目-320-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "只有曲目-320-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "只有曲目-320-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     224,
+     81.2,
+     60.2,
+     81.2,
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 284,
+     "scroll": 553
+    },
+    "pageOverflow": 0,
+    "newOverflow": -18,
+    "overflowFrom": [
+     " > DD 1998",
+     " > DD 1998-05"
+    ],
+    "introLines": 4,
+    "introGaps": [
+     7.8,
+     11.7,
+     12
+    ],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "只有曲目-320-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [224, 81.2, 60.2, 81.2, 53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 284, \"scroll\": 553}, \"pageOverflow\": 0, \"newOverflow\": -18, \"overflowFrom\": [\" > DD 1998\", \" > DD 1998-05\"], \"introLines\": 4, \"introGaps\": [7.8, 11.7, 12], \"introWrap\": \"wrap\"}"
+  },
+  {
+   "id": "只有曲目-1440-overflow",
+   "name": "新加的三區沒有超出畫面",
+   "ok": true,
+   "detail": "-339.5"
+  },
+  {
+   "id": "只有曲目-1440-rowh",
+   "name": "版本比較表列高一致",
+   "ok": true,
+   "detail": "[42]"
+  },
+  {
+   "id": "只有曲目-1440-cut",
+   "name": "版本比較表沒有截斷",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "只有曲目-1440-fixed",
+   "name": "table-layout: fixed",
+   "ok": true,
+   "detail": "fixed"
+  },
+  {
+   "id": "只有曲目-1440-console",
+   "name": "console error 0",
+   "ok": true,
+   "detail": "",
+   "measure": {
+    "rowHeights": [
+     42
+    ],
+    "headH": 40,
+    "colWidths": [
+     224,
+     81.2,
+     60.2,
+     81.2,
+     53.2,
+     53.2
+    ],
+    "layout": "fixed",
+    "cut": [],
+    "scroll": {
+     "client": 553,
+     "scroll": 553
+    },
+    "pageOverflow": 0,
+    "newOverflow": -339.5,
+    "overflowFrom": [],
+    "introLines": 1,
+    "introGaps": [],
+    "introWrap": "wrap"
+   }
+  },
+  {
+   "id": "只有曲目-1440-measure",
+   "name": "量測",
+   "ok": true,
+   "detail": "{\"rowHeights\": [42], \"headH\": 40, \"colWidths\": [224, 81.2, 60.2, 81.2, 53.2, 53.2], \"layout\": \"fixed\", \"cut\": [], \"scroll\": {\"client\": 553, \"scroll\": 553}, \"pageOverflow\": 0, \"newOverflow\": -339.5, \"overflowFrom\": [], \"introLines\": 1, \"introGaps\": [], \"introWrap\": \"wrap\"}"
+  }
+ ]
+}
