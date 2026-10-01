@@ -738,8 +738,6 @@ a.pg:hover { border-color: var(--line); }
   .foot-row { flex-direction: column; align-items: flex-start; gap: 8px; justify-content: center; padding-block: 16px; }
   /* 直排時子項目會縮成內容寬，聲明文字提早換行；撐滿整列並左右對齊 */
   .foot-note { align-self: stretch; width: 100%; text-align: justify; text-justify: inter-character; }
-  /* 頁尾連結一行一條，擠成一列時「新手指南」這類會被拆成兩行 */
-  .foot-links { flex-direction: column; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1171,6 +1169,12 @@ a.title-chip:hover { background: var(--line); }
 .foot-links { display: flex; gap: 16px; }
 .foot-row .foot-links a { color: var(--muted); font-weight: 400; text-decoration-color: var(--line); }
 .foot-row .foot-links a:hover { color: var(--text); }
+/* 手機：頁尾連結橫排、放不下才換行（2026-10-01，原本一行一條太佔高度）。要放在上面 .foot-links 的 gap 之後才蓋得過。
+   每條不拆字（nowrap，避免「新手指南」被拆兩行），點擊高度 40px */
+@media (max-width: 700px) {
+  .foot-links { column-gap: 20px; flex-wrap: wrap; row-gap: 0; }
+  .foot-row .foot-links a { align-items: center; display: inline-flex; min-height: 40px; white-space: nowrap; }
+}
 @media (max-width: 640px) {
   /* 手機：隱私權政策的表改成一筆一段，不用橫捲 */
   .legal-tbl { min-width: 0; }
@@ -1709,11 +1713,14 @@ p.fill-row { display: flex; }
 
 /* 頁尾版權與照片授權（2026-09-30）：標章 88×31 官方圖檔，文字手機可換行 */
 .foot-cc { align-items: center; border-top: 1px solid var(--line); color: var(--muted); display: flex; font-size: var(--text-xs); gap: 12px; line-height: 1.6; padding-block: 14px; }
-.foot-cc p { flex: 1; margin: 0; min-width: 0; overflow-wrap: anywhere; }
+/* text-wrap 改回 wrap：全站 p 的 pretty 在 WebKit（iPhone Safari）會把每行都縮短求平均，右邊留 50px 以上空白（2026-10-01） */
+.foot-cc p { flex: 1; margin: 0; min-width: 0; overflow-wrap: anywhere; text-wrap: wrap; }
 .foot-cc-badge { display: block; flex: none; line-height: 0; }
 .foot-cc-badge img { display: block; height: 31px; width: 88px; }
 @media (max-width: 700px) {
   .foot-cc { align-items: flex-start; flex-direction: column; gap: 8px; }
+  /* 撐滿整列。不左右對齊：WebKit 不支援 text-justify: inter-character，只會撐大半形空格（「©   2026   樂迷藏」），比靠左難看 */
+  .foot-cc p { align-self: stretch; }
 }
 .prose .about-lede { border-bottom: 1px solid var(--line); margin-bottom: 1.4em; padding-bottom: 1.2em; }
 
