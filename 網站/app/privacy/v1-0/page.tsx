@@ -2,13 +2,13 @@ import Link from "@/components/link";
 import { feedbackHref } from "@/lib/feedback";
 import { LegalPage } from "@/components/legal";
 import { SITE_NAME } from "@/lib/data";
-import { CONTACT_EMAIL, DELETION_DAYS, OPERATOR_TEXT, TAKEDOWN_PATH, TERMS_EFFECTIVE, TERMS_VERSION } from "@/lib/legal";
+import { CONTACT_EMAIL, DELETION_DAYS, OPERATOR_TEXT, TAKEDOWN_PATH } from "@/lib/legal";
 
 // 2026-10-01 法務修正：照 產出/20261001_上線前法務審閱/README.md 第八節 D6 補齊個資法第 8 條應告知事項。
 // 另外補私訊檢舉、封鎖名單、條款同意紀錄、權利侵害通知四類資料（D6 沒有，依網站實際蒐集的資料補，待律師確認）。
-// 2026-10-01 1.1 版：補 Google Analytics（資料表一列、交給誰處理一項、Cookie 一段）。1.0 版全文在 app/privacy/v1-0/。
 // 「管理員看得到什麼」照網站實際做法：私訊檢舉時管理員也看不到訊息內容（D6 草稿寫會看到被檢舉的那段，跟現況不符）。
-export const metadata = { title: "隱私權政策" };
+// 隱私權政策 1.0 版全文（2026-10-01 生效、2026-10-01 由 1.1 取代）。只留作查閱，內容不要再改
+export const metadata = { title: "隱私權政策 1.0（舊版）", robots: { index: false } };
 
 const ROWS: [string, string, string, string][] = [
   ["Email、密碼", "註冊時", "登入、寄驗證碼與重設密碼的信。密碼只存雜湊值，網站也看不到原文", "帳號存在期間；刪除帳號時刪除"],
@@ -22,15 +22,14 @@ const ROWS: [string, string, string, string][] = [
   ["你發表的內容", "你使用網站時", "炫收藏與照片、留言、編輯紀錄、出價、成交、私訊、檢舉與申訴，照各功能的用途使用", "帳號存在期間；刪除帳號時的處理見下方"],
   ["私訊檢舉（檢舉人、被檢舉人、理由與補充說明）", "你檢舉一段對話時", "管理員處理騷擾、詐騙；不含訊息內容", "帳號存在期間；刪除帳號後保留 3 年，期滿刪除"],
   ["封鎖名單（你封鎖了誰）", "你封鎖其他會員時", "讓對方不能再傳訊息給你、不能對你的收藏出價。管理後台不列出", "解除封鎖前；刪除帳號時刪除"],
-  ["使用情形統計（Google Analytics）：看了哪些頁面、從哪個網站或搜尋進來、裝置與瀏覽器類型、大略地區（Google 依 IP 位址推估）、註冊、登入、發布、私訊、加入願望清單、出價等操作的次數", "開網頁時，由 Google Analytics 的程式蒐集（只在 lemibox.com）", "了解哪些頁面與功能有人用、從哪裡來，用來改善網站。不含 Email、暱稱、訊息內容，網址裡的驗證碼類參數會先拿掉", "依 Google Analytics 的資料保留設定（目前是預設的 2 個月），期滿由 Google 刪除；統計報表只有總數，不對應到個人"],
   ["權利侵害通知與回復通知（姓名、Email、電話、地址、通知內容）", "你送出權利侵害通知，或會員送出回復通知時", "依著作權法處理侵權通知。通知內容（不含通知人的聯絡方式）會轉給被通知的會員，回復通知會轉給通知人", "處理完成後 3 年，期滿刪除"],
 ];
 
-export default function PrivacyPage() {
+export default function PrivacyV10Page() {
   return (
-    <LegalPage title="隱私權政策" other={{ href: "/terms", label: "使用條款" }}>
+    <LegalPage title="隱私權政策（1.0 版）" other={{ href: "/privacy", label: "現行隱私權政策" }} version="1.0" effective="2026-10-01">
       <p>
-        {SITE_NAME}（lemibox.com）由{OPERATOR_TEXT}經營（以下稱「我們」），聯絡信箱 <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>。這份政策說明我們依個人資料保護法蒐集、處理與利用你的個人資料的方式。版本 {TERMS_VERSION}，{TERMS_EFFECTIVE} 生效。
+        {SITE_NAME}（lemibox.com）由{OPERATOR_TEXT}經營（以下稱「我們」），聯絡信箱 <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>。這份政策說明我們依個人資料保護法蒐集、處理與利用你的個人資料的方式。版本 1.0，2026-10-01 生效。
       </p>
       <p>註冊與使用時會蒐集下表這些資料，用途只限表上寫的，不販售、不出租、不拿去做廣告投放。</p>
 
@@ -65,7 +64,7 @@ export default function PrivacyPage() {
 
       <h2>哪些資訊是公開的</h2>
       <ul>
-        <li>帳號名、暱稱、大頭貼、自我介紹、社群連結、最喜歡的藝人、等級，以及你的炫收藏、我有與願望清單裡的專輯版本（按愛心的收藏不公開）、留言、出價紀錄、資料貢獻紀錄</li>
+        <li>帳號名、暱稱、大頭貼、自我介紹、社群連結、最喜歡的藝人、等級，以及你的炫收藏、我有與想要的清單、留言、出價紀錄、資料貢獻紀錄</li>
         <li>
           <b>所在地區</b>：個人頁、出價列表、私訊對象都看得到，只顯示到國家（例如「台灣」）。判定方式是最近 30 天你開網站最多天的國家；30
           天內沒有紀錄就用最近一次登入的國家，再沒有就用註冊時的國家。目前沒有隱藏這項的選項
@@ -90,25 +89,12 @@ export default function PrivacyPage() {
         <li>Resend（美國）：寄送驗證碼與重設密碼的信，會拿到你的 Email 與信件內容</li>
         <li>Google Fonts（美國）：網頁字型，瀏覽器載入字型時 Google 會收到你的 IP 位址</li>
         <li>Spotify（瑞典公司）：首頁的歌曲播放器是 Spotify 的嵌入播放器，開首頁時瀏覽器會連到 Spotify，Spotify 會收到你的 IP 位址，也可能設定它自己的 Cookie</li>
-        <li>
-          Google Analytics（美國 Google LLC）：統計網站的使用情形（見上表）。開網頁時 Google 會收到你的 IP 位址、瀏覽器與裝置資訊，並設定 Google Analytics 的 Cookie。我們不把 Email、暱稱、訊息內容交給 Google，也關閉了 Google 信號與廣告個人化，Google 不會把這些資料用在廣告上。Google 怎麼處理這些資料，見
-          <a href="https://policies.google.com/technologies/partner-sites?hl=zh-TW" target="_blank" rel="noopener noreferrer">
-            Google 的說明
-          </a>
-        </li>
       </ul>
       <p>除了上面這些服務，以及司法、警察或其他主管機關依法要求提供的情況，我們不會把個人資料交給其他人。</p>
       <p>利用地區：台灣，以及上列服務供應商處理資料的所在地。</p>
 
       <h2>Cookie</h2>
-      <p>網站自己只用一個登入用的 Cookie（記住你已登入，最長 30 天），沒有廣告用的 Cookie。Cloudflare 為了擋機器人與攻擊，可能另外設定它自己的安全用 Cookie；首頁的 Spotify 播放器也可能設定 Spotify 自己的 Cookie。</p>
-      <p>
-        另外用 Google Analytics 統計使用情形，會設定 Google Analytics 的 Cookie（名稱以 _ga 開頭，最長保存 2 年），用來分辨是不是同一個瀏覽器再次造訪，不含你的 Email 或暱稱。不想被統計，可以在瀏覽器設定裡封鎖或刪除 Cookie，或安裝 Google 提供的
-        <a href="https://tools.google.com/dlpage/gaoptout?hl=zh-TW" target="_blank" rel="noopener noreferrer">
-          Google Analytics 停用外掛
-        </a>
-        ；不影響網站其他功能。
-      </p>
+      <p>網站自己只用一個登入用的 Cookie（記住你已登入，最長 30 天），沒有廣告或追蹤用的 Cookie。Cloudflare 為了擋機器人與攻擊，可能另外設定它自己的安全用 Cookie；首頁的 Spotify 播放器也可能設定 Spotify 自己的 Cookie。</p>
 
       <h2>你的權利與申請方式</h2>
       <p>你可以查詢、閱覽、要求複製、補充或更正自己的個人資料，也可以要求停止蒐集、處理、利用或刪除。</p>

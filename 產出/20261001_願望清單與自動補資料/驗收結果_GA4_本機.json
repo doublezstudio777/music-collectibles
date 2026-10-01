@@ -1,0 +1,163 @@
+{
+ "結果": [
+  {
+   "項目": "本機網址不載入 GA",
+   "通過": true,
+   "說明": "[]"
+  },
+  {
+   "項目": "有送 page_view",
+   "通過": true,
+   "說明": "5"
+  },
+  {
+   "項目": "網址裡的 token、email 參數拿掉、其他參數留著",
+   "通過": true,
+   "說明": "https://lemibox.com/search?q=cheer"
+  },
+  {
+   "項目": "個人頁標題換成通用字",
+   "通過": true,
+   "說明": "會員個人頁"
+  },
+  {
+   "項目": "wishlist_add 版本／收藏各一次",
+   "通過": true,
+   "說明": "['版本', '收藏']"
+  },
+  {
+   "項目": "所有事件的標題都沒有暱稱（含 GA 自動事件）",
+   "通過": true,
+   "說明": ""
+  },
+  {
+   "項目": "沒有送出 Email、暱稱",
+   "通過": true,
+   "說明": ""
+  }
+ ],
+ "送出的事件": [
+  [
+   "page_view",
+   {
+    "dl": "https://lemibox.com/search?q=cheer",
+    "dp": "/search?q=cheer",
+    "dt": "搜尋：cheer｜樂迷藏"
+   }
+  ],
+  [
+   "user_engagement",
+   {
+    "dl": "https://lemibox.com/search?q=cheer",
+    "dt": "搜尋：cheer｜樂迷藏",
+    "dp": "/search?q=cheer"
+   }
+  ],
+  [
+   "user_engagement",
+   {
+    "dl": "https://lemibox.com/search?q=cheer",
+    "dt": "搜尋：cheer｜樂迷藏",
+    "dp": "/search?q=cheer"
+   }
+  ],
+  [
+   "page_view",
+   {
+    "dl": "https://lemibox.com/u/lmbwishtest",
+    "dp": "/u/lmbwishtest",
+    "dt": "會員個人頁"
+   }
+  ],
+  [
+   "user_engagement",
+   {
+    "dl": "https://lemibox.com/u/lmbwishtest",
+    "dp": "/u/lmbwishtest",
+    "dt": "會員個人頁"
+   }
+  ],
+  [
+   "page_view",
+   {
+    "dl": "https://lemibox.com/u/lmbwishtest",
+    "dp": "/u/lmbwishtest",
+    "dt": "會員個人頁"
+   }
+  ],
+  [
+   "user_engagement",
+   {
+    "dl": "https://lemibox.com/u/lmbwishtest",
+    "dp": "/u/lmbwishtest",
+    "dt": "會員個人頁"
+   }
+  ],
+  [
+   "page_view",
+   {
+    "dl": "https://lemibox.com/artist/chen-qi-zhen/8",
+    "dp": "/artist/chen-qi-zhen/8",
+    "dt": "陳綺貞《Cheer》2005 專輯｜曲目、版本與收藏｜樂迷藏"
+   }
+  ],
+  [
+   "wishlist_add",
+   {
+    "dl": "https://lemibox.com/artist/chen-qi-zhen/8",
+    "dp": "/artist/chen-qi-zhen/8",
+    "dt": "陳綺貞《Cheer》2005 專輯｜曲目、版本與收藏｜樂迷藏",
+    "ep.type": "版本"
+   }
+  ],
+  [
+   "user_engagement",
+   {
+    "dl": "https://lemibox.com/artist/chen-qi-zhen/8",
+    "dt": "陳綺貞《Cheer》2005 專輯｜曲目、版本與收藏｜樂迷藏",
+    "dp": "/artist/chen-qi-zhen/8"
+   }
+  ],
+  [
+   "user_engagement",
+   {
+    "dl": "https://lemibox.com/artist/chen-qi-zhen/8",
+    "dt": "陳綺貞《Cheer》2005 專輯｜曲目、版本與收藏｜樂迷藏",
+    "dp": "/artist/chen-qi-zhen/8"
+   }
+  ],
+  [
+   "page_view",
+   {
+    "dl": "https://lemibox.com/share/8",
+    "dp": "/share/8",
+    "dt": "理想混蛋《關掉／打開》2022 台灣首版 CD｜民生鄰居的收藏｜樂迷藏"
+   }
+  ],
+  [
+   "wishlist_add",
+   {
+    "dl": "https://lemibox.com/share/8",
+    "dp": "/share/8",
+    "dt": "理想混蛋《關掉／打開》2022 台灣首版 CD｜民生鄰居的收藏｜樂迷藏",
+    "ep.type": "收藏"
+   }
+  ],
+  [
+   "user_engagement",
+   {
+    "dl": "https://lemibox.com/share/8",
+    "dt": "理想混蛋《關掉／打開》2022 台灣首版 CD｜民生鄰居的收藏｜樂迷藏",
+    "dp": "/share/8"
+   }
+  ],
+  [
+   "user_engagement",
+   {
+    "dl": "https://lemibox.com/share/8",
+    "dt": "理想混蛋《關掉／打開》2022 台灣首版 CD｜民生鄰居的收藏｜樂迷藏",
+    "dp": "/share/8"
+   }
+  ]
+ ]
+}

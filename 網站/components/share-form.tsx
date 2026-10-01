@@ -21,6 +21,7 @@ import { api, useAccount, whenLoggedIn } from "@/lib/account";
 import { uploadCoverOg } from "@/lib/image";
 import { PhotoPicker, usePhotoPicker, type PickedPhoto } from "@/components/photo-picker";
 import { MoneyInput, parsePrice } from "@/components/share-detail";
+import { track } from "@/lib/analytics";
 
 // 炫收藏表單（2026-09-28 上傳表單改版，照 產出/20260928_上傳表單UX/）：
 // 單頁；照片在最上面；「這是什麼」一組（誰的東西？是什麼？哪一張專輯／哪裡出的？哪個版本？），答完收成「值＋改」；
@@ -617,6 +618,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
         setBusy(false);
         return setFormError(r.error.message);
       }
+      track("share_publish", { kind: "一般" });
       router.push(`/share/${r.data.n}`);
     });
   };

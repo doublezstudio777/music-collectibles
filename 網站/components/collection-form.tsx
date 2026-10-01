@@ -15,6 +15,7 @@ import type { PickSeries } from "@/lib/catalog";
 import { PhotoPicker, usePhotoPicker, type PickedPhoto } from "@/components/photo-picker";
 import { AddSeries, PickList, submitSeries, submitVersion, type NewSeries } from "@/components/pick-list";
 import { CollectionPhoto, type Pin } from "@/components/collection-photo";
+import { track } from "@/lib/analytics";
 
 /** 一個標記：key＝系列鍵／品項鍵／版本鍵；photo＝照片在表單裡的 key（上傳中也有）；x、y 是 0～1 */
 type Tag = { key: string; label: string; artist: string; photo?: string; x?: number; y?: number };
@@ -213,6 +214,7 @@ function Body({ edit, initial, preset }: { edit?: CollectionEdit; initial: Picke
         setBusy(false);
         return setFormError(r.error.message);
       }
+      track("share_publish", { kind: "合集" });
       router.push(shareHref(r.data.n));
     });
   };

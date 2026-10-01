@@ -127,7 +127,7 @@ async def main():
             check(f"{w} 系列頁（比較表）無橫向溢出", await overflow(pg) <= 0, str(await overflow(pg)))
 
             # 6. 個人頁：「願望清單」區塊
-            await pg.goto(BASE + "/u/lmbwishtest", wait_until="load")
+            await pg.goto(BASE + "/u/" + os.environ.get("HANDLE", "lmbwishtest"), wait_until="load")
             await settle(pg)
             title = (await pg.locator("#wanted .block-title").inner_text()).replace("\n", " ")
             check(f"{w} 個人頁區塊叫願望清單", title.startswith("願望清單"), title)

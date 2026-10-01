@@ -16,6 +16,7 @@ import { PHOTO_LICENSE_URL, SITE_NAME, shareHref, type SaleState } from "@/lib/d
 import type { BatchEntry } from "@/lib/catalog";
 import { PhotoPicker, usePhotoPicker, type PickedPhoto } from "@/components/photo-picker";
 import { MoneyInput, parsePrice, RegionNote } from "@/components/share-detail";
+import { track } from "@/lib/analytics";
 
 type Trade = Exclude<SaleState, "sold">;
 const TRADES: { key: Trade; label: string }[] = [
@@ -161,7 +162,10 @@ function Body({ handle, entries }: { handle: string; entries: BatchEntry[] }) {
             sale: t === "sale" ? { state: "sale", price: parsePrice(r.price) } : { state: t },
           },
         });
-        if (res.ok) out.push({ key: r.key, label: r.label, n: res.data.n });
+        if (res.ok) {
+          out.push({ key: r.key, label: r.label, n: res.data.n });
+          track("share_publish", { kind: "批次" });
+        }
         else {
           out.push({ key: r.key, label: r.label, error: res.error.message });
           // 條款要先同意、或今天額度用完：後面的也不會過，停下來

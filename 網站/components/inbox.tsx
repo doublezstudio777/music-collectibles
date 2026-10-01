@@ -10,6 +10,7 @@ import { Ava } from "@/components/ava";
 import { UnreadBadge } from "@/components/site-header";
 import { Photo } from "@/components/share-card";
 import { MoneyInput, RegionNote, parsePrice } from "@/components/share-detail";
+import { track } from "@/lib/analytics";
 
 /** 所在地區（國家層級）；沒有紀錄就不顯示 */
 const regionText = (r?: string) => (r ? ` · 所在地區 ${r}` : "");
@@ -229,10 +230,11 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
 
   // 接受、拒絕、撤回：處理中按鈕停用，成功顯示「已更新」約 3 秒，失敗顯示原因（2026-09-28 回饋一致化）
   const op = useSave();
-  const run = (path: string, body: unknown) =>
+  const run = (path: string, body: unknown, ok?: () => void) =>
     void op.run(async () => {
       setError("");
       const r = await api(path, { body });
+      if (r.ok) ok?.();
       setVersion((v) => v + 1);
       onChange();
       return r.ok ? { ok: true, text: "已更新" } : { ok: false, text: r.error.message };
@@ -297,7 +299,7 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
       onSubmit={async (e) => {
         e.preventDefault();
         if (!text.trim()) return;
-        await run(`/api/threads/${id}/messages`, { text });
+        await run(`/api/threads/${id}/messages`, { text }, () => track("dm_send"));
         setText("");
       }}
     >
@@ -372,7 +374,7 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
       setError("填一個整數金額");
       return;
     }
-    await run(`/api/shares/${share.n}/offers`, { kind: "offer", price: p });
+    await run(`/api/shares/${share.n}/offers`, { kind: "offer", price: p }, () => track("offer_make", { kind: "出價" }));
     setAmount("");
     setOffering(false);
   };
@@ -432,7 +434,7 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
         ) : null}
         {!blockedNote && !frozen && !iAmSeller && geo.canTrade && sale.state === "sale" && !hasBuy ? (
           <div>
-            <button type="button" className="btn btn-line" onClick={() => run(`/api/shares/${share.n}/offers`, { kind: "buy" })}>
+            <button type="button" className="btn btn-line" onClick={() => run(`/api/shares/${share.n}/offers`, { kind: "buy" }, () => track("offer_make", { kind: "我要買" }))}>
               我要買 {priceText(sale.price ?? 0)}
             </button>
           </div>

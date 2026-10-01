@@ -16,6 +16,7 @@ import { ShareActions, type ShareInfo } from "@/components/share-actions";
 import { LevelTag } from "@/components/level-tag";
 import { DmButton } from "@/components/dm-button";
 import { sharePhotoAlt } from "@/lib/seo";
+import { track } from "@/lib/analytics";
 
 /** 金額輸入：只收正整數 */
 export function parsePrice(raw: string) {
@@ -556,6 +557,7 @@ function BuyBox({ share, sale, offers }: { share: ShareView; sale: Sale; offers:
       }
       whenLoggedIn("登入後才能出價", async () => {
         const r = await api<{ result: number }>(`/api/shares/${share.n}/offers`, { body: { kind: "offer", price: p } });
+        if (r.ok) track("offer_make", { kind: "出價" });
         if (r.ok) router.push(`/messages/${r.data.result}`);
         else setError(r.error.message);
       });
@@ -600,6 +602,7 @@ function BuyBox({ share, sale, offers }: { share: ShareView; sale: Sale; offers:
     const go = (path: string, body: unknown, reason: string) =>
       whenLoggedIn(reason, async () => {
         const r = await api<{ result: number }>(path, { body });
+        if (r.ok && path.endsWith("/offers")) track("offer_make", { kind: "我要買" });
         if (r.ok) router.push(`/messages/${r.data.result}`);
         else setError(r.error.message);
       });

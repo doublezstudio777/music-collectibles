@@ -4,13 +4,14 @@
 // 舊版全文另存一份可查（/terms/history）。版本號一變，所有會員下次登入都會跳補同意視窗。
 
 /** 現行使用條款與隱私權政策版本（兩份一起算一個版本） */
-export const TERMS_VERSION = "1.0";
+export const TERMS_VERSION = "1.1";
 /** 生效日 */
 export const TERMS_EFFECTIVE = "2026-10-01";
 
 /** 歷史版本（新的在前）。href 是該版全文的位置；現行版就是 /terms、/privacy */
 export const TERMS_HISTORY: { version: string; effective: string; note: string; terms: string; privacy: string }[] = [
-  { version: "1.0", effective: TERMS_EFFECTIVE, note: "第一個生效的版本", terms: "/terms", privacy: "/privacy" },
+  { version: "1.1", effective: TERMS_EFFECTIVE, note: "隱私權政策補上 Google Analytics（統計使用情形、Cookie、怎麼停用）；使用條款內容沒有改", terms: "/terms", privacy: "/privacy" },
+  { version: "1.0", effective: "2026-10-01", note: "第一個生效的版本", terms: "/terms", privacy: "/privacy/v1-0" },
 ];
 
 /** 經營者（個資法第 8 條應告知事項第一款；用戶 2026-10-01 決定） */

@@ -7,6 +7,7 @@
 // 寫入走樂觀更新：先改畫面再送 API，失敗就退回並提示。
 
 import { useSyncExternalStore } from "react";
+import { track } from "@/lib/analytics";
 
 export type Me = {
   id: string;
@@ -213,6 +214,7 @@ async function write<K extends "liked" | "owned" | "wanted" | "follows" | "dismi
 export function toggleLike(n: number) {
   requireLogin("登入後才能點讚", (late) => {
     const on = late || !acc.liked.includes(n);
+    if (on) track("wishlist_add", { type: "收藏" });
     void write("liked", n, on, "/api/me/likes", { share: n, on });
   });
 }
@@ -220,6 +222,7 @@ export function toggleLike(n: number) {
 export function toggleHolding(bucket: "owned" | "wanted", key: string) {
   requireLogin(bucket === "owned" ? "登入後才能標記我有" : "登入後才能加入願望清單", (late) => {
     const on = late || !acc[bucket].includes(key);
+    if (on && bucket === "wanted") track("wishlist_add", { type: "版本" });
     void write(bucket, key, on, "/api/me/holdings", { kind: bucket, key, on });
   });
 }

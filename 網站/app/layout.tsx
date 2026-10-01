@@ -4,6 +4,7 @@ import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { AuthPanel } from "@/components/auth-panel";
 import { TermsConsent } from "@/components/terms-consent";
+import { Analytics } from "@/components/analytics";
 import { sponsorUrl, turnstileSiteKey } from "@/lib/server/services";
 import { indexingAllowed } from "@/lib/server/guard";
 import { seoContext } from "@/lib/server/seo";
@@ -75,6 +76,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             </p>
           </div>
         </footer>
+        <Analytics />
       </body>
     </html>
   );

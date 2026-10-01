@@ -7,6 +7,7 @@ import { useState } from "react";
 import { afterLogin, api, type Me, type PanelMode } from "@/lib/account";
 import { Turnstile } from "@/components/turnstile";
 import { TERMS_VERSION } from "@/lib/legal";
+import { track } from "@/lib/analytics";
 
 type Props = {
   mode: PanelMode;
@@ -69,7 +70,10 @@ export function AuthForm({ mode, setMode, reason, initialEmail = "", idp, onDone
     try {
       if (mode === "login") {
         const r = await api<{ user: Me }>("/api/auth/login", { body: { email, password, turnstileToken: token } });
-        if (r.ok) return await done();
+        if (r.ok) {
+          track("login", { method: "email" });
+          return await done();
+        }
         if (r.error.code === "EMAIL_UNVERIFIED") {
           go("verify");
           setNote(`這個 Email 還沒驗證，驗證碼已寄到 ${email}`);
@@ -79,6 +83,7 @@ export function AuthForm({ mode, setMode, reason, initialEmail = "", idp, onDone
       } else if (mode === "register") {
         const r = await api("/api/auth/register", { body: { email, password, handle, name, turnstileToken: token, agreeTerms: agree, termsVersion: TERMS_VERSION } });
         if (r.ok) {
+          track("sign_up", { method: "email" });
           go("verify");
           setNote(`驗證碼已寄到 ${email}`);
           return;
