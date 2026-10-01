@@ -1,0 +1,3991 @@
+[
+  {
+    "slug": "san-zhi-gou",
+    "name": "三隻狗",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "j-sheon",
+    "name": "J.Sheon",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "1bbce3ee-6a17-454f-831a-2eb746329953",
+    "candidates": [
+      {
+        "mbid": "1bbce3ee-6a17-454f-831a-2eb746329953",
+        "name": "J.Sheon",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "Wikidata Q30946953 的中文維基條目＝「J.Sheon」"
+        ]
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：Wikidata Q30946953 的中文維基條目＝「J.Sheon」"
+  },
+  {
+    "slug": "cold-dew",
+    "name": "COLD DEW",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "48ddec66-31c8-4ee0-aa18-d45be63487f9",
+    "candidates": [
+      {
+        "mbid": "48ddec66-31c8-4ee0-aa18-d45be63487f9",
+        "name": "Cold Dew",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "art rock/progressive rock group",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "臺北人文地景"
+        ]
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：臺北人文地景"
+  },
+  {
+    "slug": "ma-wei",
+    "name": "馬尾",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "debloop",
+    "name": "debloop",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "08ff7a3f-997f-4a2e-b135-7303182a0aca",
+    "candidates": [
+      {
+        "mbid": "08ff7a3f-997f-4a2e-b135-7303182a0aca",
+        "name": "debloop",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "Puffer Bone"
+        ]
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：Puffer Bone"
+  },
+  {
+    "slug": "chen-ying-da",
+    "name": "陳穎達",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "lin-wei-zhong",
+    "name": "林偉中",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "8421c283-ad69-42c1-b680-a4edfef5cb9e",
+        "name": "林偉中",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "drummer",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "wang-pin-xin",
+    "name": "王品心",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "ye-jun-lin",
+    "name": "葉俊麟",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "0e554c3f-205b-433e-a488-a1fc1e890bd9",
+        "name": "葉俊麟",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "brandon-lin",
+    "name": "Brandon Lin",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "hong-wei-nong",
+    "name": "洪惟農",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "zheng-yu-tai",
+    "name": "鄭宇泰",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "266986a1-b5ed-4cfd-9409-365a51772874",
+        "name": "鄭宇泰",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "flowstrong",
+    "name": "Flowstrong",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "a3daadd3-9f77-4c6a-ad60-22620dadfe1d",
+        "name": "Flowstrong",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "thats-my-shhh",
+    "name": "That's My Shhh",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "sheng-zi-chong",
+    "name": "聲子蟲",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "094c5f7f-c3e6-4b96-89a5-f3770832a02f",
+        "name": "聲子蟲",
+        "country": "Tainan",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "c-holly",
+    "name": "C.Holly",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "06aecab3-eb86-4a08-9bb1-ef674a087c17",
+        "name": "C.Holly",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "kiki",
+    "name": "KIKI",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "d58c2dff-c9fc-4f92-b1c3-07d3c4705d0c",
+        "name": "Kiki",
+        "country": "BE",
+        "type": "Person",
+        "disambiguation": "Belgian singer, Christian Isaye",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "419576ca-d0d7-405f-ab14-632566d2bbad",
+        "name": "Kiki",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "techno/electro artist Joakim Ijäs",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "33b3e622-c9b2-4981-a031-55e37e4bee6a",
+        "name": "KIKI",
+        "country": "TH",
+        "type": "Group",
+        "disambiguation": "Thai indie pop",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "345197b8-a2c6-4021-80d7-8b2e668fb322",
+        "name": "KiKi",
+        "country": "SI",
+        "type": "Person",
+        "disambiguation": "Slovenian folk pop artist",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "shnti",
+    "name": "SHNTI",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "a758b3c1-da08-4fb8-97ec-a2d180062056",
+        "name": "SHNTI",
+        "country": "PH",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "n-y-p-d",
+    "name": "N.Y.P.D.南洋派對",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "6313d24e-7ee5-42d0-a950-9d07e6c3173a",
+        "name": "南洋派對 N.Y.P.D.",
+        "country": "HK",
+        "type": "Group",
+        "disambiguation": "Hong Kong Rock/Punk",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "6060a0a3-844e-47c4-8d27-bdca1d1eee45",
+        "name": "N.Y.P.D.",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "namdo-calling",
+    "name": "NAMDO CALLING",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "yu-tiao",
+    "name": "魚條",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "3ef8860b-2655-428e-b985-875a7f0c63a9",
+    "candidates": [
+      {
+        "mbid": "3ef8860b-2655-428e-b985-875a7f0c63a9",
+        "name": "魚條",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "Fish Stick",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "忘形"
+        ]
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：忘形"
+  },
+  {
+    "slug": "acid-brain",
+    "name": "Acid Brain酸腦",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "6e07ebb2-e98e-4821-8bb1-a26bb6afed0e",
+        "name": "Acid Brain",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "7613dce9-64a9-407e-b751-2980eac059d5",
+        "name": "Acid Brain",
+        "country": "Taipei",
+        "type": "Group",
+        "disambiguation": "Taiwanese heavy psych group",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "gong-zhen-xiao-ying",
+    "name": "共振效應",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "2a9a2528-79e9-4ad7-ae6f-bba84b63d304",
+        "name": "共振效應",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "yi-hao-li-hang",
+    "name": "一好．屴夯",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "lei-qing",
+    "name": "雷擎",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "bc6b9efd-f0cb-498e-b7df-c47c0def2fb4",
+    "candidates": [
+      {
+        "mbid": "bc6b9efd-f0cb-498e-b7df-c47c0def2fb4",
+        "name": "雷擎",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "Taiwan Singer-Songwriter",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "Wikidata Q112966472 的中文維基條目＝「雷擎」"
+        ]
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：Wikidata Q112966472 的中文維基條目＝「雷擎」"
+  },
+  {
+    "slug": "lizi",
+    "name": "Lizi栗子",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "2fc193c7-4ccc-4fe6-8e54-4d801dd9f2b1",
+        "name": "Lizi 栗子",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "Taiwanese rapper",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "104fd022-3d4f-452e-81d0-67e7431d1ced",
+        "name": "栗子",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "7ce3b7be-417a-4159-8a33-af84dd10aa31",
+        "name": "Lizi",
+        "country": "",
+        "type": "",
+        "disambiguation": "L'année du zouk 2022",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "617c863e-be1d-45d2-a9e6-b49838c3d544",
+        "name": "Lizi",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "Rappeuse fr membre du groupe Slex",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "su-yi-fei",
+    "name": "蘇裔非",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "dciv",
+    "name": "DCIV柯德維",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "3a051ff7-2224-4a06-83d7-77beb95262a1",
+        "name": "DCIV",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "wu-rui-peng",
+    "name": "吳睿朋",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "undep",
+    "name": "undep",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "prod-cw",
+    "name": "PROD_CW",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "yyt",
+    "name": "yyt",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "a-flyt",
+    "name": "A.FLYT",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "teacheray",
+    "name": "TeacheRay",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "falk-bonitz-rafique",
+    "name": "Falk Bonitz Rafique",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "yang-yi-xiu",
+    "name": "楊易修",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "71698dc8-5312-455c-9147-a8f2c9652945",
+        "name": "楊易修",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "bradd",
+    "name": "BRADD",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "b499d0ff-26e4-4c90-a6a4-48724b3e1cc4",
+        "name": "BRADD",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "yun-duan-si-ji",
+    "name": "雲端司機",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "haezee",
+    "name": "Haezee黃瑋昕",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "906a4c7c-c294-408c-ba12-95affd20f325",
+        "name": "黄玮昕",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "nio",
+    "name": "NIO",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "ac24445f-4f53-4c81-a016-e37e49a5e3b4",
+        "name": "Nio",
+        "country": "DE",
+        "type": "Person",
+        "disambiguation": "German Rapper. Brother of Vega",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "7ce3c592-f356-4a27-bc5e-45b100dc5e6b",
+        "name": "Niō",
+        "country": "San Francisco",
+        "type": "Group",
+        "disambiguation": "Post-metal band from San Francisco",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "d4d65740-130c-4c32-b7e6-a15c2fe7490a",
+        "name": "nIo",
+        "country": "JP",
+        "type": "Group",
+        "disambiguation": "MUSHIRO SOCKER PROJECT",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "13b04e8a-dec5-46de-9a32-6c333c61a04f",
+        "name": "Nio",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "ddc5a599-c659-4e0e-a301-cc39ecf7694e",
+        "name": "NIO",
+        "country": "",
+        "type": "",
+        "disambiguation": "EDM producer",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "zhong-yi-an",
+    "name": "鐘奕安",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "9b3289b5-08ed-4735-b6ec-e3ee3f5c4f2b",
+        "name": "鐘奕安",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "a-root",
+    "name": "A_Root同根生",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "53e16570-dba6-452f-9402-908e2c5a6625",
+        "name": "同根生",
+        "country": "TW",
+        "type": "",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "future-after-a-second",
+    "name": "FUTURE AFTER A SECOND",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "29ee3b9b-473f-4360-8f77-d12cc84be913",
+        "name": "Future After a Second",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "Taiwanese Metalcore",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "mao-dan-zhi",
+    "name": "貓膽汁",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "lucy",
+    "name": "LÜCY",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "lin-yi-shuo",
+    "name": "林奕碩",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "eafcd04c-cd27-4c97-9f69-8fb96ac3cf16",
+        "name": "林奕碩",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "lin-yi-le",
+    "name": "林以樂",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "a49ac4c0-4070-421e-989e-67fd654562ae",
+        "name": "林以樂",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "Taiwanese singer-songwriter",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "brbp",
+    "name": "BRBP",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "d658240a-d80b-4f1b-8b13-2d41cf12c375",
+    "candidates": [
+      {
+        "mbid": "d658240a-d80b-4f1b-8b13-2d41cf12c375",
+        "name": "BRBP",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "BRBP"
+        ]
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：BRBP"
+  },
+  {
+    "slug": "ftk",
+    "name": "FTK",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "836cac24-1a52-45e0-9340-ff3c0cc9fda5",
+        "name": "FTK",
+        "country": "FI",
+        "type": "Group",
+        "disambiguation": "Finnish punk band",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "12ca087b-7582-418b-a774-6f6f8c8f375e",
+        "name": "Ftk",
+        "country": "",
+        "type": "",
+        "disambiguation": "related to I've",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "b7710eea-4b5e-479c-a51e-81aa5b2b5aa2",
+        "name": "FTK",
+        "country": "FR",
+        "type": "",
+        "disambiguation": "French artist",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "f38484e4-5ad3-4130-92ef-08e88a322969",
+        "name": "F.T.K.",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "tickle-tickle",
+    "name": "Tickle Tickle癢癢",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "zhong-qi",
+    "name": "鍾錡",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "17742870-61c9-42af-a4f6-dc59bfad68bf",
+        "name": "鍾錡",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "wu-zheng-jun",
+    "name": "吳政君",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "li-wei-yong",
+    "name": "利惟庸",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "46a5c497-0c1a-4d58-aab2-85d3b04f2556",
+        "name": "Tony Li",
+        "country": "Taipei",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "zheng-zhao-yuan",
+    "name": "鄭昭元",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "pang-hu",
+    "name": "胖虎",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "b7d26b8b-1fca-400c-bebf-436781ad9f6c",
+    "candidates": [
+      {
+        "mbid": "b7d26b8b-1fca-400c-bebf-436781ad9f6c",
+        "name": "胖虎",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "關係：member of band Benn"
+        ]
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：關係：member of band Benn"
+  },
+  {
+    "slug": "fat-hamster-and-kang-new",
+    "name": "Fat Hamster and KANG New",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "jacqui",
+    "name": "Jacqui",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "b9563711-388e-4b91-aec4-176beb3bbc88",
+        "name": "Jacqui",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "Featured by C4 on the track \"Vienna\"",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "067e5c5d-f0e0-4b67-9189-7f0a90ff04d6",
+        "name": "Jacqui",
+        "country": "KR",
+        "type": "Person",
+        "disambiguation": "Korean solo female artist 재키, formerly Soullette (소울렛)",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "76de56d3-321c-445b-b9ed-b01b400c582e",
+        "name": "Jacqui",
+        "country": "",
+        "type": "",
+        "disambiguation": "chorus",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "lomba-sihir",
+    "name": "Lomba Sihir",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "8234e912-773c-4004-bab2-0298a2cc74e8",
+        "name": "Lomba Sihir",
+        "country": "ID",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "feast",
+    "name": ".Feast",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "b2b03f41-86d0-436d-bad0-5b7c55dbbb45",
+        "name": "F.E.A.S.T.",
+        "country": "IT",
+        "type": "Group",
+        "disambiguation": "Italian hard rock band",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "ce3f0979-81c5-489d-aed9-41ad0ef6d86a",
+        "name": ".Feast",
+        "country": "ID",
+        "type": "Group",
+        "disambiguation": "Indonesian rock band",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "8f289da2-7124-43d6-b171-d71d61158a7b",
+        "name": "Feast",
+        "country": "NL",
+        "type": "Group",
+        "disambiguation": "Dutch post-metal band",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "7c98b908-9836-40e8-999d-beb19094930c",
+        "name": "Feast",
+        "country": "Seattle",
+        "type": "Group",
+        "disambiguation": "Seattle Band",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "3c01bcc9-e24b-46f9-af13-abc517911ba9",
+        "name": "Feast",
+        "country": "",
+        "type": "Group",
+        "disambiguation": "played in the 70’s",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "elle-shimada",
+    "name": "ELLE SHIMADA",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "35dd7e5d-ae38-4148-8adb-a59d34af609c",
+        "name": "Elle Shimada",
+        "country": "Melbourne",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "beyond-cure",
+    "name": "BEYOND CURE病入膏肓",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "16d97fd7-8a39-49bb-9daa-a1424b991c61",
+        "name": "Beyond Cure",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "Taiwanese deathcore",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但沒有已知作品、團員關係或顏社／本色發行可交叉比對"
+  },
+  {
+    "slug": "destroyers",
+    "name": "擊沈女孩DESTROYERS",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "4e223c13-cdb0-492c-bdb9-9c8069a985e4",
+        "name": "擊沈女孩",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "b151f04d-bb52-482f-b0e3-c5c238d54c2f",
+        "name": "Destroyers",
+        "country": "PL",
+        "type": "Group",
+        "disambiguation": "polish trash metal group",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "7ef81176-d62e-4241-9884-e2590f740def",
+        "name": "Destroyers",
+        "country": "ES",
+        "type": "Person",
+        "disambiguation": "Miguel Blanco / Breakbeat project by Michael White.",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "284fd5c8-a802-4e20-87c1-e2a31e5073c5",
+        "name": "The Destroyers",
+        "country": "GB",
+        "type": "Group",
+        "disambiguation": "UK 15 piece gypsy, balkan, klesmer and beat poetry",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但沒有已知作品、團員關係或顏社／本色發行可交叉比對"
+  },
+  {
+    "slug": "dao-che-ru-ku",
+    "name": "倒車入庫",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "c1a97722-63c6-4d36-9c58-0d4aa66c7ef8",
+        "name": "倒車入庫",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "sapud-kacaw",
+    "name": "Sapud Kacaw撒部．噶照",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "naau",
+    "name": "Naa'u娜塢",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "1b4f5051-7887-4151-867f-3c39ecd8c092",
+        "name": "娜塢",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "jiang-meng-xun",
+    "name": "江孟薰",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "yang-shu-ya",
+    "name": "楊舒雅",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "knowtis",
+    "name": "KNOWTIS",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "puzzleman",
+    "name": "PUZZLEMAN",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "ced",
+    "name": "CED",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "7945cbc9-6bab-40f6-9dbb-318670180339",
+        "name": "Cédric Monnet",
+        "country": "FR",
+        "type": "Person",
+        "disambiguation": "engineer",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "cc946227-8665-4576-9110-b28b2d584152",
+        "name": "Ced",
+        "country": "DE",
+        "type": "Person",
+        "disambiguation": "German artist",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "f04f2097-8649-496c-a2a8-d55a15fe5bad",
+        "name": "Ced",
+        "country": "FR",
+        "type": "Person",
+        "disambiguation": "French Disco/House DJ and producer \"Ced Rework\"",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "751a2997-f70b-4c9c-a678-d825e25667b0",
+        "name": "C.E.D.",
+        "country": "US",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "5da2a7a0-7a90-4089-8a4a-d83ab045c228",
+        "name": "CED",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "Taiwanese rapper",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "wring-out-laura",
+    "name": "Wring Out Laura",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "20c0bbd1-a42d-4c89-9c30-84608101b90c",
+        "name": "Wring Out Laura",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "kbn",
+    "name": "KbN凱比鳥",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "571cb096-2210-4a9d-b9eb-7d93414cdba5",
+        "name": "KBN",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "708515dd-a64d-4d97-8b7c-d58d8ad7039d",
+        "name": "K.B.N.",
+        "country": "Roma",
+        "type": "Group",
+        "disambiguation": "Italian indie rock band from Rome",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "oberka",
+    "name": "Oberka",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "5cffefac-29d7-4968-9edb-1437f3bacf9c",
+        "name": "Oberka",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "Tainwanese record producer and remixer",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "b-e-n-n",
+    "name": "B E N N",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "3412c264-f2b5-4205-b13c-2cc74c8e5fb2",
+        "name": "B E N N",
+        "country": "London",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "sonia-calico",
+    "name": "Sonia Calico",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "d9853447-1885-457b-b109-b5cce0633fd6",
+        "name": "Sonia Calico",
+        "country": "Taipei",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "aiko-tomi",
+    "name": "富愛子AIKO TOMI",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "89119263-6495-4541-ad45-913a4ccff0a5",
+        "name": "AIKO TOMI",
+        "country": "Toronto",
+        "type": "Person",
+        "disambiguation": "crafty, hyper-energetic alt-pop artist from Toronto",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "plutato",
+    "name": "Plutato",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "e81d693c-f4fa-4979-b68a-837032d4aa91",
+    "candidates": [
+      {
+        "mbid": "e81d693c-f4fa-4979-b68a-837032d4aa91",
+        "name": "Plutato",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "Jazz Trio",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "Ctrl+Z",
+          "Pluto Potato"
+        ]
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：Ctrl+Z、Pluto Potato"
+  },
+  {
+    "slug": "chen-zi-zhang",
+    "name": "陳子彰",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "kuljelje-ljamcun",
+    "name": "古樂樂良春Kuljelje Ljamcun",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "huang-yan-bin",
+    "name": "黃彥斌",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "yufu",
+    "name": "Yufu／陳郁夫",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "07b2c39f-62d6-4c8c-b7d8-f239f9a17057",
+        "name": "Yufu",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但沒有已知作品、團員關係或顏社／本色發行可交叉比對"
+  },
+  {
+    "slug": "dac",
+    "name": "Dac",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "df2e8c88-c453-43dc-8132-ead6ec2d570f",
+        "name": "D.A.C.",
+        "country": "NL",
+        "type": "Group",
+        "disambiguation": "hip-hop, aka De Amersfoortse Coöperatie",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "546e9acd-75cb-4a6f-96c4-1b72bf4f8255",
+        "name": "DAC",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "577a9903-c112-4f15-95bd-824d3854a54d",
+        "name": "Dac",
+        "country": "",
+        "type": "",
+        "disambiguation": "performed with Lazy Habits",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "0c81b249-9678-4440-90a5-11740fd66d9a",
+        "name": "D.A.C.",
+        "country": "",
+        "type": "",
+        "disambiguation": "sacremento based artist originally from oakland",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "1e2b1abd-b465-413c-bab7-85079b7162cc",
+        "name": "Dac",
+        "country": "",
+        "type": "",
+        "disambiguation": "Taiwanese hip-hop/pop",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "liu-wei",
+    "name": "劉暐",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "12de0e87-3f5c-4837-84a6-cc4914e1dbf3",
+        "name": "劉暐",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "zheng-jing-ru",
+    "name": "鄭敬儒",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "377b29dc-88ca-492b-8517-062e971b4546",
+        "name": "鄭敬儒",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "zheng-jia-fu",
+    "name": "鄭嘉富",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "li-mao-song",
+    "name": "李茂嵩",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "pan-zi-jue",
+    "name": "潘子爵",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "177c9987-2e35-4958-bcca-be37cb04c4e4",
+    "candidates": [
+      {
+        "mbid": "177c9987-2e35-4958-bcca-be37cb04c4e4",
+        "name": "潘子爵",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "沒問題少女"
+        ]
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：沒問題少女"
+  },
+  {
+    "slug": "jian-yu-min",
+    "name": "簡聿民",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "mandark",
+    "name": "MANDARK",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "d515c0d2-305d-445f-a4fc-71348fc9e074",
+    "candidates": [
+      {
+        "mbid": "d515c0d2-305d-445f-a4fc-71348fc9e074",
+        "name": "Mandark",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "BADA88"
+        ]
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：BADA88"
+  },
+  {
+    "slug": "jia-ri-zhen-cao",
+    "name": "假日貞操",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "f688ce50-2f2a-48b2-9200-e65a9c6815b5",
+        "name": "Virgin Vacation",
+        "country": "HK",
+        "type": "Group",
+        "disambiguation": "Hong Kong instrumental group",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "huang-ye-yuan",
+    "name": "黃業圓",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "lite",
+    "name": "LITE",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "ef3a1aab-6676-4ad1-89a2-6c6bd828e0b0",
+        "name": "LITE",
+        "country": "JP",
+        "type": "Group",
+        "disambiguation": "Japanese math rock band",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "afa130e2-ce86-402f-be58-15e34e1d7ca7",
+        "name": "€lite",
+        "country": "IN",
+        "type": "Person",
+        "disambiguation": "Indian rapper, also known as Nayan Maharania",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "d81e0a5c-dc6d-41ea-9380-4f4b77373b29",
+        "name": "Lite",
+        "country": "",
+        "type": "",
+        "disambiguation": "U.S. Rapper",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "60996a01-65d0-4cd9-9ef3-ce1df8682c3e",
+        "name": "lite",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "digicore artist",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "9bd397ac-ddd8-4a8d-b935-35cf9df1ae5e",
+        "name": "Lite",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "AOR singer",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "age-factory",
+    "name": "Age Factory",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "dfd8030e-4c2d-4d9d-8092-06dea047d9fd",
+        "name": "Age Factory",
+        "country": "JP",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "narabara",
+    "name": "NaraBara",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "bdff5a3e-09e8-43b7-98bd-1cb9dcf44e23",
+        "name": "NaraBara",
+        "country": "Beijing",
+        "type": "Group",
+        "disambiguation": "mongolian folk-jazz",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "wen-shi-za-cao",
+    "name": "溫室雜草",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "a12d6eb6-7aed-46b2-befb-991c12df6af0",
+    "candidates": [
+      {
+        "mbid": "a12d6eb6-7aed-46b2-befb-991c12df6af0",
+        "name": "溫室雜草",
+        "country": "Taichung",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "Intro_鞋"
+        ]
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：Intro_鞋"
+  },
+  {
+    "slug": "wannasleep",
+    "name": "wannasleep",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "85ec6660-bb2b-4f20-8a76-6ab68e9a048a",
+    "candidates": [
+      {
+        "mbid": "85ec6660-bb2b-4f20-8a76-6ab68e9a048a",
+        "name": "wannasleep",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "且且",
+          "BS"
+        ]
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：且且、BS"
+  },
+  {
+    "slug": "shen-jing-yuan",
+    "name": "神經元",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "f2875fa8-f794-4612-8c92-ca9d17b21677",
+        "name": "神經元",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "dizparity",
+    "name": "Dizparity",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "d483254d-7a3b-44e7-bed9-4b00fb7b3341",
+        "name": "Dizparity",
+        "country": "Taipei",
+        "type": "Person",
+        "disambiguation": "Po Cheng Yeh",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "lv-shao-chun",
+    "name": "呂紹淳",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "ead8e476-82c3-4ca6-9a5b-2b592bfed560",
+        "name": "呂紹淳",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "freedom-beat",
+    "name": "Freedom Beat",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "cheer",
+    "name": "cheer",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "bd4f83a0-5f05-4cdd-87e0-76bf2033ed8c",
+        "name": "Cheer",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "Experimental/ambient artist Alec Cheer",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "xiao-qin",
+    "name": "笑琴",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "you-fa",
+    "name": "幽法",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "lu-qian-qian",
+    "name": "魯千千",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "roger-lin",
+    "name": "林煒翔／Roger Lin",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "debby-wang",
+    "name": "王思雅／Debby Wang",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "linion",
+    "name": "LINION",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "a7f037c1-362a-4152-8fbe-ca84c37bc5f4",
+    "candidates": [
+      {
+        "mbid": "a7f037c1-362a-4152-8fbe-ca84c37bc5f4",
+        "name": "LINION",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "Taiwanese neo-soul/R&B singer-songwriter",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "HIDEOUT"
+        ]
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：HIDEOUT"
+  },
+  {
+    "slug": "wen-ti-zong-bu",
+    "name": "問題總部",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "ce1fc25f-421d-4a0d-aecc-6dc00496f973",
+        "name": "問題總部",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "su-pei-qing",
+    "name": "蘇珮卿",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "dab631a5-8b23-4361-bfaf-d42554ec5405",
+        "name": "蘇珮卿",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "sha-zi-yu-bai-chi",
+    "name": "傻子與白痴",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "0e5a42ae-271a-4396-a5b2-85d677f35ff0",
+        "name": "傻子與白痴",
+        "country": "CN",
+        "type": "Group",
+        "disambiguation": "Taiwanese group",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "zheng-ping",
+    "name": "鄭平",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "c0913288-0008-4fac-971e-62eed58c50a7",
+        "name": "鄭平",
+        "country": "Taipei",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "panai",
+    "name": "巴奈Panai",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "8d17787a-bd4f-4830-89e5-50dc67a67650",
+    "candidates": [
+      {
+        "mbid": "8d17787a-bd4f-4830-89e5-50dc67a67650",
+        "name": "巴奈",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "夜婆 Iā-Pô",
+          "夜婆 Iā-Pô (落雨版)"
+        ]
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：夜婆 Iā-Pô、夜婆 Iā-Pô (落雨版)"
+  },
+  {
+    "slug": "lin-yu-ting",
+    "name": "林鈺婷",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "qiu-shu-chan",
+    "name": "邱淑蟬",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "e2ae42af-3e8c-4af0-8a54-bf590e5d60e3",
+        "name": "邱淑蟬",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "zoomie",
+    "name": "柔米",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "peng-bai-yi",
+    "name": "彭柏邑",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "1f24f7b7-3c00-4a1a-94ee-80f6d329d3d8",
+        "name": "彭柏邑",
+        "country": "CN",
+        "type": "Person",
+        "disambiguation": "Chinese songwriter, singer",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "az",
+    "name": "AZ李孝祖",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "0506bf37-90d7-4654-9585-b4800dc945d5",
+        "name": "AZ",
+        "country": "US",
+        "type": "Person",
+        "disambiguation": "US rapper",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "eea37c02-51fe-409a-a45a-b7c73a776446",
+        "name": "李孝祖",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "05bc3a1c-f7c1-4e01-bf61-e7699294b1a4",
+        "name": "Азъ",
+        "country": "Sankt-Peterburg",
+        "type": "Group",
+        "disambiguation": "Punk rock band from Moscow/Russia",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "155d4523-5cfc-4e82-b254-7c7126438a6f",
+        "name": "A.Z.",
+        "country": "KZ",
+        "type": "Person",
+        "disambiguation": "Kazakh rapper",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "275907ca-dd8a-4aa8-8bc8-f965a5b69758",
+        "name": "AZ",
+        "country": "US",
+        "type": "Person",
+        "disambiguation": "Azita of Scissor Girls",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "qiu-li-ting",
+    "name": "邱立婷",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "sa-ba-tai-lu-ge-er-tong-he-chang-tuan",
+    "name": "薩巴太魯閣兒童合唱團",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "wu-jiong-en-jia-yi-fa-li-de",
+    "name": "舞炯恩加以法利得",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "makav",
+    "name": "Makav真愛",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "0805a436-89ff-4c17-a19b-cf34980452b1",
+        "name": "Makav 真愛",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "a-luo-ka-li-ting-ba-qi-la",
+    "name": "阿洛·卡力亭·巴奇辣",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "su-yun-ying",
+    "name": "蘇運瑩",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "su-ming-yuan",
+    "name": "蘇明淵",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "cai-jia-zhen",
+    "name": "蔡家蓁",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "lulu-lin",
+    "name": "林沛蕎",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "guang-cai-yu-lao-le-shou",
+    "name": "廣財與老樂手",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "ya-wei-mo-rui",
+    "name": "雅維·茉芮",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "lu-bo-he-chang-tuan",
+    "name": "露波合唱團",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "dee579e1-d57e-429e-804a-d4c6734e2bac",
+        "name": "露波合唱團",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "qing-chong",
+    "name": "青虫",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "857666fc-9de0-45b3-9ad4-5ed042468c94",
+        "name": "青虫",
+        "country": "JP",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "the-wanted",
+    "name": "尋人啟事",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "bcb16f22-b064-4b80-b3a3-c824bccdbab1",
+        "name": "The Wanted",
+        "country": "GB",
+        "type": "Group",
+        "disambiguation": "English-Irish pop boy band",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "7ec37e46-bfb4-4cd5-8484-7c6062c80723",
+        "name": "The Wanted",
+        "country": "CA",
+        "type": "Group",
+        "disambiguation": "Canadian folk/alt‐country band",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "4880f0a6-462a-432b-9f23-d9f1e0de2cec",
+        "name": "The Wanted",
+        "country": "FR",
+        "type": "Group",
+        "disambiguation": "French punk band",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "f060c387-f04b-4b59-95b5-f821b76a2d1f",
+        "name": "The Wanted",
+        "country": "DE",
+        "type": "Group",
+        "disambiguation": "German thrash/death metal band",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "5a5d881e-0663-479a-ad68-a51aac375731",
+        "name": "The Wanted",
+        "country": "US",
+        "type": "Group",
+        "disambiguation": "Ohio hard rock band",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "smashregz",
+    "name": "SmashRegz",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "3d947a21-778e-4779-829b-36a8eaafb93f",
+        "name": "SmashRegz",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "zou-xu",
+    "name": "鄒序",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "jocelyn9-4-0",
+    "name": "Jocelyn9.4.0",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "a-bu-si-ta-na-bi-ma",
+    "name": "阿布絲·塔娜比瑪",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "aaa-hyukoh",
+    "name": "AAA（HYUKOH與落日飛車）",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "5d6047a8-f601-4157-a1ee-b8b87b162489",
+        "name": "AAA",
+        "country": "JP",
+        "type": "Group",
+        "disambiguation": "Attack All Around",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "78dd6e93-9463-40b4-ab97-6a0a86e24083",
+        "name": "Against All Authority",
+        "country": "US",
+        "type": "Group",
+        "disambiguation": "Miami political punk/ska band",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "8b64a68f-eb63-48dd-80d9-1c2abcdf1970",
+        "name": "혁오",
+        "country": "KR",
+        "type": "Group",
+        "disambiguation": "South Korean indie pop/rock band",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "54a97dad-3d55-44e3-ad2c-15330b1e1100",
+        "name": "aaa",
+        "country": "",
+        "type": "",
+        "disambiguation": "A group formed by Finnish rap legend Julma Henri",
+        "tw": true,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "324caaac-3b23-49f7-b54c-a946c3e78b7b",
+        "name": "AAA",
+        "country": "AR",
+        "type": "Group",
+        "disambiguation": "Argentinean ultranationalist black metal band",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但沒有已知作品、團員關係或顏社／本色發行可交叉比對"
+  },
+  {
+    "slug": "energy",
+    "name": "Energy",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "257b1a09-3499-4b0f-8b07-bf087d0fa19a",
+        "name": "Kevin Energy",
+        "country": "GB",
+        "type": "Person",
+        "disambiguation": "UK trance/happy hardcore DJ/producer Kevin Thorpe",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "cb545aee-b2e5-4f38-a579-53aef001e74a",
+        "name": "E.N.E.R.G.Y.",
+        "country": "",
+        "type": "Group",
+        "disambiguation": "prog trance duo, key tracks \"Desire\", \"Party Time\"",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "d936ce8e-a37f-492f-bbd2-8372174ee381",
+        "name": "Energy",
+        "country": "Boston",
+        "type": "Group",
+        "disambiguation": "Melodic Hardcore band from Massachusetts",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "819a2ee4-b659-4c2f-b88f-1a381ba3e3c3",
+        "name": "Energy",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "Taiwan boy band",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "hush",
+    "name": "HUSH",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "17845a30-c69b-4009-bf22-6b05a6a410f3",
+        "name": "Hush",
+        "country": "DK",
+        "type": "Group",
+        "disambiguation": "Danish duo",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "5a43f7dc-8ed0-4bcf-89bd-17d3d98f90d7",
+        "name": "HUSH",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "Taiwanese singer-songwriter and lyricist",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "8c7d61cb-d6bd-4ca7-8d77-9f8bc347ca12",
+        "name": "Hush",
+        "country": "US",
+        "type": "Person",
+        "disambiguation": "Edward Barton project",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "b8f9f1dc-03ff-4f8d-bbb5-0958905edd48",
+        "name": "Hush",
+        "country": "AU",
+        "type": "Group",
+        "disambiguation": "Australian glam rock band",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "259a0313-39dc-48e6-89d2-c57b7faeb4c7",
+        "name": "Hush",
+        "country": "US",
+        "type": "Person",
+        "disambiguation": "Detroit rapper",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "wu-yue-tian-ma-sha",
+    "name": "五月天瑪莎",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "huang-qi-shan",
+    "name": "黃綺珊",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "jihu",
+    "name": "JIHU",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "45227fcd-c670-4017-94bf-60b816a8676d",
+        "name": "JIHU",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": true,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "kafe-hu",
+    "name": "KAFE.HU咖啡胡",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "187203bd-bd16-4a5d-8fc2-805ca932de5d",
+        "name": "KAFE_HU咖啡胡",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": true,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "project-ace",
+    "name": "李吉吉",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "b404f9de-629a-4633-8991-01382e5c3d8d",
+        "name": "李吉吉",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": true,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "df4d0e9c-fe8f-43f7-897a-b690bcd121c6",
+        "name": "Project Ace",
+        "country": "CN",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": true,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "tu-ling-yin-le-shi-yan-shi",
+    "name": "圖靈音樂實驗室",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "von-citizen",
+    "name": "Von Citizen",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "2300eca2-3ccc-4cc6-b478-e8c8173fce96",
+        "name": "Von Citizen",
+        "country": "Guangzhou",
+        "type": "Group",
+        "disambiguation": "Chinese progressive metal band",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "ok",
+    "name": "王OK",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "9d347aa4-1b7b-4922-80ad-38958d433a90",
+        "name": "王OK",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "3ee20afb-747e-4468-95d3-840946abceba",
+        "name": "Ouderkerk Kaffers",
+        "country": "NL",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": true,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "3192a39c-f25d-46a7-b698-4a3720dc0553",
+        "name": "OK",
+        "country": "FR",
+        "type": "Group",
+        "disambiguation": "French indie band",
+        "tw": true,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "leezi",
+    "name": "張羽涵",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "8fb76574-6413-4a90-af46-7138a3d78c81",
+        "name": "张羽涵",
+        "country": "CN",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "james-lee",
+    "name": "李銖銜",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "9518e631-d0b4-4cfb-8e3e-b03914cbf35a",
+        "name": "이주현",
+        "country": "KR",
+        "type": "Person",
+        "disambiguation": "bassist",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "8567db77-c126-450f-91b8-9f3a25ad5c80",
+        "name": "James Lee",
+        "country": "US",
+        "type": "Person",
+        "disambiguation": "K-Pop artist from Los Angeles/Seoul",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "0352ccd2-1f16-47ed-8a5f-38dc0ba3ea34",
+        "name": "Lee Ving",
+        "country": "US",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "212458fa-459e-4077-af27-ca1fd0b0ca83",
+        "name": "Mecham",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "69e6a648-e8d4-4a6e-b829-0ff2235e0e37",
+        "name": "James Lee",
+        "country": "AU",
+        "type": "Person",
+        "disambiguation": "animator",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "yang-su-hao",
+    "name": "楊肅浩",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "funkymo",
+    "name": "FunkyMo",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "f6934fca-8fd3-4ded-9693-4fc7d5d47959",
+        "name": "FunkyMo",
+        "country": "TW",
+        "type": "",
+        "disambiguation": "",
+        "tw": true,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "qiu-lin",
+    "name": "秋林",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "traego",
+    "name": "粹垢TRAEGO",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "huang-zi-xuan",
+    "name": "黃子軒",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "luo-si-rong",
+    "name": "羅思容",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "f119981e-0e54-49db-aa0c-0d8a08f4ca09",
+        "name": "羅思容",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "yang-shu-yu-ji-na",
+    "name": "楊淑喻（吉那）",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "giyu-tjuljaviya",
+    "name": "張淦勛",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "morikilr",
+    "name": "Morikilr孔亞明",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "kumu-basaw",
+    "name": "Kumu Basaw姑慕·巴紹",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "sauljaljui",
+    "name": "戴曉君Sauljaljui",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "2b1fc355-652d-44e1-aad5-904997690acc",
+        "name": "Sauljaljui",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "Tai Siao-chun",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但沒有已知作品、團員關係或顏社／本色發行可交叉比對"
+  },
+  {
+    "slug": "savage-m",
+    "name": "馬克SAVAGE.M",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "43a8f75e-eae4-474b-b783-5b1c87c2e5a1",
+    "candidates": [
+      {
+        "mbid": "43a8f75e-eae4-474b-b783-5b1c87c2e5a1",
+        "name": "馬克",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "hip-hop / r&b",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "海口"
+        ]
+      },
+      {
+        "mbid": "85ade157-4f96-4ae0-ae8c-aa2fa8e79a5b",
+        "name": "馬克",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：海口"
+  },
+  {
+    "slug": "lin-mei-xiu",
+    "name": "林美秀",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "dremedreman",
+    "name": "曾妮Dremedreman",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "jade",
+    "name": "JADE",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "f4108df8-cf1f-4279-a840-599b2a291127",
+        "name": "JADE",
+        "country": "GB",
+        "type": "Person",
+        "disambiguation": "UK vocalist, member of Little Mix",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "22bec108-cd77-4b50-a9dd-449239909bf9",
+        "name": "jade",
+        "country": "US",
+        "type": "Person",
+        "disambiguation": "ambient/experimental electronic producer – furry",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "970ec984-5b9d-49a8-a1b3-3c0d6c7d5c34",
+        "name": "Jade",
+        "country": "Budapest",
+        "type": "Person",
+        "disambiguation": "drum & bass artist Gábor Simon, label manager of Eatbrain",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "43de6887-21d9-4849-b9da-b592d1db9237",
+        "name": "Ms. Jade",
+        "country": "US",
+        "type": "Person",
+        "disambiguation": "US female rapper Chevon Young",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "45361e96-21bb-43a8-984a-1718b5a4dc18",
+        "name": "Jade De Rijcke",
+        "country": "BE",
+        "type": "Person",
+        "disambiguation": "Belgian 'The Voice Kids 2018' winner",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "dan-dan-mao-mao",
+    "name": "丹丹猫猫",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "sherryz",
+    "name": "SherryZ鄭雙雙",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "1ddd677d-1329-4fa1-9fb3-46ac8635747e",
+        "name": "鄭雙雙",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但沒有已知作品、團員關係或顏社／本色發行可交叉比對"
+  },
+  {
+    "slug": "jud",
+    "name": "JUD陳泳希",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "b437ff88-6256-4387-9d07-fd362527fb60",
+        "name": "JUD 陳泳希",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "26072c1e-b173-4e89-a5a6-01d89b452c47",
+        "name": "Jud",
+        "country": "JP",
+        "type": "Person",
+        "disambiguation": "doujin artist",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "40fd137e-d9f1-4403-8ce5-c60097c57fb3",
+        "name": "Jud",
+        "country": "US",
+        "type": "Group",
+        "disambiguation": "rockband",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "bf3539b9-4426-4cfa-8649-33ef76fcd4e7",
+        "name": "J.u.D.",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "jolin",
+    "name": "JOLIN蔡依林",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "3033ce2b-2fb2-408e-8c5a-aea48592d7bc",
+    "candidates": [
+      {
+        "mbid": "3033ce2b-2fb2-408e-8c5a-aea48592d7bc",
+        "name": "蔡依林",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "Pleasure",
+          "Pleasure"
+        ]
+      },
+      {
+        "mbid": "bacc8c15-5a05-4595-8e8e-a8437b30ff5b",
+        "name": "Jolin",
+        "country": "DE",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：Pleasure、Pleasure"
+  },
+  {
+    "slug": "dan-yi-chun",
+    "name": "單依純",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "wu-yong-ji",
+    "name": "吳永吉",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "05ea511c-8b98-4daf-8fc9-e3887926b33f",
+        "name": "吳永吉",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "cj-mit",
+    "name": "CJ MiT",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "a-yi-luo",
+    "name": "阿依.羅",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "ana",
+    "name": "ana",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "925f2053-f392-4bd6-ab27-b3cd320d1fea",
+        "name": "Ana",
+        "country": "US",
+        "type": "Person",
+        "disambiguation": "’80s pop star",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "a8e82e40-181b-4a8d-a9ec-3b06180c64e4",
+        "name": "Ana Martí",
+        "country": "Mallorca",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "11ace729-640a-4d71-90cf-6256b20d4f27",
+        "name": "Ana Anguita",
+        "country": "ES",
+        "type": "Person",
+        "disambiguation": "Spanish singer, member of Enrique Y Ana",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "chun-mian-le-dui",
+    "name": "春麵樂隊",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "sarah",
+    "name": "陳以諾Sarah",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "170ee490-5491-4b8e-a9db-f86761913c1b",
+        "name": "陳以諾Sarah",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": true,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "a11597ca-6f79-4d6e-a32b-32c1f5a2fd30",
+        "name": "Sarah Engels",
+        "country": "DE",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "lawis-aow",
+    "name": "高金龍Lawis Aow",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "arase",
+    "name": "Arase阿拉斯",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "suming",
+    "name": "Suming舒米恩",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "6b99e789-fcbe-45f3-bb58-b62e043a0aff",
+        "name": "舒米恩",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "the-crane",
+    "name": "鶴The Crane",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "1f3088ed-4fc4-4b92-a5a7-d70470a37e6d",
+    "candidates": [
+      {
+        "mbid": "1f3088ed-4fc4-4b92-a5a7-d70470a37e6d",
+        "name": "The Crane",
+        "country": "Taipei",
+        "type": "Person",
+        "disambiguation": "鶴, Taiwanese singer",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "Same Stories, Different Narratives",
+          "UMAMI"
+        ]
+      },
+      {
+        "mbid": "de6a9eab-42fa-4f7e-902a-3b07f8d107ca",
+        "name": "The Crane",
+        "country": "",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "89f41b8f-2714-4f55-8d38-74664d66c394",
+        "name": "The Crane",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "Stephen Hedley",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：Same Stories, Different Narratives、UMAMI"
+  },
+  {
+    "slug": "erika-liu",
+    "name": "劉艾立",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "ceng-wei-zhong",
+    "name": "曾瑋中",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "since-chou",
+    "name": "周自從",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "a5a5b223-7a4a-492a-990c-9be399a56d32",
+        "name": "周自從",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "chen-yi-ting",
+    "name": "陳怡婷",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "pia",
+    "name": "PiA吳蓓雅",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "4781c458-b55a-40b1-b6a4-4605a2f58ed4",
+        "name": "PIA",
+        "country": "KR",
+        "type": "Group",
+        "disambiguation": "Korean",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "a86d8354-888d-4e6a-aefc-e091f34bcaee",
+        "name": "吳蓓雅",
+        "country": "",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "61b2ac3c-4df0-4647-b0c3-db328f8d9e53",
+        "name": "Pia",
+        "country": "FI",
+        "type": "Person",
+        "disambiguation": "Pia Mäntykangas, singer from Finland",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "cha-lao-ba-xi-wa-li",
+    "name": "查勞．巴西瓦里",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "sweet-john",
+    "name": "甜約翰Sweet John",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "660abae5-15ac-4ba7-913f-a6e6c8b9844c",
+        "name": "甜約翰",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但沒有已知作品、團員關係或顏社／本色發行可交叉比對"
+  },
+  {
+    "slug": "ao-yu-shan",
+    "name": "凹與山",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "dac-zaoyuan",
+    "name": "Dac與鄭昭元ZAOYUAN",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "df2e8c88-c453-43dc-8132-ead6ec2d570f",
+        "name": "D.A.C.",
+        "country": "NL",
+        "type": "Group",
+        "disambiguation": "hip-hop, aka De Amersfoortse Coöperatie",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "546e9acd-75cb-4a6f-96c4-1b72bf4f8255",
+        "name": "DAC",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "577a9903-c112-4f15-95bd-824d3854a54d",
+        "name": "Dac",
+        "country": "",
+        "type": "",
+        "disambiguation": "performed with Lazy Habits",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "0c81b249-9678-4440-90a5-11740fd66d9a",
+        "name": "D.A.C.",
+        "country": "",
+        "type": "",
+        "disambiguation": "sacremento based artist originally from oakland",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      },
+      {
+        "mbid": "1e2b1abd-b465-413c-bab7-85079b7162cc",
+        "name": "Dac",
+        "country": "",
+        "type": "",
+        "disambiguation": "Taiwanese hip-hop/pop",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "163braces",
+    "name": "163braces",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "joyce",
+    "name": "JOYCE就以斯",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "8e0758e2-cb58-4d5a-bab0-0f8182e3ec18",
+        "name": "JOYCE 就以斯",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "f47a0968-f2c1-4ec5-b0e3-0a15ae73b88d",
+        "name": "Joyce",
+        "country": "BR",
+        "type": "Person",
+        "disambiguation": "bossa nova singer from Brazil, guitar",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "2c8ae295-840d-4872-bacb-ecf7eee17170",
+        "name": "Joyce Lemmens",
+        "country": "BE",
+        "type": "Person",
+        "disambiguation": "Belgian pop singer-songwriter, aka 'Pure Joyce' / 'Joyce'",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "8c418a5e-4462-4eb4-80cf-7f73e3dfd5cf",
+        "name": "Joyce Vanderhoydonck",
+        "country": "BE",
+        "type": "Person",
+        "disambiguation": "Belgian pop singer & songwriter",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "chen-ying-da-si-chong-zou",
+    "name": "陳穎達四重奏",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "miss-alpaca",
+    "name": "羊駝小姐",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "afed3efc-0f92-45ef-9f74-4d90885314a0",
+        "name": "羊駝小姐",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "2change",
+    "name": "2CHANGE",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "dc670ffd-249e-4cbd-a549-c2ef6bd6847c",
+        "name": "2CHANGE",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "Taiwanese rapper",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "luo-yan-ting",
+    "name": "羅妍婷",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "mong-tong",
+    "name": "Mong Tong夢東",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "570fe648-4a8a-4568-862e-a1ec4cd817fa",
+        "name": "夢東",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "psychedelic music",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但沒有已知作品、團員關係或顏社／本色發行可交叉比對"
+  },
+  {
+    "slug": "robot-swing",
+    "name": "Robot Swing",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "90a72823-65ca-43f7-99b3-3b07e2673764",
+        "name": "Robot Swing",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "su-yu-han",
+    "name": "蘇郁涵",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "po-hou",
+    "name": "潑猴",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "ac11e520-ac99-45f8-bfb1-58f2d4859a64",
+        "name": "潑猴",
+        "country": "",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "our-shame",
+    "name": "凹與山Our Shame",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "11d394a4-f0e0-492a-bc82-afcedd7052b9",
+        "name": "Our Shame",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "qiu-shu",
+    "name": "邱舒",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "bai-he-hua",
+    "name": "百合花",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "62f4f4dd-908a-4cc1-804d-15e8a96b5375",
+        "name": "百合花",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "Taiwanese band",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "dang-dai-dian-ying-da-shi",
+    "name": "當代電影大師",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "886ca72b-7fbe-40e9-a4cc-31ddf06ee43a",
+        "name": "當代電影大師",
+        "country": "",
+        "type": "",
+        "disambiguation": "",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "xie-ming-yan",
+    "name": "謝明諺",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "8ab90791-c974-4a7a-9250-1fd44a64170b",
+        "name": "謝明諺",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "Taiwanese jazz saxophonist Minyen Hsieh",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "ke-zhi-tang",
+    "name": "柯智棠",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "tracy-yang",
+    "name": "Tracy Yang楊又臻",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "ab9109ea-ebcf-47c7-b7ce-4d24a61c3e69",
+        "name": "Tracy Yang",
+        "country": "New York",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  },
+  {
+    "slug": "yellow",
+    "name": "YELLOW黃宣",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "77357057-9d5d-468b-8247-bdaf5408a26d",
+        "name": "YELLOW黃宣",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "Taiwan Male Artist",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "9319588d-9361-4373-b126-05ba997ab51f",
+        "name": "DJ Yellow",
+        "country": "FR",
+        "type": "Person",
+        "disambiguation": "French DJ and producer",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "c616aef1-e21f-46f8-864f-b7bad96f41b2",
+        "name": "Yello",
+        "country": "CH",
+        "type": "Group",
+        "disambiguation": "Swiss electronica duo",
+        "tw": false,
+        "typ": false,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "a-kua-mian",
+    "name": "阿跨面",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "a5c15cea-af23-42f2-9ea3-f62eff373e35",
+        "name": "阿跨面",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "bu-lai-mei",
+    "name": "布萊梅",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "imdifficult",
+    "name": "我是機車少女I'mdifficult",
+    "label": "金曲金音",
+    "status": "ok",
+    "mbid": "afd9aeb0-0890-4ad2-b8b7-574b9446c48a",
+    "candidates": [
+      {
+        "mbid": "afd9aeb0-0890-4ad2-b8b7-574b9446c48a",
+        "name": "我是機車少女",
+        "country": "TW",
+        "type": "Group",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": [
+          "I’mdifficult: Remixes by Flowstrong",
+          "I'mdifficult"
+        ]
+      }
+    ],
+    "reason": "名稱相符、台灣、類型相符，佐證：I’mdifficult: Remixes by Flowstrong、I'mdifficult"
+  },
+  {
+    "slug": "blaire-ko",
+    "name": "柯智豪Blaire Ko",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "29883d7a-c418-416f-905a-9eaa5223841b",
+        "name": "柯智豪",
+        "country": "TW",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": true,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱、國家、類型相符，但作品、團員關係、發行廠牌都沒有交集"
+  },
+  {
+    "slug": "ti-pi-ou-jue-shi-da-le-tuan",
+    "name": "踢霹歐爵士大樂團",
+    "label": "金曲金音",
+    "status": "none",
+    "candidates": [],
+    "reason": "MusicBrainz 查無同名藝人"
+  },
+  {
+    "slug": "sophy",
+    "name": "SOPHY王嘉儀",
+    "label": "金曲金音",
+    "status": "doubt",
+    "candidates": [
+      {
+        "mbid": "c503fc13-aaa6-418f-be95-e6a3bad35f2f",
+        "name": "Sophy",
+        "country": "PR",
+        "type": "Person",
+        "disambiguation": "Puerto Rican singer",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "0987f14d-b1e2-4fce-b9b0-41dfdbfd2a98",
+        "name": "王嘉儀",
+        "country": "HK",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "23381778-19eb-4932-9de2-c520b5d2631a",
+        "name": "소피",
+        "country": "KR",
+        "type": "Person",
+        "disambiguation": "",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      },
+      {
+        "mbid": "3ddf7b85-bbf4-469e-976f-4efbbf511854",
+        "name": "SOPHY",
+        "country": "JP",
+        "type": "Person",
+        "disambiguation": "vocal on 冬に桜が咲くようなキセキ。",
+        "tw": false,
+        "typ": true,
+        "hits": []
+      }
+    ],
+    "reason": "名稱相符，但國家或類型對不上"
+  }
+]

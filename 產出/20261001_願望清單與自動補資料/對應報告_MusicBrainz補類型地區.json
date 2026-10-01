@@ -1,0 +1,66 @@
+[
+  {
+    "slug": "cold-dew",
+    "name": "COLD DEW",
+    "結果": "補上",
+    "gender": "group",
+    "region": "domestic",
+    "mbid": "48ddec66-31c8-4ee0-aa18-d45be63487f9"
+  },
+  {
+    "slug": "debloop",
+    "name": "debloop",
+    "結果": "補上",
+    "gender": "group",
+    "region": "domestic",
+    "mbid": "08ff7a3f-997f-4a2e-b135-7303182a0aca"
+  },
+  {
+    "slug": "yu-tiao",
+    "name": "魚條",
+    "結果": "補上",
+    "gender": "group",
+    "region": "domestic",
+    "mbid": "3ef8860b-2655-428e-b985-875a7f0c63a9"
+  },
+  {
+    "slug": "brbp",
+    "name": "BRBP",
+    "結果": "補上",
+    "gender": "group",
+    "region": "domestic",
+    "mbid": "d658240a-d80b-4f1b-8b13-2d41cf12c375"
+  },
+  {
+    "slug": "pang-hu",
+    "name": "胖虎",
+    "結果": "補上",
+    "gender": "group",
+    "region": "domestic",
+    "mbid": "b7d26b8b-1fca-400c-bebf-436781ad9f6c"
+  },
+  {
+    "slug": "plutato",
+    "name": "Plutato",
+    "結果": "補上",
+    "gender": "group",
+    "region": "domestic",
+    "mbid": "e81d693c-f4fa-4979-b68a-837032d4aa91"
+  },
+  {
+    "slug": "pan-zi-jue",
+    "name": "潘子爵",
+    "結果": "補上",
+    "gender": "female",
+    "region": "domestic",
+    "mbid": "177c9987-2e35-4958-bcca-be37cb04c4e4"
+  },
+  {
+    "slug": "mandark",
+    "name": "MANDARK",
+    "結果": "補上",
+    "gender": "female",
+    "region": "domestic",
+    "mbid": "d515c0d2-305d-445f-a4fc-71348fc9e074"
+  }
+]

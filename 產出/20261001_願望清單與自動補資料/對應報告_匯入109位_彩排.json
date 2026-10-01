@@ -1,0 +1,1034 @@
+{
+  "環境": "local",
+  "名單": 109,
+  "新建": 108,
+  "已存在略過": 0,
+  "併進既有": 1,
+  "類型": {
+    "名單": 2,
+    "Wikidata": 7,
+    "留空": 99
+  },
+  "地區": {
+    "名單": 3,
+    "Wikidata": 6,
+    "留空": 99
+  },
+  "帶維基簡介": 8,
+  "明細": {
+    "名單": 109,
+    "新建": [
+      {
+        "slug": "san-zhi-gou",
+        "name": "三隻狗",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "j-sheon",
+        "name": "J.Sheon",
+        "類型": "male",
+        "類型來源": "名單",
+        "地區": "domestic",
+        "地區來源": "Wikidata",
+        "wikidata": "成功",
+        "qid": "Q30946953"
+      },
+      {
+        "slug": "cold-dew",
+        "name": "COLD DEW",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "ma-wei",
+        "name": "馬尾",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "debloop",
+        "name": "debloop",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "chen-ying-da",
+        "name": "陳穎達",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "lin-wei-zhong",
+        "name": "林偉中",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "wang-pin-xin",
+        "name": "王品心",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "ye-jun-lin",
+        "name": "葉俊麟",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "brandon-lin",
+        "name": "Brandon Lin",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "hong-wei-nong",
+        "name": "洪惟農",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "zheng-yu-tai",
+        "name": "鄭宇泰",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "flowstrong",
+        "name": "Flowstrong",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "thats-my-shhh",
+        "name": "That's My Shhh",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "sheng-zi-chong",
+        "name": "聲子蟲",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "c-holly",
+        "name": "C.Holly",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "kiki",
+        "name": "KIKI",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "shnti",
+        "name": "SHNTI",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "n-y-p-d",
+        "name": "N.Y.P.D.南洋派對",
+        "類型": "group",
+        "類型來源": "名單",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "namdo-calling",
+        "name": "NAMDO CALLING",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "yu-tiao",
+        "name": "魚條",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "acid-brain",
+        "name": "Acid Brain酸腦",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "gong-zhen-xiao-ying",
+        "name": "共振效應",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "yi-hao-li-hang",
+        "name": "一好．屴夯",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "lei-qing",
+        "name": "雷擎",
+        "類型": "male",
+        "類型來源": "Wikidata",
+        "地區": "domestic",
+        "地區來源": "Wikidata",
+        "wikidata": "成功",
+        "qid": "Q112966472"
+      },
+      {
+        "slug": "lizi",
+        "name": "Lizi栗子",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "su-yi-fei",
+        "name": "蘇裔非",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "dciv",
+        "name": "DCIV柯德維",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "wu-rui-peng",
+        "name": "吳睿朋",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "undep",
+        "name": "undep",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "prod-cw",
+        "name": "PROD_CW",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "yyt",
+        "name": "yyt",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "a-flyt",
+        "name": "A.FLYT",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "teacheray",
+        "name": "TeacheRay",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "falk-bonitz-rafique",
+        "name": "Falk Bonitz Rafique",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "yang-yi-xiu",
+        "name": "楊易修",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "bradd",
+        "name": "BRADD",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "yun-duan-si-ji",
+        "name": "雲端司機",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "haezee",
+        "name": "Haezee黃瑋昕",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "nio",
+        "name": "NIO",
+        "類型": "male",
+        "類型來源": "Wikidata",
+        "地區": "domestic",
+        "地區來源": "名單",
+        "wikidata": "成功",
+        "qid": "Q112966053"
+      },
+      {
+        "slug": "zhong-yi-an",
+        "name": "鐘奕安",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "a-root",
+        "name": "A_Root同根生",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "future-after-a-second",
+        "name": "FUTURE AFTER A SECOND",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "mao-dan-zhi",
+        "name": "貓膽汁",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "lucy",
+        "name": "LÜCY",
+        "類型": "female",
+        "類型來源": "Wikidata",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "成功",
+        "qid": "Q113795024"
+      },
+      {
+        "slug": "lin-yi-shuo",
+        "name": "林奕碩",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "lin-yi-le",
+        "name": "林以樂",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "brbp",
+        "name": "BRBP",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "ftk",
+        "name": "FTK",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "tickle-tickle",
+        "name": "Tickle Tickle癢癢",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "zhong-qi",
+        "name": "鍾錡",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "wu-zheng-jun",
+        "name": "吳政君",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": "domestic",
+        "地區來源": "名單",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "li-wei-yong",
+        "name": "利惟庸",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "zheng-zhao-yuan",
+        "name": "鄭昭元",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "pang-hu",
+        "name": "胖虎",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "fat-hamster-and-kang-new",
+        "name": "Fat Hamster and KANG New",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": "overseas",
+        "地區來源": "名單",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "jacqui",
+        "name": "Jacqui",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "lomba-sihir",
+        "name": "Lomba Sihir",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "feast",
+        "name": ".Feast",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "elle-shimada",
+        "name": "ELLE SHIMADA",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "beyond-cure",
+        "name": "BEYOND CURE病入膏肓",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "destroyers",
+        "name": "擊沈女孩DESTROYERS",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "dao-che-ru-ku",
+        "name": "倒車入庫",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "sapud-kacaw",
+        "name": "Sapud Kacaw撒部．噶照",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "naau",
+        "name": "Naa'u娜塢",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "jiang-meng-xun",
+        "name": "江孟薰",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "yang-shu-ya",
+        "name": "楊舒雅",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "成功",
+        "qid": "Q137878600"
+      },
+      {
+        "slug": "knowtis",
+        "name": "KNOWTIS",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "puzzleman",
+        "name": "PUZZLEMAN",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "ced",
+        "name": "CED",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "wring-out-laura",
+        "name": "Wring Out Laura",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "kbn",
+        "name": "KbN凱比鳥",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "oberka",
+        "name": "Oberka",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "b-e-n-n",
+        "name": "B E N N",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "sonia-calico",
+        "name": "Sonia Calico",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "aiko-tomi",
+        "name": "富愛子AIKO TOMI",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "plutato",
+        "name": "Plutato",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "chen-zi-zhang",
+        "name": "陳子彰",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "kuljelje-ljamcun",
+        "name": "古樂樂良春Kuljelje Ljamcun",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "huang-yan-bin",
+        "name": "黃彥斌",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "yufu",
+        "name": "Yufu／陳郁夫",
+        "類型": "male",
+        "類型來源": "Wikidata",
+        "地區": "domestic",
+        "地區來源": "Wikidata",
+        "wikidata": "成功",
+        "qid": "Q135641496"
+      },
+      {
+        "slug": "dac",
+        "name": "Dac",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "liu-wei",
+        "name": "劉暐",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "zheng-jing-ru",
+        "name": "鄭敬儒",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "zheng-jia-fu",
+        "name": "鄭嘉富",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "li-mao-song",
+        "name": "李茂嵩",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "pan-zi-jue",
+        "name": "潘子爵",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "jian-yu-min",
+        "name": "簡聿民",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "mandark",
+        "name": "MANDARK",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "jia-ri-zhen-cao",
+        "name": "假日貞操",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "huang-ye-yuan",
+        "name": "黃業圓",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "lite",
+        "name": "LITE",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "age-factory",
+        "name": "Age Factory",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "narabara",
+        "name": "NaraBara",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "wen-shi-za-cao",
+        "name": "溫室雜草",
+        "類型": "group",
+        "類型來源": "Wikidata",
+        "地區": "domestic",
+        "地區來源": "Wikidata",
+        "wikidata": "成功",
+        "qid": "Q134298930"
+      },
+      {
+        "slug": "wannasleep",
+        "name": "wannasleep",
+        "類型": "male",
+        "類型來源": "Wikidata",
+        "地區": "domestic",
+        "地區來源": "Wikidata",
+        "wikidata": "成功",
+        "qid": "Q110107655"
+      },
+      {
+        "slug": "shen-jing-yuan",
+        "name": "神經元",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "dizparity",
+        "name": "Dizparity",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "lv-shao-chun",
+        "name": "呂紹淳",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "freedom-beat",
+        "name": "Freedom Beat",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "cheer",
+        "name": "cheer",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "xiao-qin",
+        "name": "笑琴",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "you-fa",
+        "name": "幽法",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "lu-qian-qian",
+        "name": "魯千千",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      },
+      {
+        "slug": "roger-lin",
+        "name": "林煒翔／Roger Lin",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "debby-wang",
+        "name": "王思雅／Debby Wang",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "疑義"
+      },
+      {
+        "slug": "linion",
+        "name": "LINION",
+        "類型": "male",
+        "類型來源": "Wikidata",
+        "地區": "domestic",
+        "地區來源": "Wikidata",
+        "wikidata": "成功",
+        "qid": "Q104722031"
+      },
+      {
+        "slug": "wen-ti-zong-bu",
+        "name": "問題總部",
+        "類型": null,
+        "類型來源": "留空",
+        "地區": null,
+        "地區來源": "留空",
+        "wikidata": "失敗"
+      }
+    ],
+    "已存在略過": [],
+    "併進既有": [
+      {
+        "slug": "erika",
+        "name": "ERIKA劉艾立",
+        "類型": "female",
+        "類型來源": "Wikidata",
+        "地區": "overseas",
+        "地區來源": "Wikidata",
+        "wikidata": "成功",
+        "qid": "Q10900342",
+        "併進": "劉艾立（erika-liu）",
+        "補別名": [
+          "ERIKA劉艾立",
+          "ERIKA"
+        ],
+        "補獎項": 1
+      }
+    ],
+    "類型": {
+      "名單": 2,
+      "Wikidata": 7,
+      "留空": 99
+    },
+    "地區": {
+      "名單": 3,
+      "Wikidata": 6,
+      "留空": 99
+    },
+    "帶維基簡介": 8
+  }
+}

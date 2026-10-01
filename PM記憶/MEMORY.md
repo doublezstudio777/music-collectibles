@@ -85,3 +85,6 @@
 - iPhone 段落右側整塊空白但元素寬度正常：先查 `text-wrap: pretty`（WebKit 會每行都縮短求平均，Chromium 只調末幾行所以重現不出來），量法是 Range 逐行右緣；WebKit 不支援 `text-justify: inter-character`，中文左右對齊只會撐大空格，別用。手機斷點規則若寫在檔案前段，後面同權重的基礎規則（如 `gap`）會蓋掉它（2026-10-01）
 - 要看每頁「自動產生的文字」實際長怎樣：用 scratchpad 還原正式站備份＋開建置版，從 sitemap 抓全部系列頁算重複度（678 頁約 20 秒），比只看樣板可靠；`.prose p` 左右對齊在 WebKit 會撐大英文名旁的空白，自動組的句子要靠左（2026-10-01）
 - 驗收會新增系列的腳本重跑時，上一輪的空專輯排在清單最上面，選版本要用 `:has([data-testid=pl-chip]:not(.pick-unsure))` 篩有版本的系列；正式站驗收的 session token 每次隨機、3 小時過期，不寫死可猜的字串（2026-10-01）
+- vinext `router.prefetch(href)` 預設 auto 對動態頁只抓骨架，點下去還會再打一次；要 `{ kind: "full" }` 才會被換頁沿用（點下去 0 請求）。WebKit 換頁時還在飛的 fetch 會記成 console error「access control checks」，驗收換頁前先 settle（2026-10-01）
+- GA4 自動事件（user_engagement 等）帶 `document.title`，個人頁標題有暱稱：用 `gtag('set', { page_title, page_location })` 蓋掉才乾淨；本機驗 GA 用 Playwright 把 lemibox.com 轉給本機、`/g/collect` 用 204 fulfill（abort 會讓 gtag 重送，看起來像重複事件）（2026-10-01）
+- 排程狀態存成 JSON（autofill_state）時，測試用 SQL 改值要等那一輪 finishedAt 後再改，進行中的批次會拿記憶體版本覆寫回去；本機沒有排程，手動 API 每 30 秒接一批（2026-10-01）
