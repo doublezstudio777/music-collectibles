@@ -17,7 +17,13 @@ declare global {
   }
 }
 
-export const gaEnabled = () => typeof window !== "undefined" && window.location.hostname === GA_HOST;
+/**
+ * 開始統計的時間＝隱私權政策 1.1 生效（2026-10-01 公告、照政策「生效前至少 7 日公告」10-08 生效）。
+ * 生效前現行的 1.0 寫「沒有追蹤用的 Cookie」，所以 GA 等 1.1 生效才載入
+ */
+export const GA_START = Date.parse("2026-10-08T00:00:00+08:00");
+
+export const gaEnabled = () => typeof window !== "undefined" && window.location.hostname === GA_HOST && Date.now() >= GA_START;
 
 const SECRET_PARAM = /token|code|key|secret|session|pass|e-?mail|mail|sig|auth|reset|verify|otp|invite/i;
 

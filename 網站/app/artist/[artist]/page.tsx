@@ -15,6 +15,7 @@ import { SITE_NAME } from "@/lib/data";
 import { activeArtistPhoto } from "@/lib/server/artist-photos";
 import { ArtistPhotoFigure } from "@/components/artist-photo";
 import { ArtistPhotoSubmit } from "@/components/artist-photo-submit";
+import { spotifyArtistId } from "@/lib/server/spotify-picks";
 
 type Props = { params: Promise<{ artist: string }>; searchParams: Promise<{ edit?: string }> };
 
@@ -52,7 +53,7 @@ export default async function ArtistPage({ params, searchParams }: Props) {
   if (!artist) notFound();
   const editing = (await searchParams).edit === "1";
   const wt = { kind: "artist" as const, slug: artist.slug };
-  const [page, locked, edited, photo] = await Promise.all([loadPage(wt), isLocked(wt), lastEdit(wt), activeArtistPhoto(artist.slug)]);
+  const [page, locked, edited, photo, spotifyId] = await Promise.all([loadPage(wt), isLocked(wt), lastEdit(wt), activeArtistPhoto(artist.slug), spotifyArtistId(artist.slug)]);
   const self = artistHref(artist.slug);
   const lastBy = edited ?? artist.lastEdit;
 
@@ -87,19 +88,24 @@ export default async function ArtistPage({ params, searchParams }: Props) {
           </p>
           <ArtistPhotoSubmit slug={artist.slug} name={artist.name} />
         </div>
-        <div className="head-actions">
-          <FollowButton slug={artist.slug} name={artist.name} />
-          {/* 一次勾選「我有」（2026-10-01）：個人頁面，不在整頁快取裡 */}
-          <Link className="btn btn-line" href={`/me/owned/${artist.slug}`} data-testid="owned-entry">
-            我收藏了哪些
-          </Link>
-          <CopyLink />
-          <Link className="btn btn-line" href={`${self}?edit=1#intro`} data-testid="edit-link">
-            編輯
-          </Link>
-          <Link className="btn btn-line" href={`${self}/history`}>
-            歷史
-          </Link>
+        {/* 2026-10-01 手機排版：主要動作「追蹤」「我收藏了哪些」等寬兩欄；複製連結、編輯、歷史改成一列小文字連結 */}
+        <div className="head-actions artist-actions">
+          <div className="artist-main-acts">
+            <FollowButton slug={artist.slug} name={artist.name} />
+            {/* 一次勾選「我有」（2026-10-01）：個人頁面，不在整頁快取裡 */}
+            <Link className="btn btn-line" href={`/me/owned/${artist.slug}`} data-testid="owned-entry">
+              我收藏了哪些
+            </Link>
+          </div>
+          <p className="artist-sub-acts">
+            <CopyLink className="link-btn" />
+            <Link className="link-btn" href={`${self}?edit=1#intro`} data-testid="edit-link">
+              編輯
+            </Link>
+            <Link className="link-btn" href={`${self}/history`}>
+              歷史
+            </Link>
+          </p>
         </div>
       </header>
 
@@ -111,6 +117,20 @@ export default async function ArtistPage({ params, searchParams }: Props) {
               <SeriesTile key={`${w.artistSlug}/${w.no}`} series={w} credits={c.creditNames(w)} except={artist.slug} photo={c.seriesCover(w)} />
             ))}
           </ul>
+        </section>
+      ) : null}
+
+      {spotifyId ? (
+        // 在 Spotify 上的熱門歌曲（2026-10-01）：Spotify 官方藝人嵌入播放器，熱門歌曲由 Spotify 決定；跟首頁一樣自動載入
+        <section className="block" data-testid="artist-spotify">
+          <h2 className="block-title">在 Spotify 上的熱門歌曲</h2>
+          <iframe
+            className="artist-sp"
+            title={`${artist.name}在 Spotify 上的熱門歌曲`}
+            src={`https://open.spotify.com/embed/artist/${spotifyId}?utm_source=generator`}
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+          />
         </section>
       ) : null}
 

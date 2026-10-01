@@ -56,7 +56,7 @@ function useDismiss(open: boolean, close: () => void) {
 }
 
 /** 系列頁、藝人頁：複製這頁的網址（不帶 ?edit、#錨點） */
-export function CopyLink() {
+export function CopyLink({ className = "btn btn-line" }: { className?: string } = {}) {
   const [done, setDone] = useState(false);
   const copy = async () => {
     if (await copyText(location.origin + location.pathname)) {
@@ -65,7 +65,7 @@ export function CopyLink() {
     }
   };
   return (
-    <button type="button" className="btn btn-line" onClick={copy} data-testid="copy-link">
+    <button type="button" className={className} onClick={copy} data-testid="copy-link">
       <span aria-live="polite">{done ? "已複製連結" : "複製連結"}</span>
     </button>
   );

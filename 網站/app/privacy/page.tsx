@@ -6,7 +6,7 @@ import { CONTACT_EMAIL, DELETION_DAYS, OPERATOR_TEXT, TAKEDOWN_PATH, TERMS_EFFEC
 
 // 2026-10-01 法務修正：照 產出/20261001_上線前法務審閱/README.md 第八節 D6 補齊個資法第 8 條應告知事項。
 // 另外補私訊檢舉、封鎖名單、條款同意紀錄、權利侵害通知四類資料（D6 沒有，依網站實際蒐集的資料補，待律師確認）。
-// 2026-10-01 1.1 版：補 Google Analytics（資料表一列、交給誰處理一項、Cookie 一段）。1.0 版全文在 app/privacy/v1-0/。
+// 2026-10-01 1.1 版：補 Google Analytics（資料表一列、交給誰處理一項、Cookie 一段，保存 14 個月）、Spotify 嵌入播放器涵蓋藝人頁。1.0 版全文在 app/privacy/v1-0/。
 // 「管理員看得到什麼」照網站實際做法：私訊檢舉時管理員也看不到訊息內容（D6 草稿寫會看到被檢舉的那段，跟現況不符）。
 export const metadata = { title: "隱私權政策" };
 
@@ -22,7 +22,7 @@ const ROWS: [string, string, string, string][] = [
   ["你發表的內容", "你使用網站時", "炫收藏與照片、留言、編輯紀錄、出價、成交、私訊、檢舉與申訴，照各功能的用途使用", "帳號存在期間；刪除帳號時的處理見下方"],
   ["私訊檢舉（檢舉人、被檢舉人、理由與補充說明）", "你檢舉一段對話時", "管理員處理騷擾、詐騙；不含訊息內容", "帳號存在期間；刪除帳號後保留 3 年，期滿刪除"],
   ["封鎖名單（你封鎖了誰）", "你封鎖其他會員時", "讓對方不能再傳訊息給你、不能對你的收藏出價。管理後台不列出", "解除封鎖前；刪除帳號時刪除"],
-  ["使用情形統計（Google Analytics）：看了哪些頁面、從哪個網站或搜尋進來、裝置與瀏覽器類型、大略地區（Google 依 IP 位址推估）、註冊、登入、發布、私訊、加入願望清單、出價等操作的次數", "開網頁時，由 Google Analytics 的程式蒐集（只在 lemibox.com）", "了解哪些頁面與功能有人用、從哪裡來，用來改善網站。不含 Email、暱稱、訊息內容，網址裡的驗證碼類參數會先拿掉", "依 Google Analytics 的資料保留設定（目前是預設的 2 個月），期滿由 Google 刪除；統計報表只有總數，不對應到個人"],
+  ["使用情形統計（Google Analytics）：看了哪些頁面、從哪個網站或搜尋進來、裝置與瀏覽器類型、大略地區（Google 依 IP 位址推估）、註冊、登入、發布、私訊、加入願望清單、出價等操作的次數", "開網頁時，由 Google Analytics 的程式蒐集（只在 lemibox.com）", "了解哪些頁面與功能有人用、從哪裡來，用來改善網站。不含 Email、暱稱、訊息內容，網址裡的驗證碼類參數會先拿掉", "14 個月（Google Analytics 的資料保留設定），期滿由 Google 刪除；統計報表只有總數，不對應到個人"],
   ["權利侵害通知與回復通知（姓名、Email、電話、地址、通知內容）", "你送出權利侵害通知，或會員送出回復通知時", "依著作權法處理侵權通知。通知內容（不含通知人的聯絡方式）會轉給被通知的會員，回復通知會轉給通知人", "處理完成後 3 年，期滿刪除"],
 ];
 
@@ -89,7 +89,7 @@ export default function PrivacyPage() {
         <li>Cloudflare（美國公司，資料中心遍布全球）：網站主機、資料庫、照片儲存、機器人驗證（Turnstile）。你的資料可能存放在台灣以外的地區</li>
         <li>Resend（美國）：寄送驗證碼與重設密碼的信，會拿到你的 Email 與信件內容</li>
         <li>Google Fonts（美國）：網頁字型，瀏覽器載入字型時 Google 會收到你的 IP 位址</li>
-        <li>Spotify（瑞典公司）：首頁的歌曲播放器是 Spotify 的嵌入播放器，開首頁時瀏覽器會連到 Spotify，Spotify 會收到你的 IP 位址，也可能設定它自己的 Cookie</li>
+        <li>Spotify（瑞典公司）：首頁的歌曲播放器、藝人頁的「在 Spotify 上的熱門歌曲」都是 Spotify 的嵌入播放器，開這些頁面時瀏覽器會連到 Spotify，Spotify 會收到你的 IP 位址，也可能設定它自己的 Cookie</li>
         <li>
           Google Analytics（美國 Google LLC）：統計網站的使用情形（見上表）。開網頁時 Google 會收到你的 IP 位址、瀏覽器與裝置資訊，並設定 Google Analytics 的 Cookie。我們不把 Email、暱稱、訊息內容交給 Google，也關閉了 Google 信號與廣告個人化，Google 不會把這些資料用在廣告上。Google 怎麼處理這些資料，見
           <a href="https://policies.google.com/technologies/partner-sites?hl=zh-TW" target="_blank" rel="noopener noreferrer">
@@ -101,7 +101,7 @@ export default function PrivacyPage() {
       <p>利用地區：台灣，以及上列服務供應商處理資料的所在地。</p>
 
       <h2>Cookie</h2>
-      <p>網站自己只用一個登入用的 Cookie（記住你已登入，最長 30 天），沒有廣告用的 Cookie。Cloudflare 為了擋機器人與攻擊，可能另外設定它自己的安全用 Cookie；首頁的 Spotify 播放器也可能設定 Spotify 自己的 Cookie。</p>
+      <p>網站自己只用一個登入用的 Cookie（記住你已登入，最長 30 天），沒有廣告用的 Cookie。Cloudflare 為了擋機器人與攻擊，可能另外設定它自己的安全用 Cookie；首頁與藝人頁的 Spotify 播放器也可能設定 Spotify 自己的 Cookie。</p>
       <p>
         另外用 Google Analytics 統計使用情形，會設定 Google Analytics 的 Cookie（名稱以 _ga 開頭，最長保存 2 年），用來分辨是不是同一個瀏覽器再次造訪，不含你的 Email 或暱稱。不想被統計，可以在瀏覽器設定裡封鎖或刪除 Cookie，或安裝 Google 提供的
         <a href="https://tools.google.com/dlpage/gaoptout?hl=zh-TW" target="_blank" rel="noopener noreferrer">

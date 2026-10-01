@@ -127,3 +127,15 @@ export async function removePick(admin: User, id: number) {
   });
   return { ok: true };
 }
+
+/**
+ * 藝人頁「在 Spotify 上的熱門歌曲」（2026-10-01）：這位藝人對上的 Spotify 藝人 ID（spotify_artists，停用的不算）。
+ * 熱門歌曲由 Spotify 官方藝人嵌入播放器自己顯示，不打 API、不吃配額（Spotify 2026-02 拿掉 Top Tracks API）
+ */
+export async function spotifyArtistId(slug: string): Promise<string | null> {
+  const [r] = await getDb()
+    .select({ id: spotifyArtists.spotifyId })
+    .from(spotifyArtists)
+    .where(and(eq(spotifyArtists.artistSlug, slug), eq(spotifyArtists.enabled, 1)));
+  return r && /^[A-Za-z0-9]{22}$/.test(r.id) ? r.id : null;
+}

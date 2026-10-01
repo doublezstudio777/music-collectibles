@@ -2067,3 +2067,35 @@ button.ctag-n:disabled { cursor: default; }
 .rs-list summary { cursor: pointer; font-weight: 600; }
 .rs-list ul { list-style: none; margin: 6px 0 0; padding: 0; }
 .rs-list li { border-bottom: 1px solid var(--line); font-size: var(--text-sm); padding: 6px 0; }
+
+/* 條款更新公告（2026-10-01）：底部一條，白底 1px 黑框，不推動內容 */
+.terms-notice {
+  align-items: center; background: #fff; border: 1px solid var(--text); bottom: 16px; display: flex; gap: 8px; left: 50%;
+  max-width: min(720px, calc(100% - 24px)); padding: 10px 6px 10px 16px; position: fixed; transform: translateX(-50%); width: max-content; z-index: 60;
+}
+.terms-notice p { font-size: var(--text-sm); margin: 0; overflow-wrap: anywhere; }
+.terms-notice .link { margin-left: 6px; white-space: nowrap; }
+.terms-notice-x { flex: none; font-size: 22px; height: 40px; line-height: 1; width: 40px; }
+.terms-notice-x:hover { background: var(--surface); }
+@media (max-width: 700px) { .terms-notice { bottom: 12px; width: calc(100% - 24px); } }
+
+/* ---------- 藝人頁頭部（2026-10-01 手機排版） ---------- */
+/* 主要動作兩顆等寬；次要（複製連結、編輯、歷史）一列小文字連結 */
+.artist-actions { align-items: stretch; flex-direction: column; gap: 6px; }
+.artist-main-acts { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.artist-main-acts > .btn { justify-content: center; min-width: 0; width: 100%; }
+.artist-sub-acts { display: flex; gap: 4px 18px; justify-content: flex-end; margin: 0; }
+.link-btn {
+  align-items: center; background: none; border: 0; color: var(--muted); cursor: pointer; display: inline-flex; font: inherit;
+  font-size: var(--text-sm); min-height: 40px; padding: 0; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 4px;
+}
+.link-btn:hover { color: var(--text); text-decoration-color: currentColor; }
+/* 在 Spotify 上的熱門歌曲：官方藝人嵌入播放器，手機 352px 高 */
+.artist-sp { border: 0; display: block; height: 352px; max-width: 720px; width: 100%; }
+@media (max-width: 700px) {
+  .artist-actions { width: 100%; }
+  .artist-sub-acts { justify-content: flex-start; }
+  /* 照片滿版寬、固定比例置中裁切（臉通常在上半，往上對齊一點），說明跟照片同寬 */
+  .head-split.has-photo .artist-photo { width: 100% !important; }
+  .head-split.has-photo .artist-photo img { aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 25%; }
+}

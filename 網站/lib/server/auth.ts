@@ -9,7 +9,7 @@ import { codeMail, getMailer } from "@/lib/server/services";
 import { recordLogin } from "@/lib/server/geo";
 import { SITE_NAME } from "@/lib/data";
 import { nextNameChange } from "@/lib/server/names";
-import { TERMS_VERSION } from "@/lib/legal";
+import { termsAccepted } from "@/lib/legal";
 
 /** 大頭貼 R2 檔名 → 網址 */
 export const avatarUrl = (key: string | null | undefined) => (key ? `/img/${key}` : null);
@@ -48,7 +48,7 @@ export const publicMe = (u: User) => ({
   /** 下次可以改暱稱的時間；現在就能改是 null */
   nameNextAt: nextNameChange(u.nameChangedAt),
   /** 已同意現行版使用條款與隱私權政策（2026-10-01）；false 時前端跳補同意視窗 */
-  termsOk: u.termsVersion === TERMS_VERSION,
+  termsOk: termsAccepted(u.termsVersion),
 });
 export type Me = ReturnType<typeof publicMe>;
 
