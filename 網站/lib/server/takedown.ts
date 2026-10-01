@@ -205,7 +205,7 @@ function blockMessage(b: Blockers, credited = 0) {
   const parts = [
     b.shares ? `${b.shares} 則炫收藏` : "",
     b.mentions ? `${b.mentions} 則炫收藏提到他` : "",
-    b.holdings ? `${b.holdings} 筆我有／想要` : "",
+    b.holdings ? `${b.holdings} 筆我有／願望清單` : "",
     b.reports ? `${b.reports} 筆檢舉紀錄` : "",
     credited ? `${credited} 個其他系列列了他` : "",
   ].filter(Boolean);

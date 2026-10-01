@@ -36,6 +36,7 @@ export type SeriesFacts = {
   trackDiscs: number;
   versions: VersionFact[];
   owners: number;
+  /** 放進願望清單的人數（Series.wishers，不重複計人） */
   wanted: number;
   shares: number;
   onSale: number;
@@ -178,10 +179,10 @@ function versionLine(f: SeriesFacts, short: boolean) {
   return [base, ...details.slice(0, 2)].join("，");
 }
 
-/** 第三句：收藏、想要、炫收藏（全部 0 就不寫） */
+/** 第三句：收藏、願望清單、炫收藏（全部 0 就不寫） */
 function peopleLine(f: SeriesFacts, short: boolean) {
   const { key, owners, wanted, shares } = f;
-  const people = [owners ? z`${owners}人登記擁有` : "", wanted ? z`${wanted}人想要` : ""].filter(Boolean).join("、");
+  const people = [owners ? z`${owners}人登記擁有` : "", wanted ? z`${wanted}人放進願望清單` : ""].filter(Boolean).join("、");
   if (short) return [people, shares ? z`${shares}則樂迷收藏` : "", f.onSale ? z`${f.onSale}件出售中` : ""].filter(Boolean).join("、");
   if (!people && !shares) return "";
   if (!people) return choose(key, "p-s", [z`已經有${shares}則樂迷的炫收藏`, z`站上有${shares}則樂迷分享的實體照片`, z`樂迷分享的炫收藏有${shares}則`]);

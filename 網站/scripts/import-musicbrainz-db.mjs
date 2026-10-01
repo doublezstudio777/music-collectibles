@@ -382,7 +382,7 @@ export async function run({ remote, persist, dry, mapping, releases, people, PRO
     }
   }
 
-  const out = join(root, ".wrangler", `import-musicbrainz${set === "awards" ? "-awards" : ""}.sql`);
+  const out = join(root, ".wrangler", `import-musicbrainz${set === "label" ? "" : `-${set}`}.sql`);
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, lines.join("\n") + "\n");
 
@@ -408,7 +408,7 @@ export async function run({ remote, persist, dry, mapping, releases, people, PRO
     匯入前: before,
     受保護版本id: protectedId,
   };
-  const reportFile = join(root, ".wrangler", `import-musicbrainz${set === "awards" ? "-awards" : ""}-report${remote ? "-remote" : ""}.json`);
+  const reportFile = join(root, ".wrangler", `import-musicbrainz${set === "label" ? "" : `-${set}`}-report${remote ? "-remote" : ""}.json`);
   writeFileSync(reportFile, JSON.stringify(summary, null, 2));
   console.log(JSON.stringify({ ...summary, MusicBrainz: { ...summary.MusicBrainz, 跳過明細: `${skippedList.length} 筆（見報告檔）` }, 計畫: { ...summary.計畫, 明細: "見報告檔" } }, null, 2));
 

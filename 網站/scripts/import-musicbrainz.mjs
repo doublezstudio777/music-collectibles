@@ -42,8 +42,8 @@ const opt = (k, d) => (argv.indexOf(k) >= 0 ? argv[argv.indexOf(k) + 1] : d);
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const research = join(root, "..", "研究", "20260927_顏社本色音樂");
 const set = opt("--set", "label");
-if (!["label", "awards"].includes(set)) {
-  console.error("--set 只能是 label（顏社本色，預設）或 awards（金曲金音）");
+if (!["label", "awards", "pending"].includes(set)) {
+  console.error("--set 只能是 label（顏社本色，預設）、awards（金曲金音）或 pending（補匯的 109 位＋上次對不到的重查）");
   process.exit(2);
 }
 const persist = opt("--persist-to", ".wrangler/state");
@@ -146,7 +146,53 @@ function awardsPeople() {
       };
     });
 }
-const people = set === "awards" ? awardsPeople() : labelPeople;
+/**
+ * 補匯批（2026-10-01，自動補資料第 3 層）：
+ *   - 金曲金音類型或地區待確認的 109 位（import-pending-artists.mjs 匯進站的；併進既有藝人的那幾位不算，既有那位若上次沒對上會在下一組）
+ *   - 金曲金音批上次（mapping-awards.json）沒對上的藝人重查
+ * 兩組都把名字拆開當別名一起搜：中英連寫（JOLIN蔡依林 → JOLIN、蔡依林）、「／」分隔。對應規則不變，一樣要作品、維基或團員佐證才算對上。
+ * 類型地區：109 位用 Wikidata 補的結果（沒有就不限），上次那組用名單的值
+ */
+async function pendingPeople() {
+  const { pendingRows, splitNames } = await import("./wikidata-pending.mjs");
+  const dir = join(root, "..", "研究", "20260927_金曲金音近三屆入圍藝人");
+  const wiki = new Map(
+    parseCsv(readFileSync(join(dir, "維基簡介.csv"), "utf8"))
+      .filter((w) => w["狀態"] === "已取得" && w["維基條目網址"])
+      .map((w) => [w["藝人中文名"], w]),
+  );
+  const works = JSON.parse(readFileSync(join(dir, "入圍作品_維基.json"), "utf8")).藝人;
+  const REGION = { 國內: "domestic", 國外: "overseas" };
+  const wd = JSON.parse(readFileSync(join(root, ".cache", "wikidata", "pending-result.json"), "utf8"));
+  const wdBySlug = new Map(wd.list.map((x) => [x.slug, x]));
+  const merged = new Set(JSON.parse(readFileSync(join(root, ".wrangler", "import-pending-report.json"), "utf8")).明細.併進既有.map((x) => x.slug));
+  const one = (r, gender, region) => {
+    const w = wiki.get(r["藝人中文名"]);
+    return {
+      slug: r["網址識別碼"],
+      name: r["藝人中文名"],
+      en: splitNames(r["藝人中文名"], r["藝人英文名"]).filter((n) => n !== r["藝人中文名"]),
+      gender,
+      region,
+      label: "金曲金音",
+      wiki: w?.["維基條目網址"] ?? "",
+      known: [...new Set([...[...(w?.["簡介"] ?? "").matchAll(/《([^》]+)》/g)].map((m) => m[1]), ...(works[r["網址識別碼"]]?.works ?? [])])],
+    };
+  };
+  const pend = pendingRows()
+    .filter((r) => !merged.has(r["網址識別碼"]))
+    .map((r) => {
+      const x = wdBySlug.get(r["網址識別碼"]);
+      const ok = x?.status === "成功";
+      return one(r, GENDER[r["類型"]] ?? (ok ? x.gender : null) ?? null, REGION[r["地區"]] ?? (ok ? x.region : null) ?? null);
+    });
+  const prev = JSON.parse(readFileSync(join(CACHE, "mapping-awards.json"), "utf8"));
+  const missed = new Set(prev.filter((m) => m.status !== "ok").map((m) => m.slug));
+  const rows = parseCsv(readFileSync(join(dir, "藝人名單_v2.csv"), "utf8"));
+  const again = rows.filter((r) => missed.has(r["網址識別碼"])).map((r) => one(r, GENDER[r["類型"]] ?? null, REGION[r["地區"]] ?? null));
+  return [...pend, ...again];
+}
+const people = set === "pending" ? await pendingPeople() : set === "awards" ? awardsPeople() : labelPeople;
 const allNames = [...labelPeople, ...people].flatMap((x) => [x.name, ...x.en]);
 for (const p of people) p.peers = allNames.filter((n) => n !== p.name && !p.en.includes(n));
 
@@ -171,7 +217,7 @@ for (const m of matched) {
   console.log(`  ${m.name}：${list.length} 個 release`);
 }
 mkdirSync(CACHE, { recursive: true });
-writeFileSync(join(CACHE, set === "awards" ? "mapping-awards.json" : "mapping.json"), JSON.stringify(mapping, null, 2));
+writeFileSync(join(CACHE, set === "pending" ? "mapping-pending.json" : set === "awards" ? "mapping-awards.json" : "mapping.json"), JSON.stringify(mapping, null, 2));
 console.log(`MusicBrainz 請求：網路 ${stats.network}、快取 ${stats.cached}、重試 ${stats.retries}`);
 if (fetchOnly) process.exit(0);
 
@@ -182,6 +228,13 @@ if (set === "awards") {
   const prev = JSON.parse(readFileSync(join(CACHE, "mapping.json"), "utf8"));
   dbMapping = [...mapping, ...prev.filter((m) => m.status === "ok").map((m) => ({ ...m, previous: true }))];
   dbPeople = [...people, ...labelPeople];
+}
+if (set === "pending") {
+  // 顏社本色、金曲金音上次對上的沿用（不抓發行），只用來歸屬共同署名、比對既有系列
+  const prev = [...JSON.parse(readFileSync(join(CACHE, "mapping.json"), "utf8")), ...JSON.parse(readFileSync(join(CACHE, "mapping-awards.json"), "utf8"))];
+  const mine = new Set(mapping.map((m) => m.slug));
+  dbMapping = [...mapping, ...prev.filter((m) => m.status === "ok" && !mine.has(m.slug)).map((m) => ({ ...m, previous: true }))];
+  dbPeople = [...people, ...labelPeople, ...awardsPeople()];
 }
 // 以下在 --local／--remote 時執行（資料庫部分另見本檔後半）
 await import("./import-musicbrainz-db.mjs").then((m) =>

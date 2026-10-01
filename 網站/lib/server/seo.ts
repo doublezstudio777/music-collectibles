@@ -206,7 +206,8 @@ export function seriesFacts(c: Catalog, w: Series, tracks: VersionLines): Series
     trackDiscs: discs.length,
     versions,
     owners: all.reduce((n, v) => n + v.owners, 0),
-    wanted: all.reduce((n, v) => n + v.wanted, 0),
+    // 願望清單人數（想要 ∪ 對這個系列的收藏按愛心，同一人只算一次）
+    wanted: w.wishers ?? 0,
     shares: shares.length,
     onSale: seriesMarket(c, w)?.onSale ?? 0,
   };

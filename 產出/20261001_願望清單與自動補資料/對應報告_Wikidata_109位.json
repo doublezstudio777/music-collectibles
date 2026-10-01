@@ -1,0 +1,2505 @@
+{
+  "generatedAt": "2026-10-01T13:56:18.099Z",
+  "總數": 109,
+  "成功": 10,
+  "疑義": 30,
+  "失敗": 69,
+  "請求": {
+    "network": 0,
+    "cached": 347
+  },
+  "list": [
+    {
+      "slug": "san-zhi-gou",
+      "name": "三隻狗",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "三隻狗"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "j-sheon",
+      "name": "J.Sheon",
+      "csvType": "男歌手",
+      "csvRegion": "待確認",
+      "status": "成功",
+      "qid": "Q30946953",
+      "evidence": "中文維基條目「J.Sheon」",
+      "gender": "male",
+      "region": "domestic",
+      "names": [
+        "J.Sheon"
+      ],
+      "candidates": [
+        {
+          "qid": "Q30946953",
+          "label": "J.Sheon",
+          "desc": "Taiwanese rapper and singer-songwriter",
+          "music": true,
+          "tw": true,
+          "dead": false,
+          "gender": "male",
+          "region": "domestic",
+          "countries": [
+            "Q865"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "cold-dew",
+      "name": "COLD DEW",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "COLD DEW"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "ma-wei",
+      "name": "馬尾",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "馬尾"
+      ],
+      "candidates": [
+        {
+          "qid": "Q653122",
+          "label": "ponytail",
+          "desc": "looser bunch of hair (opposing a pair of shorter/tighter pigtails)｜髮型",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q1051445",
+          "label": "cauda equina",
+          "desc": "lower part of the spinal cord, consisting of the lumbar, sacral, and coccygeal n",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "debloop",
+      "name": "debloop",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "debloop"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "chen-ying-da",
+      "name": "陳穎達",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "陳穎達"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "lin-wei-zhong",
+      "name": "林偉中",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "林偉中"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "wang-pin-xin",
+      "name": "王品心",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "王品心"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "ye-jun-lin",
+      "name": "葉俊麟",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名的台灣音樂人在 2020 年以前就過世了，不是這次入圍的人",
+      "names": [
+        "葉俊麟"
+      ],
+      "candidates": [
+        {
+          "qid": "Q15903991",
+          "label": "葉俊麟",
+          "desc": "Taiwanese songwriter (1921-1998)｜台灣歌謠作詞家｜台灣歌謠作詞家",
+          "music": true,
+          "tw": true,
+          "dead": true,
+          "gender": "male",
+          "region": null,
+          "countries": [
+            "Q865",
+            "Q188712"
+          ]
+        },
+        {
+          "qid": "Q134408362",
+          "label": "葉俊麟",
+          "desc": "Taiwanese baseball player｜臺灣棒球運動員",
+          "music": false,
+          "tw": true,
+          "dead": false,
+          "gender": "male",
+          "region": "domestic",
+          "countries": [
+            "Q865"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "brandon-lin",
+      "name": "Brandon Lin",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 有搜尋結果，但沒有名字完全相同的",
+      "names": [
+        "Brandon Lin"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "hong-wei-nong",
+      "name": "洪惟農",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "洪惟農"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "zheng-yu-tai",
+      "name": "鄭宇泰",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "鄭宇泰"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "flowstrong",
+      "name": "Flowstrong",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "Flowstrong"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "thats-my-shhh",
+      "name": "That's My Shhh",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "That's My Shhh"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "sheng-zi-chong",
+      "name": "聲子蟲",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "聲子蟲"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "c-holly",
+      "name": "C.Holly",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名的音樂人，但看不出跟台灣有關",
+      "names": [
+        "C.Holly"
+      ],
+      "candidates": [
+        {
+          "qid": "Q115929892",
+          "label": "C.Holly",
+          "desc": "",
+          "music": true,
+          "tw": false,
+          "dead": false,
+          "gender": "female",
+          "region": "overseas",
+          "countries": [
+            "Q145"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "kiki",
+      "name": "KIKI",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名的音樂人，但看不出跟台灣有關",
+      "names": [
+        "KIKI"
+      ],
+      "candidates": [
+        {
+          "qid": "Q17018183",
+          "label": "Kiki",
+          "desc": "given name｜名字｜名字｜名字",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q113630439",
+          "label": "kiki",
+          "desc": "Japanese light novelist",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q17"
+          ]
+        },
+        {
+          "qid": "Q11227865",
+          "label": "KIKI",
+          "desc": "Japanese actress｜日本女演員",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": "female",
+          "region": "overseas",
+          "countries": [
+            "Q17"
+          ]
+        },
+        {
+          "qid": "Q24628154",
+          "label": "Kiki",
+          "desc": "village in South Central Timor Regency, East Nusa Tenggara, Indonesia",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q252"
+          ]
+        },
+        {
+          "qid": "Q25894401",
+          "label": "Kiki",
+          "desc": "village in Mappi Regency, South Papua, Indonesia",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q252"
+          ]
+        },
+        {
+          "qid": "Q294330",
+          "label": "Kiki",
+          "desc": "Wikimedia disambiguation page｜維基媒體消歧義頁｜維基百科消歧義頁｜維基媒體消歧義頁",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q123503941",
+          "label": "Chiara Oliver",
+          "desc": "Spanish singer",
+          "music": true,
+          "tw": false,
+          "dead": false,
+          "gender": "female",
+          "region": "overseas",
+          "countries": [
+            "Q29",
+            "Q145"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "shnti",
+      "name": "SHNTI",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "SHNTI"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "n-y-p-d",
+      "name": "N.Y.P.D.南洋派對",
+      "csvType": "團體",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "N.Y.P.D.南洋派對",
+        "N.Y.P.D.",
+        "南洋派對"
+      ],
+      "candidates": [
+        {
+          "qid": "Q328473",
+          "label": "紐約市警察局",
+          "desc": "municipal police force in the United States｜美国纽约市的警察部门",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q30"
+          ]
+        },
+        {
+          "qid": "Q3446234",
+          "label": "N.Y.P.D.",
+          "desc": "television series",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q30"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "namdo-calling",
+      "name": "NAMDO CALLING",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "NAMDO CALLING"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "yu-tiao",
+      "name": "魚條",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "魚條"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "acid-brain",
+      "name": "Acid Brain酸腦",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "Acid Brain酸腦",
+        "Acid Brain",
+        "酸腦"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "gong-zhen-xiao-ying",
+      "name": "共振效應",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "共振效應"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "yi-hao-li-hang",
+      "name": "一好．屴夯",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "一好．屴夯"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "lei-qing",
+      "name": "雷擎",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "成功",
+      "qid": "Q112966472",
+      "evidence": "中文維基條目「雷擎」",
+      "gender": "male",
+      "region": "domestic",
+      "names": [
+        "雷擎"
+      ],
+      "candidates": [
+        {
+          "qid": "Q112966472",
+          "label": "雷擎",
+          "desc": "",
+          "music": false,
+          "tw": true,
+          "dead": false,
+          "gender": "male",
+          "region": "domestic",
+          "countries": [
+            "Q865"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "lizi",
+      "name": "Lizi栗子",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "Lizi栗子",
+        "Lizi",
+        "栗子"
+      ],
+      "candidates": [
+        {
+          "qid": "Q134542626",
+          "label": "Lizi栗子",
+          "desc": "",
+          "music": false,
+          "tw": true,
+          "dead": false,
+          "gender": null,
+          "region": "domestic",
+          "countries": [
+            "Q865"
+          ]
+        },
+        {
+          "qid": "Q108617522",
+          "label": "Liziane Gutierrez",
+          "desc": "Model",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": "female",
+          "region": "overseas",
+          "countries": [
+            "Q155"
+          ]
+        },
+        {
+          "qid": "Q129324",
+          "label": "栗",
+          "desc": "genus of plants｜壳斗科的一属植物",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q699584",
+          "label": "板栗",
+          "desc": "species of plant｜壳斗科板栗属植物",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q132558100",
+          "label": "栗子",
+          "desc": "item from the collection of National Museum of China｜中國國家博物館藏品",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q132559083",
+          "label": "栗子",
+          "desc": "item from the collection of National Museum of China｜中國國家博物館藏品",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "su-yi-fei",
+      "name": "蘇裔非",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "蘇裔非"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "dciv",
+      "name": "DCIV柯德維",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 有搜尋結果，但沒有名字完全相同的",
+      "names": [
+        "DCIV柯德維",
+        "DCIV",
+        "柯德維"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "wu-rui-peng",
+      "name": "吳睿朋",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "吳睿朋"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "undep",
+      "name": "undep",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 有搜尋結果，但沒有名字完全相同的",
+      "names": [
+        "undep"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "prod-cw",
+      "name": "PROD_CW",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "PROD_CW"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "yyt",
+      "name": "yyt",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "yyt"
+      ],
+      "candidates": [
+        {
+          "qid": "Q1516699",
+          "label": "聖約翰斯國際機場",
+          "desc": "airport in St John's, NL, Canada",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q16"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "a-flyt",
+      "name": "A.FLYT",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "A.FLYT"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "teacheray",
+      "name": "TeacheRay",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "TeacheRay"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "falk-bonitz-rafique",
+      "name": "Falk Bonitz Rafique",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "Falk Bonitz Rafique"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "yang-yi-xiu",
+      "name": "楊易修",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "楊易修"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "erika",
+      "name": "ERIKA劉艾立",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "成功",
+      "qid": "Q10900342",
+      "evidence": "名稱相同（ERIKA、劉艾立）、音樂人／樂團、描述寫台灣",
+      "gender": "female",
+      "region": "overseas",
+      "names": [
+        "ERIKA劉艾立",
+        "ERIKA",
+        "劉艾立"
+      ],
+      "candidates": [
+        {
+          "qid": "Q4962499",
+          "label": "Erika",
+          "desc": "female given name｜女性人名 (Erika)｜女性人名 (Erika)｜女性人名 (Erika)",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q700867",
+          "label": "艾瑞卡",
+          "desc": "German marching song｜歌曲",
+          "music": true,
+          "tw": false,
+          "dead": false,
+          "gender": "group",
+          "region": "overseas",
+          "countries": [
+            "Q183"
+          ]
+        },
+        {
+          "qid": "Q5388939",
+          "label": "Erika",
+          "desc": "moth genus",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q11344263",
+          "label": "ERIKA",
+          "desc": "former Japanese AV idol｜原日本AV女优",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": "female",
+          "region": "overseas",
+          "countries": [
+            "Q17"
+          ]
+        },
+        {
+          "qid": "Q19854528",
+          "label": "Erika",
+          "desc": "album",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q15077555",
+          "label": "Erika",
+          "desc": "Wikimedia disambiguation page｜維基媒體消歧義頁｜維基媒體消歧義頁｜維基媒體消歧義頁",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q10900342",
+          "label": "劉艾立",
+          "desc": "American-Taiwanese singer",
+          "music": true,
+          "tw": true,
+          "dead": false,
+          "gender": "female",
+          "region": "overseas",
+          "countries": [
+            "Q30"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "bradd",
+      "name": "BRADD",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "BRADD"
+      ],
+      "candidates": [
+        {
+          "qid": "Q51884071",
+          "label": "Bradd",
+          "desc": "given name",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "yun-duan-si-ji",
+      "name": "雲端司機",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "雲端司機"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "haezee",
+      "name": "Haezee黃瑋昕",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名的音樂人，但看不出跟台灣有關",
+      "names": [
+        "Haezee黃瑋昕",
+        "Haezee",
+        "黃瑋昕"
+      ],
+      "candidates": [
+        {
+          "qid": "Q114690826",
+          "label": "Haezee",
+          "desc": "馬來西亞女創作歌手｜Malaysian singer｜馬來西亞女創作歌手",
+          "music": true,
+          "tw": false,
+          "dead": false,
+          "gender": "female",
+          "region": "overseas",
+          "countries": [
+            "Q833"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "nio",
+      "name": "NIO",
+      "csvType": "待確認",
+      "csvRegion": "國內",
+      "status": "成功",
+      "qid": "Q112966053",
+      "evidence": "名稱相同（NIO）、音樂人／樂團、國家台灣",
+      "gender": "male",
+      "region": null,
+      "names": [
+        "NIO"
+      ],
+      "candidates": [
+        {
+          "qid": "Q539715",
+          "label": "Nio",
+          "desc": "佛教護法神｜佛教兩位護門金剛｜two wrathful and muscular guardians of the Buddha standing at the",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q13391233",
+          "label": "Liang",
+          "desc": "Chinese family name (梁)｜中文姓氏 (梁)｜姓氏 (梁)｜姓氏",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q20000700",
+          "label": "Nio",
+          "desc": "male given name｜男性人名｜男性人名｜男性人名",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q47417841",
+          "label": "Nio",
+          "desc": "family name｜姓氏 (Nio)｜姓氏 (Nio)｜姓氏 (Nio)",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q112966053",
+          "label": "NIO",
+          "desc": "台灣創作歌手｜Taiwanese-British singer-songwriter",
+          "music": true,
+          "tw": true,
+          "dead": false,
+          "gender": "male",
+          "region": null,
+          "countries": [
+            "Q145",
+            "Q865"
+          ]
+        },
+        {
+          "qid": "Q406952",
+          "label": "NIO",
+          "desc": "Wikimedia disambiguation page｜维基媒体消歧义页｜維基百科消歧義頁｜維基媒體消歧義頁",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "zhong-yi-an",
+      "name": "鐘奕安",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "鐘奕安"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "a-root",
+      "name": "A_Root同根生",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "A_Root同根生",
+        "A_Root",
+        "同根生"
+      ],
+      "candidates": [
+        {
+          "qid": "Q10917649",
+          "label": "同根生",
+          "desc": "1989 Hong Kong action film directed by Wang Lung-wei｜1989年香港電影",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q8646"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "future-after-a-second",
+      "name": "FUTURE AFTER A SECOND",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "FUTURE AFTER A SECOND"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "mao-dan-zhi",
+      "name": "貓膽汁",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "貓膽汁"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "lucy",
+      "name": "LÜCY",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "成功",
+      "qid": "Q113795024",
+      "evidence": "中文維基條目「LÜCY」",
+      "gender": "female",
+      "region": null,
+      "names": [
+        "LÜCY"
+      ],
+      "candidates": [
+        {
+          "qid": "Q113795024",
+          "label": "LÜCY",
+          "desc": "",
+          "music": true,
+          "tw": false,
+          "dead": false,
+          "gender": "female",
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "lin-yi-shuo",
+      "name": "林奕碩",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "林奕碩"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "lin-yi-le",
+      "name": "林以樂",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "研究填的中文維基條目是「雀斑樂團」，不是本人的條目（可能是所屬樂團）",
+      "names": [
+        "林以樂"
+      ],
+      "candidates": [
+        {
+          "qid": "Q7197102",
+          "label": "雀斑樂團",
+          "desc": "Taiwanese musical group",
+          "music": true,
+          "tw": true,
+          "dead": false,
+          "gender": "group",
+          "region": "domestic",
+          "countries": [
+            "Q865"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "brbp",
+      "name": "BRBP",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "BRBP"
+      ],
+      "candidates": [
+        {
+          "qid": "Q18255629",
+          "label": "Dazap2",
+          "desc": "protein-coding gene in the species Mus musculus",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "ftk",
+      "name": "FTK",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "FTK"
+      ],
+      "candidates": [
+        {
+          "qid": "Q3274607",
+          "label": "Godman Army Airfield",
+          "desc": "airport in Kentucky, United States of America",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q30"
+          ]
+        },
+        {
+          "qid": "Q5468696",
+          "label": "Forensic Toolkit",
+          "desc": "software for computer forensics",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q139328490",
+          "label": "Tano Kora Foundation",
+          "desc": "contemporary art foundation based in Côte d'Ivoire",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q29777376",
+          "label": "gjd6",
+          "desc": "protein-coding gene in the species Danio rerio",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q30256768",
+          "label": "Research Institute for Telecommunication Cooperation",
+          "desc": "government organization in Dortmund, Germany",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q183"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "tickle-tickle",
+      "name": "Tickle Tickle癢癢",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 有搜尋結果，但沒有名字完全相同的",
+      "names": [
+        "Tickle Tickle癢癢",
+        "Tickle Tickle",
+        "癢癢"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "zhong-qi",
+      "name": "鍾錡",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "鍾錡"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "wu-zheng-jun",
+      "name": "吳政君",
+      "csvType": "待確認",
+      "csvRegion": "國內",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "吳政君"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "li-wei-yong",
+      "name": "利惟庸",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "利惟庸"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "zheng-zhao-yuan",
+      "name": "鄭昭元",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "鄭昭元"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "pang-hu",
+      "name": "胖虎",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "胖虎"
+      ],
+      "candidates": [
+        {
+          "qid": "Q1134950",
+          "label": "剛田武",
+          "desc": "character in the Doraemon series｜《多啦A夢》角色",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q17"
+          ]
+        },
+        {
+          "qid": "Q9366879",
+          "label": "陳卓智",
+          "desc": "香港男配音員",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": "male",
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "fat-hamster-and-kang-new",
+      "name": "Fat Hamster and KANG New",
+      "csvType": "待確認",
+      "csvRegion": "國外",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "Fat Hamster and KANG New"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "jacqui",
+      "name": "Jacqui",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "Jacqui"
+      ],
+      "candidates": [
+        {
+          "qid": "Q21296612",
+          "label": "Jacqui",
+          "desc": "female given name｜女性人名｜女性人名｜女性人名",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "lomba-sihir",
+      "name": "Lomba Sihir",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名的音樂人，但看不出跟台灣有關",
+      "names": [
+        "Lomba Sihir"
+      ],
+      "candidates": [
+        {
+          "qid": "Q108550420",
+          "label": "Lomba Sihir",
+          "desc": "Indonesian musical group",
+          "music": true,
+          "tw": false,
+          "dead": false,
+          "gender": "group",
+          "region": "overseas",
+          "countries": [
+            "Q252"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "feast",
+      "name": ".Feast",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名的音樂人，但看不出跟台灣有關",
+      "names": [
+        ".Feast"
+      ],
+      "candidates": [
+        {
+          "qid": "Q56399854",
+          "label": ".Feast",
+          "desc": "Indonesian musical group; alternative rock band",
+          "music": true,
+          "tw": false,
+          "dead": false,
+          "gender": "group",
+          "region": "overseas",
+          "countries": [
+            "Q252"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "elle-shimada",
+      "name": "ELLE SHIMADA",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "ELLE SHIMADA"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "beyond-cure",
+      "name": "BEYOND CURE病入膏肓",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 有搜尋結果，但沒有名字完全相同的",
+      "names": [
+        "BEYOND CURE病入膏肓",
+        "BEYOND CURE",
+        "病入膏肓"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "destroyers",
+      "name": "擊沈女孩DESTROYERS",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名的音樂人，但看不出跟台灣有關",
+      "names": [
+        "擊沈女孩DESTROYERS",
+        "DESTROYERS",
+        "擊沈女孩"
+      ],
+      "candidates": [
+        {
+          "qid": "Q113578416",
+          "label": "George Thorogood & The Destroyers",
+          "desc": "American musical group",
+          "music": true,
+          "tw": false,
+          "dead": false,
+          "gender": "group",
+          "region": "overseas",
+          "countries": [
+            "Q30"
+          ]
+        },
+        {
+          "qid": "Q9206471",
+          "label": "Destroyers",
+          "desc": "Polish thrash metal band",
+          "music": true,
+          "tw": false,
+          "dead": false,
+          "gender": "group",
+          "region": "overseas",
+          "countries": [
+            "Q36",
+            "Q682001"
+          ]
+        },
+        {
+          "qid": "Q3986595",
+          "label": "The Destroyers",
+          "desc": "1916 film by Ralph Ince",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q30"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "dao-che-ru-ku",
+      "name": "倒車入庫",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "倒車入庫"
+      ],
+      "candidates": [
+        {
+          "qid": "Q3497475",
+          "label": "perpendicular parking",
+          "desc": "停车方式｜method of parking",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "sapud-kacaw",
+      "name": "Sapud Kacaw撒部．噶照",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "Sapud Kacaw撒部．噶照",
+        "Sapud Kacaw",
+        "撒部．噶照"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "naau",
+      "name": "Naa'u娜塢",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "Naa'u娜塢",
+        "Naa'u",
+        "娜塢"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "jiang-meng-xun",
+      "name": "江孟薰",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "江孟薰"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "yang-shu-ya",
+      "name": "楊舒雅",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "成功",
+      "qid": "Q137878600",
+      "evidence": "中文維基條目「楊舒雅」",
+      "gender": null,
+      "region": null,
+      "names": [
+        "楊舒雅"
+      ],
+      "candidates": [
+        {
+          "qid": "Q137878600",
+          "label": "楊舒雅",
+          "desc": "",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "knowtis",
+      "name": "KNOWTIS",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "KNOWTIS"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "puzzleman",
+      "name": "PUZZLEMAN",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 有搜尋結果，但沒有名字完全相同的",
+      "names": [
+        "PUZZLEMAN"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "ced",
+      "name": "CED",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "CED"
+      ],
+      "candidates": [
+        {
+          "qid": "Q11088",
+          "label": "celiac disease",
+          "desc": "long term autoimmune disorder caused by a reaction to gluten",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "wring-out-laura",
+      "name": "Wring Out Laura",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "Wring Out Laura"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "kbn",
+      "name": "KbN凱比鳥",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "KbN凱比鳥",
+        "KbN",
+        "凱比鳥"
+      ],
+      "candidates": [
+        {
+          "qid": "Q1800430",
+          "label": "Kilburn High Road railway station",
+          "desc": "railway station in Kilburn High Road, London Borough of Camden, England, UK",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q145"
+          ]
+        },
+        {
+          "qid": "Q113992645",
+          "label": "Kirkburton Branch",
+          "desc": "railway branch line and section of railway line in the UK",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q145"
+          ]
+        },
+        {
+          "qid": "Q12695376",
+          "label": "Tunta Airport",
+          "desc": "airport in Democratic Republic of the Congo",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q974"
+          ]
+        },
+        {
+          "qid": "Q369851",
+          "label": "Kommunalbanken",
+          "desc": "company",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q20"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "oberka",
+      "name": "Oberka",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 有搜尋結果，但沒有名字完全相同的",
+      "names": [
+        "Oberka"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "b-e-n-n",
+      "name": "B E N N",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "B E N N"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "sonia-calico",
+      "name": "Sonia Calico",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "Sonia Calico"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "aiko-tomi",
+      "name": "富愛子AIKO TOMI",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "富愛子AIKO TOMI",
+        "AIKO TOMI",
+        "富愛子"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "plutato",
+      "name": "Plutato",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "Plutato"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "chen-zi-zhang",
+      "name": "陳子彰",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "陳子彰"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "kuljelje-ljamcun",
+      "name": "古樂樂良春Kuljelje Ljamcun",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "古樂樂良春Kuljelje Ljamcun",
+        "Kuljelje Ljamcun",
+        "古樂樂良春"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "huang-yan-bin",
+      "name": "黃彥斌",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "黃彥斌"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "yufu",
+      "name": "Yufu／陳郁夫",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "成功",
+      "qid": "Q135641496",
+      "evidence": "名稱相同（陳郁夫）、音樂人／樂團、國家台灣",
+      "gender": "male",
+      "region": "domestic",
+      "names": [
+        "Yufu／陳郁夫",
+        "Yufu",
+        "陳郁夫"
+      ],
+      "candidates": [
+        {
+          "qid": "Q990455",
+          "label": "由布市",
+          "desc": "city in Ōita Prefecture, Japan｜日本大分縣的市",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q17"
+          ]
+        },
+        {
+          "qid": "Q532587",
+          "label": "宋教仁",
+          "desc": "Chinese revolutionary (1882-1913)｜中國近代民主革命家 (1882-1913)",
+          "music": false,
+          "tw": false,
+          "dead": true,
+          "gender": "male",
+          "region": "overseas",
+          "countries": [
+            "Q29520",
+            "Q13426199",
+            "Q148"
+          ]
+        },
+        {
+          "qid": "Q11620784",
+          "label": "叶恭绰",
+          "desc": "中國書畫家｜Chinese politician and art collector",
+          "music": false,
+          "tw": false,
+          "dead": true,
+          "gender": "male",
+          "region": "overseas",
+          "countries": [
+            "Q148",
+            "Q8733",
+            "Q13426199",
+            "Q9903",
+            "Q7313",
+            "Q7462",
+            "Q9683"
+          ]
+        },
+        {
+          "qid": "Q16925844",
+          "label": "陳遴瑋",
+          "desc": "Ming dynasty person CBDB = 207210",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": "male",
+          "region": "overseas",
+          "countries": [
+            "Q9903"
+          ]
+        },
+        {
+          "qid": "Q11597824",
+          "label": "立山",
+          "desc": "Qing dynasty politician",
+          "music": false,
+          "tw": false,
+          "dead": true,
+          "gender": "male",
+          "region": "overseas",
+          "countries": [
+            "Q8733"
+          ]
+        },
+        {
+          "qid": "Q45613207",
+          "label": "Yang Daoheng",
+          "desc": "Ming dynasty person CBDB = 131845",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": "male",
+          "region": "overseas",
+          "countries": [
+            "Q9903"
+          ]
+        },
+        {
+          "qid": "Q109346318",
+          "label": "俞跗",
+          "desc": "Legendary Chinese doctor who supposedly served under the Yellow Emperor in prehi",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q135641496",
+          "label": "陳郁夫",
+          "desc": "臺灣男創作歌手、吉他手、音樂製作人｜臺灣男創作歌手、吉他手、音樂製作人｜臺灣男創作歌手、吉他手、音樂製作人｜Taiwanese singer-songwrite",
+          "music": true,
+          "tw": true,
+          "dead": false,
+          "gender": "male",
+          "region": "domestic",
+          "countries": [
+            "Q865"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "dac",
+      "name": "Dac",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "Dac"
+      ],
+      "candidates": [
+        {
+          "qid": "Q30603",
+          "label": "沙阿贾拉勒国际机场",
+          "desc": "Primary Airport of Bangladesh, Serves the capital City Dhaka｜位於孟加拉達卡的民用國際機場",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": "overseas",
+          "countries": [
+            "Q902"
+          ]
+        },
+        {
+          "qid": "Q225450",
+          "label": "DAC",
+          "desc": "Wikimedia disambiguation page｜維基媒體消歧義頁｜維基媒體消歧義頁｜維基媒體消歧義頁",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "liu-wei",
+      "name": "劉暐",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "劉暐"
+      ],
+      "candidates": [
+        {
+          "qid": "Q45569055",
+          "label": "Liu Wei",
+          "desc": "Song dynasty person CBDB = 51801",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": "male",
+          "region": "overseas",
+          "countries": [
+            "Q7462"
+          ]
+        },
+        {
+          "qid": "Q45679299",
+          "label": "Liu Wei",
+          "desc": "Qing dynasty person CBDB = 74778",
+          "music": false,
+          "tw": false,
+          "dead": true,
+          "gender": "male",
+          "region": "overseas",
+          "countries": [
+            "Q8733"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "zheng-jing-ru",
+      "name": "鄭敬儒",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "鄭敬儒"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "zheng-jia-fu",
+      "name": "鄭嘉富",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "鄭嘉富"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "li-mao-song",
+      "name": "李茂嵩",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "李茂嵩"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "pan-zi-jue",
+      "name": "潘子爵",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "潘子爵"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "jian-yu-min",
+      "name": "簡聿民",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "簡聿民"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "mandark",
+      "name": "MANDARK",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "MANDARK"
+      ],
+      "candidates": [
+        {
+          "qid": "Q1226051",
+          "label": "Dimitris Reppas",
+          "desc": "Greek politician｜希臘政治人物",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": "male",
+          "region": "overseas",
+          "countries": [
+            "Q41"
+          ]
+        },
+        {
+          "qid": "Q119078997",
+          "label": "Mandark",
+          "desc": "main antagonist in Dexter's Laboratory",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "jia-ri-zhen-cao",
+      "name": "假日貞操",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "假日貞操"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "huang-ye-yuan",
+      "name": "黃業圓",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "黃業圓"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "lite",
+      "name": "LITE",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名的音樂人，但看不出跟台灣有關",
+      "names": [
+        "LITE"
+      ],
+      "candidates": [
+        {
+          "qid": "Q3028491",
+          "label": "Lite",
+          "desc": "Japanese math rock band",
+          "music": true,
+          "tw": false,
+          "dead": false,
+          "gender": "group",
+          "region": "overseas",
+          "countries": [
+            "Q17"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "age-factory",
+      "name": "Age Factory",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名的音樂人，但看不出跟台灣有關",
+      "names": [
+        "Age Factory"
+      ],
+      "candidates": [
+        {
+          "qid": "Q60988391",
+          "label": "Age Factory",
+          "desc": "Japanese rock band",
+          "music": true,
+          "tw": false,
+          "dead": false,
+          "gender": "group",
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "narabara",
+      "name": "NaraBara",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 有搜尋結果，但沒有名字完全相同的",
+      "names": [
+        "NaraBara"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "wen-shi-za-cao",
+      "name": "溫室雜草",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "成功",
+      "qid": "Q134298930",
+      "evidence": "中文維基條目「溫室雜草」",
+      "gender": "group",
+      "region": "domestic",
+      "names": [
+        "溫室雜草"
+      ],
+      "candidates": [
+        {
+          "qid": "Q134298930",
+          "label": "溫室雜草",
+          "desc": "台灣獨立樂團｜台灣獨立樂團｜台灣獨立樂團",
+          "music": true,
+          "tw": true,
+          "dead": false,
+          "gender": "group",
+          "region": "domestic",
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "wannasleep",
+      "name": "wannasleep",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "成功",
+      "qid": "Q110107655",
+      "evidence": "中文維基條目「Wannasleep」",
+      "gender": "male",
+      "region": "domestic",
+      "names": [
+        "wannasleep"
+      ],
+      "candidates": [
+        {
+          "qid": "Q110107655",
+          "label": "Wannasleep",
+          "desc": "",
+          "music": false,
+          "tw": true,
+          "dead": false,
+          "gender": "male",
+          "region": "domestic",
+          "countries": [
+            "Q865"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "shen-jing-yuan",
+      "name": "神經元",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "神經元"
+      ],
+      "candidates": [
+        {
+          "qid": "Q43054",
+          "label": "神經元",
+          "desc": "electrically excitable cell that communicates via synapses｜神經系統的結構和功能單位",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "dizparity",
+      "name": "Dizparity",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "Dizparity"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "lv-shao-chun",
+      "name": "呂紹淳",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "呂紹淳"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "freedom-beat",
+      "name": "Freedom Beat",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "Freedom Beat"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "cheer",
+      "name": "cheer",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "cheer"
+      ],
+      "candidates": [
+        {
+          "qid": "Q37452769",
+          "label": "Cheer",
+          "desc": "family name｜姓氏 (Cheer)｜姓氏 (Cheer)｜姓氏 (Cheer)",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q61391",
+          "label": "啦啦隊",
+          "desc": "sports activity in which the participants cheer for their team as a form of enco",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q10846686",
+          "label": "CHEER",
+          "desc": "2005 compilation album by Cheer Chen",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        },
+        {
+          "qid": "Q11194478",
+          "label": "Cheer!",
+          "desc": "album by Manish",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "xiao-qin",
+      "name": "笑琴",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "笑琴"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "you-fa",
+      "name": "幽法",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "幽法"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "lu-qian-qian",
+      "name": "魯千千",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "魯千千"
+      ],
+      "candidates": []
+    },
+    {
+      "slug": "roger-lin",
+      "name": "林煒翔／Roger Lin",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "林煒翔／Roger Lin",
+        "林煒翔",
+        "Roger Lin"
+      ],
+      "candidates": [
+        {
+          "qid": "Q106310771",
+          "label": "林煒翔",
+          "desc": "臺灣藝術家｜Taiwanese artist｜臺灣藝術家｜臺灣藝術家",
+          "music": false,
+          "tw": true,
+          "dead": false,
+          "gender": "male",
+          "region": "domestic",
+          "countries": [
+            "Q865"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "debby-wang",
+      "name": "王思雅／Debby Wang",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "疑義",
+      "reason": "同名項目都不是音樂人",
+      "names": [
+        "王思雅／Debby Wang",
+        "王思雅",
+        "Debby Wang"
+      ],
+      "candidates": [
+        {
+          "qid": "Q61467231",
+          "label": "Debby D Wang",
+          "desc": "researcher ORCID ID = 0000-0002-3755-8943｜研究者",
+          "music": false,
+          "tw": false,
+          "dead": false,
+          "gender": null,
+          "region": null,
+          "countries": []
+        }
+      ]
+    },
+    {
+      "slug": "linion",
+      "name": "LINION",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "成功",
+      "qid": "Q104722031",
+      "evidence": "中文維基條目「LINION」",
+      "gender": "male",
+      "region": "domestic",
+      "names": [
+        "LINION"
+      ],
+      "candidates": [
+        {
+          "qid": "Q104722031",
+          "label": "LINION",
+          "desc": "",
+          "music": false,
+          "tw": true,
+          "dead": false,
+          "gender": "male",
+          "region": "domestic",
+          "countries": [
+            "Q865"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "wen-ti-zong-bu",
+      "name": "問題總部",
+      "csvType": "待確認",
+      "csvRegion": "待確認",
+      "status": "失敗",
+      "reason": "Wikidata 查無同名項目",
+      "names": [
+        "問題總部"
+      ],
+      "candidates": []
+    }
+  ]
+}

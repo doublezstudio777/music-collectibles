@@ -120,7 +120,7 @@ async function load(params: Props["params"]) {
 
 // 系列頁 metadata（2026-10-01 SEO）：
 // - 標題：只有一個版本「理想混蛋《關掉／打開》2022 台灣首版 CD｜曲目、版本與收藏」；多個版本「Hyukoh《23》2017 專輯｜曲目、版本與收藏」
-// - 描述：自動事實句（lib/series-intro.ts：誰、哪一年、幾首、版本與地區、收藏與想要、出售中件數，不含價格），再接系列介紹開頭
+// - 描述：自動事實句（lib/series-intro.ts：誰、哪一年、幾首、版本與地區、收藏與願望清單人數、出售中件數，不含價格），再接系列介紹開頭
 // - 版本沒有獨立網址（系列頁的錨點），版本的 MusicRelease 放在這頁的結構化資料裡
 // 後台可覆寫；內容太空、待確認、後台設定不收錄時 noindex（lib/server/seo.ts）
 const tracksOf = cache(seriesTracks);
@@ -434,7 +434,8 @@ export default async function SeriesPage({ params, searchParams }: Props) {
         ),
     }))
     .filter((g) => g.list.length > 0);
-  const wanted = versions.reduce((n, v) => n + v.wanted, 0);
+  // 放進願望清單的人（2026-10-01 統一）：想要任一版本 ∪ 對這個系列的收藏按愛心，同一人只算一次（lib/server/content.ts）
+  const wishers = series.wishers ?? 0;
 
   // 結構化資料（2026-10-01 SEO）：MusicAlbum＋各版本 MusicRelease、麵包屑
   const ctx = await seoContext();
@@ -486,7 +487,7 @@ export default async function SeriesPage({ params, searchParams }: Props) {
             {series.kind === "misc" ? <span className="sub">不屬於專輯、也不屬於演唱會的周邊</span> : null}
           </p>
           <p className="page-meta">
-            <span className="num">{owners}</span> 人有 · <span className="num">{wanted}</span> 人想要 ·{" "}
+            <span className="num">{owners}</span> 人有 · <span className="num">{wishers}</span> 人放進願望清單 ·{" "}
             <span className="num">{related.length}</span> 則炫收藏
             {collections.length ? (
               <>

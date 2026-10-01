@@ -37,6 +37,12 @@ import {
   type MbRelease,
   type VersionFill,
 } from "@/lib/server/autofill-mb";
+import { releaseScanStep, scanState } from "@/lib/server/release-scan";
+
+const scanActive = async () => {
+  const st = await scanState();
+  return Boolean(st && !st.finishedAt);
+};
 
 export type AfSource = { label: string; url: string };
 export type AfCandidate = { label: string; url: string; note?: string; mbid?: string };
@@ -148,7 +154,7 @@ async function nextJob() {
 }
 
 /** 跑到沒有到期的工作、額度用完或 MusicBrainz 忙線為止。回傳處理了幾筆 */
-export async function runAutofill({ ms, maxCalls }: { ms: number; maxCalls: number }) {
+export async function runAutofill({ ms, maxCalls, scan = false }: { ms: number; maxCalls: number; scan?: boolean }) {
   const start = Date.now();
   let done = 0;
   for (let round = 0; round < 2; round++) {
@@ -157,7 +163,19 @@ export async function runAutofill({ ms, maxCalls }: { ms: number; maxCalls: numb
     const b: Budget = { calls: 0, maxCalls, deadline: start + ms, mbLast: Number(last?.value) || 0 };
     let stop = false;
     try {
-      for (let job = await nextJob(); job && !stop; job = await nextJob()) {
+      for (let job = await nextJob(); !stop; job = await nextJob()) {
+        if (!job) {
+          // 沒有工作了：排程執行時接著跑每月補新作品（一次一位藝人；建了系列就會多出工作，回到迴圈處理）
+          if (!scan) break;
+          try {
+            if (!(await releaseScanStep(b))) break;
+          } catch (e) {
+            if (e instanceof Busy) console.warn(`[每月補新作品] ${(e as Error).message}，下次排程再查`);
+            else if (!(e instanceof OutOfBudget)) console.error("[每月補新作品] 失敗", e);
+            stop = true;
+          }
+          continue;
+        }
         try {
           const out = await processJob(b, job);
           if (out.defer) {
@@ -201,7 +219,7 @@ export async function runAutofill({ ms, maxCalls }: { ms: number; maxCalls: numb
       await dropLock();
     }
     // 放鎖前剛好有人排了新工作、又因為鎖在而沒跑：再看一次
-    if (stop || Date.now() - start > ms - 5000 || !(await nextJob())) break;
+    if (stop || Date.now() - start > ms - 5000 || (!(await nextJob()) && !(scan && (await scanActive())))) break;
   }
   return { done, locked: false };
 }
@@ -492,7 +510,16 @@ async function doSeries(b: Budget, job: Job): Promise<Outcome> {
   if (forced) {
     const rg = await mb<MbRg>(b, `release-group/${forced}?inc=artist-credits`);
     if (!rg) return { confidence: "low", result: { summary: `MusicBrainz 找不到 ${forced}`, fields: [], sources: [], candidates } };
-    pick = { rg, releases: await releasesOfRg(b, rg.id), why: job.hint ? "管理員指定" : "系列已經有 MusicBrainz 代碼（版本用條碼對上時寫入，或原本就有）" };
+    pick = {
+      rg,
+      releases: await releasesOfRg(b, rg.id),
+      why:
+        job.hint === "monthly"
+          ? "每月補新作品：這位藝人在 MusicBrainz 的作品清單裡有、站上還沒有的新發行"
+          : job.hint
+            ? "管理員指定"
+            : "系列已經有 MusicBrainz 代碼（版本用條碼對上時寫入，或原本就有）",
+    };
   } else {
     const artistQ = a.mbid ? `arid:${a.mbid}` : `artist:"${lq(a.name)}"`;
     const res = await mb<{ "release-groups"?: MbRg[] }>(b, `release-group?query=${encodeURIComponent(`releasegroup:"${lq(w.title)}" AND ${artistQ}`)}&limit=10`);

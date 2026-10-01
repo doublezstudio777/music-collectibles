@@ -81,7 +81,7 @@ function OwnedGroups({ rows, isSelf, name }: { rows: HoldingView[]; isSelf: bool
 }
 
 /**
- * 個人頁的我有／想要，兩者都公開。別人看讀伺服器給的清單；本人看自己時跟著按鈕即時變，
+ * 個人頁的我有／願望清單（版本，舊稱想要），兩者都公開；按愛心的收藏不公開。別人看讀伺服器給的清單；本人看自己時跟著按鈕即時變，
  * 清單裡還沒有的鍵（剛勾的）另外跟 /api/holding-views 要顯示資料
  */
 export function HoldingsList({
@@ -127,7 +127,7 @@ export function HoldingsList({
       </section>
       <section className="block" id="wanted">
         <h2 className="block-title">
-          想要 <span className="count">{wantRows.length}</span>
+          願望清單 <span className="count">{wantRows.length}</span>
         </h2>
         {wantRows.length ? <Table rows={wantRows} /> : <p className="empty">還沒有標記</p>}
       </section>

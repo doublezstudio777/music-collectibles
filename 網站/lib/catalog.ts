@@ -406,10 +406,28 @@ export class Catalog {
     return s ? ogPhoto(s) : null;
   };
 
+  /**
+   * 這個鍵（系列／品項／版本）底下出售中的收藏：定價出售＋開放出價，被鎖的不算（跟系列頁「站上行情」同一套）。
+   * 願望清單用（2026-10-01）：「有 N 件出售中」，一件直接連那則，多件連系列頁的版本（或品項、系列）段落
+   */
+  sellingFor = (key: string) => {
+    const [sk, anchor = ""] = key.split("#");
+    const [itemId, vid] = anchor ? anchor.split("-") : [];
+    return this.shares.filter(
+      (s) =>
+        s.link?.series === sk &&
+        (!itemId || s.link.item === itemId) &&
+        (!vid || s.link.version === vid) &&
+        (s.sale?.state === "sale" || s.sale?.state === "offer") &&
+        !this.toShareView(s).lock,
+    );
+  };
+
   /** 我有／想要清單的一列。2026-10-01 起系列鍵、品項鍵（不確定版本）也收 */
   toHoldingView = (key: string): HoldingView | null => {
     const r = this.keyView(key);
     if (!r) return null;
+    const selling = this.sellingFor(key);
     return {
       key,
       title: r.series.title,
@@ -423,6 +441,7 @@ export class Catalog {
       artistSlug: r.artistSlug,
       artistName: r.artistName,
       ...(r.unsure ? { unsure: true } : {}),
+      ...(selling.length ? { onSale: selling.length, saleHref: selling.length === 1 ? `/share/${selling[0].n}` : r.href } : {}),
     };
   };
 

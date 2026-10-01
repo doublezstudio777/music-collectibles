@@ -16,6 +16,7 @@ import { mergeArtists } from "@/lib/server/duplicates";
 import { creditCreate } from "@/lib/server/scores";
 import { HttpError } from "@/lib/server/trade";
 import { autofillFor, enqueueAutofill, requeueRef, type AdminAutofill } from "@/lib/server/autofill";
+import { SYSTEM_RELEASES } from "@/lib/server/release-scan";
 
 export type AdditionType = "artist" | "series" | "version";
 const nowIso = () => new Date().toISOString();
@@ -251,7 +252,8 @@ export async function listAdditions(): Promise<AdminAddition[]> {
   const shRows = await db.select({ about: shares.about, seriesKey: shares.seriesKey, itemId: shares.itemId, versionId: shares.versionId }).from(shares).where(isNull(shares.deletedAt));
   const vBy = new Map((await versionRows(rows.filter((r) => r.type === "version").map((r) => Number(r.ref)))).map((v) => [String(v.id), v]));
   const names = await userNames([...rows.flatMap((r) => [r.createdBy, r.confirmedBy ?? ""]), ...edits.map((e) => e.byId)]);
-  const who = (id: string | null) => (id ? (names.get(id)?.name ?? "（已刪除）") : null);
+  // 每月補新作品（2026-10-01）建的系列：新增者記成 system:releases
+  const who = (id: string | null) => (id === SYSTEM_RELEASES ? "每月自動補新作品" : id ? (names.get(id)?.name ?? "（已刪除）") : null);
   const af = await autofillFor(rows.map((r) => r.id));
   return rows.map((r) => ({ ...one(r), autofill: af.get(r.id) }));
   function one(r: (typeof rows)[number]): AdminAddition {

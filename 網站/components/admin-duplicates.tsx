@@ -19,7 +19,7 @@ type Pair = { pairKey: string; reason: string; a: Side; b: Side };
 type Impact = { series: number; shares: number; holdings: number; deals: number; follows: number; dismissals: number; revisions: number; decisions: number; locks: number };
 
 const impactLine = (i: Impact) =>
-  `系列 ${i.series} 個、炫收藏 ${i.shares} 則、我有／想要 ${i.holdings} 筆、成交紀錄 ${i.deals} 筆、追蹤 ${i.follows} 筆、不感興趣 ${i.dismissals} 筆、` +
+  `系列 ${i.series} 個、炫收藏 ${i.shares} 則、我有／願望清單 ${i.holdings} 筆、成交紀錄 ${i.deals} 筆、追蹤 ${i.follows} 筆、不感興趣 ${i.dismissals} 筆、` +
   `編輯紀錄 ${i.revisions} 筆、裁決 ${i.decisions} 筆、頁面鎖定 ${i.locks} 筆`;
 
 function SideCard({ s }: { s: Side }) {

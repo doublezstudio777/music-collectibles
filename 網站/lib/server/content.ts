@@ -7,7 +7,7 @@
 // 前端用 lib/counts.ts 以「拿到這份總數時自己按了沒」扣回去再疊上現在的狀態。
 
 import { cache } from "react";
-import { and, count, eq, getTableColumns, inArray, isNull } from "drizzle-orm";
+import { and, count, eq, getTableColumns, inArray, isNull, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import {
   artists as tArtists,
@@ -240,6 +240,22 @@ async function build(): Promise<Catalog> {
       color: v.color,
     });
   }
+  // 願望清單人數（2026-10-01 願望清單統一）：想要（任一層的鍵）∪ 對這個系列的炫收藏按愛心，(會員, 系列) 去重後計人。
+  // 跟按讚、我有一樣不讓整頁快取作廢（likes／holdings 沒有內容版本觸發器），數字跟著下一次目錄重建更新
+  const wishRows = await db.all<{ sk: string; n: number }>(sql`
+    SELECT sk, COUNT(*) AS n FROM (
+      SELECT user_id AS uid, CASE WHEN instr(target_key, '#') > 0 THEN substr(target_key, 1, instr(target_key, '#') - 1) ELSE target_key END AS sk
+        FROM holdings WHERE kind = 'wanted'
+      UNION
+      SELECT l.user_id AS uid, s.series_key AS sk FROM likes l JOIN shares s ON s.no = l.share_no
+        WHERE s.series_key IS NOT NULL AND s.deleted_at IS NULL AND s.hidden_at IS NULL
+    ) GROUP BY sk`);
+  const wishBy = new Map(wishRows.map((r) => [r.sk, Number(r.n)]));
+  for (const w of seriesList) {
+    const n = wishBy.get(`${w.artistSlug}/${w.no}`);
+    if (n) w.wishers = n;
+  }
+
   // 「有，但不確定版本」（系列層、品項層的我有，2026-10-01）：系列頁「N 人有」加上這些人
   for (const w of seriesList) {
     const sk = `${w.artistSlug}/${w.no}`;

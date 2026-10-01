@@ -4,6 +4,7 @@ import Link from "@/components/link";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/account";
 import type { AdminAddition } from "@/lib/server/additions";
+import type { ScanItem, ScanState } from "@/lib/server/release-scan";
 
 const CONF: Record<string, string> = { high: "高信心，已預填", low: "低信心，只列候選", none: "未查到", dup: "跟既有資料重複" };
 
@@ -225,6 +226,114 @@ function Row({ r, done }: { r: AdminAddition; done: () => void }) {
   );
 }
 
+function ScanList({ title, rows, testid }: { title: string; rows: ScanItem[]; testid: string }) {
+  if (!rows.length) return null;
+  return (
+    <details className="rs-list" data-testid={testid}>
+      <summary>
+        {title} <span className="num">{rows.length}</span>
+      </summary>
+      <ul>
+        {rows.map((x, i) => (
+          <li key={i}>
+            {x.artist}《
+            <a className="link" href={x.url} target="_blank" rel="noreferrer">
+              {x.title}
+            </a>
+            》<span className="sub-inline num">　{x.date}</span>
+            {x.key ? (
+              <>
+                {"　"}
+                <a className="link" href={`/artist/${x.key}`} target="_blank" rel="noreferrer">
+                  {x.key}
+                </a>
+              </>
+            ) : null}
+            {x.note ? <span className="sub-inline">　{x.note}</span> : null}
+          </li>
+        ))}
+      </ul>
+    </details>
+  );
+}
+
+/**
+ * 每月補新作品（2026-10-01）：每月初排程自動開一輪，這裡看進度、建了哪些、疑義清單；也可以手動開一輪。
+ * 建出來的系列跟會員新增的一樣列在下面「待確認」（新增者寫「每月自動補新作品」）
+ */
+function ReleaseScan({ reload }: { reload: () => void }) {
+  const [st, setSt] = useState<ScanState | null | undefined>(undefined);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  // tick 變了就重讀一次；查詢中每 8 秒加一（連同下面的待確認清單一起重讀）
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    let live = true;
+    void api<{ state: ScanState | null }>("/api/admin/release-scan").then((r) => {
+      if (live && r.ok) setSt(r.data.state);
+    });
+    return () => {
+      live = false;
+    };
+  }, [tick]);
+  const running = Boolean(st && !st.finishedAt);
+  useEffect(() => {
+    if (!running) return;
+    const t = setTimeout(() => {
+      setTick((n) => n + 1);
+      reload();
+    }, 8000);
+    return () => clearTimeout(t);
+  }, [running, st, reload]);
+  const act = async (action: "start" | "run") => {
+    setBusy(true);
+    setError("");
+    const r = await api<{ state: ScanState | null }>("/api/admin/release-scan", { method: "POST", body: { action } });
+    setBusy(false);
+    if (!r.ok) return setError(r.error.message);
+    setSt(r.data.state);
+  };
+  if (st === undefined) return null;
+  const x = st?.stats;
+  return (
+    <section className="block rs" data-testid="release-scan" data-running={running ? "1" : "0"}>
+      <h2 className="block-title">每月補新作品</h2>
+      {st && x ? (
+        <>
+          <p className="sub" data-testid="rs-progress">
+            {st.month}（{st.trigger === "manual" ? "手動" : "排程"}，{time(st.startedAt)} 開始{st.finishedAt ? `，${time(st.finishedAt)} 查完` : "，查詢中"}）：藝人{" "}
+            <span className="num">
+              {x.artists}／{st.total}
+            </span>
+            ，發行日 {st.cutoff} 之後
+          </p>
+          <p className="rs-stats" data-testid="rs-stats">
+            新發行 <span className="num">{x.candidates}</span>・建系列 <span className="num">{x.created}</span>・疑義 <span className="num">{x.doubt}</span>・只有數位{" "}
+            <span className="num">{x.digital}</span>
+          </p>
+          <ScanList title="建了這些系列（版本由自動補資料建，列在下方待確認）" rows={st.created} testid="rs-created" />
+          <ScanList title="疑義：站上可能已經有（沒建）" rows={st.doubt} testid="rs-doubt" />
+          <ScanList title="只有數位或還沒有發行（沒建，一年內每月再看一次）" rows={st.digital} testid="rs-digital" />
+          {st.errors.length ? <p className="field-error">{st.errors.join("；")}</p> : null}
+        </>
+      ) : (
+        <p className="sub">還沒跑過，每月第一天台灣時間 02:00 自動開始</p>
+      )}
+      <div className="ap-actions">
+        <button type="button" className="btn btn-line" disabled={busy || running} onClick={() => void act("start")} data-testid="rs-start">
+          現在跑一輪
+        </button>
+        {running ? (
+          <button type="button" className="btn-text" disabled={busy} onClick={() => void act("run")} data-testid="rs-run">
+            接著查一批
+          </button>
+        ) : null}
+      </div>
+      {error ? <p className="field-error">{error}</p> : null}
+    </section>
+  );
+}
+
 /** 後台「待確認的新增」：會員在炫收藏表單就地新增的藝人、系列，新增當下已生效，這裡事後確認、修名或合併 */
 export function AdminAdditions() {
   const [list, setList] = useState<AdminAddition[] | null>(null);
@@ -272,6 +381,7 @@ export function AdminAdditions() {
   );
   return (
     <div data-testid="additions-admin">
+      <ReleaseScan reload={() => void load()} />
       {section("待確認", list.filter((r) => !r.confirmedAt), "沒有待確認的新增", "add-open")}
       {section("已確認", list.filter((r) => r.confirmedAt), "沒有紀錄", "add-done")}
     </div>

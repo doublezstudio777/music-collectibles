@@ -26,6 +26,7 @@ import { take, tooMany, weight } from "./lib/edge/limiter";
 import { cleanupOldRecords } from "./lib/server/cleanup";
 import { runSpotifyDraw } from "./lib/server/spotify-draw";
 import { runAutofill } from "./lib/server/autofill";
+import { startReleaseScan } from "./lib/server/release-scan";
 import { recomputeScores } from "./lib/server/scores";
 
 type Env = { DB: D1Database; CF_VERSION_METADATA?: { id: string }; LOCAL_TEST?: string; GEO_DEFAULT?: string };
@@ -161,10 +162,11 @@ const worker = {
   // 兩件事各自獨立，失敗只記 console，不影響另一件與下一次排程。
   // - Spotify 自動抽歌（2026-09-30）：另一條 `*/5 18-20 * * *`，每 5 分鐘抽一批（lib/server/spotify-draw.ts）
   // - 發布時自動補資料（2026-09-30）：`*/10 * * * *` 接手 waitUntil 沒跑完的工作（lib/server/autofill.ts），沒工作時只查一次 D1
+  // - 每月補新作品（2026-10-01）：每天 02:00 那次看這個月開過沒，沒有就開一輪；查詢在 `*/10` 沒工作時分批跑（lib/server/release-scan.ts）
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
     if (event.cron === "*/10 * * * *") {
       ctx.waitUntil(
-        runAutofill({ ms: 120_000, maxCalls: 45 })
+        runAutofill({ ms: 120_000, maxCalls: 45, scan: true })
           .then((r) => {
             if (r.done) console.log("[樂迷藏排程] 自動補資料", JSON.stringify(r));
           })
@@ -189,6 +191,12 @@ const worker = {
     ctx.waitUntil(
       cleanupOldRecords().catch((e) => {
         console.error("[樂迷藏排程] 清理過期紀錄失敗", e);
+      }),
+    );
+    // 每月補新作品（2026-10-01）：這個月還沒開過就開一輪，實際查詢由 */10 的排程分批接手（lib/server/release-scan.ts）
+    ctx.waitUntil(
+      startReleaseScan({ trigger: "cron", now: event.scheduledTime }).catch((e) => {
+        console.error("[樂迷藏排程] 每月補新作品開始失敗", e);
       }),
     );
     ctx.waitUntil(

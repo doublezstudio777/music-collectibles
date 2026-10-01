@@ -218,7 +218,7 @@ export function toggleLike(n: number) {
 }
 
 export function toggleHolding(bucket: "owned" | "wanted", key: string) {
-  requireLogin(bucket === "owned" ? "登入後才能標記我有" : "登入後才能標記想要", (late) => {
+  requireLogin(bucket === "owned" ? "登入後才能標記我有" : "登入後才能加入願望清單", (late) => {
     const on = late || !acc[bucket].includes(key);
     void write(bucket, key, on, "/api/me/holdings", { kind: bucket, key, on });
   });
