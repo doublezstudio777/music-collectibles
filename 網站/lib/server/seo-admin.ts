@@ -20,7 +20,6 @@ import {
   artistDescription,
   artistIndex,
   artistTitle,
-  mainTracks,
   overrideOf,
   seoContext,
   seriesDescription,
@@ -28,7 +27,6 @@ import {
   seriesTitle,
 } from "@/lib/server/seo";
 import { artistHref, norm, SITE_TITLE, SITE_NAME, seriesHref } from "@/lib/data";
-import { trackCount } from "@/lib/tracks";
 import { clipWidth, DEFAULT_SITE_DESC, DEFAULT_TITLE_SUFFIX, DESC_MAX, isSeoTarget, oneLine, type SeoOverride, type SeoTarget } from "@/lib/seo";
 import { ABOUT_PARAS } from "@/lib/about";
 
@@ -81,7 +79,7 @@ export async function seoForm(target: SeoTarget): Promise<SeoForm> {
   const key = target.slice(7);
   const w = c.getSeriesByKey(key);
   if (!w) throw new HttpError(404, "NOT_FOUND", "找不到這個系列");
-  const main = mainTracks(w, await seriesTracks(w.artistSlug, w.no));
+  const tracks = await seriesTracks(w.artistSlug, w.no);
   return {
     ...base,
     label: `${c.creditNames(w).map((a) => a.name).join("、")}《${w.title}》`,
@@ -89,7 +87,7 @@ export async function seoForm(target: SeoTarget): Promise<SeoForm> {
     absolute: false,
     auto: {
       title: seriesTitle(c, w),
-      description: seriesDescription(c, w, main ? trackCount(main.lines) : 0),
+      description: seriesDescription(c, w, tracks),
       og: c.ogPhotoOf(c.sharesOfSeries(w))?.url ?? OG_DEFAULT_URL,
     },
     auto_index: withoutOverride(seriesIndex(c, ctx, w), override),

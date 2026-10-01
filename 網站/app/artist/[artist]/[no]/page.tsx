@@ -21,7 +21,28 @@ import {
 } from "@/lib/data";
 import { pageData } from "@/lib/server/viewer";
 import { cache } from "react";
-import { ARTISTS_CRUMB, HOME_CRUMB, artistCrumb, breadcrumbLd, ldJson, mainTracks, overrideOf, overridePhoto, pick, seoContext, seoMeta, seriesCrumb, seriesDescription, seriesIndex, seriesLd, seriesTitle } from "@/lib/server/seo";
+import {
+  ARTISTS_CRUMB,
+  HOME_CRUMB,
+  artistCrumb,
+  breadcrumbLd,
+  ldJson,
+  mainTracks,
+  overrideOf,
+  overridePhoto,
+  pick,
+  seoContext,
+  seoMeta,
+  seriesCrumb,
+  seriesDescription,
+  seriesFacts,
+  seriesIndex,
+  seriesLd,
+  seriesMarket,
+  seriesTitle,
+} from "@/lib/server/seo";
+import { seriesIntro } from "@/lib/series-intro";
+import { MarketBox, VersionTable } from "@/components/series-facts";
 import { CopyLink } from "@/components/share-actions";
 import { HoldingButtons, OwnersCount } from "@/components/holding-buttons";
 import { PriceHistory } from "@/components/price-history";
@@ -99,7 +120,7 @@ async function load(params: Props["params"]) {
 
 // 系列頁 metadata（2026-10-01 SEO）：
 // - 標題：只有一個版本「理想混蛋《關掉／打開》2022 台灣首版 CD｜曲目、版本與收藏」；多個版本「Hyukoh《23》2017 專輯｜曲目、版本與收藏」
-// - 描述：藝人、系列、發行年、版本數與品項、曲目數、收藏數，再接系列介紹開頭
+// - 描述：自動事實句（lib/series-intro.ts：誰、哪一年、幾首、版本與地區、收藏與想要、出售中件數，不含價格），再接系列介紹開頭
 // - 版本沒有獨立網址（系列頁的錨點），版本的 MusicRelease 放在這頁的結構化資料裡
 // 後台可覆寫；內容太空、待確認、後台設定不收錄時 noindex（lib/server/seo.ts）
 const tracksOf = cache(seriesTracks);
@@ -108,11 +129,11 @@ export async function generateMetadata({ params }: Props) {
   const [{ c, series: w }, ctx] = await Promise.all([load(params), seoContext()]);
   if (!w) return { title: "找不到系列" };
   const o = overrideOf(ctx, `series:${w.artistSlug}/${w.no}`);
-  const main = mainTracks(w, await tracksOf(w.artistSlug, w.no));
+  const tracks = await tracksOf(w.artistSlug, w.no);
   return seoMeta({
     path: `/artist/${w.artistSlug}/${w.no}`,
     title: pick(o.title, seriesTitle(c, w)),
-    description: pick(o.description, seriesDescription(c, w, main ? trackCount(main.lines) : 0)),
+    description: pick(o.description, seriesDescription(c, w, tracks)),
     photo: overridePhoto(o) ?? c.ogPhotoOf(c.sharesOfSeries(w)),
     index: seriesIndex(c, ctx, w).index,
     alt: `${c.creditNames(w).map((a) => a.name).join("、")}《${w.title}》`,
@@ -409,10 +430,14 @@ export default async function SeriesPage({ params, searchParams }: Props) {
   const leadArtist = credits.find((a) => c.artistVisible(a));
   const album = seriesLd(c, ctx, series, {
     image: selfCover,
-    description: seriesDescription(c, series, main ? trackCount(main.lines) : 0),
+    description: seriesDescription(c, series, tracks),
     tracks,
     mainLines: main?.lines ?? [],
   });
+  // 自動介紹句、版本比較、站上行情（2026-10-01 系列頁全部收錄）
+  const facts = seriesFacts(c, series, tracks);
+  const intro = seriesIntro(facts);
+  const market = seriesMarket(c, series);
   const ld = ldJson([
     ...(album ? [album] : []),
     breadcrumbLd([HOME_CRUMB, ARTISTS_CRUMB, ...(leadArtist ? [artistCrumb(leadArtist)] : []), seriesCrumb(series)]),
@@ -481,6 +506,9 @@ export default async function SeriesPage({ params, searchParams }: Props) {
       </nav>
 
       <section id="body" className="block prose">
+        <p className="series-lead" data-testid="series-intro">
+          {intro}
+        </p>
         {editing ? (
           <WikiEditor target={`series:${skey}`} paras={page?.content ?? series.body} baseId={baseId} locked={pageLocked} closeHref={self} label="介紹" />
         ) : series.body.length ? (
@@ -499,6 +527,9 @@ export default async function SeriesPage({ params, searchParams }: Props) {
           </Link>
         </p>
       </section>
+
+      <VersionTable versions={facts.versions} />
+      <MarketBox market={market} />
 
       {main ? (
         <section className="block tracks-main" id="tracks" data-testid="main-tracks">

@@ -2,7 +2,8 @@
 //
 // 收錄判斷（第二層，自動把關）。條件每次渲染重算，條件一變頁面就跟著變（整頁快取鍵含內容版本；
 // catalog_additions 沒有內容版本觸發器，確認新增後最多 5 分鐘生效，見 worker.ts 的 TTL）：
-// - 系列頁：內容太空（沒有收藏、系列介紹不到 30 字；只有曲目不算，2026-10-01 使用者選 B 案；「周邊與其他」只看有沒有收藏）、
+// - 系列頁：內容太空（沒有收藏、沒有任何版本有曲目、系列介紹不到 30 字三個都成立；2026-10-01 晚間使用者改回 A 案，
+//   頁面另外有自動介紹句、版本一覽、站上行情補內容；「周邊與其他」只看有沒有收藏）、
 //   待確認的新增、後台設定不收錄 → noindex
 // - 藝人頁：簡介不到 30 字、沒有收藏、底下沒有任何可收錄的主要系列 → 內容太空；待確認、後台設定 → noindex
 // - 收藏頁：檢舉達門檻（被鎖＝交易暫停）、沒照片而且內容不到 10 字 → noindex
@@ -18,10 +19,12 @@ import { isRecordKind, seriesHref, artistHref, shareHref, titleSegments, SERIES_
 import { indexingAllowed } from "@/lib/server/guard";
 import { OG_DEFAULT } from "@/lib/server/og";
 import { parseTracks, REGULAR_EDITION } from "@/lib/tracks";
+import { hasValue, packagingOnly, parseContents, seriesSummaryParts, type MarketFacts, type SeriesFacts, type VersionFact } from "@/lib/series-intro";
 import {
   CANONICAL_ORIGIN,
   clipWidth,
   DESC_MAX,
+  displayWidth,
   DEFAULT_SITE_DESC,
   DEFAULT_TITLE_SUFFIX,
   oneLine,
@@ -35,6 +38,8 @@ export type SeoContext = {
   site: SeoSite;
   overrides: Map<string, SeoOverride>;
   pending: { artist: Set<string>; series: Set<string>; version: Set<string> };
+  /** 有曲目的系列（鍵 slug/no），A 案收錄判斷用 */
+  tracked: Set<string>;
 };
 
 const parse = <T,>(s: string | null | undefined, d: T): T => {
@@ -45,10 +50,10 @@ const parse = <T,>(s: string | null | undefined, d: T): T => {
   }
 };
 
-/** 一次 batch 讀完：後台覆寫（settings 的 seo:*）、待確認的新增（2026-10-01 B 案後不再讀「有曲目的系列」） */
+/** 一次 batch 讀完：後台覆寫（settings 的 seo:*）、待確認的新增、有曲目的系列 */
 export const seoContext = cache(async (): Promise<SeoContext> => {
   const db = env.DB!;
-  const [s, p] = await db.batch([
+  const [s, p, t] = await db.batch([
     db.prepare(`SELECT key, value FROM settings WHERE key >= 'seo:' AND key < 'seo;'`),
     db.prepare(
       `SELECT 'artist' AS t, ca.ref AS k FROM catalog_additions ca WHERE ca.type = 'artist' AND ca.confirmed_at IS NULL
@@ -59,6 +64,13 @@ export const seoContext = cache(async (): Promise<SeoContext> => {
        SELECT 'version', w.artist_slug || '/' || w.no || '#' || i.item_id || '-' || v.version_id
          FROM catalog_additions ca JOIN versions v ON v.id = CAST(ca.ref AS INTEGER) JOIN items i ON i.id = v.item_ref JOIN series w ON w.id = i.series_id
          WHERE ca.type = 'version' AND ca.confirmed_at IS NULL`,
+    ),
+    db.prepare(
+      `SELECT DISTINCT w.artist_slug || '/' || w.no AS k FROM versions v
+         JOIN items i ON i.id = v.item_ref JOIN series w ON w.id = i.series_id
+       WHERE v.status = 'approved' AND v.deleted_at IS NULL AND v.hidden_at IS NULL
+         AND i.deleted_at IS NULL AND i.hidden_at IS NULL
+         AND ((v.track_list != '' AND v.track_list != '[]') OR (v.tracks != '' AND v.tracks != '—' AND v.tracks != '待查證'))`,
     ),
   ]);
   const rows = s.results as { key: string; value: string }[];
@@ -73,7 +85,7 @@ export const seoContext = cache(async (): Promise<SeoContext> => {
   }
   const pending = { artist: new Set<string>(), series: new Set<string>(), version: new Set<string>() };
   for (const r of p.results as { t: keyof typeof pending; k: string }[]) pending[r.t]?.add(r.k);
-  return { site, overrides, pending };
+  return { site, overrides, pending, tracked: new Set((t.results as { k: string }[]).map((r) => r.k)) };
 });
 
 export const overrideOf = (ctx: SeoContext, target: SeoTarget): SeoOverride => ctx.overrides.get(target) ?? {};
@@ -98,9 +110,9 @@ export function seriesIndex(c: Catalog, ctx: SeoContext, w: Series): IndexDecisi
   if (ctx.pending.series.has(key)) return no("待確認的新增");
   const shares = c.sharesOfSeries(w).filter((s) => !lockedShare(c, s)).length;
   if (w.kind === "misc") return shares ? YES : no("內容太空：周邊與其他沒有收藏");
-  // B 案（2026-10-01 使用者定案）：要有收藏，或 30 字以上的系列介紹；只有 MusicBrainz 曲目不算
-  if (shares || textLen(w.body) >= THIN.bodyChars) return YES;
-  return no("內容太空：沒有收藏、介紹不到 30 字");
+  // A 案（2026-10-01 晚間使用者定案，取代同日的 B 案）：有收藏、有曲目、介紹 30 字以上，任一個就收錄
+  if (shares || ctx.tracked.has(key) || textLen(w.body) >= THIN.bodyChars) return YES;
+  return no("內容太空：沒有收藏、沒有曲目、介紹不到 30 字");
 }
 
 export function artistIndex(c: Catalog, ctx: SeoContext, a: Artist): IndexDecision {
@@ -148,17 +160,84 @@ export function seriesTitle(c: Catalog, w: Series) {
   return `${who}《${w.title}》${one || `${year}${SERIES_KIND_LABEL[w.kind]}`}｜${tail}`;
 }
 
-export function seriesDescription(c: Catalog, w: Series, nTracks: number) {
-  const who = c.creditNames(w).map((a) => a.name).join("、");
-  const n = w.items.reduce((k, it) => k + it.versions.length, 0);
-  const kinds = Array.from(new Set(w.items.map((i) => i.kind))).join("、");
-  const shares = c.sharesOfSeries(w).length;
-  const year = /^\d{4}/.test(w.year) ? `，${w.year.slice(0, 4)}年發行的${SERIES_KIND_LABEL[w.kind]}` : "";
-  const facts = [n ? `${n}個版本${kinds ? `（${kinds}）` : ""}` : "", nTracks ? `${nTracks}首曲目` : "", shares ? `${shares}則樂迷收藏` : ""].filter(Boolean).join("、");
-  const head = w.kind === "misc" ? `${who}的周邊與其他` : `${who}《${w.title}》${year}`;
-  return clipWidth(`${head}。${facts ? `收錄${facts}。` : ""}${plainText(w.body.join(" "))}`, DESC_MAX);
+/** 自動介紹句要用的事實：全部從目錄與這個系列的曲目算，不查別的表 */
+export function seriesFacts(c: Catalog, w: Series, tracks: VersionLines): SeriesFacts {
+  const main = mainTracks(w, tracks);
+  const discs = main ? parseTracks(main.lines) : [];
+  const versions: VersionFact[] = w.items.flatMap((it) =>
+    it.versions.map((v) => {
+      const lines = tracks.get(`${it.id}-${v.id}`)?.lines ?? [];
+      // 格式：內容物 → 版本名（「2017 香港再版 SACD」）→ 包裝欄；片數：內容物 → 包裝欄 → 曲目分碟 → 版本名
+      const fromContents = parseContents(v.contents) ?? parseContents(v.packaging);
+      const fromEdition = parseContents(v.edition.replace(/^\d{4}\s*/, ""));
+      const byTracks = lines.length ? parseTracks(lines).length : 0;
+      const parsed = fromContents
+        ? { format: parseContents(v.contents)?.format ?? fromEdition?.format ?? fromContents.format, discs: fromContents.discs }
+        : fromEdition
+          ? { format: fromEdition.format, discs: byTracks || fromEdition.discs }
+          : null;
+      return {
+        anchor: `${it.id}-${v.id}`,
+        edition: v.edition,
+        kind: it.kind,
+        year: /^\d{4}/.test(v.year) ? v.year.slice(0, 4) : /^\d{4}/.test(v.releaseDate) ? v.releaseDate.slice(0, 4) : "",
+        region: hasValue(v.region) ? v.region : "",
+        label: hasValue(v.label) ? v.label : "",
+        format: parsed?.format ?? (isRecordKind(it.kind) ? it.kind : ""),
+        discs: parsed?.discs ?? byTracks,
+        packaging: packagingOnly(v.packaging),
+      };
+    }),
+  );
+  const year = /^\d{4}/.test(w.year) ? w.year.slice(0, 4) : "";
+  // 發行月份：最早的完整發行日期，而且跟系列年份同一年（再版的日期不算）
+  const dates = w.items.flatMap((it) => it.versions.map((v) => v.releaseDate)).filter((d) => /^\d{4}-\d{2}/.test(d) && d.startsWith(year)).sort();
+  const shares = c.sharesOfSeries(w);
+  const all = w.items.flatMap((it) => it.versions);
+  return {
+    key: `${w.artistSlug}/${w.no}`,
+    who: c.creditNames(w).map((a) => a.name).join("、"),
+    title: w.title,
+    kind: w.kind,
+    year,
+    month: year && dates[0] ? Number(dates[0].slice(5, 7)) : 0,
+    tracks: discs.reduce((n, d) => n + d.tracks.length, 0),
+    trackDiscs: discs.length,
+    versions,
+    owners: all.reduce((n, v) => n + v.owners, 0),
+    wanted: all.reduce((n, v) => n + v.wanted, 0),
+    shares: shares.length,
+    onSale: seriesMarket(c, w)?.onSale ?? 0,
+  };
 }
 
+/** 站上行情：出售中件數、定價區間、最近一筆成交。都沒有回 null（頁面整塊不顯示）。被鎖的收藏不算 */
+export function seriesMarket(c: Catalog, w: Series): MarketFacts | null {
+  const list = c.sharesOfSeries(w).filter((s) => !lockedShare(c, s) && s.sale);
+  const selling = list.filter((s) => s.sale!.state === "sale" || s.sale!.state === "offer");
+  const asks = selling.flatMap((s) => (s.sale!.state === "sale" && s.sale!.price ? [s.sale!.price] : []));
+  const sold = list
+    .filter((s) => s.sale!.state === "sold" && (s.sale!.soldPrice ?? s.sale!.price))
+    .sort((a, b) => (b.sale!.soldOn ?? "").localeCompare(a.sale!.soldOn ?? "") || b.order - a.order)[0];
+  if (!selling.length && !sold) return null;
+  return {
+    onSale: selling.length,
+    asks: asks.length ? [Math.min(...asks), Math.max(...asks)] : null,
+    lastSold: sold ? { price: (sold.sale!.soldPrice ?? sold.sale!.price)!, date: sold.sale!.soldOn ?? "" } : null,
+  };
+}
+
+/** 描述：自動事實句（不含價格）；還有空間再接系列介紹開頭 */
+export function seriesDescription(c: Catalog, w: Series, tracks: VersionLines) {
+  // 第一句一定放；後面的句子放得下才接（不從句子中間截），最後有空間再接系列介紹
+  const [first, ...rest] = seriesSummaryParts(seriesFacts(c, w, tracks));
+  let out = first;
+  for (const x of rest) if (displayWidth(out + x) <= DESC_MAX) out += x;
+  // 介紹太短（匯入時自動寫的「CD・2009・某某唱片」）不接，只會重複上面的事實
+  const plain = plainText(w.body.join(" "));
+  const body = plain.replace(/\s+/g, "").length >= THIN.bodyChars ? plain : "";
+  return clipWidth(body && displayWidth(out) < DESC_MAX - 12 ? `${out}${body}` : out, DESC_MAX);
+}
 
 export function artistTitle(a: Artist) {
   return `${a.name}｜${a.kind === "發行單位" ? "發行作品與收藏" : "專輯、版本與收藏"}`;

@@ -247,6 +247,8 @@ export type Sale = {
   soldPrice?: number;
   soldTo?: string;
   soldAt?: string;
+  /** 成交日期 YYYY-MM-DD（系列頁「站上行情」排最近一筆用；soldAt 是相對時間） */
+  soldOn?: string;
 };
 
 export type Share = {

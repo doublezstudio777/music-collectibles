@@ -96,7 +96,8 @@ body {
 
 h1, h2, h3, p { margin: 0; }
 h1, h2, h3 { text-wrap: balance; }
-p { text-wrap: pretty; }
+/* 段落一律一般換行（2026-10-01）：pretty 在 WebKit（iPhone Safari）會把每行都縮短求平均，右邊留一大塊空白 */
+p { text-wrap: wrap; }
 a { color: inherit; text-decoration: none; }
 button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; background: none; border: 0; padding: 0; }
@@ -1837,4 +1838,50 @@ p.fill-row { display: flex; }
 @media (max-width: 700px) {
   .seo-grid, .seo-cols { grid-template-columns: minmax(0, 1fr); }
   .seo-serp { position: static; }
+}
+
+/* 系列頁自動介紹句、版本比較、站上行情（2026-10-01 系列頁全部收錄） */
+/* 介紹句夾英文名與數字：左右對齊在 WebKit 會把「Hyukoh 2017」中間的空白撐大，改靠左 */
+.prose .series-lead { margin-bottom: 1em; text-align: start; }
+.ver-table-scroll {
+  /* 表比內容寬窄時不拉滿（欄寬照字算），捲動框跟表一樣寬 */
+  max-width: 100%; overflow-x: auto; position: relative; width: fit-content;
+}
+.ver-table-hint { color: var(--muted); display: none; font-size: var(--text-xs); font-weight: 600; margin-bottom: 6px; text-align: right; }
+.ver-table-scroll:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+.ver-table { border-collapse: separate; border-spacing: 0; font-size: var(--text-sm); table-layout: fixed; }
+.ver-table th, .ver-table td {
+  border-bottom: 1px solid var(--line); line-height: 1.5; overflow: visible; padding: 10px 0 10px 12px;
+  text-align: left; vertical-align: middle; white-space: nowrap;
+}
+.ver-table thead th { background: var(--surface); border-bottom-color: var(--text); color: var(--text); font-size: var(--text-xs); font-weight: 600; }
+.ver-table tbody th { font-weight: 600; }
+.ver-table tbody td { background: transparent; }
+.ver-table tbody tr:hover th, .ver-table tbody tr:hover td { background: var(--surface); }
+/* 第一欄（版本名）橫捲時固定在左邊 */
+.ver-table th:first-child { background: var(--bg); border-right: 1px solid var(--line); left: 0; position: sticky; z-index: 1; }
+.ver-table thead th:first-child { background: var(--surface); }
+.ver-table .mono { font-variant-numeric: tabular-nums; }
+.market-stats { display: grid; grid-auto-columns: minmax(0, 240px); grid-auto-flow: column; justify-content: start; }
+.market-stats > div { border-bottom: 1px solid var(--line); border-top: 1px solid var(--line); display: grid; gap: 4px; padding: 12px 16px 12px 0; }
+.market-stats dt { color: var(--muted); font-size: var(--text-xs); }
+.market-stats dd { font-size: var(--text-md); font-weight: 600; font-variant-numeric: tabular-nums; }
+.market-date { display: block; font-size: var(--text-xs); font-weight: 400; }
+@media (max-width: 700px) {
+  .ver-table-hint { display: block; }
+  .ver-table-scroll {
+    /* 右邊還有欄位時邊緣出現淡影，跟多欄版本比較同一套 */
+    background:
+      linear-gradient(to right, var(--bg) 0%, rgba(255, 255, 255, 0) 24px),
+      linear-gradient(to left, var(--bg) 0%, rgba(255, 255, 255, 0) 24px) 100% 0,
+      linear-gradient(to right, rgba(17, 17, 17, .12), rgba(17, 17, 17, 0)),
+      linear-gradient(to left, rgba(17, 17, 17, .12), rgba(17, 17, 17, 0)) 100% 0;
+    background-repeat: no-repeat; background-color: var(--bg);
+    background-size: 24px 100%, 24px 100%, 10px 100%, 10px 100%;
+    background-attachment: local, local, scroll, scroll;
+  }
+  .market-stats { grid-auto-flow: row; grid-template-columns: minmax(0, 1fr); }
+  .market-stats > div + div { border-top: 0; }
+  .market-stats > div { align-items: baseline; gap: 12px; grid-template-columns: 80px minmax(0, 1fr); padding: 10px 0; }
+  .market-date { display: inline; margin-left: 8px; }
 }

@@ -305,7 +305,7 @@ async function build(): Promise<Catalog> {
           ...(s.price ? { price: s.price } : {}),
           ...(s.soldPrice ? { soldPrice: s.soldPrice } : {}),
           ...(s.soldTo ? { soldTo: handleOf(s.soldTo) } : {}),
-          ...(s.soldAt ? { soldAt: relTime(s.soldAt, now) } : {}),
+          ...(s.soldAt ? { soldAt: relTime(s.soldAt, now), soldOn: s.soldAt.slice(0, 10) } : {}),
         },
       };
     });
