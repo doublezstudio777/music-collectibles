@@ -56,7 +56,7 @@
 
 🟡 `/artist/hyukoh/1` 在 320 寬溢出 41px：改版前正式站同頁就是 41px（00_現況已記的「單一版本規格清單在 320 寬溢出」），這次沒動，斷言改成「沒有新增溢出」。
 
-## 正式站測試資料（等使用者回「刪」，範圍只限這次建的）
+## 正式站測試資料（10/01 使用者同意，已刪）
 
 帳號 `u-lmbtestbp1001`（lmbtestbp1001）、`u-lmbtestbp1002`（lmbtestbp1002）相關：
 
@@ -76,3 +76,14 @@
 | catalog_additions／autofill_jobs | 1／1 | 那張新增專輯的紀錄與自動補資料工作 |
 
 刪法：先備份，photos 走 `removePhotoFiles` 同一套（刪 R2、扣回 `counters.r2_bytes`），刪完全庫重掃 0、R2 計數對帳。`counters` 的 `series_no:jj-lin` 已經進到 25，刪了系列不回收（流水號永不重用，照規則）。
+
+**已刪（10/01 22:28 後）**：先備份 `D:\OneDrive\Claude-Data\_個人資料\音藏\備份\20261001-2228-remote\`，備份 SQL 全文搜尋測試識別碼，命中只有上表 13 張表；再 SELECT 確認範圍（#12～#16 沒有讚、留言、出價、對話、檢舉、成交；系列 682 沒有版本），一個交易刪完：collection_tags 8、photo_codes 6、photos 6、shares 5、holdings 13、rate_limits 6、user_activity 2、score_events 2、user_scores 1、sessions 2、autofill_jobs 1、catalog_additions 1、items 1、series 1、users 2，`counters.r2_bytes` 扣 448,938。R2 刪 23 個檔（6 張照片的主圖、縮圖、預覽圖 5 張、原圖）。
+驗證：63 張表全欄位重掃測試帳號、`jj-lin/25`、「驗收新增專輯」、6 個照片 id 全部 0；`r2_bytes` 20,541,317＝bucket 實際 117 個物件 20,541,317 bytes（刪前 140 個 20,990,255，也相等）；正式站 `/u/lmbtestbp1001`、`/u/lmbtestbp1002`、`/share/12`～`/share/16`、`/artist/jj-lin/25`、照片網址全部 404，`/artist/hyukoh/1` 不再出現「個合集中」。
+
+## 使用者決定（10/01，照建議）
+
+1. 正式站測試資料刪除（上方已刪）
+2. 合集跟一般收藏一樣給發文分數
+3. 「把這些登記成我有」只有發文者本人能用
+4. 「不確定版本」方案照現行（單一品項記系列層、多品項記品項層）
+5. 合集上限：最多 60 張專輯、10 張照片
