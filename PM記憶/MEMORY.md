@@ -90,3 +90,7 @@
 - 排程狀態存成 JSON（autofill_state）時，測試用 SQL 改值要等那一輪 finishedAt 後再改，進行中的批次會拿記憶體版本覆寫回去；本機沒有排程，手動 API 每 30 秒接一批（2026-10-01）
 - `backup.mjs` 的資料夾名只到分鐘：同一分鐘跑兩次會覆寫（10/01 刪前備份被刪後匯出蓋掉）。刪資料前後各備份一次要隔一分鐘，或刪後重掃改用 `d1 export` 到 scratchpad；正式站整庫找某帳號殘留，grep 備份的 d1.sql 比逐表逐欄 SQL 快很多（2026-10-01）
 - 部署腳本裡 curl 結果要先存變數再 grep：`curl … | grep -q` 在 pipefail 下會因 SIGPIPE 誤判失敗（2026-10-02 加 sitemap 斷言時又踩一次，程式已部署、改完用 --smoke-only 補驗）
+- 正式站 zone 會自動注入 Cloudflare Web Analytics beacon（`static.cloudflareinsights.com`、回報到 `cloudflareinsights.com`），加 CSP 時本機測不到，第一次部署煙霧測試才被擋；改 CSP 前先把這兩個網域放進 script-src／connect-src（2026-10-02）
+- 本機建置版打 API 偶發 1ms 的 503（Miniflare worker restarted），不是程式行為：驗收 helper 對沒有 JSON 內容的 503 自動重試一次；`/api/uploads/code` 這類不讀 body 的 POST 用 `Connection: close` 比較穩（2026-10-02）
+- 驗收腳本改 settings（dm 上限、門檻）要用 try/finally 還原，腳本中途炸掉會把後面批次全帶歪（10/02 dm_daily_new_limit 卡在 1 害 UI 腳本出價 429）；驗整頁快取裡的計數（願望清單人數）先做一次會讓內容版本 +1 的寫入再讀（2026-10-02）
+- Windows 工作排程器從 WSL 改設定：`schtasks /Query /XML` 匯出（ASCII＋CR/LF 混雜，先 `replace('\r','')`）、改 XML 用 UTF-16 寫到 `C:\Users\Zuka\AppData\Local\yinzang\`、`schtasks /Create /F /XML` 覆蓋；Logon Mode 要改成「不論登入與否」得輸入 Windows 密碼，從 WSL 做不到（2026-10-02）
