@@ -36,7 +36,12 @@ const sql = readFileSync(file, "utf8");
 const parts = sql.split(/;\n(?=(?:PRAGMA|CREATE|INSERT|DELETE|UPDATE)\b)/).map((s) => s.trim().replace(/;$/, "")).filter(Boolean);
 const kind = (s) =>
   /^PRAGMA/.test(s) ? 0 : /^CREATE TABLE/.test(s) ? 1 : /^INSERT/.test(s) ? 2 : 3;
-const ordered = parts.map((s, i) => ({ s, i, k: kind(s) })).sort((a, b) => a.k - b.k || a.i - b.i);
+// 2026-10-02 總檢 L9：wrangler 在執行前會自己建 d1_migrations（空表），匯出檔裡的 CREATE TABLE d1_migrations 就會撞
+// 「table d1_migrations already exists」（看 wrangler 版本與資料夾狀態，不一定每次發生）。CREATE TABLE 一律改成 IF NOT EXISTS，
+// d1_migrations 的 INSERT 改 OR IGNORE，重跑同一個資料夾也不會撞主鍵
+const ordered = parts
+  .map((s, i) => ({ s: s.replace(/^CREATE TABLE (?!IF NOT EXISTS)/, "CREATE TABLE IF NOT EXISTS ").replace(/^INSERT INTO "?d1_migrations"?/, (m) => m.replace("INSERT INTO", "INSERT OR IGNORE INTO")), i, k: kind(s) }))
+  .sort((a, b) => a.k - b.k || a.i - b.i);
 const out = join(dirname(file), "restore.sql");
 writeFileSync(out, ordered.map((x) => `${x.s};`).join("\n") + "\n");
 const count = [0, 1, 2, 3].map((k) => ordered.filter((x) => x.k === k).length);
@@ -44,8 +49,18 @@ console.log(`重排完成：PRAGMA ${count[0]}、CREATE TABLE ${count[1]}、INSE
 if (argv.includes("--dry-run")) process.exit(0);
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const wranglerArgs = (a) => ["--import", "./scripts/sites-env.mjs", "./node_modules/wrangler/bin/wrangler.js", ...a];
+// 目標要是空的資料庫（2026-10-02 總檢 L9）：已經有 users 表就停，不然會撞主鍵、留下半套資料
+const probeArgs = remote
+  ? ["d1", "execute", opt("--database"), "--remote", "--json", "--command", "SELECT name FROM sqlite_master WHERE type='table' AND name='users'"]
+  : ["d1", "execute", "DB", "--local", "--config", "wrangler.local.jsonc", "--persist-to", opt("--persist-to"), "--json", "--command", "SELECT name FROM sqlite_master WHERE type='table' AND name='users'"];
+const probe = spawnSync(process.execPath, wranglerArgs(probeArgs), { cwd: root, encoding: "utf8" });
+if (probe.status === 0 && /"name":\s*"users"/.test(probe.stdout)) {
+  console.error("目標資料庫已經有資料（users 表存在），restore 只能還原到空的資料庫；換一個 --persist-to 資料夾或新建的 D1");
+  process.exit(1);
+}
 const args = remote
   ? ["d1", "execute", opt("--database"), "--remote", "--file", out]
   : ["d1", "execute", "DB", "--local", "--config", "wrangler.local.jsonc", "--persist-to", opt("--persist-to"), "--file", out];
-const r = spawnSync(process.execPath, ["--import", "./scripts/sites-env.mjs", "./node_modules/wrangler/bin/wrangler.js", ...args], { cwd: root, stdio: "inherit" });
+const r = spawnSync(process.execPath, wranglerArgs(args), { cwd: root, stdio: "inherit" });
 process.exit(r.status ?? 1);

@@ -8,9 +8,9 @@
 // - 重大變更（影響權益、要本人另外同意的）才把 TERMS_REQUIRED 改成新版號，所有會員下次登入跳補同意視窗、同意前不能發布出價投稿
 
 /** 現行使用條款與隱私權政策版本（兩份一起算一個版本） */
-export const TERMS_VERSION = "1.1";
-/** 生效日（1.1：2026-10-01 公告，照政策「生效前至少 7 日公告」，10-08 生效） */
-export const TERMS_EFFECTIVE = "2026-10-08";
+export const TERMS_VERSION = "1.2";
+/** 生效日（1.2：2026-10-02 公告，照政策「生效前至少 7 日公告」，10-09 生效；1.1 是 10-01 公告、10-08 生效） */
+export const TERMS_EFFECTIVE = "2026-10-09";
 /** 會員至少要同意到這一版才能發布、出價、投稿（強制重新同意的最低版本） */
 export const TERMS_REQUIRED = "1.0";
 
@@ -25,16 +25,17 @@ export function termsAccepted(version: string | null | undefined) {
 
 /** 網站公告的條款更新（小版本不強制同意，只公告）。null＝目前沒有要公告的 */
 export const TERMS_NOTICE: { version: string; announced: string; effective: string; text: string; href: string } | null = {
-  version: "1.1",
-  announced: "2026-10-01",
-  effective: "2026-10-08",
-  text: "隱私權政策更新：補上 Google Analytics 使用情形統計的說明（用途、Cookie、怎麼停用）",
+  version: "1.2",
+  announced: "2026-10-02",
+  effective: "2026-10-09",
+  text: "隱私權政策更新：補上 Google Analytics 的說明，以及照片查證、意見回饋、權利侵害通知時也會記錄 IP 位址的次數限制",
   href: "/privacy",
 };
 
 /** 歷史版本（新的在前）。href 是該版全文的位置；現行版就是 /terms、/privacy */
 export const TERMS_HISTORY: { version: string; effective: string; note: string; terms: string; privacy: string }[] = [
-  { version: "1.1", effective: TERMS_EFFECTIVE, note: "2026-10-01 公告。隱私權政策補上 Google Analytics（統計使用情形、Cookie、怎麼停用）、Spotify 嵌入播放器也用在藝人頁；使用條款內容沒有改。補充揭露，不用重新同意", terms: "/terms", privacy: "/privacy" },
+  { version: "1.2", effective: TERMS_EFFECTIVE, note: "2026-10-02 公告。隱私權政策的 IP 位址一列補上照片查證、意見回饋、權利侵害通知的次數限制（跟註冊、重寄驗證碼、忘記密碼一樣會寫進資料庫、最多 90 天）；使用條款內容沒有改。補充揭露，不用重新同意", terms: "/terms", privacy: "/privacy" },
+  { version: "1.1", effective: "2026-10-08", note: "2026-10-01 公告。隱私權政策補上 Google Analytics（統計使用情形、Cookie、怎麼停用）、Spotify 嵌入播放器也用在藝人頁；使用條款內容沒有改。補充揭露，不用重新同意", terms: "/terms", privacy: "/privacy/v1-1" },
   { version: "1.0", effective: "2026-10-01", note: "第一個生效的版本", terms: "/terms", privacy: "/privacy/v1-0" },
 ];
 

@@ -25,6 +25,7 @@ import { isAdmin, type User } from "@/lib/server/auth";
 import { userBadges } from "@/lib/server/scores";
 import { hit } from "@/lib/server/services";
 import { HttpError } from "@/lib/server/trade";
+import { notifyCommentRemoved } from "@/lib/server/notify";
 
 const nowIso = () => new Date().toISOString();
 const LIST_LIMIT = 200;
@@ -156,8 +157,10 @@ export async function reportComment(u: User, rawTarget: string, reason: unknown,
   const total = n?.n ?? 0;
   let hidden = Boolean(c.hiddenAt);
   if (!hidden && c.decision !== "kept" && total >= (await commentThreshold())) {
-    await db.update(comments).set({ hiddenAt: nowIso() }).where(and(eq(comments.id, id), isNull(comments.hiddenAt)));
+    const changed = await db.update(comments).set({ hiddenAt: nowIso() }).where(and(eq(comments.id, id), isNull(comments.hiddenAt))).returning({ body: comments.body, shareNo: comments.shareNo });
     hidden = true;
+    // 通知留言的人（2026-10-02 總檢 M2）
+    if (changed[0]) await notifyCommentRemoved(c.authorId, id, changed[0].shareNo, changed[0].body, "hidden", `${total} 位會員檢舉，已達留言檢舉門檻；管理員會再看過`);
   }
   return { count: total, hidden };
 }
@@ -219,10 +222,16 @@ export async function moderateComment(admin: User, rawId: unknown, action: unkno
   const id = Number(rawId);
   if (!Number.isInteger(id) || (action !== "restore" && action !== "delete")) throw new HttpError(400, "BAD_REQUEST", "參數不對");
   const db = getDb();
-  const [c] = await db.select({ id: comments.id, shareNo: comments.shareNo }).from(comments).where(and(eq(comments.id, id), isNull(comments.deletedAt)));
+  const [c] = await db
+    .select({ id: comments.id, shareNo: comments.shareNo, authorId: comments.authorId, body: comments.body })
+    .from(comments)
+    .where(and(eq(comments.id, id), isNull(comments.deletedAt)));
   if (!c) throw new HttpError(404, "NOT_FOUND", "找不到這則留言");
   if (action === "restore") await db.update(comments).set({ hiddenAt: null, decision: "kept" }).where(eq(comments.id, id));
-  else await db.update(comments).set({ deletedAt: nowIso(), deletedBy: admin.id }).where(eq(comments.id, id));
+  else {
+    await db.update(comments).set({ deletedAt: nowIso(), deletedBy: admin.id }).where(eq(comments.id, id));
+    await notifyCommentRemoved(c.authorId, id, c.shareNo, c.body, "deleted", "經檢舉後由管理員判定違反使用條款");
+  }
   await db
     .insert(adminLog)
     .values({ adminId: admin.id, action: action === "restore" ? "恢復留言" : "刪除留言", target: `comment:${id}`, detail: JSON.stringify({ share: c.shareNo }) });

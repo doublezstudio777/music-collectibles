@@ -7,7 +7,8 @@
 
 import { and, desc, eq, gte, inArray, isNotNull, or, sql } from "drizzle-orm";
 import { getDb } from "@/db";
-import { adminLog, dmReports, settings, threads, userBlocks, users } from "@/db/schema";
+import { adminLog, dmReports, messages, settings, threads, userBlocks, users } from "@/db/schema";
+import { hit } from "@/lib/server/services";
 import { avatarUrl, type User } from "@/lib/server/auth";
 import { HttpError } from "@/lib/server/trade";
 import { relTime } from "@/lib/data";
@@ -79,15 +80,19 @@ export async function assertNotBlocked(meId: string, otherId: string) {
  * 送出任何一則訊息前（文字、出價、我要買）：封鎖檢查；對話還沒開始就算一次「開新對話」，
  * 發起人超過每日上限就擋，沒超過就記下 started_at
  */
-export async function beforeSend(u: User, t: { id: number; buyerId: string; startedAt: string | null }, otherId: string) {
+export async function beforeSend(u: User, t: { id: number; buyerId: string; peerId?: string | null; shareNo?: number; startedAt: string | null }, otherId: string) {
   await assertNotBlocked(u.id, otherId);
   if (t.startedAt) return;
-  if (t.buyerId === u.id) {
-    const limit = await dmDailyLimit();
-    if ((await startedToday(u.id)) >= limit)
-      throw new HttpError(429, "DM_DAILY_LIMIT", `今天已經開了 ${limit} 個新對話，明天再試；已經在聊的對話不受影響`);
-  }
-  await getDb().update(threads).set({ startedAt: nowIso() }).where(and(eq(threads.id, t.id), sql`${threads.startedAt} IS NULL`));
+  // 誰先傳第一句，誰算開了這個新對話（2026-10-02 總檢 L3）：直接私訊若是被開的那一方先講話，把發起人換成他，
+  // 額度才會算在真正開口的人身上（原本固定算在 buyer_id，對方先回就不計、還算進開的人）
+  const direct = (t.shareNo ?? 1) === 0 && t.peerId === u.id && t.buyerId !== u.id;
+  const limit = await dmDailyLimit();
+  if ((t.buyerId === u.id || direct) && (await startedToday(u.id)) >= limit)
+    throw new HttpError(429, "DM_DAILY_LIMIT", `今天已經開了 ${limit} 個新對話，明天再試；已經在聊的對話不受影響`);
+  await getDb()
+    .update(threads)
+    .set(direct ? { startedAt: nowIso(), buyerId: u.id, peerId: t.buyerId } : { startedAt: nowIso() })
+    .where(and(eq(threads.id, t.id), sql`${threads.startedAt} IS NULL`));
 }
 
 /* ---------- 直接私訊（個人頁「傳訊息」） ---------- */
@@ -107,6 +112,8 @@ export async function openDirect(u: User, handle: unknown) {
   const [found] = await db.select({ id: threads.id }).from(threads).where(eq(threads.pairKey, key));
   if (found) return found.id;
   await assertNotBlocked(u.id, other.id);
+  // 開空對話也有上限（2026-10-02 總檢 L4）：每小時 30 條，免得對任何人狂建空對話
+  if (!(await hit(`dm-open:${u.id}`, 30, 3600))) throw new HttpError(429, "RATE_LIMITED", "開太多對話了，等一下再試");
   await db.insert(threads).values({ shareNo: 0, buyerId: u.id, peerId: other.id, pairKey: key }).onConflictDoNothing();
   const [t] = await db.select({ id: threads.id }).from(threads).where(eq(threads.pairKey, key));
   return t.id;
@@ -146,6 +153,13 @@ export async function reportThread(u: User, t: { id: number }, otherId: string, 
   if (reason === "other" && !text) throw new HttpError(400, "INVALID", "寫一句原因");
   if (!otherId) throw new HttpError(409, "GONE", "對方帳號已經不在了");
   const db = getDb();
+  // 對方要真的在這段對話講過話才能檢舉（2026-10-02 總檢 L4）：空對話、只有自己講的不收
+  const [spoke] = await db
+    .select({ id: messages.id })
+    .from(messages)
+    .where(and(eq(messages.threadId, t.id), eq(messages.fromId, otherId)))
+    .limit(1);
+  if (!spoke) throw new HttpError(409, "NO_MESSAGES", "對方還沒在這段對話傳過訊息，沒有可以檢舉的內容");
   const r = await db
     .insert(dmReports)
     .values({ threadId: t.id, reporterId: u.id, reportedId: otherId, reason, note: text })

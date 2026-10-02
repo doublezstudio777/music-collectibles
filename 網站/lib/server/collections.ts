@@ -17,7 +17,7 @@ import { isAdmin } from "@/lib/server/auth";
 import { getCatalog, lockForShare } from "@/lib/server/content";
 import { holdingLevel, validHoldingKey } from "@/lib/server/me";
 import { MAX_SHARE_PHOTOS, unattachedPhotos } from "@/lib/server/photos";
-import { hit } from "@/lib/server/services";
+import { hit, taiwanDay } from "@/lib/server/services";
 import { HttpError, shareRow, SHARE_DAILY } from "@/lib/server/trade";
 import { collectionWhat } from "@/lib/data";
 
@@ -79,7 +79,7 @@ export async function createCollection(u: User, body: Record<string, unknown>) {
   const about = aboutOf(c, tags);
   const what = collectionWhat(about, tags.length);
   const title = custom(body.customTitle);
-  const day = new Date().toISOString().slice(0, 10);
+  const day = taiwanDay();
   if (!(await hit(`share:${u.id}:${day}`, SHARE_DAILY, 86400))) throw new HttpError(429, "RATE_LIMITED", `今天已經發了 ${SHARE_DAILY} 則，明天再來`);
 
   const db = getDb();

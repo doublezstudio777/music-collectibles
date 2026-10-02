@@ -23,7 +23,9 @@
 //   yz_test_country cookie 模擬，沒帶就用 GEO_DEFAULT（預設 TW）。頁面本身不因國家而異，整頁快取不受影響
 import handler from "vinext/server/fetch-handler";
 import { take, tooMany, weight } from "./lib/edge/limiter";
-import { cleanupOldRecords } from "./lib/server/cleanup";
+import { cleanupOldRecords, cleanupOrphans } from "./lib/server/cleanup";
+import { notifyAdmin } from "./lib/server/notify";
+import { hit } from "./lib/server/services";
 import { runSpotifyDraw } from "./lib/server/spotify-draw";
 import { runAutofill } from "./lib/server/autofill";
 import { startReleaseScan } from "./lib/server/release-scan";
@@ -46,6 +48,41 @@ const VARY = [
   "x-vinext-rsc-compatibility-id",
 ];
 const TTL = 300;
+// 整頁快取鍵只留這些查詢參數（2026-10-02 總檢 S7）：首頁 state／sort／page、藝人目錄 g／type／r、藝人頁與系列頁 edit、
+// 登入頁 next／mode、意見回饋 type。其他參數一律丟掉，`/?隨便=1` 不會變成一次新的完整渲染
+const KEEP_PARAMS = new Set(["state", "sort", "page", "g", "type", "r", "edit", "next", "mode"]);
+
+// 安全標頭（2026-10-02 總檢 S6）：所有回應都帶。CSP 放行 Spotify 嵌入（frame）、GA4（script、connect）、Turnstile（script、frame）、
+// Google Fonts（style、font）；React／vinext 的 hydration 用內嵌 script，所以 script-src 要 'unsafe-inline'。
+// frame-ancestors 'none'＝不能被別的網站用 iframe 嵌入（後台、設定頁）；HSTS 一年含子網域（www 也是我們的）
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://www.googletagmanager.com",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "img-src 'self' data: blob:",
+  "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://challenges.cloudflare.com",
+  "frame-src https://challenges.cloudflare.com https://open.spotify.com",
+  "worker-src 'self' blob:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join("; ");
+const SECURITY_HEADERS: [string, string][] = [
+  ["Content-Security-Policy", CSP],
+  ["X-Content-Type-Options", "nosniff"],
+  ["X-Frame-Options", "DENY"],
+  ["Referrer-Policy", "strict-origin-when-cross-origin"],
+  ["Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"],
+];
+/** 回應補上安全標頭（原本已經有的不蓋，例如 /img/ 的 nosniff）；https 才加 HSTS */
+function secure(res: Response, https: boolean) {
+  const out = new Response(res.body, res);
+  for (const [k, v] of SECURITY_HEADERS) if (!out.headers.has(k)) out.headers.set(k, v);
+  if (https) out.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  return out;
+}
 // 本機沒有部署版本號：每次起伺服器換一個，重新建置後不會拿到舊 HTML
 // （Worker 全域範圍不能產生亂數，第一次用到才產生）
 let boot = "";
@@ -77,7 +114,8 @@ async function cacheKey(req: Request, url: URL, v: number, deploy: string) {
   const vary = VARY.map((h) => req.headers.get(h) ?? "").join("\n");
   const digest = new Uint8Array(await crypto.subtle.digest("SHA-1", new TextEncoder().encode(vary)));
   const h = Array.from(digest.slice(0, 8), (b) => b.toString(16).padStart(2, "0")).join("");
-  const k = new URL(url.pathname + url.search, url.origin);
+  const k = new URL(url.pathname, url.origin);
+  for (const name of [...url.searchParams.keys()].sort()) if (KEEP_PARAMS.has(name)) k.searchParams.set(name, url.searchParams.get(name) ?? "");
   k.searchParams.set("__yz", `${v}.${deploy}.${h}`);
   return new Request(k.toString(), { method: "GET" });
 }
@@ -110,6 +148,12 @@ const worker = {
   async fetch(raw: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(raw.url);
     if (url.hostname === WWW_HOST || (url.hostname === APEX_HOST && url.protocol === "http:")) return Response.redirect(APEX + url.pathname + url.search, 301);
+    return secure(await inner(raw, env, ctx, url), url.protocol === "https:");
+  },
+
+};
+
+async function inner(raw: Request, env: Env, ctx: ExecutionContext, url: URL): Promise<Response> {
     const ip = limitKey(raw, env);
     if (ip) {
       const wait = take(ip, weight(raw, url));
@@ -130,9 +174,9 @@ const worker = {
     const deploy = env.CF_VERSION_METADATA?.id ?? bootId();
     const build = deploy.slice(0, 8);
     const key = await cacheKey(req, url, v, deploy);
-    const hit = await cache.match(key);
-    if (hit) {
-      const res = new Response(hit.body, hit);
+    const cached = await cache.match(key);
+    if (cached) {
+      const res = new Response(cached.body, cached);
       res.headers.set("x-yz-cache", "HIT");
       res.headers.set("x-yz-build", build);
       res.headers.delete("age");
@@ -154,8 +198,21 @@ const worker = {
     out.headers.set("x-yz-cache", "MISS");
     out.headers.set("x-yz-build", build);
     return out;
-  },
+}
 
+/** 排程失敗：記 console，另外寄一封給管理員（同一個工作一天最多一封；2026-10-02 總檢 S11） */
+async function cronFailed(job: string, e: unknown) {
+  console.error(`[樂迷藏排程] ${job}失敗`, e);
+  try {
+    if (await hit(`cron-alert:${job}`, 1, 86400)) {
+      await notifyAdmin(`排程「${job}」失敗`, [`排程工作「${job}」執行失敗，錯誤：`, String(e instanceof Error ? (e.stack ?? e.message) : e).slice(0, 1500), "", "同一個工作一天只寄一封，之後的失敗只記在 Workers 的記錄裡（wrangler tail 或儀表板）。"]);
+    }
+  } catch (err) {
+    console.error("[樂迷藏排程] 寄警示信失敗", err);
+  }
+}
+
+const scheduledWorker = {
   // 每天一次（wrangler.production.jsonc 的 triggers.crons，台灣時間 02:00）：
   // - 國家與活動紀錄、限流計數保存 90 天，超過就清掉（lib/server/cleanup.ts）
   // - 彙總會員分數、等級、稱號（lib/server/scores.ts；SQL 在 D1 裡跑，不吃 Worker CPU）
@@ -170,9 +227,7 @@ const worker = {
           .then((r) => {
             if (r.done) console.log("[樂迷藏排程] 自動補資料", JSON.stringify(r));
           })
-          .catch((e) => {
-            console.error("[樂迷藏排程] 自動補資料失敗", e);
-          }),
+          .catch((e) => cronFailed("自動補資料", e)),
       );
       return;
     }
@@ -182,29 +237,26 @@ const worker = {
           .then((r) => {
             if (r.drawn || r.errors.length || r.bumped) console.log("[樂迷藏排程] Spotify 抽歌", JSON.stringify(r));
           })
-          .catch((e) => {
-            console.error("[樂迷藏排程] Spotify 抽歌失敗", e);
-          }),
+          .catch((e) => cronFailed("Spotify 抽歌", e)),
       );
       return;
     }
+    ctx.waitUntil(cleanupOldRecords().catch((e) => cronFailed("清理過期紀錄", e)));
+    // 沒掛上收藏超過 24 小時的照片（2026-10-02 總檢 S2）
     ctx.waitUntil(
-      cleanupOldRecords().catch((e) => {
-        console.error("[樂迷藏排程] 清理過期紀錄失敗", e);
-      }),
+      cleanupOrphans(APEX)
+        .then((r) => {
+          if (r.deleted) console.log("[樂迷藏排程] 清理未掛照片", JSON.stringify({ deleted: r.deleted, bytesReleased: r.bytesReleased }));
+        })
+        .catch((e) => cronFailed("清理未掛照片", e)),
     );
     // 每月補新作品（2026-10-01）：這個月還沒開過就開一輪，實際查詢由 */10 的排程分批接手（lib/server/release-scan.ts）
     ctx.waitUntil(
-      startReleaseScan({ trigger: "cron", now: event.scheduledTime }).catch((e) => {
-        console.error("[樂迷藏排程] 每月補新作品開始失敗", e);
-      }),
+      startReleaseScan({ trigger: "cron", now: event.scheduledTime }).catch((e) => cronFailed("每月補新作品", e)),
     );
-    ctx.waitUntil(
-      recomputeScores().catch((e) => {
-        console.error("[樂迷藏排程] 彙總分數失敗", e);
-      }),
-    );
+    ctx.waitUntil(recomputeScores().catch((e) => cronFailed("彙總分數", e)));
   },
 };
 
-export default worker;
+const site = { ...worker, ...scheduledWorker };
+export default site;

@@ -2,7 +2,7 @@
 // 寄信本輪只有 console 版；下輪接真的服務時只加一個 Mailer 實作，呼叫端不動。
 
 import { env } from "cloudflare:workers";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { rateLimits } from "@/db/schema";
 import { SITE_NAME } from "@/lib/data";
@@ -123,22 +123,30 @@ export function sponsorUrl() {
 
 /* ---------- 頻率限制（固定視窗） ---------- */
 
-/** 回傳 true＝還在額度內（並記一次）；false＝超過 */
+/** 台灣日期 YYYY-MM-DD（每日上限一律照台灣換日，2026-10-02 總檢 L2；私訊的 taiwanDayStart 也是同一個時區） */
+export const taiwanDay = (now = Date.now()) => new Date(now + 8 * 3600_000).toISOString().slice(0, 10);
+
+/**
+ * 回傳 true＝還在額度內（並記一次）；false＝超過。
+ * 2026-10-02 總檢 S1：改成一句 UPSERT，計數與判斷在同一個 SQL 語句裡完成（D1 一句就是一個交易）。
+ * 原本「先 SELECT 再 UPDATE」兩步，同時送 6 個請求會 6 個都讀到舊值、全部放行；
+ * 現在視窗還沒過就 count+1、過了就重設成 1，只有「視窗已過 或 count 還沒到上限」才會更新，沒更新到＝超過。
+ */
 export async function hit(key: string, limit: number, windowSec: number) {
-  const db = getDb();
-  const nowMs = Date.now();
-  const resetAt = new Date(nowMs + windowSec * 1000).toISOString();
-  const [row] = await db.select().from(rateLimits).where(eq(rateLimits.key, key));
-  if (!row || Date.parse(row.resetAt) <= nowMs) {
-    await db
-      .insert(rateLimits)
-      .values({ key, count: 1, resetAt })
-      .onConflictDoUpdate({ target: rateLimits.key, set: { count: 1, resetAt } });
-    return true;
-  }
-  if (row.count >= limit) return false;
-  await db.update(rateLimits).set({ count: sql`${rateLimits.count} + 1` }).where(eq(rateLimits.key, key));
-  return true;
+  const nowIso = new Date().toISOString();
+  const resetAt = new Date(Date.now() + windowSec * 1000).toISOString();
+  const r = await env
+    .DB!.prepare(
+      `INSERT INTO rate_limits (key, count, reset_at) VALUES (?1, 1, ?2)
+       ON CONFLICT(key) DO UPDATE SET
+         count = CASE WHEN reset_at <= ?3 THEN 1 ELSE count + 1 END,
+         reset_at = CASE WHEN reset_at <= ?3 THEN ?2 ELSE reset_at END
+       WHERE reset_at <= ?3 OR count < ?4
+       RETURNING count`,
+    )
+    .bind(key, resetAt, nowIso, limit)
+    .first<{ count: number }>();
+  return r !== null && r !== undefined;
 }
 
 export async function clearHits(key: string) {

@@ -1,4 +1,5 @@
-import { json, readBody, requireUser } from "@/lib/server/auth";
+import { requireConsented } from "@/lib/server/terms";
+import { json, readBody } from "@/lib/server/auth";
 import { handle, HttpError } from "@/lib/server/trade";
 import { openThread } from "@/lib/server/trade";
 
@@ -10,7 +11,7 @@ const num = async (p: Promise<Record<string, string>>, k: string) => {
 
 /** 問賣家：開一條對話，回傳 result＝對話 id */
 export async function POST(req: Request, ctx: { params: Promise<{ n: string }> }) {
-  const s = await requireUser(req);
+  const s = await requireConsented(req);
   if (s instanceof Response) return s;
   const body = await readBody(req);
   void body;

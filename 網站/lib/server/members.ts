@@ -12,6 +12,8 @@ import { and, eq, isNull } from "drizzle-orm";
 import { LEVELS, levelLabel, levelOf } from "@/lib/levels";
 import { destroyAllSessions, isAdmin, type User } from "@/lib/server/auth";
 import { regionNames } from "@/lib/server/geo";
+import { freezeUserTrade } from "@/lib/server/trade";
+import { notifyRestored, notifySuspended } from "@/lib/server/notify";
 
 export const PAGE_SIZE = 50;
 
@@ -132,17 +134,22 @@ export async function setMemberStatus(admin: User, id: string, action: string, r
   if (u.status === to) throw new MemberError(409, "UNCHANGED", action === "suspend" ? "這位已經停權" : "這位沒有被停權");
   const at = new Date().toISOString();
   await db.update(users).set({ status: to, updatedAt: at }).where(eq(users.id, id));
+  let frozen = { shares: 0, offers: 0 };
   if (to === "suspended") {
     await destroyAllSessions(id);
     await db.insert(suspensions).values({ userId: id, reason: code, note: text, startedAt: at, byAdmin: admin.id });
+    // 交易收掉＋通知本人（2026-10-02 總檢 M2、M3）
+    frozen = await freezeUserTrade(id, "suspended");
+    await notifySuspended(u.id, u.email, u.handle, suspendReasonText(code, text), frozen);
   } else {
     await db.update(suspensions).set({ endedAt: at }).where(and(eq(suspensions.userId, id), isNull(suspensions.endedAt)));
+    await notifyRestored(u.id);
   }
   await db.insert(adminLog).values({
     adminId: admin.id,
     action: to === "suspended" ? "停權會員" : "恢復會員",
     target: `user:${u.handle}`,
-    detail: JSON.stringify(to === "suspended" ? { reason: suspendReasonText(code, text), code, note: text } : { reason: text }),
+    detail: JSON.stringify(to === "suspended" ? { reason: suspendReasonText(code, text), code, note: text, ...frozen } : { reason: text }),
   });
   return to;
 }

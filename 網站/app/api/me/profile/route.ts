@@ -1,3 +1,4 @@
+import { requireConsented } from "@/lib/server/terms";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { userNameChanges, users } from "@/db/schema";
@@ -25,7 +26,7 @@ export async function GET(req: Request) {
  * 改名寫一筆 user_name_changes（只有管理員看得到）。users 有內容版本觸發器，改名後整頁快取自動換新
  */
 export async function PATCH(req: Request) {
-  const s = await requireUser(req);
+  const s = await requireConsented(req);
   if (s instanceof Response) return s;
   const b = await readBody(req);
   const at = new Date().toISOString();
@@ -46,7 +47,8 @@ export async function PATCH(req: Request) {
       if (next) {
         return fail(429, "NAME_CHANGE_LIMIT", `暱稱每 ${NAME_CHANGE_DAYS} 天只能改一次，${twDate(next)} 以後可以再改`, { nextAt: next });
       }
-      const np = await nameProblem(name, { max: 30, except: s.user.id, admin: isAdmin(s.user) });
+      // 上限跟註冊一致 20 字（2026-10-02 總檢 L7；原本設定頁 30）
+      const np = await nameProblem(name, { max: 20, except: s.user.id, admin: isAdmin(s.user) });
       if (np) return fail(np.code === "NAME_TAKEN" ? 409 : 400, np.code, np.message);
       patch.name = name;
       patch.nameKey = nameKey(name);

@@ -54,6 +54,7 @@ ap.add_argument("--only", default="")
 ap.add_argument("--only-legacy", action="store_true", help="只補還沒有原圖的舊照片（orig_key 是空的）")
 ap.add_argument("--deletion", type=int, default=0, help="刪帳申請 id：只重燒那位已刪除會員的照片（浮水印改匿名代號），成功後寫 deletion_requests.reburned_at")
 ap.add_argument("--skip-backup", action="store_true", help="正式環境剛備份過才用")
+ap.add_argument("--pending-deletions", action="store_true", help="把所有「已執行、還沒重燒」的刪帳申請逐一跑一遍 --deletion（每週備份排程用，2026-10-02 總檢 L12）")
 args = ap.parse_args()
 
 cfg = ["--config", "wrangler.production.jsonc"] if args.remote else ["--config", "wrangler.local.jsonc"]
@@ -160,6 +161,21 @@ async ({ b64, type, handle, code, og }) => {
 
 
 def main():
+    if args.pending_deletions:
+        pend = query("SELECT id FROM deletion_requests WHERE status = 'done' AND reburned_at IS NULL ORDER BY id")
+        if not pend:
+            print("沒有待重燒的刪帳申請")
+            return
+        print(f"待重燒的刪帳申請：{[r['id'] for r in pend]}")
+        base = [sys.executable, str(Path(__file__).resolve()), "--remote" if args.remote else "--local", "--skip-backup"]
+        if not args.remote:
+            base += ["--persist-to", args.persist_to]
+        if args.dry_run:
+            base += ["--dry-run"]
+        failed = [r["id"] for r in pend if subprocess.run([*base, "--deletion", str(r["id"])], cwd=ROOT).returncode != 0]
+        if failed:
+            raise SystemExit(f"這些刪帳申請重燒失敗：{failed}")
+        return
     if args.remote and not args.dry_run and not args.skip_backup:
         print("== 站外備份 ==")
         if subprocess.run(["node", "scripts/backup.mjs", "--remote"], cwd=ROOT).returncode != 0:

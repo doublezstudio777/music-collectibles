@@ -16,7 +16,11 @@ export async function POST(req: Request) {
   const email = normEmail(body.email);
   const password = typeof body.password === "string" ? body.password : "";
   const client = body.client === "app" ? "app" : "web";
-  const key = `login:${email}`;
+  // 錯誤上限照「Email＋來源 IP」算（2026-10-02 總檢 L1）：知道別人 Email 的人打錯 10 次只鎖他自己那個 IP，本人照常登入；
+  // 另外每個 IP 15 分鐘最多 30 次，擋同一台機器對一堆 Email 亂試
+  const ip = clientIp(req) ?? "local";
+  const key = `login:${email}:${ip}`;
+  if (!(await hit(`login-ip:${ip}`, 30, 900))) return fail(429, "RATE_LIMITED", "錯太多次了，15 分鐘後再試");
   if (!(await hit(key, 10, 900))) return fail(429, "RATE_LIMITED", "錯太多次了，15 分鐘後再試");
 
   const user = email ? await userByEmail(email) : null;

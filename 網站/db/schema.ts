@@ -1299,3 +1299,16 @@ export const collectionTags = sqliteTable(
   },
   (t) => [uniqueIndex("collection_tags_share_target_uq").on(t.shareNo, t.targetKey), index("collection_tags_target_idx").on(t.targetKey)],
 );
+
+/* =====================================================================
+ * 2026-10-02 產品顧問總檢（drizzle/0029）：只新增一張表。
+ * ===================================================================== */
+
+/**
+ * 已刪除帳號的舊帳號名（總檢 L11）：刪帳後舊帳號名不開放別人再註冊、也不能改成這個，避免冒名。
+ * 執行刪除帳號時寫入一列；註冊與改帳號名時查。永久保留（帳號名本來就公開，不含 Email）
+ */
+export const retiredHandles = sqliteTable("retired_handles", {
+  handle: text("handle").primaryKey(),
+  retiredAt: text("retired_at").notNull().default(now),
+});

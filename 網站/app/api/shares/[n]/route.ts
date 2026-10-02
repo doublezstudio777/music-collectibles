@@ -2,7 +2,7 @@ import { requireConsented } from "@/lib/server/terms";
 import { json, readBody } from "@/lib/server/auth";
 import { handle, HttpError } from "@/lib/server/trade";
 import { getCatalog } from "@/lib/server/content";
-import { editShare, publicOffers, setSale } from "@/lib/server/trade";
+import { deleteShare, editShare, publicOffers, setSale } from "@/lib/server/trade";
 import { tradeBlocked } from "@/lib/server/geo";
 
 const num = async (p: Promise<Record<string, string>>, k: string) => {
@@ -47,10 +47,14 @@ export async function PUT(req: Request, ctx: { params: Promise<{ n: string }> })
   const body = await readBody(req);
   const s = await requireConsented(req);
   if (s instanceof Response) return s;
-  const sale = body.sale as { state?: unknown } | undefined;
-  if (sale && sale.state !== "share") {
-    const blocked = tradeBlocked(req);
-    if (blocked) return blocked;
-  }
-  return handle(async () => json(await editShare(s.user, await num(ctx.params, "n"), body)));
+  // 海外連線只擋「真的改成開放出價／定價出售」（2026-10-02 總檢 L10）：表單原樣送回的 sale 由 editShare 比對後才判斷
+  const abroad = tradeBlocked(req) !== null;
+  return handle(async () => json(await editShare(s.user, await num(ctx.params, "n"), body, abroad)));
+}
+
+/** 作者刪除自己的收藏（2026-10-02 總檢 M1）：軟刪除，照片檔刪掉、出價作廢、對話通知；被鎖定時 423 */
+export async function DELETE(req: Request, ctx: { params: Promise<{ n: string }> }) {
+  const s = await requireConsented(req);
+  if (s instanceof Response) return s;
+  return handle(async () => json(await deleteShare(s.user, await num(ctx.params, "n"), new URL(req.url).origin)));
 }

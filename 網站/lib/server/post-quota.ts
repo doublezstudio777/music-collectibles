@@ -5,9 +5,10 @@
 import { env } from "cloudflare:workers";
 import { DAILY_UPLOADS, MAX_SHARE_PHOTOS } from "@/lib/server/photos";
 import { SHARE_DAILY } from "@/lib/server/trade";
+import { taiwanDay } from "@/lib/server/services";
 
 export async function postQuota(userId: string) {
-  const day = new Date().toISOString().slice(0, 10);
+  const day = taiwanDay();
   const rows = await env
     .DB!.prepare("SELECT key, count, reset_at AS resetAt FROM rate_limits WHERE key IN (?1, ?2)")
     .bind(`share:${userId}:${day}`, `upload:${userId}:${day}`)

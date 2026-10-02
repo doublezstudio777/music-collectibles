@@ -242,13 +242,14 @@ async function build(): Promise<Catalog> {
   }
   // 願望清單人數（2026-10-01 願望清單統一）：想要（任一層的鍵）∪ 對這個系列的炫收藏按愛心，(會員, 系列) 去重後計人。
   // 跟按讚、我有一樣不讓整頁快取作廢（likes／holdings 沒有內容版本觸發器），數字跟著下一次目錄重建更新
+  // 2026-10-02 總檢 S10：只算帳號還在用（active）的會員，作者對自己收藏按的愛心不算
   const wishRows = await db.all<{ sk: string; n: number }>(sql`
     SELECT sk, COUNT(*) AS n FROM (
-      SELECT user_id AS uid, CASE WHEN instr(target_key, '#') > 0 THEN substr(target_key, 1, instr(target_key, '#') - 1) ELSE target_key END AS sk
-        FROM holdings WHERE kind = 'wanted'
+      SELECT h.user_id AS uid, CASE WHEN instr(h.target_key, '#') > 0 THEN substr(h.target_key, 1, instr(h.target_key, '#') - 1) ELSE h.target_key END AS sk
+        FROM holdings h JOIN users u ON u.id = h.user_id AND u.status = 'active' WHERE h.kind = 'wanted'
       UNION
-      SELECT l.user_id AS uid, s.series_key AS sk FROM likes l JOIN shares s ON s.no = l.share_no
-        WHERE s.series_key IS NOT NULL AND s.deleted_at IS NULL AND s.hidden_at IS NULL
+      SELECT l.user_id AS uid, s.series_key AS sk FROM likes l JOIN shares s ON s.no = l.share_no JOIN users u ON u.id = l.user_id AND u.status = 'active'
+        WHERE s.series_key IS NOT NULL AND s.deleted_at IS NULL AND s.hidden_at IS NULL AND l.user_id != s.author_id
     ) GROUP BY sk`);
   const wishBy = new Map(wishRows.map((r) => [r.sk, Number(r.n)]));
   for (const w of seriesList) {

@@ -1,16 +1,15 @@
-import { CANONICAL_ORIGIN } from "@/lib/seo";
 import Link from "@/components/link";
 import { feedbackHref } from "@/lib/feedback";
 import { LegalPage } from "@/components/legal";
 import { SITE_NAME } from "@/lib/data";
-import { CONTACT_EMAIL, DELETION_DAYS, OPERATOR_TEXT, TAKEDOWN_PATH, TERMS_EFFECTIVE, TERMS_VERSION } from "@/lib/legal";
+import { CONTACT_EMAIL, DELETION_DAYS, OPERATOR_TEXT, TAKEDOWN_PATH } from "@/lib/legal";
 
 // 2026-10-01 法務修正：照 產出/20261001_上線前法務審閱/README.md 第八節 D6 補齊個資法第 8 條應告知事項。
 // 另外補私訊檢舉、封鎖名單、條款同意紀錄、權利侵害通知四類資料（D6 沒有，依網站實際蒐集的資料補，待律師確認）。
 // 2026-10-01 1.1 版：補 Google Analytics（資料表一列、交給誰處理一項、Cookie 一段，保存 14 個月）、Spotify 嵌入播放器涵蓋藝人頁。1.0 版全文在 app/privacy/v1-0/。
-// 2026-10-02 1.2 版（總檢 S5）：IP 位址一列補上照片查證、意見回饋、權利侵害通知的次數限制（程式本來就有記，政策沒寫到）。1.1 版全文在 app/privacy/v1-1/。
 // 「管理員看得到什麼」照網站實際做法：私訊檢舉時管理員也看不到訊息內容（D6 草稿寫會看到被檢舉的那段，跟現況不符）。
-export const metadata = { title: "隱私權政策", alternates: { canonical: `${CANONICAL_ORIGIN}/privacy` } };
+// 隱私權政策 1.1 版全文（2026-10-01 公告、2026-10-08 生效、2026-10-09 由 1.2 取代）。只留作查閱，內容不要再改
+export const metadata = { title: "隱私權政策 1.1（舊版）", robots: { index: false } };
 
 const ROWS: [string, string, string, string][] = [
   ["Email、密碼", "註冊時", "登入、寄驗證碼與重設密碼的信。密碼只存雜湊值，網站也看不到原文", "帳號存在期間；刪除帳號時刪除"],
@@ -20,7 +19,7 @@ const ROWS: [string, string, string, string][] = [
   ["註冊國家、最近一次登入的國家與時間", "註冊、登入時", "判定所在地區（最近 30 天沒有活動時的備援）", "最後一次登入後 90 天；刪除帳號時刪除"],
   ["每日活動紀錄（日期＋國家）", "登入後開網站時，每人每天每國最多一筆", "判定所在地區、統計活躍人數", "90 天；刪除帳號時刪除"],
   ["瀏覽次數", "看正版辨識細節、大圖時", "每個帳號每天看辨識細節與大圖有次數上限，用來擋大量抓取", "90 天；刪除帳號時刪除"],
-  ["IP 位址", "每次連線；註冊、重寄驗證碼、忘記密碼、照片查證、意見回饋、權利侵害通知時", "擋大量抓取與濫用。一般瀏覽的次數只放在伺服器記憶體，最多 5 分鐘，不寫進資料庫；註冊、重寄驗證碼、忘記密碼、照片查證、意見回饋、權利侵害通知的次數限制會把 IP 位址與次數寫進資料庫", "記憶體最多 5 分鐘；資料庫裡的次數紀錄在計數時段結束後最多 90 天"],
+  ["IP 位址", "每次連線；註冊、重寄驗證碼、忘記密碼時", "擋大量抓取與濫用。一般瀏覽的次數只放在伺服器記憶體，最多 5 分鐘，不寫進資料庫；註冊、重寄驗證碼、忘記密碼的次數限制會把 IP 位址與次數寫進資料庫", "記憶體最多 5 分鐘；資料庫裡的次數紀錄在計數時段結束後最多 90 天"],
   ["你發表的內容", "你使用網站時", "炫收藏與照片、留言、編輯紀錄、出價、成交、私訊、檢舉與申訴，照各功能的用途使用", "帳號存在期間；刪除帳號時的處理見下方"],
   ["私訊檢舉（檢舉人、被檢舉人、理由與補充說明）", "你檢舉一段對話時", "管理員處理騷擾、詐騙；不含訊息內容", "帳號存在期間；刪除帳號後保留 3 年，期滿刪除"],
   ["封鎖名單（你封鎖了誰）", "你封鎖其他會員時", "讓對方不能再傳訊息給你、不能對你的收藏出價。管理後台不列出", "解除封鎖前；刪除帳號時刪除"],
@@ -28,11 +27,11 @@ const ROWS: [string, string, string, string][] = [
   ["權利侵害通知與回復通知（姓名、Email、電話、地址、通知內容）", "你送出權利侵害通知，或會員送出回復通知時", "依著作權法處理侵權通知。通知內容（不含通知人的聯絡方式）會轉給被通知的會員，回復通知會轉給通知人", "處理完成後 3 年，期滿刪除"],
 ];
 
-export default function PrivacyPage() {
+export default function PrivacyV11Page() {
   return (
-    <LegalPage title="隱私權政策" other={{ href: "/terms", label: "使用條款" }}>
+    <LegalPage title="隱私權政策（1.1 版）" other={{ href: "/privacy", label: "現行隱私權政策" }} version="1.1" effective="2026-10-08">
       <p>
-        {SITE_NAME}（lemibox.com）由{OPERATOR_TEXT}經營（以下稱「我們」），聯絡信箱 <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>。這份政策說明我們依個人資料保護法蒐集、處理與利用你的個人資料的方式。版本 {TERMS_VERSION}，{TERMS_EFFECTIVE} 生效。
+        {SITE_NAME}（lemibox.com）由{OPERATOR_TEXT}經營（以下稱「我們」），聯絡信箱 <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>。這份政策說明我們依個人資料保護法蒐集、處理與利用你的個人資料的方式。版本 1.1，2026-10-08 生效。
       </p>
       <p>註冊與使用時會蒐集下表這些資料，用途只限表上寫的，不販售、不出租、不拿去做廣告投放。</p>
 

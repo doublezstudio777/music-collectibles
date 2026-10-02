@@ -5,19 +5,24 @@
 // - 只有出價的人能撤回；作者不能對自己的收藏出價
 // - 被鎖（檢舉達門檻、或品項／版本被鎖）時：不能改出售狀態、出價、我要買、接受、撤回、成交。
 //   判斷跟單則頁同一個 lockFor（lib/server/content.ts 的 lockForShare）
+//   2026-10-02 總檢 S9：鎖定中仍放行「賣家改回純分享」與「買家撤回出價」，這兩個都是降低風險的動作
+// - 2026-10-02 總檢 M3：對方帳號停權或刪除後不能再出價、問賣家、傳訊息（assertActive）；
+//   停權與刪帳當下 freezeUserTrade 把他名下出售中的收藏改純分享、未處理的出價撤回並在對話裡通知
+// - 2026-10-02 總檢 S3：改回純分享時未處理的出價一併作廢；接受、成交要求這則仍在出售中
+// - 2026-10-02 總檢 M1：作者可以刪除自己的收藏（deleteShare，軟刪除）
 
 import { and, asc, desc, eq, inArray, isNull, or, sql } from "drizzle-orm";
 import { getDb } from "@/db";
-import { adminLog, items, messages, offers, series, shares, threadReads, threads, photos } from "@/db/schema";
+import { adminLog, items, messages, offers, series, shares, threadReads, threads, photos, users } from "@/db/schema";
 import { composeWhat, KINDS, priceText, relTime, type Kind, type SaleState } from "@/lib/data";
 import { lockForShare, userNames, type ShareRow } from "@/lib/server/content";
 import { parseContentKey } from "@/lib/server/me";
 import { ensureItem, ensureMiscSeries, ownPendingSeries, versionEdition } from "@/lib/server/series-link";
 import { dropOgImage, MAX_SHARE_PHOTOS, removePhotoFiles, unattachedPhotos } from "@/lib/server/photos";
-import { hit } from "@/lib/server/services";
+import { hit, taiwanDay } from "@/lib/server/services";
 import { fail, isAdmin, type User } from "@/lib/server/auth";
 import { recordDeal, voidDeals } from "@/lib/server/prices";
-import { regionNames } from "@/lib/server/geo";
+import { regionNames, TRADE_ONLY_MESSAGE } from "@/lib/server/geo";
 import { assertVerified, beforeSend, blockState, assertNotBlocked, reportedThreads, reportThread } from "@/lib/server/dm";
 import { userBadges } from "@/lib/server/scores";
 
@@ -69,6 +74,12 @@ export const assertNotCollection = (s: Pick<ShareRow, "postType">) => {
 const assertAuthor = (s: ShareRow, u: User) => {
   if (s.authorId !== u.id) throw new HttpError(403, "FORBIDDEN", "只有這則的作者可以這樣做");
 };
+
+/** 對方帳號要還在用（停權、刪除都不行）：出價、問賣家、傳訊息前都查（2026-10-02 總檢 M3） */
+export async function assertActive(userId: string, message = "對方帳號已停用，無法再進行") {
+  const [u] = userId ? await getDb().select({ status: users.status }).from(users).where(eq(users.id, userId)) : [];
+  if (!u || u.status !== "active") throw new HttpError(409, "USER_INACTIVE", message);
+}
 
 /* ---------- 發布 ---------- */
 
@@ -194,7 +205,7 @@ export async function createShare(u: User, body: Record<string, unknown>) {
   const pics = await unattachedPhotos(u.id, photoIds, "share");
   if (pics.length === 0) errors.photo = "至少放一張照片";
   const content = await resolveContent(u.id, body, errors);
-  const day = nowIso().slice(0, 10);
+  const day = taiwanDay();
   if (!(await hit(`share:${u.id}:${day}`, SHARE_DAILY, 86400))) throw new HttpError(429, "RATE_LIMITED", `今天已經發了 ${SHARE_DAILY} 則，明天再來`);
 
   const db = getDb();
@@ -228,7 +239,7 @@ export async function createShare(u: User, body: Record<string, unknown>) {
  * - 管理員只能改內容欄位，出售狀態與價格只有發文者能改；管理員改別人的會寫操作紀錄
  * - 分數：發炫收藏的事件以這則的編號為準，改版本不會重複加分；版本頁的排序、統計都是讀這則目前掛的版本即時算
  */
-export async function editShare(u: User, no: number, body: Record<string, unknown>) {
+export async function editShare(u: User, no: number, body: Record<string, unknown>, abroad = false) {
   const s = await shareRow(no);
   const admin = isAdmin(u);
   if (s.authorId !== u.id && !admin) throw new HttpError(403, "FORBIDDEN", "只有發文者可以編輯這則");
@@ -246,6 +257,8 @@ export async function editShare(u: User, no: number, body: Record<string, unknow
   if (saleChanged && s.authorId !== u.id) throw new HttpError(403, "FORBIDDEN", "出售狀態與價格只有發文者可以改");
   if (saleChanged && sale.state !== "share" && sale.state !== "offer" && sale.state !== "sale") throw new HttpError(400, "BAD_REQUEST", "參數不對");
   if (saleChanged && sale.state === "sale" && !validPrice(sale.price)) throw new HttpError(400, "INVALID", "填一個整數金額");
+  // 海外連線（2026-10-02 總檢 L10）：只有「真的要改成開放出價／定價出售」才擋，表單原樣送回來的 sale 不算交易
+  if (saleChanged && sale.state !== "share" && abroad) throw new HttpError(403, "TRADE_REGION", TRADE_ONLY_MESSAGE);
   if (!(await hit(`edit-share:${u.id}`, 60, 3600))) throw new HttpError(429, "RATE_LIMITED", "改太多次了，等一下再試");
 
   const at = nowIso();
@@ -350,6 +363,24 @@ async function broadcast(no: number, text: (threadId: number) => string | null) 
   }
 }
 
+/** 這則還沒處理（open／accepted）的出價全部標撤回，各對話插一行系統訊息；回傳作廢幾筆與通知了哪些對話 */
+async function voidOpenOffers(no: number, line: string) {
+  const db = getDb();
+  const live = await db
+    .select({ id: offers.id, threadId: offers.threadId })
+    .from(offers)
+    .where(and(eq(offers.shareNo, no), inArray(offers.status, ["open", "accepted"])));
+  const threadIds = new Set(live.map((o) => o.threadId));
+  if (live.length) {
+    await db
+      .update(offers)
+      .set({ status: "withdrawn", updatedAt: nowIso() })
+      .where(inArray(offers.id, live.map((o) => o.id)));
+    for (const t of threadIds) await sys(t, line);
+  }
+  return { offers: live.length, threadIds };
+}
+
 /* ---------- 出售狀態 ---------- */
 
 const stateWord: Record<SaleState, string> = {
@@ -366,13 +397,20 @@ export async function setSale(u: User, no: number, state: unknown, price: unknow
   if (s.saleState === "sold") throw new HttpError(409, "SOLD", "已售出，要先改回出售中");
   if (state !== "share" && state !== "offer" && state !== "sale") throw new HttpError(400, "BAD_REQUEST", "參數不對");
   if (state === "sale" && !validPrice(price)) throw new HttpError(400, "INVALID", "填一個整數金額");
-  await assertNotLocked(s);
+  // 改回純分享（下架）鎖定中也放行（2026-10-02 總檢 S9）；開放出價、定價、改價仍要沒被鎖
+  if (state !== "share") await assertNotLocked(s);
   const nextPrice = state === "sale" ? (price as number) : null;
   if (state === s.saleState && nextPrice === (state === "sale" ? s.price : null)) return;
   await getDb()
     .update(shares)
     .set({ saleState: state, price: state === "sale" ? nextPrice : s.price, updatedAt: nowIso() })
     .where(eq(shares.no, no));
+  if (state === "share") {
+    // 不賣了：還沒處理的出價一併作廢（2026-10-02 總檢 S3），有出價的對話說明出價已作廢，其他對話照舊一句
+    const { threadIds } = await voidOpenOffers(no, "這件不賣了，你的出價已作廢");
+    await broadcast(no, (tid) => (threadIds.has(tid) ? null : stateWord.share));
+    return;
+  }
   const line =
     state === "sale" && s.saleState === "sale"
       ? `價格改為 ${priceText(nextPrice ?? 0)}`
@@ -414,6 +452,7 @@ export async function placeOffer(u: User, no: number, kind: unknown, price: unkn
   const p = kind === "buy" ? s.price : price;
   if (!validPrice(p)) throw new HttpError(400, "INVALID", "填一個整數金額");
   await assertNotLocked(s);
+  await assertActive(s.authorId, "賣家帳號已停用，這則不能再出價");
   if (!(await hit(`offer:${u.id}`, 60, 3600))) throw new HttpError(429, "RATE_LIMITED", "出價太頻繁，等一下再試");
   const db = getDb();
   await assertNotBlocked(u.id, s.authorId);
@@ -447,6 +486,7 @@ export async function respondOffer(u: User, id: number, answer: unknown) {
   const { o, s } = await offerWithShare(id);
   assertAuthor(s, u);
   if (s.saleState === "sold") throw new HttpError(409, "SOLD", "已售出");
+  if (s.saleState !== "offer" && s.saleState !== "sale") throw new HttpError(409, "NOT_OPEN", "這則目前不開放交易，先改成開放出價或定價出售");
   if (o.status !== "open") throw new HttpError(409, "NOT_OPEN", "這筆出價已經處理過");
   await assertNotLocked(s);
   await getDb().update(offers).set({ status: answer, updatedAt: nowIso() }).where(eq(offers.id, id));
@@ -457,7 +497,8 @@ export async function withdrawOffer(u: User, id: number) {
   const { o, s } = await offerWithShare(id);
   if (o.buyerId !== u.id) throw new HttpError(403, "FORBIDDEN", "只有出價的人可以撤回");
   if (o.status !== "open") throw new HttpError(409, "NOT_OPEN", "這筆出價已經處理過");
-  await assertNotLocked(s);
+  // 鎖定中照樣可以撤回（2026-10-02 總檢 S9）：買家把錢收回來是降低風險，不用等解鎖
+  void s;
   await getDb().update(offers).set({ status: "withdrawn", updatedAt: nowIso() }).where(eq(offers.id, id));
   await sys(o.threadId, `買家撤回了 ${priceText(o.price)}`);
 }
@@ -469,6 +510,7 @@ export async function closeDeal(u: User, no: number, offerId: unknown) {
   if (s.no !== no) throw new HttpError(400, "BAD_REQUEST", "這筆出價不是這則的");
   assertAuthor(s, u);
   if (s.saleState === "sold") throw new HttpError(409, "SOLD", "已售出");
+  if (s.saleState !== "offer" && s.saleState !== "sale") throw new HttpError(409, "NOT_OPEN", "這則目前不開放交易，不能成交");
   if (o.status !== "accepted") throw new HttpError(409, "NOT_ACCEPTED", "要先接受這筆出價");
   await assertNotLocked(s);
   const db = getDb();
@@ -529,6 +571,7 @@ export async function openThread(u: User, no: number) {
   const s = await shareRow(no);
   if (s.authorId === u.id) throw new HttpError(403, "FORBIDDEN", "這是你自己的收藏");
   assertVerified(u);
+  await assertActive(s.authorId, "賣家帳號已停用，無法再私訊");
   const [found] = await getDb()
     .select({ id: threads.id })
     .from(threads)
@@ -565,6 +608,7 @@ export async function sendText(u: User, id: number, text: unknown) {
   const body = typeof text === "string" ? text.trim().slice(0, 1000) : "";
   if (!body) throw new HttpError(400, "INVALID", "寫點什麼再送出");
   assertVerified(u);
+  await assertActive(t.otherId, "對方帳號已停用，無法再傳訊息");
   if (!(await hit(`msg:${u.id}`, 120, 3600))) throw new HttpError(429, "RATE_LIMITED", "訊息太頻繁，等一下再試");
   await beforeSend(u, t, t.otherId);
   const db = getDb();
@@ -689,11 +733,12 @@ export async function threadDetail(u: User, id: number) {
   const msgs = await db.select().from(messages).where(eq(messages.threadId, id)).orderBy(asc(messages.id));
   const offerIds = msgs.map((m) => m.offerId).filter((x): x is number => x !== null);
   const offerRows = offerIds.length ? await db.select().from(offers).where(inArray(offers.id, offerIds)) : [];
-  const [names, regions, blocked, reported] = await Promise.all([
+  const [names, regions, blocked, reported, otherRow] = await Promise.all([
     userNames([t.buyerId, t.sellerId]),
     regionNames([t.buyerId, t.sellerId]),
     blockState(u.id, t.otherId),
     reportedThreads(u.id, [t.id]),
+    t.otherId ? db.select({ status: users.status }).from(users).where(eq(users.id, t.otherId)) : Promise.resolve([]),
   ]);
   const now = Date.now();
   if (msgs.length) await markRead(u.id, id, msgs[msgs.length - 1].id);
@@ -722,6 +767,80 @@ export async function threadDetail(u: User, id: number) {
     /** me＝我封鎖對方、them＝對方封鎖我 */
     blocked,
     reported: reported.has(t.id),
+    /** 對方帳號已停權或刪除（2026-10-02 總檢 M3）：畫面顯示「對方帳號已停用」、不能再傳 */
+    otherGone: !otherRow[0] || otherRow[0].status !== "active",
     messages: out,
   };
+}
+
+/* ---------- 刪除收藏（2026-10-02 總檢 M1） ---------- */
+
+/**
+ * 作者刪除自己的收藏（使用條款第 15 條「想刪除特定內容，請在申請刪帳前自己刪除」）。
+ * - 軟刪除：shares.deleted_at，列保留；頁面 404、目錄與 sitemap 自動不含、分數在下次彙總時作廢（scores.ts 的 BASE_REASON 看 deleted_at）
+ * - 照片照「刪帳時勾選連同照片刪除」同一套：R2 檔（主圖、縮圖、預覽圖、原圖）刪掉、容量扣回、快取清掉（photos.ts removePhotoFiles）
+ * - 還沒處理的出價作廢、每條對話插一行系統訊息
+ * - 被鎖定（檢舉達門檻）不能刪：照片可能是檢舉證據，要先申訴或請管理員處理
+ */
+export async function deleteShare(u: User, no: number, origin: string) {
+  const s = await shareRow(no);
+  assertAuthor(s, u);
+  const lock = await lockForShare(s);
+  if (lock) throw new HttpError(423, "LOCKED", `${lock.label}，照片可能是檢舉證據，暫時不能刪除；請先申訴，或寫信請我們處理`);
+  const db = getDb();
+  const at = nowIso();
+  const pics = await db.select().from(photos).where(and(eq(photos.shareNo, no), isNull(photos.deletedAt)));
+  const { threadIds, offers: voided } = await voidOpenOffers(no, "作者已刪除這則收藏，你的出價已作廢");
+  await db.update(shares).set({ deletedAt: at, updatedAt: at }).where(eq(shares.no, no));
+  await broadcast(no, (tid) => (threadIds.has(tid) ? null : "作者已刪除這則收藏"));
+  const released = await removePhotoFiles(origin, pics);
+  return { no, photos: pics.length, bytesReleased: released, offersVoided: voided };
+}
+
+/* ---------- 停權、刪帳時收掉交易（2026-10-02 總檢 M3） ---------- */
+
+/**
+ * 這位會員名下出售中的收藏改成純分享、他收藏上還沒處理的出價全部撤回；他當買家還沒處理的出價也撤回。
+ * 每條受影響的對話插一行系統訊息說明。回傳改了幾則收藏、撤回幾筆出價。
+ */
+export async function freezeUserTrade(userId: string, why: "suspended" | "deleted") {
+  const db = getDb();
+  const at = nowIso();
+  const word = why === "suspended" ? "停用" : "刪除";
+  const selling = await db
+    .select({ no: shares.no })
+    .from(shares)
+    .where(and(eq(shares.authorId, userId), isNull(shares.deletedAt), inArray(shares.saleState, ["offer", "sale"])));
+  if (selling.length) {
+    await db
+      .update(shares)
+      .set({ saleState: "share", updatedAt: at })
+      .where(inArray(shares.no, selling.map((x) => x.no)));
+  }
+  // 他收藏上還沒處理的出價（含舊資料裡純分享狀態下殘留的 open）
+  const withOffers = await db
+    .select({ no: offers.shareNo })
+    .from(offers)
+    .innerJoin(shares, eq(shares.no, offers.shareNo))
+    .where(and(eq(shares.authorId, userId), inArray(offers.status, ["open", "accepted"])))
+    .groupBy(offers.shareNo);
+  let n = 0;
+  for (const { no } of withOffers) n += (await voidOpenOffers(no, `賣家帳號已${word}，這件不再開放交易，你的出價已撤回`)).offers;
+  // 出售中但沒人出價的收藏，也在既有對話裡說一聲
+  for (const { no } of selling) {
+    if (!withOffers.some((x) => x.no === no)) await broadcast(no, () => `賣家帳號已${word}，這件不再開放交易`);
+  }
+  // 他當買家還沒處理的出價
+  const mine = await db
+    .select({ id: offers.id, threadId: offers.threadId })
+    .from(offers)
+    .where(and(eq(offers.buyerId, userId), inArray(offers.status, ["open", "accepted"])));
+  if (mine.length) {
+    await db
+      .update(offers)
+      .set({ status: "withdrawn", updatedAt: at })
+      .where(inArray(offers.id, mine.map((o) => o.id)));
+    for (const t of new Set(mine.map((o) => o.threadId))) await sys(t, `買家帳號已${word}，出價已撤回`);
+  }
+  return { shares: selling.length, offers: n + mine.length };
 }

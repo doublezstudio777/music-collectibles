@@ -6,7 +6,7 @@
 
 import { env } from "cloudflare:workers";
 import { VERIFY_CODE_CHARS, VERIFY_CODE_LEN } from "@/lib/data";
-import { hit } from "@/lib/server/services";
+import { hit, taiwanDay } from "@/lib/server/services";
 
 /** 每人每天最多拿幾組碼 */
 export const CODE_DAILY = 90;
@@ -29,7 +29,7 @@ export function randomVerifyCode() {
 type Result<T> = { ok: true; value: T } | { ok: false; status: number; code: string; message: string };
 
 export async function issueVerifyCode(ownerId: string): Promise<Result<string>> {
-  const day = new Date().toISOString().slice(0, 10);
+  const day = taiwanDay();
   if (!(await hit(`vcode:${ownerId}:${day}`, CODE_DAILY, 86400))) {
     return { ok: false, status: 429, code: "DAILY_LIMIT", message: "今天上傳太多次，明天再來" };
   }
@@ -50,6 +50,11 @@ export async function claimVerifyCode(ownerId: string, code: string, photoId: st
     .bind(code, ownerId, photoId)
     .run();
   return (r.meta.changes ?? 0) > 0;
+}
+
+/** 把剛佔的碼還回去（上傳在佔碼之後失敗時用，2026-10-02 總檢 L6） */
+export async function releaseVerifyCode(code: string, photoId: string) {
+  await env.DB!.prepare("UPDATE photo_codes SET photo_id = NULL WHERE code = ?1 AND photo_id = ?2").bind(code, photoId).run();
 }
 
 /** 查證頁限流：true＝還可以查 */

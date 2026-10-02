@@ -14,6 +14,7 @@ import { parseJson } from "@/lib/server/content";
 import { parseContentKey } from "@/lib/server/me";
 import { HttpError } from "@/lib/server/trade";
 import type { User } from "@/lib/server/auth";
+import { notifyShareHidden } from "@/lib/server/notify";
 
 export type HideType = "artist" | "series" | "item" | "version" | "share";
 const TYPES: HideType[] = ["artist", "series", "item", "version", "share"];
@@ -77,17 +78,22 @@ async function resolve(type: unknown, rawKey: unknown): Promise<Resolved> {
 const label = (r: Resolved) =>
   r.type === "artist" ? `artist:${r.slug}` : r.type === "share" ? `share:${r.no}` : `${r.type}:${r.key}`;
 
-export async function setHidden(admin: User, type: unknown, key: unknown, hidden: unknown) {
+export async function setHidden(admin: User, type: unknown, key: unknown, hidden: unknown, reason = "") {
   if (typeof hidden !== "boolean") throw new HttpError(400, "BAD_REQUEST", "參數不對");
   const r = await resolve(type, key);
   const db = getDb();
   const v = hidden ? nowIso() : null;
+  // 下架炫收藏通知作者（2026-10-02 總檢 M2）；原本沒隱藏才寄，重複按不重寄
+  if (r.type === "share" && hidden) {
+    const [s] = await db.select({ a: shares.authorId, what: shares.what, custom: shares.customWhat, h: shares.hiddenAt }).from(shares).where(eq(shares.no, r.no));
+    if (s && !s.h) await notifyShareHidden(s.a, r.no, s.custom || s.what, reason);
+  }
   if (r.type === "artist") await db.update(artists).set({ hiddenAt: v }).where(eq(artists.slug, r.slug));
   else if (r.type === "series") await db.update(series).set({ hiddenAt: v }).where(eq(series.id, r.id));
   else if (r.type === "item") await db.update(items).set({ hiddenAt: v }).where(eq(items.id, r.id));
   else if (r.type === "version") await db.update(versions).set({ hiddenAt: v }).where(eq(versions.id, r.id));
   else await db.update(shares).set({ hiddenAt: v }).where(eq(shares.no, r.no));
-  await log(admin.id, hidden ? "隱藏" : "恢復", label(r));
+  await log(admin.id, hidden ? "隱藏" : "恢復", label(r), reason ? { reason } : {});
   return { target: label(r), hidden };
 }
 

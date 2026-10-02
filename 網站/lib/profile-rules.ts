@@ -53,6 +53,12 @@ export function checkLink(key: SocialKey, raw: string): { ok: true; url: string 
   if (!s.hosts.some((h) => host === h || host.endsWith(`.${h}`))) {
     return { ok: false, message: `${s.label} 欄只收 ${s.hosts.join("、")} 的網址` };
   }
+  // 平台自己的轉址頁不收（2026-10-02 總檢 L8）：l.facebook.com/l.php?u=…、l.instagram.com、youtube.com/redirect 這類會把人帶到站外
+  const sub = host.split(".")[0];
+  if (/^(l|lm|link|links|redirect|out)$/.test(sub) && host !== s.hosts[0]) return { ok: false, message: `${s.label} 要貼個人頁面的網址，不是轉址連結` };
+  if (/^\/(l\.php|redirect|linkshim|away|out)(\/|$)/i.test(u.pathname) || u.searchParams.has("u") || u.searchParams.has("q") && u.pathname.includes("redirect")) {
+    return { ok: false, message: `${s.label} 要貼個人頁面的網址，不是轉址連結` };
+  }
   if (u.pathname.replace(/\/+$/, "") === "" && !u.search) return { ok: false, message: `${s.label} 要貼個人頁面的網址，不是首頁` };
   u.hash = "";
   return { ok: true, url: u.href };

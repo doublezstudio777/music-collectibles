@@ -1,4 +1,5 @@
-import { json, readBody, requireUser } from "@/lib/server/auth";
+import { requireConsented } from "@/lib/server/terms";
+import { json, readBody } from "@/lib/server/auth";
 import { handle, HttpError } from "@/lib/server/trade";
 import { sendText } from "@/lib/server/trade";
 
@@ -10,7 +11,7 @@ const num = async (p: Promise<Record<string, string>>, k: string) => {
 
 /** 送一則文字訊息：{ text } */
 export async function POST(req: Request, ctx: { params: Promise<{ id: string }> }) {
-  const s = await requireUser(req);
+  const s = await requireConsented(req);
   if (s instanceof Response) return s;
   const body = await readBody(req);
   void body;

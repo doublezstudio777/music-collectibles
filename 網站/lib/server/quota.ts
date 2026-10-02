@@ -7,6 +7,7 @@
 // 鍵：quota:{detail|photo}:{userId}:{YYYY-MM-DD}（UTC 日期），每天換新鍵，舊鍵留著給後台看，不影響計數。
 
 import { env } from "cloudflare:workers";
+import { taiwanDay } from "@/lib/server/services";
 
 export type QuotaKind = "detail" | "photo";
 export const DEFAULT_QUOTA: Record<QuotaKind, number> = { detail: 100, photo: 1000 };
@@ -21,7 +22,7 @@ const MAX_KEYS = 20_000;
 type E = { base: number; pending: number };
 const mem = new Map<string, E>();
 
-const keyOf = (kind: QuotaKind, userId: string) => `quota:${kind}:${userId}:${new Date().toISOString().slice(0, 10)}`;
+const keyOf = (kind: QuotaKind, userId: string) => `quota:${kind}:${userId}:${taiwanDay()}`;
 
 /** 從 settings 讀上限；沒設或不合法用預設值 */
 export async function quotaLimit(kind: QuotaKind): Promise<number> {

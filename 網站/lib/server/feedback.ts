@@ -7,7 +7,7 @@ import { adminLog, feedback } from "@/db/schema";
 import { FEEDBACK_MAX, FEEDBACK_PER_HOUR, isFeedbackKind, type FeedbackKind } from "@/lib/feedback";
 import { normEmail, validEmail, type User } from "@/lib/server/auth";
 import { userNames } from "@/lib/server/content";
-import { MAX_MAIN_BYTES, MAX_THUMB_BYTES, releaseBytes, reserveBytes, sniff } from "@/lib/server/photos";
+import { MAX_MAIN_BYTES, MAX_THUMB_BYTES, releaseBytes, reserveBytes, checkImage, sniff } from "@/lib/server/photos";
 import { hit } from "@/lib/server/services";
 import { randomToken } from "@/lib/server/crypto";
 import { HttpError } from "@/lib/server/trade";
@@ -33,7 +33,11 @@ export async function submitFeedback(
     if (!input.thumb || input.image.size > MAX_MAIN_BYTES || input.thumb.size > MAX_THUMB_BYTES) throw new HttpError(413, "TOO_LARGE", "照片太大，換一張再試");
     main = new Uint8Array(await input.image.arrayBuffer());
     thumb = new Uint8Array(await input.thumb.arrayBuffer());
-    if (!sniff(main) || !sniff(thumb)) throw new HttpError(415, "BAD_FORMAT", "只收 WebP 或 JPEG 照片");
+    const mChk = checkImage(main);
+    const tChk = checkImage(thumb);
+    if (!mChk || !tChk) throw new HttpError(415, "BAD_FORMAT", "只收 WebP 或 JPEG 照片");
+    if ("error" in mChk) throw new HttpError(400, "BAD_IMAGE", mChk.error);
+    if ("error" in tChk) throw new HttpError(400, "BAD_IMAGE", tChk.error);
   }
   if (!(await hit(`feedback:${ip ?? "local"}`, FEEDBACK_PER_HOUR, 3600))) throw new HttpError(429, "RATE_LIMITED", "送出太多次了，一小時後再試");
 

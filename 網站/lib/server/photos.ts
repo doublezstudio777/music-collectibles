@@ -5,12 +5,12 @@
 // 刪照片時（之後）要把 bytes 扣回來。
 
 import { env } from "cloudflare:workers";
-import { and, eq, isNull, or } from "drizzle-orm";
+import { and, eq, isNull, lt, or } from "drizzle-orm";
 import { getDb } from "@/db";
 import { adminLog, photos, settings } from "@/db/schema";
 import { randomToken } from "@/lib/server/crypto";
-import { hit } from "@/lib/server/services";
-import { claimVerifyCode } from "@/lib/server/verify";
+import { hit, taiwanDay } from "@/lib/server/services";
+import { claimVerifyCode, releaseVerifyCode } from "@/lib/server/verify";
 import { VERIFY_CODE_RE } from "@/lib/data";
 
 /** 總容量上限 8 GB（R2 免費 10 GB，留 2 GB 緩衝） */
@@ -33,6 +33,71 @@ export function sniff(b: Uint8Array): ImageType | null {
   }
   if (b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return "image/jpeg";
   return null;
+}
+
+/**
+ * 檔案結構檢查（2026-10-02 總檢 L5）：檔頭對了還不夠，整個檔要是一張完整的圖、後面不能夾別的東西、不能帶 EXIF。
+ * - JPEG：從 SOI 逐段走到 EOI，EOI 後面不能再有資料；APP1 Exif 段一律擋（瀏覽器端 canvas 重新編碼本來就不會有 EXIF，
+ *   帶 EXIF＝沒走網站表單，可能含拍攝位置）
+ * - WebP：RIFF 長度要等於檔案長度減 8，逐塊走到底；EXIF、XMP 塊一律擋
+ * 回傳錯誤訊息；沒問題回 null
+ */
+export function imageProblem(b: Uint8Array, type: ImageType): string | null {
+  const broken = "照片檔案不完整或夾帶其他內容，重新整理後再上傳";
+  const exif = "照片帶有 EXIF 資訊（可能含拍攝位置），請用網站的上傳表單重新上傳";
+  try {
+    if (type === "image/jpeg") {
+      let i = 2;
+      let sos = false;
+      while (i < b.length) {
+        if (b[i] !== 0xff) return broken;
+        const m = b[i + 1];
+        if (m === 0xff) {
+          i++;
+          continue;
+        }
+        if (m === 0xd9) return i + 2 === b.length && sos ? null : broken;
+        if (m === 0xd8 || m === 0x01 || (m >= 0xd0 && m <= 0xd7)) {
+          i += 2;
+          continue;
+        }
+        if (i + 4 > b.length) return broken;
+        const len = (b[i + 2] << 8) | b[i + 3];
+        if (len < 2 || i + 2 + len > b.length) return broken;
+        if (m === 0xe1 && len >= 8 && b[i + 4] === 0x45 && b[i + 5] === 0x78 && b[i + 6] === 0x69 && b[i + 7] === 0x66) return exif;
+        i += 2 + len;
+        if (m === 0xda) {
+          // 掃過壓縮資料：直到遇到不是 FF00、不是 RSTn 的標記
+          sos = true;
+          while (i < b.length) {
+            if (b[i] === 0xff && i + 1 < b.length && b[i + 1] !== 0x00 && !(b[i + 1] >= 0xd0 && b[i + 1] <= 0xd7) && b[i + 1] !== 0xff) break;
+            i++;
+          }
+        }
+      }
+      return broken;
+    }
+    const riff = (b[4] | (b[5] << 8) | (b[6] << 16) | (b[7] << 24)) >>> 0;
+    if (riff + 8 !== b.length) return broken;
+    let i = 12;
+    while (i + 8 <= b.length) {
+      const id = String.fromCharCode(b[i], b[i + 1], b[i + 2], b[i + 3]);
+      const size = (b[i + 4] | (b[i + 5] << 8) | (b[i + 6] << 16) | (b[i + 7] << 24)) >>> 0;
+      if (id === "EXIF" || id === "XMP ") return exif;
+      i += 8 + size + (size & 1);
+    }
+    return i === b.length ? null : broken;
+  } catch {
+    return broken;
+  }
+}
+
+/** 看檔頭＋整個檔案結構（sniff＋imageProblem）；格式不對回 null，結構有問題丟 { error } */
+export function checkImage(b: Uint8Array): { type: ImageType } | { error: string } | null {
+  const type = sniff(b);
+  if (!type) return null;
+  const problem = imageProblem(b, type);
+  return problem ? { error: problem } : { type };
 }
 
 /** 讀寬高：WebP（VP8／VP8L／VP8X）與 JPEG（SOF）。讀不到回 0 */
@@ -120,31 +185,39 @@ export async function acceptUpload(
   if (main.size > MAX_MAIN_BYTES || thumb.size > MAX_THUMB_BYTES) return bad(413, "TOO_LARGE", "照片太大，換一張再試");
   const mainBytes = new Uint8Array(await main.arrayBuffer());
   const thumbBytes = new Uint8Array(await thumb.arrayBuffer());
-  const type = sniff(mainBytes);
-  const tType = sniff(thumbBytes);
-  if (!type || !tType) return bad(415, "BAD_FORMAT", "只收 WebP 或 JPEG 照片");
+  const mainChk = checkImage(mainBytes);
+  const thumbChk = checkImage(thumbBytes);
+  if (!mainChk || !thumbChk) return bad(415, "BAD_FORMAT", "只收 WebP 或 JPEG 照片");
+  if ("error" in mainChk) return bad(400, "BAD_IMAGE", mainChk.error);
+  if ("error" in thumbChk) return bad(400, "BAD_IMAGE", thumbChk.error);
+  const type = mainChk.type;
+  const tType = thumbChk.type;
   // 原圖：收藏照片必帶（舊版頁面送不出來，請對方重新整理），申訴證據不收
   let origBytes: Uint8Array | null = null;
   let oType: ImageType | null = null;
   if (purpose === "share") {
     if (!orig || orig.size > MAX_MAIN_BYTES || !VERIFY_CODE_RE.test(code)) return bad(400, "RELOAD", "網頁版本太舊，重新整理再上傳");
     origBytes = new Uint8Array(await orig.arrayBuffer());
-    oType = sniff(origBytes);
-    if (!oType) return bad(415, "BAD_FORMAT", "只收 WebP 或 JPEG 照片");
+    const oChk = checkImage(origBytes);
+    if (!oChk) return bad(415, "BAD_FORMAT", "只收 WebP 或 JPEG 照片");
+    if ("error" in oChk) return bad(400, "BAD_IMAGE", oChk.error);
+    oType = oChk.type;
   }
   // og 只在申訴（appeal）以外、格式對、大小對時才收；不合就當沒帶，不擋主圖上傳
   let ogBytes: Uint8Array | null = null;
   if (purpose === "share" && og && og.size > 0 && og.size <= MAX_OG_BYTES) {
     const b = new Uint8Array(await og.arrayBuffer());
-    if (sniffJpeg(b)) ogBytes = b;
-  }
-  const day = new Date().toISOString().slice(0, 10);
-  if (!(await hit(`upload:${ownerId}:${day}`, DAILY_UPLOADS, 86400))) {
-    return bad(429, "DAILY_LIMIT", `今天已經上傳 ${DAILY_UPLOADS} 張，明天再來`);
+    if (sniffJpeg(b) && !imageProblem(b, "image/jpeg")) ogBytes = b;
   }
   const id = randomToken(12);
-  // 查證碼先佔：不是發給這個人的、或已經用過的就擋（在寫 R2、佔容量之前）
+  // 查證碼先佔：不是發給這個人的、或已經用過的就擋（在扣每日額度、寫 R2、佔容量之前；2026-10-02 總檢 L6 把順序換到額度前面）
   if (purpose === "share" && !(await claimVerifyCode(ownerId, code, id))) return bad(409, "CODE_USED", "上傳失敗，再試一次");
+  const day = taiwanDay();
+  if (!(await hit(`upload:${ownerId}:${day}`, DAILY_UPLOADS, 86400))) {
+    // 額度用完：把剛佔的查證碼還回去，這組碼下次還能用
+    if (purpose === "share") await releaseVerifyCode(code, id);
+    return bad(429, "DAILY_LIMIT", `今天已經上傳 ${DAILY_UPLOADS} 張，明天再來`);
+  }
   const bytes = mainBytes.length + thumbBytes.length + (ogBytes?.length ?? 0) + (origBytes?.length ?? 0);
   if (!(await reserveBytes(bytes))) return bad(507, "STORAGE_FULL", "上傳暫停");
 
@@ -175,6 +248,23 @@ export async function acceptUpload(
   const verifyCode = purpose === "share" ? code : null;
   await getDb().insert(photos).values({ id, ownerId, purpose, r2Key: key, thumbKey, ogKey, origKey, verifyCode, contentType: type, bytes, width, height });
   return { ok: true, id, url: `/img/${key}`, thumbUrl: `/img/${thumbKey}`, ...(ogKey ? { ogUrl: `/img/${ogKey}` } : {}), ...(verifyCode ? { code: verifyCode } : {}) };
+}
+
+/**
+ * 清掉上傳超過 24 小時還沒掛到任何收藏的分享照片（2026-10-02 總檢 S2）：R2 檔刪掉、容量扣回、D1 標 deleted_at。
+ * 每天排程跑（worker.ts scheduled → cleanup.ts），後台也可以手動跑。申訴證據照片（purpose=appeal）由檢舉、申訴引用，不在這裡清。
+ * dryRun＝只列不刪
+ */
+export async function cleanupOrphanPhotos(origin: string, { hours = 24, dryRun = false, now = Date.now() } = {}) {
+  const cutoff = new Date(now - hours * 3600_000).toISOString();
+  const rows = await getDb()
+    .select()
+    .from(photos)
+    .where(and(eq(photos.purpose, "share"), isNull(photos.shareNo), isNull(photos.deletedAt), lt(photos.createdAt, cutoff)));
+  const list = rows.map((r) => ({ id: r.id, owner: r.ownerId, key: r.r2Key, bytes: r.bytes, createdAt: r.createdAt }));
+  if (dryRun || !rows.length) return { photos: list, bytesReleased: 0, deleted: 0 };
+  const bytesReleased = await removePhotoFiles(origin, rows);
+  return { photos: list, bytesReleased, deleted: rows.length };
 }
 
 /** 自己上傳、還沒掛到收藏或申訴的照片 */

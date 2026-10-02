@@ -15,6 +15,24 @@
 import { env } from "cloudflare:workers";
 import { getDb } from "@/db";
 import { adminLog } from "@/db/schema";
+import { cleanupOrphanPhotos } from "@/lib/server/photos";
+
+/** 沒掛上收藏的分享照片保留幾小時（2026-10-02 總檢 S2） */
+export const ORPHAN_HOURS = 24;
+
+/**
+ * 清掉上傳超過 ORPHAN_HOURS 小時還沒掛到收藏的分享照片（R2 刪檔、容量扣回），寫一筆 admin_log（action="清理未掛照片"）。
+ * origin＝清快取用的網站來源（排程用正式網域）。dryRun＝只列不刪
+ */
+export async function cleanupOrphans(origin: string, dryRun = false, now = Date.now()) {
+  const r = await cleanupOrphanPhotos(origin, { hours: ORPHAN_HOURS, dryRun, now });
+  if (!dryRun && r.deleted) {
+    await getDb()
+      .insert(adminLog)
+      .values({ adminId: "system", action: "清理未掛照片", target: "orphan_photos", detail: JSON.stringify({ hours: ORPHAN_HOURS, deleted: r.deleted, bytesReleased: r.bytesReleased, photos: r.photos.map((p) => p.id) }) });
+  }
+  return r;
+}
 
 export const RETENTION_DAYS = 90;
 

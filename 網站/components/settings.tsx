@@ -41,7 +41,7 @@ function NameBox({ me }: { me: Me }) {
         暱稱
       </label>
       <div className="settings-row">
-        <input id="set-name" className="input" value={name} maxLength={30} disabled={locked || busy} onChange={(e) => setName(e.target.value)} />
+        <input id="set-name" className="input" value={name} maxLength={20} disabled={locked || busy} onChange={(e) => setName(e.target.value)} />
         <button type="submit" className="btn btn-line" disabled={locked || busy} data-testid="name-save">
           {busy ? "儲存中…" : "儲存"}
         </button>

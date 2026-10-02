@@ -24,8 +24,9 @@ import { destroyAllSessions, type User } from "@/lib/server/auth";
 import { randomToken } from "@/lib/server/crypto";
 import { DELETED_NAME } from "@/lib/server/names";
 import { photoCache, photoCacheKey, releaseBytes } from "@/lib/server/photos";
-import { HttpError } from "@/lib/server/trade";
 import { DELETION_DAYS } from "@/lib/legal";
+import { freezeUserTrade, HttpError } from "@/lib/server/trade";
+import { notifyDeleted } from "@/lib/server/notify";
 
 export const REASON_MAX = 500;
 
@@ -159,8 +160,12 @@ export async function executeDeletion(admin: User, id: number, deletePhotos: boo
     ? 0
     : ((await db.prepare(`SELECT COUNT(*) AS n FROM photos WHERE owner_id = ?1 AND deleted_at IS NULL AND purpose = 'share'`).bind(uid).first<{ n: number }>())?.n ?? 0);
   const likeUid = `%${uid.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
+  // 交易先收掉（2026-10-02 總檢 M3）：出售中收藏改純分享、未處理出價撤回、對話裡通知；在改帳號之前做，系統訊息才對得到人
+  const frozen = await freezeUserTrade(uid, "deleted");
 
   const stmts = [
+    // 舊帳號名封存，不開放再註冊（2026-10-02 總檢 L11）
+    db.prepare(`INSERT OR IGNORE INTO retired_handles (handle, retired_at) VALUES (?1, ?2)`).bind(req.handle, at),
     db.prepare(`DELETE FROM sessions WHERE user_id = ?1`).bind(uid),
     db.prepare(`DELETE FROM email_codes WHERE user_id = ?1`).bind(uid),
     db.prepare(`DELETE FROM user_geo WHERE user_id = ?1`).bind(uid),
@@ -186,19 +191,20 @@ export async function executeDeletion(admin: User, id: number, deletePhotos: boo
   const out = await db.batch(stmts);
   const n = (i: number) => out[i].meta.changes ?? 0;
   const result = {
-    sessions: n(0),
-    emailCodes: n(1),
-    userGeo: n(2),
-    userActivity: n(3),
-    rateLimits: n(4),
-    counters: n(5),
-    nameChanges: n(6),
-    blocks: n(7),
+    sessions: n(1),
+    emailCodes: n(2),
+    userGeo: n(3),
+    userActivity: n(4),
+    rateLimits: n(5),
+    counters: n(6),
+    nameChanges: n(7),
+    blocks: n(8),
     photos: files.length - avatarFiles,
     avatars: avatarFiles,
-    adminLogRetargeted: n(9),
+    adminLogRetargeted: n(10),
     artistPhotos: artistFiles.length,
     reburnPending: kept,
+    ...frozen,
   };
   await db.batch([
     db
@@ -210,6 +216,8 @@ export async function executeDeletion(admin: User, id: number, deletePhotos: boo
   ]);
   // 保險：sessions 已在交易裡刪，這裡再呼叫一次共用函式（之後 sessions 有別的清理也一起走）
   await destroyAllSessions(uid);
+  // 刪帳完成通知（2026-10-02 總檢 M2）：寄到刪除前的 Email
+  await notifyDeleted(req.email, req.handle, { deletePhotos, reburnPending: kept, shares: frozen.shares, offers: frozen.offers });
 
   // R2：交易成功後才刪檔、扣容量、清這個資料中心的快取（/img/ 先查 D1，已標刪除的照片在任何地方都回 404）
   let r2Deleted = 0;

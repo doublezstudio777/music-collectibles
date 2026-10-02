@@ -8,6 +8,7 @@ import Image from "next/image";
 import { priceText, userHref, verifyHref, type Sale, type SaleState, type ShareView } from "@/lib/data";
 import { api, whenLoggedIn } from "@/lib/account";
 import { useAction, useAppState } from "@/lib/state";
+import { ShareDelete } from "@/components/share-delete";
 import type { PublicOffer } from "@/lib/server/trade";
 import { AppealBox } from "@/components/report";
 import { LikeButton } from "@/components/like-button";
@@ -535,6 +536,8 @@ function OwnerPanel({ share, sale, offers, canEdit }: { share: ShareView; sale: 
         </Link>
       ) : null}
       {error ? <p className="field-error">{error}</p> : null}
+      {/* 作者刪除（2026-10-02 總檢 M1）：獨立元件，鎖定中伺服器會回 423 */}
+      {canEdit ? <ShareDelete no={share.n} handle={share.author.handle} photos={share.photos?.length ?? 1} /> : null}
     </div>
   );
 }

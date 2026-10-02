@@ -112,6 +112,14 @@ smoke() {
       grep -qi "^x-robots-tag: noindex" <<<"$H" || { echo "煙霧測試失敗：$P 要有 X-Robots-Tag noindex"; exit 1; }
     done; echo "私人頁 /settings /search /login /u/ 仍 noindex"
   fi
+  # 安全標頭（2026-10-02 總檢 S6）：首頁與設定頁都要有 CSP、HSTS、nosniff、Referrer-Policy、Permissions-Policy、X-Frame-Options
+  local SH
+  for P in / /settings; do
+    SH=$(curl -sS -m 30 -D - -o /dev/null "$URL$P")
+    for H in "content-security-policy: default-src 'self'" "strict-transport-security: max-age=31536000" "x-content-type-options: nosniff" "referrer-policy: strict-origin-when-cross-origin" "permissions-policy: camera=()" "x-frame-options: DENY"; do
+      grep -qi "^$H" <<<"$SH" || { echo "煙霧測試失敗：$P 缺安全標頭 $H"; exit 1; }
+    done
+  done; echo "安全標頭齊全（/ 與 /settings）"
   # SEO（2026-10-01）：首頁 canonical 固定正式網域、有 og:image（首頁原本沒有 og）
   grep -q '<link rel="canonical" href="https://lemibox.com/"' <<<"$BODY" || { echo "煙霧測試失敗：首頁 canonical"; exit 1; }; echo "首頁 canonical https://lemibox.com/"
   grep -q '<meta property="og:image" content="https://lemibox.com/' <<<"$BODY" || { echo "煙霧測試失敗：首頁 og:image"; exit 1; }; echo "首頁 og:image"

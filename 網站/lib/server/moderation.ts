@@ -47,6 +47,7 @@ import { adminComments } from "@/lib/server/comments";
 import { HttpError } from "@/lib/server/trade";
 import { avatarUrl, isAdmin, type User } from "@/lib/server/auth";
 import { avatarReportable } from "@/lib/server/avatars";
+import { notifyShareLocked } from "@/lib/server/notify";
 
 const nowIso = () => new Date().toISOString();
 
@@ -101,7 +102,26 @@ export async function report(u: User, rawTarget: unknown, reason: unknown, note:
     .returning({ id: reports.id });
   if (!r.length) throw new HttpError(409, "ALREADY_REPORTED", "已經檢舉過了");
   const [c] = await getDb().select({ n: count() }).from(reports).where(eq(reports.target, target));
-  return { count: c?.n ?? 0 };
+  const total = c?.n ?? 0;
+  // 剛好達門檻、而且管理員沒裁決過：通知作者（2026-10-02 總檢 M2，條款第 12 條第 3 項）。只寄一次（等於門檻那一下）
+  if (level === "share" && total === (await threshold())) {
+    const [d] = await getDb().select({ d: targetDecisions.decision }).from(targetDecisions).where(eq(targetDecisions.target, target));
+    if (!d) {
+      const no = Number(targetBody(target));
+      const [s] = await getDb().select({ a: shares.authorId, what: shares.what, custom: shares.customWhat }).from(shares).where(eq(shares.no, no));
+      const reasonText = reasonsFor("share").map((x) => x.label).join("、");
+      if (s) await notifyShareLocked(s.a, no, s.custom || s.what, await reasonSummary(target, reasonText), total);
+    }
+  }
+  return { count: total };
+}
+
+/** 這個對象各理由的檢舉數（「疑似盜版 2、其他 1」） */
+async function reasonSummary(target: TargetKey, fallback: string) {
+  const rows = await getDb().select({ reason: reports.reason, n: count() }).from(reports).where(eq(reports.target, target)).groupBy(reports.reason);
+  const labels = new Map<string, string>(reasonsFor(targetLevel(target)).map((x) => [x.key, x.label]));
+  const parts = rows.map((r) => `${labels.get(r.reason) ?? r.reason} ${r.n}`);
+  return parts.length ? parts.join("、") : fallback;
 }
 
 /** 比對照片（選填，最多 1 張）：跟申訴證據同一種上傳（purpose=appeal，只有本人與管理員看得到） */

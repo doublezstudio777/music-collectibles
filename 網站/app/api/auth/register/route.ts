@@ -8,7 +8,7 @@ import {
 import { hashPassword, randomToken } from "@/lib/server/crypto";
 import { hit, verifyTurnstile } from "@/lib/server/services";
 import { recordRegister } from "@/lib/server/geo";
-import { nameKey, nameProblem } from "@/lib/server/names";
+import { handleRetired, nameKey, nameProblem } from "@/lib/server/names";
 import { recordConsent } from "@/lib/server/terms";
 import { TERMS_VERSION } from "@/lib/legal";
 
@@ -35,6 +35,8 @@ export async function POST(req: Request) {
   }
   if (await userByEmail(email)) return fail(409, "EMAIL_TAKEN", "這個 Email 已經註冊過，直接登入就好");
   if (await userByHandle(handle)) return fail(409, "HANDLE_TAKEN", "這個帳號名有人用了");
+  // 已刪除帳號的舊帳號名不開放再用（2026-10-02 總檢 L11）
+  if (await handleRetired(handle)) return fail(409, "HANDLE_TAKEN", "這個帳號名有人用過了，換一個");
   // 暱稱全站唯一、保留字（2026-09-28）
   const np = await nameProblem(name, { max: 20 });
   if (np) return fail(np.code === "NAME_TAKEN" ? 409 : 400, np.code, np.message);

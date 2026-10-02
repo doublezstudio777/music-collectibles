@@ -1,3 +1,4 @@
+import { CANONICAL_ORIGIN } from "@/lib/seo";
 import Link from "@/components/link";
 import { LegalPage } from "@/components/legal";
 import { PHOTO_LICENSE_URL, SITE_NAME } from "@/lib/data";
@@ -6,7 +7,7 @@ import { CONTACT_EMAIL, DELETION_DAYS, OPERATOR_TEXT, TAKEDOWN_PATH } from "@/li
 // 2026-10-01 法務修正：全文照 產出/20261001_上線前法務審閱/README.md 第八節 D5 草稿。
 // 跟草稿不同的地方（都在該輪 README 列出）：第 13 條第 2 項照網站實際做法（管理員看不到私訊內容）；
 // 第 17 條第 2 項責任上限金額未定，先不放（律師確認清單 L10）。
-export const metadata = { title: "使用條款" };
+export const metadata = { title: "使用條款", alternates: { canonical: `${CANONICAL_ORIGIN}/terms` } };
 
 const Mail = () => <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>;
 const BY_NC_ND = (

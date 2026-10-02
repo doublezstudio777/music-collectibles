@@ -1,9 +1,11 @@
+import { CANONICAL_ORIGIN } from "@/lib/seo";
 import Link from "@/components/link";
 import { artistHref, GENDER_LABEL, REGION_LABEL, type ArtistGender, type ArtistRegion } from "@/lib/data";
 import { pageData } from "@/lib/server/viewer";
 import { FollowButton } from "@/components/follow-button";
 
-export const metadata = { title: "全部藝人" };
+// canonical（2026-10-02 總檢 S8）：這頁在 sitemap 裡，補上固定正式網域的 canonical
+export const metadata = { title: "全部藝人", alternates: { canonical: `${CANONICAL_ORIGIN}/artists` } };
 
 // 類型：?type=male|female|group（首頁藝人分類連結用，2026-09-29）；舊的 ?g= 一樣有效
 type Props = { searchParams: Promise<{ g?: string; type?: string; r?: string }> };

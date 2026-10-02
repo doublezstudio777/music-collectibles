@@ -14,9 +14,10 @@ import { and, eq, isNull } from "drizzle-orm";
 import { getDb } from "@/db";
 import { adminLog, photos, users } from "@/db/schema";
 import { randomToken } from "@/lib/server/crypto";
-import { hit } from "@/lib/server/services";
-import { dimensions, isPaused, purgePhotoCache, releaseBytes, reserveBytes, sniff } from "@/lib/server/photos";
+import { hit, taiwanDay } from "@/lib/server/services";
+import { dimensions, isPaused, purgePhotoCache, releaseBytes, reserveBytes, checkImage } from "@/lib/server/photos";
 import { HttpError } from "@/lib/server/trade";
+import { notifyAvatarRemoved } from "@/lib/server/notify";
 import type { User } from "@/lib/server/auth";
 
 export const AVATAR_EDGE = 256;
@@ -42,11 +43,13 @@ export async function uploadAvatar(u: User, file: File | null, origin: string) {
   if (!file) throw new HttpError(400, "BAD_REQUEST", "缺照片檔");
   if (file.size > AVATAR_MAX_BYTES) throw new HttpError(413, "TOO_LARGE", "照片太大，換一張再試");
   const bytes = new Uint8Array(await file.arrayBuffer());
-  const type = sniff(bytes);
-  if (!type) throw new HttpError(415, "BAD_FORMAT", "只收 WebP 或 JPEG 照片");
+  const chk = checkImage(bytes);
+  if (!chk) throw new HttpError(415, "BAD_FORMAT", "只收 WebP 或 JPEG 照片");
+  if ("error" in chk) throw new HttpError(400, "BAD_IMAGE", chk.error);
+  const type = chk.type;
   const { width, height } = dimensions(bytes, type);
   if (width !== AVATAR_EDGE || height !== AVATAR_EDGE) throw new HttpError(400, "BAD_SIZE", `大頭貼要是 ${AVATAR_EDGE}×${AVATAR_EDGE}`);
-  const day = new Date().toISOString().slice(0, 10);
+  const day = taiwanDay();
   if (!(await hit(`avatar:${u.id}:${day}`, AVATAR_DAILY, 86400))) {
     throw new HttpError(429, "DAILY_LIMIT", `大頭貼一天最多換 ${AVATAR_DAILY} 次，明天再來`);
   }
@@ -82,6 +85,7 @@ export async function removeAvatar(target: User, origin: string, by?: User, note
     await getDb()
       .insert(adminLog)
       .values({ adminId: by.id, action: "移除大頭貼", target: `user:${target.handle}`, detail: JSON.stringify({ key, note }) });
+    await notifyAvatarRemoved(target.id, note);
   }
   return { removed: key, purged };
 }

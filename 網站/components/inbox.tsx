@@ -41,6 +41,8 @@ type Detail = {
     otherRegion?: string;
     blocked: "me" | "them" | null;
     reported: boolean;
+    /** 對方帳號已停權或刪除（2026-10-02 總檢 M3） */
+    otherGone?: boolean;
     messages: ThreadMessage[];
   };
   share: ShareView | null;
@@ -258,8 +260,11 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
     onChange();
   };
   const other = thread.other;
-  const blockedNote =
-    thread.blocked === "me" ? (
+  const blockedNote = thread.otherGone ? (
+    <p className="convo-blocked" data-testid="dm-other-gone">
+      對方帳號已停用，無法再傳訊息
+    </p>
+  ) : thread.blocked === "me" ? (
       <div className="convo-blocked" data-testid="dm-blocked-me">
         <p>你已封鎖 {other.name}</p>
         <button

@@ -14,7 +14,7 @@ import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { adminLog, artistPhotos, artists, users } from "@/db/schema";
 import { randomToken } from "@/lib/server/crypto";
-import { dimensions, isPaused, MAX_MAIN_BYTES, MAX_THUMB_BYTES, purgePhotoCache, releaseBytes, reserveBytes, sniff } from "@/lib/server/photos";
+import { dimensions, isPaused, MAX_MAIN_BYTES, MAX_THUMB_BYTES, purgePhotoCache, releaseBytes, reserveBytes, checkImage } from "@/lib/server/photos";
 import { HttpError } from "@/lib/server/trade";
 import { PHOTO_LICENSE, PHOTO_LICENSE_URL } from "@/lib/data";
 import type { User } from "@/lib/server/auth";
@@ -118,9 +118,13 @@ export async function submitArtistPhoto(u: User, form: FormData) {
   if (main.size > MAX_MAIN_BYTES || thumb.size > MAX_THUMB_BYTES) throw new HttpError(413, "TOO_LARGE", "照片太大，換一張再試");
   const mainBytes = new Uint8Array(await main.arrayBuffer());
   const thumbBytes = new Uint8Array(await thumb.arrayBuffer());
-  const type = sniff(mainBytes);
-  const tType = sniff(thumbBytes);
-  if (!type || !tType) throw new HttpError(415, "BAD_FORMAT", "只收 WebP 或 JPEG 照片");
+  const mChk = checkImage(mainBytes);
+  const tChk = checkImage(thumbBytes);
+  if (!mChk || !tChk) throw new HttpError(415, "BAD_FORMAT", "只收 WebP 或 JPEG 照片");
+  if ("error" in mChk) throw new HttpError(400, "BAD_IMAGE", mChk.error);
+  if ("error" in tChk) throw new HttpError(400, "BAD_IMAGE", tChk.error);
+  const type = mChk.type;
+  const tType = tChk.type;
   if ((await todaySubmissions(u.id)) >= ARTIST_PHOTO_DAILY) {
     throw new HttpError(429, "DAILY_LIMIT", `藝人照片一天最多投稿 ${ARTIST_PHOTO_DAILY} 張，明天再來`);
   }

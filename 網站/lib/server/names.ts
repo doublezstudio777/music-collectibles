@@ -11,6 +11,12 @@ import { CURATOR } from "@/lib/levels";
 import { SITE_NAME } from "@/lib/data";
 
 export const DELETED_NAME = "已刪除的會員";
+
+/** 已刪除帳號的舊帳號名（retired_handles）不開放再註冊（2026-10-02 總檢 L11） */
+export async function handleRetired(handle: string) {
+  const r = await env.DB!.prepare(`SELECT 1 AS x FROM retired_handles WHERE handle = ?1`).bind(handle).first();
+  return Boolean(r);
+}
 export const NAME_CHANGE_DAYS = 30;
 
 export const nameKey = (s: string) => s.normalize("NFKC").toLowerCase().replace(/[\s​-‍⁠﻿]/g, "");
@@ -48,7 +54,7 @@ export async function nameTaken(name: string, except = "") {
   return Boolean(row);
 }
 
-/** 暱稱有問題回訊息，沒問題回 null。max＝字數上限（註冊 20、設定頁 30，沿用既有規則） */
+/** 暱稱有問題回訊息，沒問題回 null。max＝字數上限（註冊與設定頁都是 20，2026-10-02 總檢 L7 統一） */
 export async function nameProblem(name: string, opts: { max: number; except?: string; admin?: boolean }) {
   if (!name || Array.from(name).length > opts.max) return { code: "INVALID_NAME", message: `暱稱 1～${opts.max} 字` };
   if (!nameKey(name)) return { code: "INVALID_NAME", message: "暱稱不能只有空白" };
