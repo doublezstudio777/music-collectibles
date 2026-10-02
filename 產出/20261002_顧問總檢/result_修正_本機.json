@@ -152,7 +152,7 @@
  {
   "name": "L7 待處理非 0 排前面、有黑框",
   "ok": true,
-  "detail": "[['2', 'queue-item has-n'], ['1', 'queue-item has-n'], ['2', 'queue-item has-n'], ['0', 'queue-item is-zero']]"
+  "detail": "[['3', 'queue-item has-n'], ['1', 'queue-item has-n'], ['2', 'queue-item has-n'], ['0', 'queue-item is-zero']]"
  },
  {
   "name": "L7 推薦歌曲有搜尋",
@@ -596,8 +596,13 @@
  },
  {
   "name": "S15 新手指南圖全部載到",
-  "ok": false,
-  "detail": "[['howto-share', True], ['howto-edit', False], ['howto-report', False], ['levels-desktop', False], ['points-desktop', False], ['titles', False]]"
+  "ok": true,
+  "detail": "[['howto-share', True, 'howto-share@2x.webp'], ['howto-edit', True, 'howto-edit@2x.webp'], ['howto-report', True, 'howto-report@2x.webp'], ['levels-desktop', True, 'levels-mobile@2x.webp'], ['points-desktop', True, 'points-mobile@2x.webp'], ['titles', True, 'titles@2x.webp']]"
+ },
+ {
+  "name": "S15 新手指南圖檔全部 200",
+  "ok": true,
+  "detail": "16 檔"
  },
  {
   "name": "S15 指南有合集、一次發多張、願望清單、私訊",

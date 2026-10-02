@@ -71,6 +71,8 @@ def ctx_for(browser, who, width=1440, height=900, scale=1, mobile=False, dark=Fa
     c = browser.new_context(
         viewport={"width": width, "height": height}, device_scale_factor=scale, is_mobile=mobile, has_touch=mobile,
         color_scheme="dark" if dark else "light", locale="zh-TW",
+        # 正式站 CSP（fix/pc 10/02 加）沒有 unsafe-eval；Chromium 靠這個放行，WebKit 不吃，輪詢一律改 evaluate
+        bypass_csp=True,
     )
     cookies = [{"name": "yz_test_country", "value": "TW", "domain": HOST, "path": "/"}]
     if who:
@@ -359,7 +361,13 @@ def main():
         p.set_input_files("[data-testid=pp-input]", [
             {"name": f"p{i}.jpg", "mimeType": "image/jpeg", "buffer": jpeg(color=col)} for i, col in enumerate([(200, 120, 40), (40, 90, 160), (90, 160, 60)])
         ])
-        p.wait_for_function("document.querySelectorAll('[data-testid=pp-tile][data-status=done]').length === 3", timeout=60000)
+        # 用 evaluate 輪詢（CSP 沒有 unsafe-eval，WebKit 連 bypass_csp 都擋 wait_for_function 的輪詢；evaluate 走協定不受限）
+        for _ in range(600):
+            if p.evaluate("document.querySelectorAll('[data-testid=pp-tile][data-status=done]').length") == 3:
+                break
+            p.wait_for_timeout(100)
+        else:
+            raise RuntimeError("三張照片 60 秒內沒有上傳完成")
         p.wait_for_timeout(300)
         btns = p.evaluate("""[...document.querySelectorAll('.pp-bar')].map(bar => [...bar.children].map(b => { const r = b.getBoundingClientRect(); return { t: b.textContent.trim(), w: r.width, h: r.height, vis: getComputedStyle(b).visibility, lines: Math.round(r.height / parseFloat(getComputedStyle(b).lineHeight)) }; }))""")
         sizes = [b for bar in btns for b in bar if b["vis"] == "visible"]
@@ -427,7 +435,9 @@ def main():
                 shot(p, "修正_05_版本比較表_1440", clip={"x": 0, "y": rect(p, ".ver-compare")["y"] + p.evaluate("scrollY") - 10, "width": 1440, "height": min(500, rect(p, ".ver-compare")["h"] + 40)})
                 shot(p, "修正_21_系列頁三塊右緣_1440", clip={"x": 0, "y": rect(p, ".ver-compare")["y"] + p.evaluate("scrollY") - 10, "width": 1440, "height": 900})
                 # 存一份 HTML 給全域規則 10 的表格對齊檢查腳本（<base> 指回本機伺服器載 CSS）
-                (OUT.parent / "_hyukoh1_1440.html").write_text(html.replace("<head>", f'<head><base href="{BASE}/">', 1), encoding="utf-8")
+                # 表格是伺服器畫的，script 拿掉（file:// 載站內 module script 會被 CORS 擋，console error 會讓對齊腳本誤判）
+                static_html = re.sub(r"<link[^>]*rel=\"(modulepreload|preload)\"[^>]*>", "", re.sub(r"<script[\s\S]*?</script>", "", html)).replace("<head>", f'<head><base href="{BASE}/">', 1)
+                (OUT.parent / "_hyukoh1_1440.html").write_text(static_html, encoding="utf-8")
             else:
                 shot(p, "修正_05b_系列頁首屏_390")
                 shot(p, "修正_11_系列頁版本段落_390", full=True)
@@ -593,9 +603,24 @@ def main():
         c = ctx_for(wk, "uxa", 390, 844, 3, True)
         p = page_of(c)
         go(p, "/guide")
-        # 圖是 lazy 載入：先全部改成立即載入再等 decode，才量得到
-        imgs = p.evaluate("""async () => { const list = [...document.querySelectorAll('[data-guide-img]')]; for (const i of list) { i.loading = 'eager'; try { await i.decode(); } catch {} } return list.map(i => [i.dataset.guideImg, i.naturalWidth > 0, i.currentSrc.split('/').pop()]); }""")
+        # 圖是 lazy 載入：逐張捲進畫面等 complete（WebKit 對畫面外的 lazy 圖 decode() 會直接拒絕，不能拿來判斷）
+        imgs = p.evaluate("""async () => {
+          const list = [...document.querySelectorAll('[data-guide-img]')];
+          const out = [];
+          for (const i of list) {
+            i.scrollIntoView({ block: 'center' });
+            const t0 = Date.now();
+            while (!(i.complete && i.naturalWidth > 0) && Date.now() - t0 < 8000) await new Promise(r => setTimeout(r, 100));
+            out.push([i.dataset.guideImg, i.naturalWidth > 0, (i.currentSrc || '').split('/').pop()]);
+          }
+          window.scrollTo(0, 0);
+          return out;
+        }""")
         check("S15 新手指南圖全部載到", all(x[1] for x in imgs), str(imgs))
+        # 每個檔案（1x、2x）都要 200
+        srcs = p.evaluate("[...new Set([...document.querySelectorAll('.guide-fig source, .guide-fig img')].flatMap(e => (e.srcset || e.getAttribute('srcset') || '').split(',').map(s => s.trim().split(' ')[0]).filter(Boolean)))]")
+        codes = [(s, api(p, s, None, "GET")["status"]) for s in srcs]
+        check("S15 新手指南圖檔全部 200", all(c == 200 for _, c in codes) and len(codes) >= 12, str([s for s, c in codes if c != 200] or f"{len(codes)} 檔"))
         check("S15 指南有合集、一次發多張、願望清單、私訊", all(k in p.locator("main").inner_text() for k in ("一次發多張", "發合集", "願望清單", "私訊")))
         check("S2 指南必填說法一致", "必填：照片、誰的東西、是什麼" in p.locator("main").inner_text())
         shot(p, "修正_15_新手指南_390", full=True)
