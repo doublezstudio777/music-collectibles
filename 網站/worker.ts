@@ -57,11 +57,12 @@ const KEEP_PARAMS = new Set(["state", "sort", "page", "g", "type", "r", "edit", 
 // frame-ancestors 'none'＝不能被別的網站用 iframe 嵌入（後台、設定頁）；HSTS 一年含子網域（www 也是我們的）
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://www.googletagmanager.com",
+  // static.cloudflareinsights.com／cloudflareinsights.com：Cloudflare 在 zone 層自動注入的 Web Analytics beacon（2026-10-02 部署煙霧測試抓到被 CSP 擋）
+  "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://www.googletagmanager.com https://static.cloudflareinsights.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob:",
-  "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://challenges.cloudflare.com",
+  "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://challenges.cloudflare.com https://cloudflareinsights.com",
   "frame-src https://challenges.cloudflare.com https://open.spotify.com",
   "worker-src 'self' blob:",
   "object-src 'none'",
