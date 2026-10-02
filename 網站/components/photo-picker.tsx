@@ -243,7 +243,11 @@ export function PhotoPicker({ picker, labelId, paused, disabled }: { picker: Pic
                   <button type="button" aria-label={`第 ${i + 1} 張設為封面`} onClick={() => picker.move(i, 0)} data-testid="pp-cover">
                     設封面
                   </button>
-                ) : null}
+                ) : (
+                  <span className="pp-bar-cover" aria-hidden="true">
+                    封面
+                  </span>
+                )}
                 <button type="button" aria-label={`第 ${i + 1} 張往後移`} disabled={i === items.length - 1} onClick={() => picker.move(i, i + 1)} data-testid="pp-right">
                   ▶
                 </button>

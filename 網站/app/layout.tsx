@@ -31,6 +31,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         {/* 2026-09-30 Logo 定案（B 版正方形紙套）：分頁用簡化小圖示（SVG 沒有底線；PNG 備援 16px 沒底線、32px 留加粗底線），iPhone 主畫面用完整插圖 180px。
             直接寫在 <head>，不走 metadata.icons：vinext 會把 metadata 的圖示串流到 <body> 再靠 JS 搬，iOS 與爬蟲讀原始 HTML 看不到 */}
+        {/* 只做淺色：iPhone 深色模式不要把表單控件與框架預設頁反成黑底（2026-10-02 必修 1） */}
+        <meta name="color-scheme" content="light" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
         <link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16" />
@@ -43,6 +45,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
       </head>
       <body>
+        {/* 鍵盤使用者跳過頁首（2026-10-02 之後再說 5）；每頁 <main id="main"> */}
+        <a className="skip-link" href="#main">
+          跳到主要內容
+        </a>
         <SiteHeader />
         {children}
         <AuthPanel siteKey={turnstileSiteKey()} />
@@ -67,6 +73,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           </div>
           {/* 版權與照片授權（2026-09-30 使用者核准）：會員照片 CC BY-NC-ND 4.0。標章是官方 88×31 圖檔放站內，不外連圖片。
               2026-10-01 法務修正：文字照法務審閱 D4（原本上面那行「照片著作權屬上傳者…」併進來） */}
+          <div className="foot-cc-wrap">
           <div className="wrap foot-cc" data-testid="foot-cc">
             <a href={PHOTO_LICENSE_URL} target="_blank" rel="license noopener" className="foot-cc-badge">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -75,6 +82,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <p>
               © 2026 {SITE_NAME}　網站設計與資料之選擇編排屬{SITE_NAME}。會員照片著作權屬拍攝者，以 CC BY-NC-ND 4.0 授權：可分享，須標示拍攝者與{SITE_NAME}，不得商業使用、不得修改。藝人照片與簡介依各自標示的授權，專輯封面、商標與藝人名稱屬原權利人。
             </p>
+          </div>
           </div>
         </footer>
         <TermsNotice />

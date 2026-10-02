@@ -161,7 +161,7 @@ function Body({ edit, initial, preset }: { edit?: CollectionEdit; initial: Picke
   const [tried, setTried] = useState(false);
   const [formError, setFormError] = useState("");
   const errors: Record<string, string> = {};
-  if (!picker.items.length) errors.photo = "放一張合照";
+  if (!picker.items.length) errors.photo = "放一張合集照片";
   else if (picker.pending) errors.photo = "照片還在上傳，等一下";
   else if (picker.failed) errors.photo = "有照片沒傳上去，按重試或刪掉那張";
   if (!tags.length) errors.tags = "至少標一張專輯";
@@ -226,7 +226,7 @@ function Body({ edit, initial, preset }: { edit?: CollectionEdit; initial: Picke
       <div className="sf-main cf-main">
         <div className="field" id="cf-photos">
           <span className="field-label" id="cf-photo-label">
-            合照
+            合集照片
           </span>
           <div
             onClickCapture={(e) => {
@@ -256,7 +256,7 @@ function Body({ edit, initial, preset }: { edit?: CollectionEdit; initial: Picke
                       src={it.preview}
                       w={0}
                       h={0}
-                      alt={`第 ${i + 1} 張合照`}
+                      alt={`第 ${i + 1} 張合集照片`}
                       pins={pinsOf(it.key)}
                       active={placing}
                       placing={Boolean(placing)}

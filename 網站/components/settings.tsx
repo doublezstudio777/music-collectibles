@@ -40,8 +40,9 @@ function NameBox({ me }: { me: Me }) {
       <label className="sr-only" htmlFor="set-name">
         暱稱
       </label>
+      {/* 儲存鈕一律在左下（2026-10-02 建議 16） */}
+      <input id="set-name" className="input" value={name} maxLength={20} disabled={locked || busy} onChange={(e) => setName(e.target.value)} />
       <div className="settings-row">
-        <input id="set-name" className="input" value={name} maxLength={20} disabled={locked || busy} onChange={(e) => setName(e.target.value)} />
         <button type="submit" className="btn btn-line" disabled={locked || busy} data-testid="name-save">
           {busy ? "儲存中…" : "儲存"}
         </button>
@@ -180,7 +181,7 @@ function PasswordBox() {
       </label>
       <input id="set-cur" className="input" type="password" autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} />
       <label className="field-label" htmlFor="set-new">
-        新密碼（至少 8 個字）
+        新密碼<span className="opt">至少 8 個字</span>
       </label>
       <input id="set-new" className="input" type="password" autoComplete="new-password" value={next} onChange={(e) => setNext(e.target.value)} />
       <div className="settings-row">

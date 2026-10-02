@@ -19,7 +19,7 @@ export default async function BatchPage({ searchParams }: Props) {
     .map((k) => c.batchEntryOf(k))
     .filter((x): x is BatchEntry => x !== null);
   return (
-    <main className="wrap page sf-page bp-page">
+    <main id="main" className="wrap page sf-page bp-page">
       <h1 className="page-title">一起發文</h1>
       <BatchPost entries={entries} />
     </main>

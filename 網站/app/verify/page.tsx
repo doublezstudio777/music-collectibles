@@ -58,7 +58,7 @@ export default async function VerifyPage({ searchParams }: Props) {
   const raw = String((await searchParams)?.c ?? "").slice(0, 40);
   const r = await check(raw);
   return (
-    <main className="wrap page page-narrow">
+    <main id="main" className="wrap page page-narrow">
       <h1 className="page-title">照片查證</h1>
       <form className="verify-form" action="/verify" method="get" data-testid="verify-form">
         <label className="field-label" htmlFor="verify-code">

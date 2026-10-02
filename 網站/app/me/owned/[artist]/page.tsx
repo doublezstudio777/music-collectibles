@@ -22,7 +22,7 @@ export default async function OwnedPage({ params }: Props) {
   const a = c.getArtist(slug);
   if (!a) notFound();
   return (
-    <main className="wrap page own-page">
+    <main id="main" className="wrap page own-page">
       <OwnedChecklist artist={{ slug: a.slug, name: a.name, visible: c.artistVisible(a) }} series={c.pickSeriesOf(a.slug)} />
     </main>
   );

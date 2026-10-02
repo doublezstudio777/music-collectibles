@@ -7,6 +7,7 @@ import { reasonLabel, targetLevel, type ReportReason, type TargetKey } from "@/l
 import { SaveMsg, useSave } from "@/components/save-status";
 import { api } from "@/lib/account";
 import { commentReasonLabel } from "@/lib/comment-rules";
+import { ConfirmDialog } from "@/components/confirm";
 
 const STATUS_WORD: Record<string, string> = { pending: "審核中", unlocked: "已解鎖", kept: "維持鎖定" };
 const TYPE_WORD = { artist: "藝人", series: "系列", item: "品項", version: "版本" } as const;
@@ -87,6 +88,8 @@ function AvatarQueue({ data, run }: { data: Overview["avatars"]; run: (path: str
 /** 被檢舉的留言（2026-09-28）：恢復＝之後不再自動隱藏；刪除＝軟刪除。門檻另外調 */
 function CommentQueue({ data, run }: { data: Overview["comments"]; run: (path: string, body: unknown) => Promise<void> }) {
   const [draft, setDraft] = useState<string | null>(null);
+  // 刪除留言先確認（2026-10-02 必修 3）
+  const [del, setDel] = useState<Overview["comments"]["list"][number] | null>(null);
   const save = (e: React.FormEvent) => {
     e.preventDefault();
     const n = Number(draft ?? data.threshold);
@@ -144,7 +147,7 @@ function CommentQueue({ data, run }: { data: Overview["comments"]; run: (path: s
                       <button type="button" className="btn btn-line" onClick={() => run("/api/admin/comments", { id: c.id, action: "restore" })}>
                         {c.hidden ? "恢復" : "保留"}
                       </button>
-                      <button type="button" className="btn-text" onClick={() => run("/api/admin/comments", { id: c.id, action: "delete" })}>
+                      <button type="button" className="btn-text" onClick={() => setDel(c)} aria-haspopup="dialog" data-testid="comment-admin-delete">
                         刪除
                       </button>
                     </span>
@@ -154,6 +157,21 @@ function CommentQueue({ data, run }: { data: Overview["comments"]; run: (path: s
             </tbody>
           </table>
         </div>
+      ) : null}
+      {del ? (
+        <ConfirmDialog
+          title="刪除這則留言？"
+          confirmLabel="確定刪除"
+          danger
+          onConfirm={async () => {
+            await run("/api/admin/comments", { id: del.id, action: "delete" });
+          }}
+          onClose={() => setDel(null)}
+          testid="comment-admin-confirm"
+        >
+          <p className="comment-admin-body">{del.body}</p>
+          <p>{del.by} 的留言會被刪掉，不能還原。</p>
+        </ConfirmDialog>
       ) : null}
     </section>
   );
@@ -175,6 +193,8 @@ const pct = (a: number, b: number) => `${Math.round((a / b) * 1000) / 10}%`;
 
 /** 網站狀態：暫停模式（第三道防線）、本月照片讀取（第二道）、照片容量（第一道） */
 function SiteStatus({ site, run }: { site: Site; run: (path: string, body: unknown) => Promise<void> }) {
+  // 整站暫停影響所有人，要打「暫停」才能按（2026-10-02 必修 3）
+  const [ask, setAsk] = useState(false);
   return (
     <section className="block">
       <h2 className="block-title">網站狀態</h2>
@@ -211,11 +231,26 @@ function SiteStatus({ site, run }: { site: Site; run: (path: string, body: unkno
             解除暫停
           </button>
         ) : (
-          <button type="button" className="btn-text" onClick={() => run("/api/admin/pause", { paused: true })}>
+          <button type="button" className="btn-text" onClick={() => setAsk(true)} aria-haspopup="dialog" data-testid="pause-open">
             手動暫停
           </button>
         )}
       </div>
+      {ask ? (
+        <ConfirmDialog
+          title="暫停整個網站？"
+          confirmLabel="確定暫停"
+          danger
+          typeWord="暫停"
+          onConfirm={async () => {
+            await run("/api/admin/pause", { paused: true });
+          }}
+          onClose={() => setAsk(false)}
+          testid="pause-confirm"
+        >
+          <p>暫停後所有人都不能上傳照片、看大圖，直到你在這裡解除暫停。</p>
+        </ConfirmDialog>
+      ) : null}
     </section>
   );
 }
@@ -226,6 +261,8 @@ function Takedown({ data, run }: { data: Overview; run: (path: string, body: unk
   const [key, setKey] = useState("");
   const [mode, setMode] = useState<keyof typeof DISPLAY_WORD>("on");
   const [slugTo, setSlugTo] = useState("");
+  // 永久刪除不可逆，要打出識別碼才能按（2026-10-02 必修 3）
+  const [purge, setPurge] = useState(false);
   const k = key.trim();
   return (
     <section className="block" id="hidden">
@@ -255,7 +292,7 @@ function Takedown({ data, run }: { data: Overview; run: (path: string, body: unk
             恢復
           </button>
           {type !== "share" ? (
-            <button type="button" className="btn-text" disabled={!k} data-testid="purge" onClick={() => run("/api/admin/purge", { type, key: k })}>
+            <button type="button" className="btn-text" disabled={!k} data-testid="purge" onClick={() => setPurge(true)} aria-haspopup="dialog">
               永久刪除
             </button>
           ) : null}
@@ -302,6 +339,21 @@ function Takedown({ data, run }: { data: Overview; run: (path: string, body: unk
           </span>
         ) : null}
       </form>
+      {purge ? (
+        <ConfirmDialog
+          title={`永久刪除${HIDE_WORD[type]}「${k}」？`}
+          confirmLabel="確定永久刪除"
+          danger
+          typeWord={k}
+          onConfirm={async () => {
+            await run("/api/admin/purge", { type, key: k });
+          }}
+          onClose={() => setPurge(false)}
+          testid="purge-confirm"
+        >
+          <p>只能刪空的{HIDE_WORD[type]}；刪掉後資料與網址都不會再出現，不能還原。要先隱藏請改用「隱藏」。</p>
+        </ConfirmDialog>
+      ) : null}
       {data.hidden.length ? (
         <ul className="rows" data-testid="hidden-list">
           {data.hidden.map((h) => (

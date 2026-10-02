@@ -36,6 +36,8 @@ export function AuthForm({ mode, setMode, reason, initialEmail = "", idp, onDone
   const [token, setToken] = useState("");
   /** 註冊同意條款（2026-10-01 法務修正 M2，必勾；伺服器也檢查） */
   const [agree, setAgree] = useState(false);
+  // 沒勾同意就按註冊：不停用按鈕，改在勾選框旁說原因（2026-10-02 建議 17）
+  const [agreeError, setAgreeError] = useState(false);
   const [resetKey, setResetKey] = useState(0);
   const [error, setError] = useState("");
   const [note, setNote] = useState("");
@@ -59,6 +61,7 @@ export function AuthForm({ mode, setMode, reason, initialEmail = "", idp, onDone
     e.preventDefault();
     setError("");
     if (mode === "register" && !agree) {
+      setAgreeError(true);
       setError("勾選同意使用條款與隱私權政策才能註冊");
       return;
     }
@@ -227,7 +230,17 @@ export function AuthForm({ mode, setMode, reason, initialEmail = "", idp, onDone
 
       {mode === "register" ? (
         <label className="check auth-agree" data-testid="register-agree">
-          <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} data-testid="register-agree-box" />
+          <input
+            type="checkbox"
+            checked={agree}
+            aria-invalid={agreeError && !agree}
+            aria-describedby={agreeError && !agree ? id("agree-error") : undefined}
+            onChange={(e) => {
+              setAgree(e.target.checked);
+              if (e.target.checked) setAgreeError(false);
+            }}
+            data-testid="register-agree-box"
+          />
           <span>
             我已年滿 18 歲，或已取得法定代理人同意；我已閱讀並同意
             <a className="link" href="/terms" target="_blank" rel="noopener">
@@ -242,6 +255,12 @@ export function AuthForm({ mode, setMode, reason, initialEmail = "", idp, onDone
         </label>
       ) : null}
 
+      {mode === "register" && agreeError && !agree ? (
+        <p className="field-error auth-agree-error" id={id("agree-error")} role="alert" data-testid="register-agree-error">
+          勾選同意才能註冊
+        </p>
+      ) : null}
+
       {needsTurnstile ? <Turnstile onToken={setToken} resetKey={resetKey} /> : null}
 
       {error ? (
@@ -250,7 +269,7 @@ export function AuthForm({ mode, setMode, reason, initialEmail = "", idp, onDone
         </p>
       ) : null}
 
-      <button type="submit" className="btn btn-p btn-lg auth-submit" disabled={busy || (mode === "register" && !agree)} data-testid="auth-submit">
+      <button type="submit" className="btn btn-p btn-lg auth-submit" disabled={busy} data-testid="auth-submit">
         {mode === "forgot" ? "寄重設碼" : mode === "verify" ? "驗證並登入" : mode === "reset" ? "重設並登入" : TITLE[mode]}
       </button>
 

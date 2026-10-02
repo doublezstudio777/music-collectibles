@@ -47,13 +47,14 @@ function BioBox({ initial }: { initial: string }) {
         onChange={(e) => setBio(e.target.value)}
         data-testid="bio-input"
       />
-      <div className="settings-row settings-row-between">
-        <span id="set-bio-count" className={`field-count num${n > BIO_MAX ? " is-over" : ""}`} data-testid="bio-count">
-          {n} / {BIO_MAX}
-        </span>
+      {/* 儲存鈕在左下、字數跟在右邊（2026-10-02 建議 16） */}
+      <div className="settings-row">
         <button type="submit" className="btn btn-line" disabled={busy || n > BIO_MAX} data-testid="bio-save">
           {busy ? "儲存中…" : "儲存"}
         </button>
+        <span id="set-bio-count" className={`field-count num${n > BIO_MAX ? " is-over" : ""}`} data-testid="bio-count">
+          {n} / {BIO_MAX}
+        </span>
       </div>
       <SaveMsg {...msg} testid="bio-msg" />
     </form>

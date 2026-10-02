@@ -20,7 +20,7 @@ export function LegalPage({
   effective?: string;
 }) {
   return (
-    <main className="wrap page page-narrow legal">
+    <main id="main" className="wrap page page-narrow legal">
       <p className="legal-version" data-testid="legal-version">
         <b>版本 {version}</b>
         <span>生效日 {effective}</span>

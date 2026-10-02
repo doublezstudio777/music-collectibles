@@ -44,17 +44,19 @@ export default async function Home({ searchParams }: Props) {
     const meta = [a.gender ? GENDER_LABEL[a.gender] : null, a.region ? REGION_LABEL[a.region] : null, `${d.count} 則收藏`].filter(Boolean).join("・");
     return [{ track: p.trackId, slug: a.slug, name: a.name, meta, count: d.count }];
   });
+  // 2026-10-02 之後再說 3：有收藏的藝人才推（按過去是空的藝人頁）；全部都 0 則時才退回全部
+  const songsShown = songs.some((s) => s.count > 0) ? songs.filter((s) => s.count > 0) : songs;
   const byGender = (g: ArtistGender) => dir.filter((d) => d.artist.gender === g).length;
   return (
-    <main className="wrap page page-wall">
+    <main id="main" className="wrap page page-wall">
       <h1 className="sr-only">{SITE_TITLE}</h1>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldJson([{ "@type": "WebSite", "@id": `${CANONICAL_ORIGIN}/#website`, name: SITE_NAME, url: `${CANONICAL_ORIGIN}/`, inLanguage: "zh-Hant-TW" }]) }}
       />
       <HomeTagline />
-      <div className={songs.length ? "home-top" : "home-top is-solo"} data-testid="home-top">
-        {songs.length ? <HomePick songs={songs} /> : null}
+      <div className={songsShown.length ? "home-top" : "home-top is-solo"} data-testid="home-top">
+        {songsShown.length ? <HomePick songs={songsShown} /> : null}
         <nav className="home-art" aria-labelledby="home-art-title" data-testid="home-art">
           <h2 id="home-art-title" className="home-art-title">
             藝人

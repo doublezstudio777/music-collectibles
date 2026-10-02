@@ -13,7 +13,7 @@ export default async function NewSharePage() {
   const { c } = await pageData();
   const viewer = await getViewer();
   return (
-    <main className="wrap page sf-page">
+    <main id="main" className="wrap page sf-page">
       <header className="page-head sf-head">
         <h1 className="page-title">炫收藏</h1>
         {/* 一張大合照標很多張專輯（2026-10-01 全家福合集） */}

@@ -81,14 +81,12 @@ function ScoreLine({ handle, s }: { handle: string; s: Awaited<ReturnType<typeof
     <div className="score-box" data-testid="profile-score">
       {s.admin ? null : (
         <p className="page-meta">
+          {/* 2026-10-02 建議 13：固定兩行，手機不會在「分」前面斷行 */}
           目前 <b className="num" data-testid="score-now">{s.score.toLocaleString("en-US")}</b> 分
-          {s.level.next === null && s.level.level < 25 ? null : (
-            <span className="dot" aria-hidden="true">·</span>
-          )}
           {s.level.next === null ? (
-            s.level.level === 25 ? "已是最高等級" : null
+            s.level.level === 25 ? <span className="score-next">已是最高等級</span> : null
           ) : (
-            <span data-testid="score-next">
+            <span className="score-next" data-testid="score-next">
               離 {levelOf(s.level.next).label} 還差 <span className="num">{s.level.toNext.toLocaleString("en-US")}</span> 分
             </span>
           )}
@@ -96,7 +94,7 @@ function ScoreLine({ handle, s }: { handle: string; s: Awaited<ReturnType<typeof
       )}
       {s.admin ? null : (
         <p className="score-at" data-testid="score-at">
-          {s.runAt ? `分數統計於 ${twTime(s.runAt)}（每天統計一次）` : "分數尚未統計"}
+          {s.runAt ? `每天統計一次，上次 ${twTime(s.runAt)}` : "分數尚未統計"}
         </p>
       )}
       {!s.admin && s.pending > 0 ? (
@@ -132,19 +130,15 @@ export default async function UserPage({ params }: Props) {
   // 最喜歡的藝人：照本人排的順序，已隱藏、刪除或前台看不到藝人頁的不顯示
   const favs = user.favs.map((slug) => c.visibleArtist(slug)).filter((a) => a !== undefined);
   const own = c.shares.filter((s) => s.author === user.handle).map(c.toShareView);
+  const notSelling = own.filter((s) => !((s.sale.state === "sale" || s.sale.state === "offer") && !s.lock));
   // 我有／想要：伺服器只算這位會員目前標的那些（2026-10-01 起不再把全站版本都給，本人剛勾的由前端另外補）
   const views = c.holdingViews(Array.from(new Set([...user.owned, ...user.wanted])));
 
   return (
-    <main className="wrap page">
+    <main id="main" className="wrap page">
       <header className="profile">
         <div className="profile-ava">
           <Ava name={user.name} src={user.avatar} size="lg" />
-          {user.avatarId ? (
-            <NotSelf handle={user.handle}>
-              <ReportBox target={avatarTarget(user.avatarId)} label="檢舉大頭貼" />
-            </NotSelf>
-          ) : null}
         </div>
         <div className="profile-text">
           <h1 className="page-title">
@@ -202,26 +196,29 @@ export default async function UserPage({ params }: Props) {
         </SelfOnly>
       </header>
 
-      <section className="block">
-        <h2 className="block-title">炫收藏</h2>
-        <ShareWall
-          shares={own}
-          empty={
-            <p className="empty">
-              還沒有炫過收藏
-              <SelfOnly handle={user.handle}>
-                <Link className="btn btn-p empty-btn" href="/share/new">
-                  炫收藏
-                </Link>
-              </SelfOnly>
-            </p>
-          }
-        />
-      </section>
+      {/* 2026-10-02 建議 14：出售中排在炫收藏前面（DESIGN「我的頁面」段），炫收藏只列不在賣的，同一張卡不出現兩次 */}
+      {user.deleted ? null : <SaleWall shares={own} />}
+      {own.length === 0 || notSelling.length ? (
+        <section className="block">
+          <h2 className="block-title">炫收藏</h2>
+          <ShareWall
+            shares={notSelling}
+            empty={
+              <p className="empty">
+                還沒有炫過收藏
+                <SelfOnly handle={user.handle}>
+                  <Link className="btn btn-p empty-btn" href="/share/new">
+                    炫收藏
+                  </Link>
+                </SelfOnly>
+              </p>
+            }
+          />
+        </section>
+      ) : null}
 
       {user.deleted ? null : (
         <>
-          <SaleWall shares={own} />
 
           <SelfOnly handle={user.handle}>
             <FollowList artists={c.artists.map((a) => ({ slug: a.slug, name: a.name, tagline: a.tagline }))} />
@@ -230,6 +227,14 @@ export default async function UserPage({ params }: Props) {
           <HoldingsList handle={user.handle} name={user.name} owned={user.owned} wanted={user.wanted} views={views} />
         </>
       )}
+      {/* 檢舉大頭貼放頁底，跟收藏頁「對這則收藏有疑問嗎？」同一個位置（2026-10-02 建議 14） */}
+      {user.avatarId && !user.deleted ? (
+        <NotSelf handle={user.handle}>
+          <div className="profile-report" data-testid="profile-report">
+            <ReportBox target={avatarTarget(user.avatarId)} label="檢舉這位會員的大頭貼" />
+          </div>
+        </NotSelf>
+      ) : null}
     </main>
   );
 }

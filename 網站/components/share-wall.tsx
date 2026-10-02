@@ -6,7 +6,7 @@ import type { ShareView } from "@/lib/data";
 import { useAppState } from "@/lib/state";
 import { ShareCard } from "@/components/share-card";
 
-/** 首頁以炫收藏為主：排序在前，「只看在賣」是次要開關 */
+/** 首頁以炫收藏為主：排序在前，「只看出售中」是次要開關（2026-10-02 用詞統一：在賣＝出售中） */
 export type WallFilter = "all" | "selling";
 export type WallSort = "following" | "new" | "likes";
 
@@ -169,7 +169,7 @@ export function ShareWall({
                 data-on={filter === "selling"}
                 aria-current={filter === "selling" ? "true" : undefined}
               >
-                只看在賣
+                只看出售中
               </Link>
             </>
           ) : (
@@ -228,7 +228,7 @@ const VERSION_SORTS: { key: VersionSort; label: string }[] = [
   { key: "featured", label: "精選" },
   { key: "new", label: "最新" },
   { key: "likes", label: "最多讚" },
-  { key: "selling", label: "在賣的" },
+  { key: "selling", label: "出售中" },
 ];
 /** 每個版本先顯示幾則 */
 export const VERSION_SHOWN = 6;

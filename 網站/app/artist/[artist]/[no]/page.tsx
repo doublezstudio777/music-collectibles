@@ -67,25 +67,15 @@ import { FILL_FIELDS, isBlank, type FillField } from "@/lib/fill";
 type Props = { params: Promise<{ artist: string; no: string }>; searchParams?: Promise<{ edit?: string }> };
 
 // 辨識特徵、目錄號、條碼屬於辨識細節（2026-09-28 防盜版批次）：登入會員才看得到，
-// 不放進公開頁面（整頁快取訪客與會員同一份），改由 IdentifyDetails 從 /api/details 取
-const ROWS: { label: string; get: (v: Version) => string; mono?: boolean }[] = [
-  { label: "發行年", get: (v) => v.year, mono: true },
-  { label: "發行日期", get: (v) => (v.releaseDate && v.releaseDate !== v.year ? v.releaseDate : ""), mono: true },
-  { label: "地區", get: (v) => v.region },
-  { label: "發行", get: (v) => v.label },
-  { label: "包裝", get: (v) => v.packaging },
-  { label: "內容物", get: (v) => v.contents },
-  { label: "曲目", get: (v) => v.tracks },
-  { label: "資料狀態", get: (v) => v.status },
-];
+// 不放進公開頁面（整頁快取訪客與會員同一份），改由 IdentifyDetails 從 /api/details 取。
+// 2026-10-02 設計總檢：品項裡的多欄比較表（Compare）與單一版本規格清單（Spec）拿掉，
+// 版本欄位一律在頁面上方的「版本比較」表（components/series-facts.tsx），一張表、同一套列高規則
 
 /** 公開頁面上可以補的空白欄位（目錄號、辨識特徵在登入後的辨識細節補；曲目改在版本的「曲目」區塊逐首補，2026-09-28） */
 const PUBLIC_FILL = (Object.keys(FILL_FIELDS) as FillField[]).filter(
   (k): k is "year" | "region" | "label" | "packaging" | "contents" => FILL_FIELDS[k].public && k !== "tracks",
 );
 
-type Tracks = Map<string, VersionTracks>;
-const linesOf = (tracks: Tracks, item: Item, v: Version) => tracks.get(versionAnchor(item, v))?.lines ?? [];
 
 function TrackList({ lines }: { lines: string[] }) {
   const discs = parseTracks(lines);
@@ -108,9 +98,6 @@ function TrackList({ lines }: { lines: string[] }) {
     </div>
   );
 }
-
-/** 單一版本不比較，只列有值的欄位 */
-const hasValue = (x: string) => x && x !== "—" && x !== "待查證" && x !== "無條碼";
 
 async function load(params: Props["params"]) {
   const { artist, no } = await params;
@@ -140,96 +127,6 @@ export async function generateMetadata({ params }: Props) {
   });
 }
 
-function Compare({ series, item, tracks, base }: { series: Series; item: Item; tracks: Tracks; base: Version | null }) {
-  const baseLines = base ? (series.items.flatMap((it) => it.versions.map((v) => ({ v, l: linesOf(tracks, it, v) }))).find((x) => x.v === base)?.l ?? []) : [];
-  const trackDiffs = item.versions.map((v) => {
-    const l = linesOf(tracks, item, v);
-    if (!l.length || !baseLines.length) return { text: "—", same: true };
-    if (v === base) return { text: "比較基準", same: true };
-    const d = diffTracks(baseLines, l);
-    return { text: diffText(d), same: d.same };
-  });
-  const showDiff = baseLines.length > 0 && item.versions.some((v) => linesOf(tracks, item, v).length);
-  return (
-    <div className="compare-scroll-wrap">
-      {item.versions.length > 2 ? (
-        <p className="compare-hint" aria-hidden="true">
-          左右滑動看更多版本 →
-        </p>
-      ) : null}
-      <div className="compare-scroll">
-      <table className="compare" style={{ "--cols": item.versions.length } as React.CSSProperties}>
-        <thead>
-          <tr>
-            <th className="compare-key" scope="col">
-              <span className="sr-only">欄位</span>
-            </th>
-            {item.versions.map((v) => (
-              <th key={v.id} scope="col" className="compare-ver">
-                <a className="ver-name" href={`#${versionAnchor(item, v)}`}>
-                  {v.edition}
-                </a>
-                <span className="sub">
-                  {v.year} · {v.region}
-                </span>
-                <HoldingButtons vkey={versionKey(series, item, v)} owners={v.owners} wanted={v.wanted} />
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {ROWS.filter((row) => item.versions.some((v) => hasValue(row.get(v)))).map((row) => {
-            const values = item.versions.map(row.get);
-            const differs = new Set(values).size > 1;
-            return (
-              <tr key={row.label} className={differs ? "diff" : undefined}>
-                <th scope="row" className="compare-key">
-                  {row.label}
-                </th>
-                {values.map((val, i) => (
-                  <td key={item.versions[i].id} className={row.mono ? "mono" : undefined}>
-                    {val}
-                  </td>
-                ))}
-              </tr>
-            );
-          })}
-          {showDiff ? (
-            <tr className={trackDiffs.some((d) => !d.same) ? "diff" : undefined} data-testid="track-diff-row">
-              <th scope="row" className="compare-key">
-                曲目差異
-              </th>
-              {trackDiffs.map((d, i) => (
-                <td key={item.versions[i].id} data-testid="track-diff">
-                  {d.text}
-                </td>
-              ))}
-            </tr>
-          ) : null}
-        </tbody>
-      </table>
-      </div>
-    </div>
-  );
-}
-
-function Spec({ series, item, v }: { series: Series; item: Item; v: Version }) {
-  const rows = ROWS.filter((r) => hasValue(r.get(v)));
-  return (
-    <div className="spec">
-      <HoldingButtons vkey={versionKey(series, item, v)} owners={v.owners} wanted={v.wanted} />
-      <dl className="spec-list">
-        {rows.map((r) => (
-          <div key={r.label}>
-            <dt>{r.label}</dt>
-            <dd className={r.mono ? "mono" : undefined}>{r.get(v)}</dd>
-          </div>
-        ))}
-      </dl>
-    </div>
-  );
-}
-
 function VersionBlock({
   series,
   item,
@@ -241,12 +138,18 @@ function VersionBlock({
   tracks,
   editor,
   collections = 0,
+  base,
+  first,
 }: {
   series: Series;
   item: Item;
   v: Version;
   /** 這個版本被標在幾個合集裡（2026-10-01） */
   collections?: number;
+  /** 曲目比較的基準版本（主曲目那一版）；2026-10-02 曲目差異改寫在這裡，不放表格 */
+  base: { v: Version; lines: string[] } | null;
+  /** 品項裡的第一個版本：訪客的「登入後查看辨識細節」只在這裡出現一次（2026-10-02 建議 18） */
+  first: boolean;
   related: Share[];
   view: (s: Share) => ShareView;
   locks: LockData;
@@ -259,26 +162,50 @@ function VersionBlock({
   // 正版辨識照片：只列管理員標為「辨識參考」的（2026-09-28 起會員不能自己勾）
   const refs = list.flatMap((s) => (s.refPhotos ?? []).map((p, i) => ({ s, p, i })));
   const vkey = versionKey(series, item, v);
+  const locked = isTargetLocked(locks, versionTarget(vkey));
+  const lines = tracks?.lines ?? [];
+  const blanks = PUBLIC_FILL.filter((f) => isBlank(f, v[f]));
+  // 沒資料的版本（沒曲目、沒行情、沒參考照片、沒收藏、沒被鎖、不在編輯）收成一列：補資料＋檢舉（2026-10-02 建議 18）
+  const lite = !lines.length && !price && !refs.length && !list.length && !locked && !editor && !v.fakes?.length;
+  const anchor = versionAnchor(item, v);
+  const self = `/artist/${seriesKey(series)}`;
+  const tracksEditHref = `${self}?edit=${encodeURIComponent(`tracks:${anchor}`)}#${anchor}`;
   return (
-    <section id={versionAnchor(item, v)} className="ver-block">
-      <h3 className="ver-title">
-        {v.edition}
-        {v.fakes?.length ? <span className="flag flag-fake">有已知仿冒</span> : null}
-        <OwnersCount vkey={vkey} owners={v.owners} />
-        {collections ? (
-          <a className="ver-collections" href="#collections" data-testid="ver-collections">
-            出現在 <span className="num">{collections}</span> 個合集中
-          </a>
-        ) : null}
-      </h3>
-      <LockBanner target={versionTarget(vkey)} locked={isTargetLocked(locks, versionTarget(vkey))} />
-      <FieldFill vkey={vkey} fields={PUBLIC_FILL.filter((f) => isBlank(f, v[f]))} />
+    <section id={anchor} className={lite ? "ver-block is-lite" : "ver-block"} data-lite={lite ? "true" : undefined}>
+      <div className="ver-head">
+        <h3 className="ver-title">
+          {v.edition}
+          {v.fakes?.length ? <span className="flag flag-fake">有已知仿冒</span> : null}
+          <OwnersCount vkey={vkey} owners={v.owners} />
+          {collections ? (
+            <a className="ver-collections" href="#collections" data-testid="ver-collections">
+              出現在 <span className="num">{collections}</span> 個合集中
+            </a>
+          ) : null}
+        </h3>
+        {/* 我有／願望清單原本在比較表的表頭，表拿掉後移到版本標題旁 */}
+        <HoldingButtons vkey={vkey} owners={v.owners} wanted={v.wanted} />
+      </div>
+      <LockBanner target={versionTarget(vkey)} locked={locked} />
+      {lite ? (
+        <div className="ver-lite" data-testid="ver-lite">
+          <FieldFill vkey={vkey} fields={blanks} />
+          <p className="fill-row">
+            <span className="fill-label">曲目待補</span>
+            <FillLink href={tracksEditHref} testid="tracks-edit" />
+          </p>
+          <IdentifyDetails skey={seriesKey(series)} vkey={vkey} anchor={anchor} hasFakes={false} gate={first} compact />
+          <ReportBox target={versionTarget(vkey)} label="檢舉這個版本" />
+        </div>
+      ) : (
+        <>
+      <FieldFill vkey={vkey} fields={blanks} />
 
       {price ? <PriceHistory summary={price} /> : null}
 
-      <VersionTracksBlock series={series} anchor={versionAnchor(item, v)} vkey={vkey} t={tracks} editor={editor ?? null} />
+      <VersionTracksBlock series={series} anchor={anchor} vkey={vkey} t={tracks} editor={editor ?? null} base={base && base.v !== v ? base : null} />
 
-      <IdentifyDetails skey={seriesKey(series)} vkey={vkey} anchor={versionAnchor(item, v)} hasFakes={Boolean(v.fakes?.length)} />
+      <IdentifyDetails skey={seriesKey(series)} vkey={vkey} anchor={anchor} hasFakes={Boolean(v.fakes?.length)} gate={first} />
       {refs.length ? (
         <div className="refs">
           <span className="refs-label">辨識參考照片</span>
@@ -294,11 +221,18 @@ function VersionBlock({
         </div>
       ) : null}
 
-      <h4 className="sub-title">
-        炫收藏<span className="count">{list.length}</span>
-      </h4>
-      <VersionWall shares={list.map(view)} confirmed={v.status === "已確認"} id={versionAnchor(item, v)} />
+      {/* 0 則就不畫標題與「還沒有人炫過」（2026-10-02 建議 18） */}
+      {list.length ? (
+        <>
+          <h4 className="sub-title">
+            炫收藏<span className="count">{list.length}</span>
+          </h4>
+          <VersionWall shares={list.map(view)} confirmed={v.status === "已確認"} id={anchor} />
+        </>
+      ) : null}
       <ReportBox target={versionTarget(vkey)} label="檢舉這個版本" />
+        </>
+      )}
     </section>
   );
 }
@@ -310,14 +244,18 @@ function VersionTracksBlock({
   vkey,
   t,
   editor,
+  base,
 }: {
   series: Series;
   anchor: string;
   vkey: string;
   t?: VersionTracks;
   editor: { baseId: number; locked: boolean } | null;
+  /** 主曲目那一版（不是自己時才給）：曲目不同就寫一句「跟某版相比：多了〈XX〉」 */
+  base: { v: Version; lines: string[] } | null;
 }) {
   const lines = t?.lines ?? [];
+  const diff = base && lines.length && base.lines.length ? diffTracks(base.lines, lines) : null;
   const n = trackCount(lines);
   const self = `/artist/${seriesKey(series)}`;
   const editHref = `${self}?edit=${encodeURIComponent(`tracks:${anchor}`)}#${anchor}`;
@@ -341,6 +279,11 @@ function VersionTracksBlock({
         曲目
         {n ? <span className="count">{n}</span> : <span className="sub tracks-none">還沒有</span>}
       </summary>
+      {diff && !diff.same ? (
+        <p className="tracks-diff" data-testid="track-diff">
+          跟「{base!.v.edition}」相比：{diffText(diff)}
+        </p>
+      ) : null}
       {editor ? (
         <WikiEditor target={`tracks:${vkey}`} paras={lines} baseId={editor.baseId} locked={editor.locked} closeHref={`${self}#${anchor}`} label="曲目" lines />
       ) : lines.length ? (
@@ -456,7 +399,7 @@ export default async function SeriesPage({ params, searchParams }: Props) {
   ]);
 
   return (
-    <main className="wrap page">
+    <main id="main" className="wrap page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld }} />
       <header className="work-head">
         {selfCover ? (
@@ -487,12 +430,22 @@ export default async function SeriesPage({ params, searchParams }: Props) {
             {series.kind === "misc" ? <span className="sub">不屬於專輯、也不屬於演唱會的周邊</span> : null}
           </p>
           <p className="page-meta">
-            <span className="num">{owners}</span> 人有 · <span className="num">{wishers}</span> 人放進願望清單 ·{" "}
-            <span className="num">{related.length}</span> 則炫收藏
+            {/* 每一段不拆字（2026-10-02 建議 18：手機「1 則炫收藏」斷成「炫／收藏」） */}
+            <span className="stat">
+              <span className="num">{owners}</span> 人有
+            </span>
+            {" · "}
+            <span className="stat">
+              <span className="num">{wishers}</span> 人放進願望清單
+            </span>
+            {" · "}
+            <span className="stat">
+              <span className="num">{related.length}</span> 則炫收藏
+            </span>
             {collections.length ? (
               <>
                 {" · "}
-                <a className="link" href="#collections" data-testid="series-collections-count">
+                <a className="link stat" href="#collections" data-testid="series-collections-count">
                   出現在 <span className="num">{collections.length}</span> 個合集中
                 </a>
               </>
@@ -500,14 +453,17 @@ export default async function SeriesPage({ params, searchParams }: Props) {
           </p>
           {/^\d{4}/.test(series.year) || series.kind === "misc" ? null : <YearFill skey={skey} />}
         </div>
-        <div className="head-actions">
-          <CopyLink />
-          <Link className="btn btn-line" href={`${self}?edit=1#body`} data-testid="edit-link">
-            編輯
-          </Link>
-          <Link className="btn btn-line" href={`${self}/history`}>
-            歷史
-          </Link>
+        {/* 2026-10-02 建議 3：跟藝人頁一樣，複製連結、編輯、歷史是一列小文字連結，不佔手機一整排 */}
+        <div className="head-actions series-acts">
+          <p className="series-sub-acts">
+            <CopyLink className="link-btn" />
+            <Link className="link-btn" href={`${self}?edit=1#body`} data-testid="edit-link">
+              編輯
+            </Link>
+            <Link className="link-btn" href={`${self}/history`}>
+              歷史
+            </Link>
+          </p>
         </div>
       </header>
 
@@ -570,16 +526,12 @@ export default async function SeriesPage({ params, searchParams }: Props) {
           <section key={it.id} id={itemAnchor(it)} className="block item-block">
             <h2 className="item-title">{it.kind}</h2>
             <LockBanner target={itemTarget(itemKey(series, it))} locked={isTargetLocked(c.lockData, itemTarget(itemKey(series, it)))} />
-            {it.versions.length > 1 ? (
-              <Compare series={series} item={it} tracks={tracks} base={main?.v ?? null} />
-            ) : it.versions.length === 1 ? (
-              <Spec series={series} item={it} v={it.versions[0]} />
-            ) : (
+            {it.versions.length === 0 ? (
               <p className="sub" data-testid="item-no-version">
                 還沒有人補上版本資料
               </p>
-            )}
-            {it.versions.map((v) => (
+            ) : null}
+            {it.versions.map((v, vi) => (
               <VersionBlock
                 key={v.id}
                 series={series}
@@ -592,6 +544,8 @@ export default async function SeriesPage({ params, searchParams }: Props) {
                 tracks={tracks.get(versionAnchor(it, v))}
                 editor={tt && tm && tm[1] === it.id && tm[2] === v.id ? { baseId: tracksBase, locked: tracksLocked } : null}
                 collections={collections.filter((s) => s.collection?.tags.some((t) => t.key === versionKey(series, it, v))).length}
+                base={main ? { v: main.v, lines: main.lines } : null}
+                first={vi === 0}
               />
             ))}
             <ItemLooseWall shares={loose.map(c.toShareView)} />

@@ -20,6 +20,10 @@ export type VersionFact = {
   /** 片數；查不到是 0 */
   discs: number;
   packaging: string;
+  /** 2026-10-02 版本比較表併入品項層的欄位：發行日（有完整日期才有，台灣寫法 2017/4/24）、內容物、曲目數 */
+  releaseDate: string;
+  contents: string;
+  trackCount: number;
 };
 
 export type SeriesFacts = {

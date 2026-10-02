@@ -215,7 +215,8 @@ export class Catalog {
     const link = w
       ? {
           href: it ? (v ? versionHref(w, it, v) : itemHref(w, it)) : seriesHref(w),
-          label: [w.title, it?.kind, v?.edition].filter(Boolean).join(" › "),
+          // 單則頁的「收錄在」一句（2026-10-02 建議 5）：《系列》＋版本名；沒版本就《系列》＋品項
+          label: `收錄在《${w.title}》${v?.edition ?? it?.kind ?? ""}`.trim(),
           seriesKey: seriesKey(w),
           itemId: it?.id,
           versionId: v?.id,

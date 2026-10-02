@@ -264,58 +264,32 @@ export function AdminDashboard() {
       <section className="block">
         <h2 className="block-title">待處理</h2>
         <div className="queue" data-testid="queue">
-          <Link href="/admin/moderation#pending" className="queue-item">
-            <b className="num">{q.pending}</b>
-            <span>待審核新增</span>
-          </Link>
-          <Link href="/admin/moderation#reports" className="queue-item">
-            <b className="num">{q.reports}</b>
-            <span>待裁決檢舉</span>
-          </Link>
-          <Link href="/admin/error-reports" className="queue-item" data-testid="queue-error-reports">
-            <b className="num">{q.errorReports ?? 0}</b>
-            <span>錯誤回報</span>
-          </Link>
-          <Link href="/admin/feedback" className="queue-item" data-testid="queue-feedback">
-            <b className="num">{q.feedback ?? 0}</b>
-            <span>未處理的意見回饋</span>
-          </Link>
-          <Link href="/admin/moderation#appeals" className="queue-item">
-            <b className="num">{q.appeals}</b>
-            <span>待處理申訴</span>
-          </Link>
-          <Link href="/admin/moderation#reports" className="queue-item">
-            <b className="num">{q.locked}</b>
-            <span>被鎖定的內容</span>
-          </Link>
-          <Link href="/admin/moderation#hidden" className="queue-item">
-            <b className="num">{q.hidden}</b>
-            <span>已下架</span>
-          </Link>
-          <Link href="/admin/moderation#comments" className="queue-item" data-testid="queue-comments">
-            <b className="num">{q.comments ?? 0}</b>
-            <span>被檢舉的留言{q.commentsHidden ? `（${q.commentsHidden} 則已自動隱藏）` : ""}</span>
-          </Link>
-          <Link href="/admin/duplicates" className="queue-item" data-testid="queue-duplicates">
-            <b className="num">{q.duplicates ?? 0}</b>
-            <span>疑似重複藝人</span>
-          </Link>
-          <Link href="/admin/moderation#avatars" className="queue-item" data-testid="queue-avatars">
-            <b className="num">{q.avatars ?? 0}</b>
-            <span>被檢舉的大頭貼</span>
-          </Link>
-          <Link href="/admin/deletions" className="queue-item" data-testid="queue-deletions">
-            <b className="num">{q.deletions ?? 0}</b>
-            <span>刪帳申請</span>
-          </Link>
-          <Link href="/admin/takedowns" className="queue-item" data-testid="queue-takedowns">
-            <b className="num">{q.takedowns ?? 0}</b>
-            <span>侵權通知</span>
-          </Link>
-          <Link href="/admin/artist-photos" className="queue-item" data-testid="queue-artist-photos">
-            <b className="num">{q.artistPhotos ?? 0}</b>
-            <span>藝人照片投稿</span>
-          </Link>
+          {/* 2026-10-02 之後再說 7：非 0 的加黑框排前面，0 的淡掉 */}
+          {(
+            [
+            { href: "/admin/moderation#pending", testid: undefined, n: q.pending, label: <>待審核新增</> },
+            { href: "/admin/moderation#reports", testid: undefined, n: q.reports, label: <>待裁決檢舉</> },
+            { href: "/admin/error-reports", testid: "queue-error-reports", n: q.errorReports ?? 0, label: <>錯誤回報</> },
+            { href: "/admin/feedback", testid: "queue-feedback", n: q.feedback ?? 0, label: <>未處理的意見回饋</> },
+            { href: "/admin/moderation#appeals", testid: undefined, n: q.appeals, label: <>待處理申訴</> },
+            { href: "/admin/moderation#reports", testid: undefined, n: q.locked, label: <>被鎖定的內容</> },
+            { href: "/admin/moderation#hidden", testid: undefined, n: q.hidden, label: <>已下架</> },
+            { href: "/admin/moderation#comments", testid: "queue-comments", n: q.comments ?? 0, label: <>被檢舉的留言{q.commentsHidden ? `（${q.commentsHidden} 則已自動隱藏）` : ""}</> },
+            { href: "/admin/duplicates", testid: "queue-duplicates", n: q.duplicates ?? 0, label: <>疑似重複藝人</> },
+            { href: "/admin/moderation#avatars", testid: "queue-avatars", n: q.avatars ?? 0, label: <>被檢舉的大頭貼</> },
+            { href: "/admin/deletions", testid: "queue-deletions", n: q.deletions ?? 0, label: <>刪帳申請</> },
+            { href: "/admin/takedowns", testid: "queue-takedowns", n: q.takedowns ?? 0, label: <>侵權通知</> },
+            { href: "/admin/artist-photos", testid: "queue-artist-photos", n: q.artistPhotos ?? 0, label: <>藝人照片投稿</> },
+            ] as { href: string; testid?: string; n: number; label: React.ReactNode }[]
+          )
+            .map((x, i) => ({ ...x, i }))
+            .sort((a, b) => (b.n > 0 ? 1 : 0) - (a.n > 0 ? 1 : 0) || a.i - b.i)
+            .map((x) => (
+              <Link key={x.href + x.i} href={x.href} className={x.n > 0 ? "queue-item has-n" : "queue-item is-zero"} data-testid={x.testid} data-n={x.n}>
+                <b className="num">{x.n}</b>
+                <span>{x.label}</span>
+              </Link>
+            ))}
         </div>
       </section>
 

@@ -6,6 +6,7 @@
 
 import { Ava } from "@/components/ava";
 import Link from "@/components/link";
+import { ConfirmDialog } from "@/components/confirm";
 import { useCallback, useEffect, useState } from "react";
 import { api, openPanel, useAccount } from "@/lib/account";
 import { relTime } from "@/lib/data";
@@ -135,10 +136,12 @@ export function ShareComments({ share }: { share: number }) {
     reload();
   };
 
-  const remove = async (id: number) => {
-    if (!window.confirm("刪除這則留言？")) return;
-    const r = await api(`/api/comments/${id}`, { method: "DELETE" });
-    if (!r.ok) setError(r.error.message);
+  // 刪留言先用站內對話框確認（2026-10-02 必修 3：不用瀏覽器的 window.confirm）
+  const [removing, setRemoving] = useState<number | null>(null);
+  const remove = async () => {
+    if (removing === null) return;
+    const r = await api(`/api/comments/${removing}`, { method: "DELETE" });
+    if (!r.ok) return r.error.message;
     reload();
   };
 
@@ -170,7 +173,7 @@ export function ShareComments({ share }: { share: number }) {
               ) : null}
               <div className="comment-acts">
                 {c.canDelete ? (
-                  <button type="button" className="btn-text comment-act" data-testid="comment-delete" onClick={() => void remove(c.id)}>
+                  <button type="button" className="btn-text comment-act" data-testid="comment-delete" onClick={() => setRemoving(c.id)} aria-haspopup="dialog">
                     刪除
                   </button>
                 ) : null}
@@ -228,6 +231,11 @@ export function ShareComments({ share }: { share: number }) {
           ) : null}
         </form>
       )}
+      {removing !== null ? (
+        <ConfirmDialog title="刪除這則留言？" confirmLabel="確定刪除" danger onConfirm={remove} onClose={() => setRemoving(null)} testid="comment-delete-confirm">
+          <p>刪掉就沒有了，不能還原。</p>
+        </ConfirmDialog>
+      ) : null}
     </section>
   );
 }

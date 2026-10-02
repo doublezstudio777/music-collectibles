@@ -10,7 +10,7 @@ export default async function LikesPage({ searchParams }: Props) {
   const { c } = await pageData();
   const tab = (await searchParams)?.tab === "shares" ? "shares" : "versions";
   return (
-    <main className="wrap page">
+    <main id="main" className="wrap page">
       <header className="page-head">
         <h1 className="page-title">願望清單</h1>
       </header>

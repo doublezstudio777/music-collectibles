@@ -20,7 +20,10 @@ import type { FormOptions } from "@/lib/catalog";
 import { api, useAccount, whenLoggedIn } from "@/lib/account";
 import { uploadCoverOg } from "@/lib/image";
 import { PhotoPicker, usePhotoPicker, type PickedPhoto } from "@/components/photo-picker";
-import { MoneyInput, parsePrice } from "@/components/share-detail";
+import { MoneyInput, parsePrice, POSTED_FLAG } from "@/components/share-detail";
+
+/** 別名跟本名只差大小寫就不顯示（2026-10-02 建議 12：Hyukoh／HYUKOH） */
+const aliasOf = (a: { name: string; aliases: string[] }) => (a.aliases[0] && a.aliases[0].toLowerCase() !== a.name.toLowerCase() ? a.aliases[0] : undefined);
 import { track } from "@/lib/analytics";
 
 // 炫收藏表單（2026-09-28 上傳表單改版，照 產出/20260928_上傳表單UX/）：
@@ -330,6 +333,8 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
   const [price, setPrice] = useState(edit?.sale.price ? String(edit.sale.price) : "");
 
   const [tried, setTried] = useState(false);
+  // 手機黏底列的授權說明收成一行，按「詳細」原地展開全文（2026-10-02 建議 9）
+  const [licOpen, setLicOpen] = useState(false);
   const [formError, setFormError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -619,6 +624,11 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
         return setFormError(r.error.message);
       }
       track("share_publish", { kind: "一般" });
+      try {
+        sessionStorage.setItem(POSTED_FLAG, String(r.data.n));
+      } catch {
+        /* 存不了就不顯示「已發布」條 */
+      }
       router.push(`/share/${r.data.n}`);
     });
   };
@@ -715,7 +725,13 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
         </span>
       </span>
       {/* 發布前的授權提示（2026-10-01 法務修正 M4，文字照法務審閱 D2）：CC 授權不可撤回，發布那一刻要看得到 */}
-      <span className="sf-license" data-testid="sf-license">
+      <span className="sf-license-short" data-testid="sf-license-short">
+        {edit ? "儲存" : "發布"}即同意 CC BY-NC-ND 授權
+        <button type="button" className="sf-license-more" aria-expanded={licOpen} onClick={() => setLicOpen((v) => !v)} data-testid="sf-license-more">
+          {licOpen ? "收起" : "詳細"}
+        </button>
+      </span>
+      <span className={licOpen ? "sf-license is-open" : "sf-license"} data-testid="sf-license">
         {edit ? "儲存" : "發布"}即表示這些照片是你本人拍攝，並同意以{" "}
         <a className="link" href={PHOTO_LICENSE_URL} target="_blank" rel="license noopener">
           CC BY-NC-ND 4.0
@@ -762,7 +778,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
         <section className="sf-group" aria-labelledby={`${id}-g1`}>
           <div className="sf-group-head">
             <h2 id={`${id}-g1`}>這是什麼</h2>
-            <span>前兩題必答</span>
+            <span>照片、誰的東西、是什麼 必填</span>
           </div>
 
           <div className="field" id={`${id}-sec-about`}>
@@ -792,7 +808,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
                       key={a.slug}
                       testid="bar-about"
                       title={a.name}
-                      sub={a.aliases[0]}
+                      sub={aliasOf(a)}
                       isNew={isMine}
                       action={isMine ? "改名" : "修改"}
                       onAction={() => (isMine ? setRenameArtist(a.slug) : setAboutOpen(true))}
@@ -842,7 +858,7 @@ function FormBody({ options, edit, mine, initial }: { options: FormOptions; edit
                     {suggestions.map((a) => (
                       <button key={a.slug} type="button" className="sf-row" onClick={() => pickArtist(a)} data-testid="artist-opt" data-slug={a.slug}>
                         <span className="sf-row-name">
-                          <b>{a.name}</b> {a.aliases[0] ? <span className="sub-inline">{a.aliases[0]}</span> : null}
+                          <b>{a.name}</b> {aliasOf(a) ? <span className="sub-inline">{aliasOf(a)}</span> : null}
                         </span>
                       </button>
                     ))}

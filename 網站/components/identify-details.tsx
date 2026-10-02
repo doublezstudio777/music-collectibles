@@ -64,14 +64,58 @@ function Gate() {
   );
 }
 
-export function IdentifyDetails({ skey, vkey, anchor, hasFakes }: { skey: string; vkey: string; anchor: string; hasFakes: boolean }) {
+export function IdentifyDetails({
+  skey,
+  vkey,
+  anchor,
+  hasFakes,
+  gate = true,
+  compact = false,
+}: {
+  skey: string;
+  vkey: string;
+  anchor: string;
+  hasFakes: boolean;
+  /** 訪客的「登入後查看辨識細節」要不要在這個版本出現（2026-10-02 建議 18：一個品項只出現一次） */
+  gate?: boolean;
+  /** 沒資料的版本收成一列時用：沒有標題，只有登入提示或已有的辨識細節 */
+  compact?: boolean;
+}) {
   const { me, ready } = useAppState();
   const r = useDetails(skey, me?.id ?? null);
   const d = r?.status === "ok" ? r.versions[vkey] : undefined;
+  if (compact) {
+    if (!ready || !me) return gate && ready ? <Gate /> : null;
+    if (!d) return null;
+    const marks = [
+      ...(hasValue(d.identifyBy) ? [{ label: "辨識特徵", text: d.identifyBy }] : []),
+      ...(hasValue(d.barcode) ? [{ label: "條碼", text: d.barcode }] : []),
+      ...(hasValue(d.catalog) ? [{ label: "目錄號", text: d.catalog }] : []),
+      ...d.marks,
+    ] as Mark[];
+    const missing = (["catalog", "identifyBy"] as const).filter((k) => isBlank(k, d[k]));
+    return (
+      <>
+        {marks.length ? (
+          <ul className="marks marks-inline" data-testid="details">
+            {marks.map((m) => (
+              <li key={m.label + m.text} className="mark">
+                <span className="mark-text">
+                  <b>{m.label}</b>
+                  <span className={m.label === "條碼" || m.label === "目錄號" ? "mono" : undefined}>{m.text}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        <FieldFill vkey={vkey} fields={missing} />
+      </>
+    );
+  }
 
   let body: React.ReactNode;
   if (!ready) body = <p className="gate-note">讀取中</p>;
-  else if (!me) body = <Gate />;
+  else if (!me) body = gate ? <Gate /> : null;
   else if (!r || r.status === "loading") body = <p className="gate-note">讀取中</p>;
   else if (r.status === "error") body = <p className="gate-note" role="alert">{r.message}</p>;
   else if (d) {
@@ -100,6 +144,8 @@ export function IdentifyDetails({ skey, vkey, anchor, hasFakes }: { skey: string
     );
   }
 
+  // 訪客、而且這個版本不放登入提示：整段不畫（標題也不留）
+  if (ready && !me && !gate && !hasFakes) return null;
   return (
     <>
       <h4 className="sub-title">正版辨識</h4>

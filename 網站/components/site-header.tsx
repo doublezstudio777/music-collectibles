@@ -7,7 +7,6 @@ import { Plus, Search } from "lucide-react";
 import { userHref } from "@/lib/data";
 import { clearFollows } from "@/lib/state";
 import { logout, openPanel, refreshAccount, useAccount } from "@/lib/account";
-import { avatarLabel } from "@/lib/avatar-label";
 import { SITE_NAME } from "@/lib/data";
 import { LogoMark } from "@/components/logo-mark";
 
@@ -68,7 +67,9 @@ export function SiteHeader() {
     return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
   const isForm = pathname === "/share/new";
-  const label = acc.me ? avatarLabel(acc.me.name) : null;
+  // 頭像只放暱稱首字（2026-10-02 設計總檢建議 1：跟頁內 Ava 同一套樣子；原本兩行多字的規則見 lib/avatar-label.ts，不再用）
+  const initial = acc.me ? (Array.from(acc.me.name.trim() || "我")[0] ?? "我") : "";
+  const onLogin = pathname === "/login";
   const close = () => {
     if (menu.current) menu.current.open = false;
   };
@@ -123,7 +124,7 @@ export function SiteHeader() {
                 <Plus className="nav-share-ico" aria-hidden="true" />
               </Link>
               {acc.status === "loading" ? <span className="ava ava-wait" aria-hidden="true" /> : null}
-              {acc.status === "anon" ? (
+              {acc.status === "anon" && !onLogin ? (
                 <button type="button" className="nav-login" onClick={() => openPanel("login")}>
                   登入
                 </button>
@@ -131,7 +132,7 @@ export function SiteHeader() {
               {acc.status === "user" && acc.me ? (
               <details className="me-menu" ref={menu}>
                 <summary
-                  className={acc.me.avatar ? "ava ava-photo" : `ava ava-name${label?.size === "small" ? " ava-name-sm" : ""}`}
+                  className={acc.me.avatar ? "ava ava-photo" : "ava ava-name"}
                   title={acc.me.name}
                   aria-label={`${acc.me.name}，我的選單`}
                   data-testid="me-avatar"
@@ -140,11 +141,7 @@ export function SiteHeader() {
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={acc.me.avatar} alt="" width={40} height={40} />
                   ) : (
-                    label?.lines.map((line, i) => (
-                      <span key={i} aria-hidden="true">
-                        {line}
-                      </span>
-                    ))
+                    <span aria-hidden="true">{initial}</span>
                   )}
                 </summary>
                 <div className="menu-panel">

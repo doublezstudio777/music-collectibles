@@ -123,13 +123,43 @@ export function HoldingsList({
     <>
       <section className="block" id="owned">
         <h2 className="block-title">我有</h2>
-        {ownRows.length ? <OwnedGroups rows={ownRows} isSelf={isSelf} name={name} /> : <p className="empty">還沒有標記</p>}
+        {ownRows.length ? (
+          <OwnedGroups rows={ownRows} isSelf={isSelf} name={name} />
+        ) : (
+          <p className="empty empty-hint" data-testid="owned-empty">
+            {isSelf ? (
+              <>
+                <span>還沒有勾選。到藝人頁按「我收藏了哪些」，一次勾好你有的版本。</span>
+                <Link className="link" href="/artists">
+                  找藝人
+                </Link>
+              </>
+            ) : (
+              <span>{name}還沒有勾選收藏</span>
+            )}
+          </p>
+        )}
       </section>
       <section className="block" id="wanted">
         <h2 className="block-title">
           願望清單 <span className="count">{wantRows.length}</span>
         </h2>
-        {wantRows.length ? <Table rows={wantRows} /> : <p className="empty">還沒有標記</p>}
+        {wantRows.length ? (
+          <Table rows={wantRows} />
+        ) : (
+          <p className="empty empty-hint" data-testid="wanted-empty">
+            {isSelf ? (
+              <>
+                <span>還沒有想要的版本。在系列頁的版本旁按愛心「加入願望清單」就會列在這裡。</span>
+                <Link className="link" href="/me/likes">
+                  看願望清單
+                </Link>
+              </>
+            ) : (
+              <span>{name}的願望清單還是空的</span>
+            )}
+          </p>
+        )}
       </section>
     </>
   );

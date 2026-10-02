@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/account";
 import type { AdminArtistPhoto } from "@/lib/server/artist-photos";
+import { ConfirmDialog } from "@/components/confirm";
 
 const time = (iso: string) => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 16).replace("T", " ");
 const kb = (n: number) => `${Math.round(n / 1024)} KB`;
@@ -15,24 +16,29 @@ const STATUS: Record<string, string> = {
   deleted: "已刪除",
 };
 type Action = "activate" | "reject" | "delete" | "remove";
-const CONFIRM: Partial<Record<Action, string>> = {
-  remove: "撤下後藝人頁不再顯示照片，檔案會從儲存空間刪除，不能還原。確定撤下？",
-  delete: "檔案會從儲存空間刪除，不能還原。確定刪除？",
+// 不可逆的兩個動作先用站內對話框確認（2026-10-02 必修 3、建議 4：不用 window.confirm，撤下不再用黑底實心鈕）
+const CONFIRM: Partial<Record<Action, { title: string; body: string; ok: string }>> = {
+  remove: { title: "撤下這張照片？", body: "撤下後藝人頁不再顯示這張照片，檔案會從儲存空間刪除，不能還原。", ok: "確定撤下" },
+  delete: { title: "刪除這張照片？", body: "檔案會從儲存空間刪除，不能還原。", ok: "確定刪除" },
 };
 
 function Item({ p, activeOf, done }: { p: AdminArtistPhoto; activeOf: (slug: string) => AdminArtistPhoto | undefined; done: () => void }) {
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const run = async (action: Action) => {
-    if (CONFIRM[action] && !window.confirm(CONFIRM[action])) return;
+  const [ask, setAsk] = useState<Action | null>(null);
+  const send = async (action: Action) => {
     setError("");
     setBusy(true);
     const r = await api("/api/admin/artist-photos", { body: { id: p.id, action, note } });
     setBusy(false);
-    if (!r.ok) return setError(r.error.message);
+    if (!r.ok) {
+      setError(r.error.message);
+      return r.error.message;
+    }
     done();
   };
+  const run = (action: Action) => (CONFIRM[action] ? setAsk(action) : void send(action));
   const cur = activeOf(p.artist.slug);
   const hasFile = p.status === "pending" || p.status === "active" || p.status === "retired";
   return (
@@ -93,7 +99,7 @@ function Item({ p, activeOf, done }: { p: AdminArtistPhoto; activeOf: (slug: str
               </button>
             ) : null}
             {p.status === "active" || p.status === "retired" ? (
-              <button type="button" className="btn btn-danger" disabled={busy} onClick={() => run("remove")} data-testid="ap-remove">
+              <button type="button" className="btn btn-line" disabled={busy} onClick={() => run("remove")} data-testid="ap-remove" aria-haspopup="dialog">
                 撤下
               </button>
             ) : null}
@@ -105,6 +111,11 @@ function Item({ p, activeOf, done }: { p: AdminArtistPhoto; activeOf: (slug: str
           </div>
         ) : null}
         {error ? <p className="field-error">{error}</p> : null}
+        {ask ? (
+          <ConfirmDialog title={CONFIRM[ask]!.title} confirmLabel={CONFIRM[ask]!.ok} danger onConfirm={() => send(ask)} onClose={() => setAsk(null)} testid="ap-confirm">
+            <p>{CONFIRM[ask]!.body}</p>
+          </ConfirmDialog>
+        ) : null}
       </div>
     </li>
   );

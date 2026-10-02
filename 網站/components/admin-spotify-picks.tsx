@@ -112,6 +112,7 @@ export function AdminSpotifyPicks() {
   const [busy, setBusy] = useState(false);
   const [formError, setFormError] = useState("");
   const [added, setAdded] = useState("");
+  const [filter, setFilter] = useState("");
   const load = useCallback(async () => {
     const r = await api<{ list: AdminPick[]; artists: Opt[] }>("/api/admin/spotify-picks");
     if (r.ok) {
@@ -138,6 +139,9 @@ export function AdminSpotifyPicks() {
     void load();
   };
   const onCount = list.filter((p) => p.enabled === 1).length;
+  // 2026-10-02 之後再說 7：93 列沒有搜尋，加一個藝人／歌名篩選
+  const needle = filter.trim().toLowerCase();
+  const shown = needle ? list.filter((p) => `${p.artistName} ${p.title ?? ""} ${p.artistSlug}`.toLowerCase().includes(needle)) : list;
   return (
     <>
       <DrawBox />
@@ -182,6 +186,12 @@ export function AdminSpotifyPicks() {
           歌單<span className="count">{`${onCount} / ${list.length}`}</span>
         </h2>
         {list.length ? (
+          <>
+          <label className="sr-only" htmlFor="sp-filter">
+            搜尋歌單
+          </label>
+          <input id="sp-filter" className="input sp-filter" placeholder="搜尋藝人或歌名" value={filter} onChange={(e) => setFilter(e.target.value)} data-testid="sp-filter" />
+          {needle && !shown.length ? <p className="empty">沒有符合的歌</p> : null}
           <div className="tbl-scroll">
             <table className="tbl admin-tbl">
               <thead>
@@ -193,12 +203,13 @@ export function AdminSpotifyPicks() {
                 </tr>
               </thead>
               <tbody>
-                {list.map((p) => (
+                {shown.map((p) => (
                   <Row key={`${p.id}-${p.enabled}`} p={p} reload={() => void load()} />
                 ))}
               </tbody>
             </table>
           </div>
+          </>
         ) : (
           <p className="empty">還沒有歌</p>
         )}

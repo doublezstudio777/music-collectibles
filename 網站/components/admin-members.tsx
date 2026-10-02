@@ -7,6 +7,7 @@ import { LEVELS, levelLabel } from "@/lib/levels";
 import type { MemberRow } from "@/lib/server/members";
 import { Ava } from "@/components/ava";
 import { SaveMsg, useSave } from "@/components/save-status";
+import { ConfirmDialog } from "@/components/confirm";
 
 // 跟 lib/server/members.ts 的 SUSPEND_REASONS 同一份（伺服器檔不能被 client 元件載入）
 const REASONS = [
@@ -50,23 +51,37 @@ function Renames({ m }: { m: MemberRow }) {
 /** 大頭貼：有就顯示小圖＋「移除」（寫操作紀錄、R2 檔刪除） */
 function AvatarCell({ m, done }: { m: MemberRow; done: () => void }) {
   const { busy, msg, run } = useSave();
+  const [ask, setAsk] = useState(false);
   if (!m.avatar) return null;
-  const remove = () => {
-    if (!window.confirm(`移除「${m.name}」的大頭貼？`)) return;
-    void run(async () => {
+  // 站內對話框確認（2026-10-02 必修 3：不用 window.confirm）
+  const remove = () =>
+    run(async () => {
       const r = await api("/api/admin/avatar", { body: { id: m.id } });
       if (!r.ok) return { ok: false, text: r.error.message };
       done();
       return { ok: true, text: "已移除" };
     });
-  };
   return (
     <span className="member-ava">
       <Ava name={m.name} src={m.avatar} />
-      <button type="button" className="btn-text" onClick={remove} disabled={busy} data-testid="avatar-admin-remove">
+      <button type="button" className="btn-text" onClick={() => setAsk(true)} disabled={busy} data-testid="avatar-admin-remove" aria-haspopup="dialog">
         {busy ? "處理中…" : "移除大頭貼"}
       </button>
       <SaveMsg {...msg} />
+      {ask ? (
+        <ConfirmDialog
+          title={`移除「${m.name}」的大頭貼？`}
+          confirmLabel="確定移除"
+          danger
+          onConfirm={async () => {
+            await remove();
+          }}
+          onClose={() => setAsk(false)}
+          testid="avatar-admin-confirm"
+        >
+          <p>檔案會從儲存空間刪除，這位會員的頭像回到暱稱首字，不能還原。</p>
+        </ConfirmDialog>
+      ) : null}
     </span>
   );
 }
@@ -153,14 +168,7 @@ function LevelCell({ m, done }: { m: MemberRow; done: () => void }) {
     });
   return (
     <div className="level-cell" data-testid="level-cell">
-      <span data-testid="level-label">{m.level}</span>
-      {m.override ? (
-        <span className="sub" title={m.overrideReason} data-testid="level-override">
-          指定（計算值 {m.score.toLocaleString("en-US")} 分）
-        </span>
-      ) : (
-        <span className="sub num">{m.score.toLocaleString("en-US")} 分</span>
-      )}
+      <span className="sub">等級 {m.level}</span>
       {open ? (
         <div className="suspend-form">
           <select className="select" value={level} aria-label="指定等級" onChange={(e) => setLevel(e.target.value)} data-testid="level-select">
@@ -277,40 +285,76 @@ export function AdminMembers() {
           <tbody>
             {d?.members.map((m) => (
               <tr key={m.id} data-handle={m.handle} data-status={m.status}>
-                <td>
-                  {m.status === "active" ? (
-                    <Link className="link" href={`/u/${m.handle}`}>
-                      {m.name}
-                    </Link>
-                  ) : (
-                    m.name
-                  )}
-                  <span className="sub">@{m.handle}</span>
-                  <AvatarCell m={m} done={() => void load()} />
-                  <Renames key={`${m.id}-${m.renames}`} m={m} />
+                {/* 2026-10-02 建議 22：每列固定高度；移除大頭貼、改名紀錄、指定等級收進最後一欄的「更多」；手機用 data-label 排成卡片 */}
+                <td data-label="暱稱">
+                  <span className="cell-stack">
+                    {m.status === "active" ? (
+                      <Link className="link" href={`/u/${m.handle}`}>
+                        {m.name}
+                      </Link>
+                    ) : (
+                      m.name
+                    )}
+                    <span className="sub">@{m.handle}</span>
+                  </span>
                 </td>
-                <td className="mono">{m.email}</td>
-                <td className="num">{day(m.createdAt)}</td>
-                <td>{m.region}</td>
-                <td>{m.verified ? "已驗證" : "未驗證"}</td>
-                <td className="num">{m.posts}</td>
-                <td className="num">{m.deals}</td>
-                <td className="num">{m.reported}</td>
-                <td className="num">{m.threads}</td>
-                <td>
-                  <LevelCell m={m} done={() => void load()} />
+                <td className="mono" data-label="Email">
+                  {m.email}
                 </td>
-                <td>
-                  {STATUS[m.status] ?? m.status}
-                  {m.suspendReason ? (
-                    <span className="sub" data-testid="suspend-reason">
-                      {m.suspendReason}
-                    </span>
-                  ) : null}
-                  {m.deletionRequested ? <span className="sub">申請刪除</span> : null}
+                <td className="num" data-label="註冊日">
+                  {day(m.createdAt)}
                 </td>
-                <td>
-                  <Actions m={m} done={() => void load()} />
+                <td data-label="所在地區">{m.region}</td>
+                <td data-label="驗證">{m.verified ? "已驗證" : "未驗證"}</td>
+                <td className="num" data-label="發文">
+                  {m.posts}
+                </td>
+                <td className="num" data-label="成交">
+                  {m.deals}
+                </td>
+                <td className="num" data-label="被檢舉">
+                  {m.reported}
+                </td>
+                <td className="num" data-label="對話">
+                  {m.threads}
+                </td>
+                <td data-label="等級">
+                  <span className="cell-stack">
+                    <span data-testid="level-label">{m.admin ? "館長" : m.level}</span>
+                    {m.admin ? null : m.override ? (
+                      <span className="sub" title={m.overrideReason} data-testid="level-override">
+                        指定（計算值 {m.score.toLocaleString("en-US")} 分）
+                      </span>
+                    ) : (
+                      <span className="sub num">{m.score.toLocaleString("en-US")} 分</span>
+                    )}
+                  </span>
+                </td>
+                <td data-label="狀態">
+                  <span className="cell-stack">
+                    {STATUS[m.status] ?? m.status}
+                    {m.suspendReason ? (
+                      <span className="sub" data-testid="suspend-reason">
+                        {m.suspendReason}
+                      </span>
+                    ) : null}
+                    {m.deletionRequested ? <span className="sub">申請刪除</span> : null}
+                  </span>
+                </td>
+                <td data-label="操作">
+                  <span className="report-acts">
+                    <Actions m={m} done={() => void load()} />
+                    {m.admin || m.status === "deleted" ? null : (
+                      <details className="member-more" data-testid="member-more">
+                        <summary>更多</summary>
+                        <div className="member-more-panel">
+                          <AvatarCell m={m} done={() => void load()} />
+                          <LevelCell m={m} done={() => void load()} />
+                          <Renames key={`${m.id}-${m.renames}`} m={m} />
+                        </div>
+                      </details>
+                    )}
+                  </span>
                 </td>
               </tr>
             ))}

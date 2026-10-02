@@ -88,7 +88,7 @@ export default async function SharePage({ params }: Props) {
 
   // 底部只放跟同一個系列、藝人、標籤有關的，不放同一位會員的
   return (
-    <main className="wrap page">
+    <main id="main" className="wrap page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson([breadcrumbLd(crumbs)]) }} />
       {share.collection ? (
         <CollectionDetail share={view} shareInfo={shareInfo} />

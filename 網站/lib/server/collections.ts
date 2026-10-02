@@ -73,7 +73,7 @@ export async function createCollection(u: User, body: Record<string, unknown>) {
   const ids = Array.isArray(body.photoIds) ? body.photoIds.filter((x): x is string => typeof x === "string").slice(0, MAX_SHARE_PHOTOS + 1) : [];
   if (ids.length > MAX_SHARE_PHOTOS) throw new HttpError(400, "TOO_MANY_PHOTOS", `一則最多 ${MAX_SHARE_PHOTOS} 張照片`);
   const pics = await unattachedPhotos(u.id, Array.from(new Set(ids)), "share");
-  if (!pics.length) throw new HttpError(400, "INVALID", "至少放一張合照");
+  if (!pics.length) throw new HttpError(400, "INVALID", "至少放一張合集照片");
   const c = await getCatalog();
   const tags = readTags(c, body.tags, pics.map((p) => p.id));
   const about = aboutOf(c, tags);

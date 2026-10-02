@@ -42,7 +42,7 @@ export function TermsNotice() {
   return (
     <div className="terms-notice" role="region" aria-label="條款更新公告" data-testid="terms-notice">
       <p>
-        {n.text}，{n.effective.replace(/^(\d{4})-0?(\d+)-0?(\d+)$/, "$2 月 $3 日")}生效，不用重新同意。
+        {n.text}，{n.effective.replace(/^(\d{4})-0?(\d+)-0?(\d+)$/, "$2 月 $3 日")}生效。
         <Link className="link" href={n.href}>
           看全文
         </Link>

@@ -5,7 +5,7 @@ import Link from "@/components/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { priceText, userHref, verifyHref, type Sale, type SaleState, type ShareView } from "@/lib/data";
+import { priceText, SITE_NAME, userHref, verifyHref, type Sale, type SaleState, type ShareView } from "@/lib/data";
 import { api, whenLoggedIn } from "@/lib/account";
 import { useAction, useAppState } from "@/lib/state";
 import { ShareDelete } from "@/components/share-delete";
@@ -18,6 +18,10 @@ import { LevelTag } from "@/components/level-tag";
 import { DmButton } from "@/components/dm-button";
 import { sharePhotoAlt } from "@/lib/seo";
 import { track } from "@/lib/analytics";
+import { ConfirmDialog } from "@/components/confirm";
+
+/** 發布成功的記號（2026-10-02 建議 10）：表單發布後寫進 sessionStorage，單則頁第一次打開顯示「已發布」條 */
+export const POSTED_FLAG = "yz_posted";
 
 /** 金額輸入：只收正整數 */
 export function parsePrice(raw: string) {
@@ -602,16 +606,16 @@ function BuyBox({ share, sale, offers }: { share: ShareView; sale: Sale; offers:
     const mineOpen = offers.find(
       (o) => o.buyer.handle === me?.handle && o.kind === "buy" && (o.status === "open" || o.status === "accepted"),
     );
-    const go = (path: string, body: unknown, reason: string) =>
-      whenLoggedIn(reason, async () => {
-        const r = await api<{ result: number }>(path, { body });
-        if (r.ok && path.endsWith("/offers")) track("offer_make", { kind: "我要買" });
-        if (r.ok) router.push(`/messages/${r.data.result}`);
-        else setError(r.error.message);
-      });
+    // 我要買（2026-10-02 必修 2）：先開確認框寫清楚價格與之後的流程，確定了才送出
     const buy = () => {
       if (mineOpen) router.push(`/messages/${mineOpen.threadId}`);
-      else go(`/api/shares/${share.n}/offers`, { kind: "buy" }, "登入後才能買");
+      else whenLoggedIn("登入後才能買", () => setOpen(true));
+    };
+    const confirmBuy = async () => {
+      const r = await api<{ result: number }>(`/api/shares/${share.n}/offers`, { body: { kind: "buy" } });
+      if (!r.ok) return r.error.message;
+      track("offer_make", { kind: "我要買" });
+      router.push(`/messages/${r.data.result}`);
     };
     return (
       <div className="deal">
@@ -622,13 +626,20 @@ function BuyBox({ share, sale, offers }: { share: ShareView; sale: Sale; offers:
         {!canTrade ? <RegionNote /> : null}
         <div className={canTrade ? "deal-actions" : "deal-actions one"}>
           {canTrade ? (
-            <button type="button" className="btn btn-p btn-lg" onClick={buy}>
+            <button type="button" className="btn btn-p btn-lg" onClick={buy} data-testid="buy-open" aria-haspopup="dialog">
               我要買
             </button>
           ) : null}
           <DmButton to={{ share: share.n }} label="問賣家" className="btn btn-line btn-lg" testid="dm-share" />
         </div>
         {error ? <p className="field-error">{error}</p> : null}
+        {open ? (
+          <ConfirmDialog title="確定要買？" confirmLabel="確定要買" busyLabel="送出中…" onConfirm={confirmBuy} onClose={() => setOpen(false)} testid="buy-confirm">
+            <p className="confirm-price">{priceText(sale.price ?? 0)}</p>
+            <p>按下確定，賣家會收到你的購買意願，接下來在私訊裡跟你聯絡。</p>
+            <p className="confirm-note">成交後請用私訊約交付，{SITE_NAME}不經手款項。</p>
+          </ConfirmDialog>
+        ) : null}
       </div>
     );
   }
@@ -679,12 +690,19 @@ function OfferList({
   const act = useAction();
   const { me, canTrade } = useAppState();
   const [error, setError] = useState("");
+  // 拒絕、成交給這位先確認（2026-10-02 必修 2）
+  const [ask, setAsk] = useState<{ kind: "reject" | "close"; o: PublicOffer } | null>(null);
   if (offers.length === 0) return null;
   const closed = sale.state === "sold" || frozen;
   const run = async (path: string, body: unknown) => {
     setError("");
     const r = await act(path, { body });
     if (!r.ok) setError(r.error.message);
+  };
+  const confirmAsk = async () => {
+    if (!ask) return;
+    const r = ask.kind === "reject" ? await act(`/api/offers/${ask.o.id}/respond`, { body: { answer: "rejected" } }) : await act(`/api/shares/${share.n}/close`, { body: { offerId: ask.o.id } });
+    if (!r.ok) return r.error.message;
   };
   return (
     <section className="offers" aria-labelledby="offers-title">
@@ -724,13 +742,13 @@ function OfferList({
                     <button type="button" className="btn btn-line" onClick={() => run(`/api/offers/${o.id}/respond`, { answer: "accepted" })}>
                       接受
                     </button>
-                    <button type="button" className="btn btn-line" onClick={() => run(`/api/offers/${o.id}/respond`, { answer: "rejected" })}>
+                    <button type="button" className="btn btn-line" onClick={() => setAsk({ kind: "reject", o })} aria-haspopup="dialog" data-testid="offer-reject">
                       拒絕
                     </button>
                   </>
                 ) : null}
                 {mine && !closed && canTrade && o.status === "accepted" ? (
-                  <button type="button" className="btn btn-line" onClick={() => run(`/api/shares/${share.n}/close`, { offerId: o.id })}>
+                  <button type="button" className="btn btn-line" onClick={() => setAsk({ kind: "close", o })} aria-haspopup="dialog" data-testid="offer-close">
                     成交給這位
                   </button>
                 ) : null}
@@ -750,6 +768,19 @@ function OfferList({
         })}
       </ul>
       {error ? <p className="field-error" role="alert">{error}</p> : null}
+      {ask?.kind === "reject" ? (
+        <ConfirmDialog title={`拒絕${ask.o.buyer.name}的${ask.o.kind === "buy" ? "購買意願" : "出價"}？`} confirmLabel="確定拒絕" onConfirm={confirmAsk} onClose={() => setAsk(null)} testid="reject-confirm">
+          <p className="confirm-price">{priceText(ask.o.price)}</p>
+          <p>拒絕後這一筆會標成「已拒絕」，不能再接受；對方要再買得重新出價。</p>
+        </ConfirmDialog>
+      ) : null}
+      {ask?.kind === "close" ? (
+        <ConfirmDialog title={`成交給${ask.o.buyer.name}？`} confirmLabel="確定成交" onConfirm={confirmAsk} onClose={() => setAsk(null)} testid="close-confirm">
+          <p className="confirm-price">{priceText(ask.o.price)}</p>
+          <p>這則收藏會標成已售出，其他出價一律標成未成交。要再賣得先「改回出售中」。</p>
+          <p className="confirm-note">成交後請用私訊約交付，{SITE_NAME}不經手款項。</p>
+        </ConfirmDialog>
+      ) : null}
     </section>
   );
 }
@@ -770,9 +801,33 @@ export function ShareDetail({
   const lock = share.lock;
   const frozen = Boolean(lock) && sale.state !== "sold";
   const fake = share.hasFakes;
+  // 剛發布（2026-10-02 建議 10）：表單寫的記號對得上這則就顯示一次「已發布」，看過就清掉
+  const [posted, setPosted] = useState(false);
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem(POSTED_FLAG) === String(share.n)) {
+        sessionStorage.removeItem(POSTED_FLAG);
+        // 記號只在剛發布那一次對得上，之後都不會再進來
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setPosted(true);
+      }
+    } catch {
+      /* 無痕模式讀不到就不顯示 */
+    }
+  }, [share.n]);
 
   return (
     <div className="detail" data-sale={sale.state}>
+      {posted ? (
+        <div className="posted-bar" role="status" data-testid="posted-bar">
+          <b>已發布</b>
+          <span>
+            <Link className="btn btn-line" href="/share/new">
+              再發一則
+            </Link>
+          </span>
+        </div>
+      ) : null}
       <div className={share.image ? "detail-photo has-image" : "detail-photo"}>
         <DetailPhoto share={share} sale={sale} lock={lock} />
       </div>
@@ -838,10 +893,13 @@ export function ShareDetail({
             </Link>
           </p>
         ) : null}
-        <p className="detail-kind">
-          <span>{share.kind}</span>
-          {share.kindNote ? <span className="sub">{share.kindNote}</span> : null}
-        </p>
+        {/* 有「收錄在」那句時不再印一次類型（2026-10-02 建議 5）；其他周邊的補充仍顯示 */}
+        {!share.link || share.kindNote ? (
+          <p className="detail-kind">
+            {share.link ? null : <span>{share.kind}</span>}
+            {share.kindNote ? <span className="sub">{share.kindNote}</span> : null}
+          </p>
+        ) : null}
         <OfferList share={share} sale={sale} offers={offers} mine={mine} frozen={frozen} />
       </div>
     </div>

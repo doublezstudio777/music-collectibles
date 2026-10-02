@@ -11,14 +11,18 @@ import type { MarketFacts, VersionFact } from "@/lib/series-intro";
 
 type Col = { key: string; label: string; get: (v: VersionFact) => string; mono?: boolean };
 
+// 2026-10-02 設計總檢（必修 5、7，建議 18）：品項裡的多欄比較表拿掉，欄位併到這一張；發行日用台灣寫法 2017/4/24（之後再說 4）；
+// 「資料狀態」「曲目差異」這類內部欄位不給訪客看，曲目差異改寫在各版本的曲目區
 const COLS: Col[] = [
   { key: "edition", label: "版本", get: (v) => v.edition },
   { key: "region", label: "發行地區", get: (v) => v.region },
-  { key: "year", label: "年份", get: (v) => v.year, mono: true },
+  { key: "year", label: "發行", get: (v) => v.releaseDate || v.year, mono: true },
   { key: "label", label: "唱片公司", get: (v) => v.label },
   { key: "format", label: "格式", get: (v) => v.format || v.kind },
   { key: "discs", label: "片數", get: (v) => (v.discs ? String(v.discs) : ""), mono: true },
+  { key: "tracks", label: "曲目", get: (v) => (v.trackCount ? `${v.trackCount} 首` : ""), mono: true },
   { key: "packaging", label: "包裝", get: (v) => v.packaging },
+  { key: "contents", label: "內容物", get: (v) => v.contents },
 ];
 
 /** 估字寬（em）：中日韓字與全形標點 1em，其他字元 .64em（Inter 大寫最寬約 .7、小寫數字約 .55，取偏寬的值寧可多留白） */
@@ -46,7 +50,8 @@ export function VersionTable({ versions }: { versions: VersionFact[] }) {
         </p>
       ) : null}
       <div className="ver-table-scroll" tabIndex={0} role="region" aria-label="版本比較表，可左右捲動">
-        <table className="ver-table" style={{ width: `${total}em` }}>
+        {/* 至少撐滿內容寬（建議 19：桌機三塊右緣對齊）；比畫面寬就照估的字寬橫捲 */}
+        <table className="ver-table ver-table-full" style={{ width: `max(100%, ${total}em)` }}>
           <colgroup>
             {cols.map((c, i) => (
               <col key={c.key} style={{ width: `${widths[i]}em` }} />

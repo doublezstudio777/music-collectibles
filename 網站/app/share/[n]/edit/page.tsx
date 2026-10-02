@@ -32,7 +32,7 @@ export default async function EditSharePage({ params }: Props) {
   );
   if (!viewer || viewer.handle !== share.author) {
     return (
-      <main className="wrap page page-narrow">
+      <main id="main" className="wrap page page-narrow">
         <h1 className="page-title">編輯炫收藏</h1>
         <p className="empty" data-testid="edit-denied">
           只有發文者可以編輯這則
@@ -43,7 +43,7 @@ export default async function EditSharePage({ params }: Props) {
   }
   if (view.lock) {
     return (
-      <main className="wrap page page-narrow">
+      <main id="main" className="wrap page page-narrow">
         <h1 className="page-title">編輯炫收藏</h1>
         <p className="empty" data-testid="edit-locked">
           {view.lock.label}，暫時不能編輯
@@ -56,7 +56,7 @@ export default async function EditSharePage({ params }: Props) {
   if (share.collection) {
     const tags = await collectionTagList(n);
     return (
-      <main className="wrap page sf-page">
+      <main id="main" className="wrap page sf-page">
         <h1 className="page-title">編輯合集</h1>
         <CollectionForm
           edit={{
@@ -75,7 +75,7 @@ export default async function EditSharePage({ params }: Props) {
     );
   }
   return (
-    <main className="wrap page sf-page">
+    <main id="main" className="wrap page sf-page">
       <h1 className="page-title">編輯收藏</h1>
       <ShareForm
         options={c.formOptions(viewer.handle)}

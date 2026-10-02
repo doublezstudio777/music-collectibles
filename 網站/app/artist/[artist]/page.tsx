@@ -72,7 +72,7 @@ export default async function ArtistPage({ params, searchParams }: Props) {
   const ld = ldJson([artistLd(c, ctx, artist, photo?.url ?? null), breadcrumbLd([HOME_CRUMB, ARTISTS_CRUMB, artistCrumb(artist)])]);
 
   return (
-    <main className="wrap page">
+    <main id="main" className="wrap page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld }} />
       <header className={`page-head head-split${photo ? " has-photo" : ""}`}>
         {photo ? <ArtistPhotoFigure photo={photo} name={artist.name} /> : null}

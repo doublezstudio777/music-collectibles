@@ -65,7 +65,7 @@ export function HistoryView({
   const older = byId(a) ?? revisions[revisions.indexOf(newer) + 1];
   const licensed = revisions.some((r) => r.license);
   return (
-    <main className="wrap page">
+    <main id="main" className="wrap page">
       <header className="page-head head-split">
         <div>
           <h1 className="page-title">{title}的編輯歷史</h1>

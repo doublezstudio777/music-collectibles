@@ -187,6 +187,9 @@ export function seriesFacts(c: Catalog, w: Series, tracks: VersionLines): Series
         format: parsed?.format ?? (isRecordKind(it.kind) ? it.kind : ""),
         discs: parsed?.discs ?? byTracks,
         packaging: packagingOnly(v.packaging),
+        releaseDate: /^\d{4}-\d{2}-\d{2}/.test(v.releaseDate) ? v.releaseDate.slice(0, 10).replace(/^(\d{4})-0?(\d+)-0?(\d+)$/, "$1/$2/$3") : "",
+        contents: hasValue(v.contents) ? v.contents : "",
+        trackCount: lines.length ? parseTracks(lines).reduce((n, d) => n + d.tracks.length, 0) : 0,
       };
     }),
   );

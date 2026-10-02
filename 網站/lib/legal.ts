@@ -28,7 +28,8 @@ export const TERMS_NOTICE: { version: string; announced: string; effective: stri
   version: "1.2",
   announced: "2026-10-02",
   effective: "2026-10-09",
-  text: "隱私權政策更新：補上 Google Analytics 的說明，以及照片查證、意見回饋、權利侵害通知時也會記錄 IP 位址的次數限制",
+  // 2026-10-02 之後再說 1：手機最多兩行，細節留給全文
+  text: "隱私權政策 1.2 補上 Google Analytics 與 IP 位址紀錄的說明",
   href: "/privacy",
 };
 

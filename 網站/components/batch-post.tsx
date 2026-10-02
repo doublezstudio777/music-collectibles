@@ -11,6 +11,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "@/components/link";
 import { api, useAccount, whenLoggedIn } from "@/lib/account";
+import { useAppState } from "@/lib/state";
 import { uploadCoverOg } from "@/lib/image";
 import { PHOTO_LICENSE_URL, SITE_NAME, shareHref, type SaleState } from "@/lib/data";
 import type { BatchEntry } from "@/lib/catalog";
@@ -282,13 +283,29 @@ function Body({ handle, entries }: { handle: string; entries: BatchEntry[] }) {
           </aside>
         </div>
       ) : results ? null : (
-        <p className="empty" data-testid="bp-empty">
-          沒有要發的收藏
-          <Link className="btn btn-line" href="/me">
-            我的頁面
-          </Link>
-        </p>
+        <EmptyStart />
       )}
+    </div>
+  );
+}
+
+/** 直接打開 /share/batch（2026-10-02 建議 11）：說怎麼開始，連到追蹤的藝人的「我收藏了哪些」 */
+function EmptyStart() {
+  const { state, ready } = useAppState();
+  const follows = ready ? state.follows.slice(0, 6) : [];
+  return (
+    <div className="bp-empty-box" data-testid="bp-empty">
+      <p>還沒有要發的收藏。先到藝人頁按「我收藏了哪些」勾選，勾好再回來一起發文。</p>
+      <div className="bp-empty-links">
+        {follows.map((slug) => (
+          <Link key={slug} className="btn btn-line" href={`/me/owned/${slug}`} data-testid="bp-empty-artist">
+            勾選 {slug}
+          </Link>
+        ))}
+        <Link className="btn btn-line" href="/artists">
+          {follows.length ? "其他藝人" : "找藝人"}
+        </Link>
+      </div>
     </div>
   );
 }

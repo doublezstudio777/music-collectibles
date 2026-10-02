@@ -11,13 +11,16 @@ import { UnreadBadge } from "@/components/site-header";
 import { Photo } from "@/components/share-card";
 import { MoneyInput, RegionNote, parsePrice } from "@/components/share-detail";
 import { track } from "@/lib/analytics";
+import { ConfirmDialog } from "@/components/confirm";
+import { SITE_NAME } from "@/lib/data";
 
 /** 所在地區（國家層級）；沒有紀錄就不顯示 */
 const regionText = (r?: string) => (r ? ` · 所在地區 ${r}` : "");
 
+/** 狀態一句（2026-10-02 建議 7：價格另外放標題右側，不放這裡被省略號切掉） */
 const saleLine = (sale: Sale) =>
   sale.state === "sale"
-    ? `定價出售 ${priceText(sale.price ?? 0)}`
+    ? "定價出售"
     : sale.state === "offer"
       ? "開放出價"
       : sale.state === "sold"
@@ -154,9 +157,10 @@ function SafetyActions({ d, reload }: { d: Detail; reload: () => void }) {
   );
 }
 
-function OfferBubble({ msg, d, frozen, run, busy }: { msg: ThreadMessage; d: ShareDetail; frozen: boolean; run: (p: string, b: unknown) => void; busy: boolean }) {
+function OfferBubble({ msg, d, frozen, run, busy }: { msg: ThreadMessage; d: ShareDetail; frozen: boolean; run: (p: string, b: unknown, ok?: () => void, text?: string) => Promise<unknown> | void; busy: boolean }) {
   const o = msg.offer!;
   const { me, geo } = useAccount();
+  const [rejecting, setRejecting] = useState(false);
   const mine = msg.from === me?.handle;
   const closed = d.share.sale.state === "sold";
   const status =
@@ -180,13 +184,27 @@ function OfferBubble({ msg, d, frozen, run, busy }: { msg: ThreadMessage; d: Sha
       {seller && !closed && !frozen && !geo.canTrade && o.status === "open" ? <RegionNote /> : null}
       {seller && !closed && !frozen && geo.canTrade && o.status === "open" ? (
         <div className="offer-acts">
-          <button type="button" className="btn btn-line" onClick={() => run(`/api/offers/${o.id}/respond`, { answer: "accepted" })} disabled={busy}>
+          <button type="button" className="btn btn-line" onClick={() => run(`/api/offers/${o.id}/respond`, { answer: "accepted" }, undefined, "已接受，到單則頁按「成交給這位」完成成交")} disabled={busy}>
             接受
           </button>
-          <button type="button" className="btn btn-line" onClick={() => run(`/api/offers/${o.id}/respond`, { answer: "rejected" })} disabled={busy}>
+          <button type="button" className="btn btn-line" onClick={() => setRejecting(true)} disabled={busy} aria-haspopup="dialog" data-testid="bubble-reject">
             拒絕
           </button>
         </div>
+      ) : null}
+      {rejecting ? (
+        <ConfirmDialog
+          title={`拒絕這筆${o.kind === "buy" ? "購買意願" : "出價"}？`}
+          confirmLabel="確定拒絕"
+          onConfirm={async () => {
+            await run(`/api/offers/${o.id}/respond`, { answer: "rejected" }, undefined, "已拒絕");
+          }}
+          onClose={() => setRejecting(false)}
+          testid="reject-confirm"
+        >
+          <p className="confirm-price">{priceText(o.price)}</p>
+          <p>拒絕後這一筆會標成「已拒絕」，不能再接受；對方要再買得重新出價。</p>
+        </ConfirmDialog>
       ) : null}
       {seller && !closed && !frozen && o.status === "accepted" ? (
         <Link className="btn btn-text" href={shareHref(d.share.n)}>
@@ -195,7 +213,7 @@ function OfferBubble({ msg, d, frozen, run, busy }: { msg: ThreadMessage; d: Sha
       ) : null}
       {!seller && mine && !closed && !frozen && o.status === "open" ? (
         <div className="offer-acts">
-          <button type="button" className="btn btn-line" onClick={() => run(`/api/offers/${o.id}/withdraw`, {})} disabled={busy}>
+          <button type="button" className="btn btn-line" onClick={() => run(`/api/offers/${o.id}/withdraw`, {}, undefined, "已撤回")} disabled={busy}>
             撤回
           </button>
         </div>
@@ -230,17 +248,19 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
     };
   }, [id, version]);
 
-  // 接受、拒絕、撤回：處理中按鈕停用，成功顯示「已更新」約 3 秒，失敗顯示原因（2026-09-28 回饋一致化）
+  // 接受、拒絕、撤回：處理中按鈕停用，成功顯示做了什麼（「已送出出價 NT$ 300」，2026-10-02 建議 7；原本一律「已更新」），失敗顯示原因
   const op = useSave();
-  const run = (path: string, body: unknown, ok?: () => void) =>
-    void op.run(async () => {
+  const run = (path: string, body: unknown, ok?: () => void, text = "已更新") =>
+    op.run(async () => {
       setError("");
       const r = await api(path, { body });
       if (r.ok) ok?.();
       setVersion((v) => v + 1);
       onChange();
-      return r.ok ? { ok: true, text: "已更新" } : { ok: false, text: r.error.message };
+      return r.ok ? { ok: true, text } : { ok: false, text: r.error.message };
     });
+  // 我要買先確認（2026-10-02 必修 2）
+  const [buying, setBuying] = useState(false);
 
   if (missing) {
     return (
@@ -304,14 +324,29 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
       onSubmit={async (e) => {
         e.preventDefault();
         if (!text.trim()) return;
-        await run(`/api/threads/${id}/messages`, { text }, () => track("dm_send"));
+        await run(`/api/threads/${id}/messages`, { text }, () => track("dm_send"), "已送出");
         setText("");
+        const el = document.getElementById("convo-text");
+        if (el) el.style.height = "auto";
       }}
     >
       <label className="sr-only" htmlFor="convo-text">
         訊息
       </label>
-      <input id="convo-text" className="input" value={text} onChange={(e) => setText(e.target.value)} autoComplete="off" maxLength={1000} />
+      {/* 多行、會長高的輸入框（2026-10-02 建議 7）；Enter 換行，按鈕送出 */}
+      <textarea
+        id="convo-text"
+        className="input convo-textarea"
+        rows={1}
+        value={text}
+        onChange={(e) => {
+          setText(e.target.value);
+          e.target.style.height = "auto";
+          e.target.style.height = `${Math.min(160, e.target.scrollHeight)}px`;
+        }}
+        maxLength={1000}
+        data-testid="convo-text"
+      />
       <button type="submit" className="btn btn-p btn-lg">
         送出
       </button>
@@ -379,7 +414,7 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
       setError("填一個整數金額");
       return;
     }
-    await run(`/api/shares/${share.n}/offers`, { kind: "offer", price: p }, () => track("offer_make", { kind: "出價" }));
+    await run(`/api/shares/${share.n}/offers`, { kind: "offer", price: p }, () => track("offer_make", { kind: "出價" }), `已送出出價 ${priceText(p)}`);
     setAmount("");
     setOffering(false);
   };
@@ -394,9 +429,17 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
           <Photo share={share} sizes="56px" small />
         </Link>
         <div className="thread-main">
-          <Link className="pin-title" href={shareHref(share.n)}>
-            {share.what}
-          </Link>
+          {/* 第一行標題＋價格、第二行誰與狀態（2026-10-02 建議 7） */}
+          <span className="pin-title-row">
+            <Link className="pin-title" href={shareHref(share.n)}>
+              {share.what}
+            </Link>
+            {sale.state === "sale" || (sale.state === "sold" && (sale.soldPrice ?? sale.price)) ? (
+              <span className="pin-price" data-testid="pin-price">
+                {priceText((sale.state === "sold" ? (sale.soldPrice ?? sale.price) : sale.price) ?? 0)}
+              </span>
+            ) : null}
+          </span>
           <span className="pin-sub">
             {iAmSeller
               ? `你的收藏 · ${thread.buyer.name}${regionText(thread.buyerRegion)}`
@@ -439,9 +482,30 @@ function Conversation({ id, onChange }: { id: number; onChange: () => void }) {
         ) : null}
         {!blockedNote && !frozen && !iAmSeller && geo.canTrade && sale.state === "sale" && !hasBuy ? (
           <div>
-            <button type="button" className="btn btn-line" onClick={() => run(`/api/shares/${share.n}/offers`, { kind: "buy" }, () => track("offer_make", { kind: "我要買" }))}>
+            <button type="button" className="btn btn-line" onClick={() => setBuying(true)} aria-haspopup="dialog" data-testid="convo-buy">
               我要買 {priceText(sale.price ?? 0)}
             </button>
+            {buying ? (
+              <ConfirmDialog
+                title="確定要買？"
+                confirmLabel="確定要買"
+                busyLabel="送出中…"
+                onConfirm={async () => {
+                  const r = await api(`/api/shares/${share.n}/offers`, { body: { kind: "buy" } });
+                  if (!r.ok) return r.error.message;
+                  track("offer_make", { kind: "我要買" });
+                  void op.run(async () => ({ ok: true, text: "已送出購買意願" }));
+                  setVersion((v) => v + 1);
+                  onChange();
+                }}
+                onClose={() => setBuying(false)}
+                testid="buy-confirm"
+              >
+                <p className="confirm-price">{priceText(sale.price ?? 0)}</p>
+                <p>按下確定，賣家會收到你的購買意願，接下來在這裡跟你聯絡。</p>
+                <p className="confirm-note">成交後請用私訊約交付，{SITE_NAME}不經手款項。</p>
+              </ConfirmDialog>
+            ) : null}
           </div>
         ) : null}
         {error ? <p className="field-error" role="alert">{error}</p> : null}

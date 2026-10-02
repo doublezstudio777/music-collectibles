@@ -18,7 +18,7 @@ export default function TermsHistoryPage() {
   // 現行＝已生效的版本裡最新的一版（TERMS_HISTORY 新的在前）
   const current = TERMS_HISTORY.find((h) => h.effective <= today)?.version;
   return (
-    <main className="wrap page page-narrow legal">
+    <main id="main" className="wrap page page-narrow legal">
       <h1 className="page-title">使用條款與隱私權政策歷史版本</h1>
       <p>每次修改都會加一個版本號，舊版全文留在這裡可以查。使用條款與隱私權政策一起改版，版本號相同。</p>
       <div className="tbl-scroll">

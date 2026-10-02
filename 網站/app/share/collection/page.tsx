@@ -15,7 +15,7 @@ export default async function NewCollectionPage({ searchParams }: Props) {
   const { c } = await pageData();
   const a = validSlug(slug) ? c.getArtist(slug) : undefined;
   return (
-    <main className="wrap page sf-page">
+    <main id="main" className="wrap page sf-page">
       <h1 className="page-title">發合集</h1>
       <CollectionForm preset={a ? { slug: a.slug, name: a.name } : null} />
     </main>

@@ -1,5 +1,6 @@
 // 新手指南正文（2026-09-29）：/guide 頁與個人頁「新手指南」對話框共用同一份。
-// 正文逐字照 產出/20260929_新手指南/文案草稿_v3.md（站名讀 SITE_NAME）；兩張表的數字一律從程式常數產生
+// 正文照 產出/20260929_新手指南/文案草稿_v3.md（站名讀 SITE_NAME）；2026-10-02 設計總檢建議 2、15：必填用詞跟表單一致（照片、誰的東西、是什麼），
+// 補合集、一次發多張、願望清單、私訊四段，操作示意圖用現行介面重截（產出/20261002_顧問總檢/配圖/）；兩張表的數字一律從程式常數產生
 // （lib/levels.ts、lib/score-rules.ts），規則改了這裡跟著變。圖只是視覺輔助，表格才是可讀取的資料。
 import Link from "@/components/link";
 import { SITE_NAME } from "@/lib/data";
@@ -60,11 +61,29 @@ export function GuideContent({ headingLevel = 2 }: { headingLevel?: 2 | 3 }) {
         <ul>
           <li>照片：1～10 張，第一張為封面；只能放自己拍的照片</li>
           <li>拍照前看一下背景，別拍到住家窗外、收件人姓名地址、實名票券上的個人資料</li>
-          <li>必填：照片、藝人、品項</li>
-          <li>選填：專輯或演唱會、版本、說明、標籤、出售方式</li>
+          <li>必填：照片、誰的東西、是什麼</li>
+          <li>選填：專輯或演唱會、版本、想說的話、標籤、要不要賣</li>
           <li>發布後可編輯</li>
         </ul>
         <Pic desk={{ src: "howto-share", w: 750, h: 1876 }} alt="操作示意：1 炫收藏、2 加照片、3 選藝人、4 選品項、5 發布" />
+      </section>
+
+      <section id="batch" className="guide-sec">
+        <H>一次發多張、發合集</H>
+        <ul>
+          <li>藝人頁按「我收藏了哪些」，勾選你有的版本；勾好按「一起發文」，每張各自一則</li>
+          <li>「發合集」是一張合集照片標很多張專輯：上傳合集照片，標記裡面有哪些專輯，可以在照片上標號碼</li>
+          <li>合集不能交易，要賣就從合集頁「挑幾張單獨發文」</li>
+        </ul>
+      </section>
+
+      <section id="wish" className="guide-sec">
+        <H>願望清單</H>
+        <ul>
+          <li>系列頁的版本旁按愛心「加入願望清單」，收藏卡片的愛心也進同一份清單</li>
+          <li>頁首的愛心打開願望清單；有人在賣的版本會標「有 N 件出售中」並排在最前面</li>
+          <li>個人頁公開的是想要的版本，按愛心的收藏不公開</li>
+        </ul>
       </section>
 
       <section id="contribute" className="guide-sec">
@@ -83,6 +102,16 @@ export function GuideContent({ headingLevel = 2 }: { headingLevel?: 2 | 3 }) {
           <li>出售方式：純分享、開放出價、定價出售</li>
           <li>限台灣地區</li>
           <li>{SITE_NAME}不經手款項與商品，成交後由買賣雙方自行交付</li>
+          <li>「我要買」「出價」「拒絕」「成交給這位」都會先確認一次才送出</li>
+        </ul>
+      </section>
+
+      <section id="dm" className="guide-sec">
+        <H>私訊</H>
+        <ul>
+          <li>出售中的收藏按「問賣家」，純分享的按「私訊」，個人頁按「傳訊息」；頁首的對話框圖示打開私訊列表</li>
+          <li>驗證 Email 後才能傳訊息</li>
+          <li>對話頂端可以封鎖或檢舉對方；管理員看不到訊息內容</li>
         </ul>
       </section>
 

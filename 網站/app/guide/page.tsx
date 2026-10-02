@@ -13,7 +13,7 @@ export async function generateMetadata() {
 
 export default function GuidePage() {
   return (
-    <main className="wrap page page-narrow">
+    <main id="main" className="wrap page page-narrow">
       <h1 className="page-title">新手指南</h1>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson([breadcrumbLd([HOME_CRUMB, { name: "新手指南", path: "/guide" }])]) }} />
       <GuideContent />

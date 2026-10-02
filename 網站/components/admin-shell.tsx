@@ -26,7 +26,7 @@ export async function AdminShell({ current, children }: { current: (typeof TABS)
   const viewer = await getViewer();
   if (!isAdmin(viewer)) {
     return (
-      <main className="wrap page">
+      <main id="main" className="wrap page">
         <h1 className="page-title">管理後台</h1>
         <p className="empty" data-testid="admin-denied">
           只有管理員進得去
@@ -35,7 +35,7 @@ export async function AdminShell({ current, children }: { current: (typeof TABS)
     );
   }
   return (
-    <main className="wrap page">
+    <main id="main" className="wrap page">
       <h1 className="page-title">管理後台</h1>
       <nav className="admin-tabs" aria-label="管理後台">
         {TABS.map((t) => (

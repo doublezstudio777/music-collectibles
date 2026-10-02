@@ -29,10 +29,15 @@ export default async function ArtistsPage({ searchParams }: Props) {
   const r = REGIONS.includes(q.r as ArtistRegion) ? (q.r as ArtistRegion) : undefined;
   const { c } = await pageData();
   const list = c.artistDirectory(g, r).sort((a, b) => b.count - a.count || a.artist.name.localeCompare(b.artist.name, "zh-Hant"));
+  // 標題跟著篩選變（2026-10-02 建議 20）：「團體」「國外女歌手」，沒篩選才是「全部藝人」
+  const title = g || r ? `${r ? REGION_LABEL[r] : ""}${g ? GENDER_LABEL[g] : "藝人"}` : "全部藝人";
   return (
-    <main className="wrap page">
+    <main id="main" className="wrap page">
       <header className="page-head">
-        <h1 className="page-title">全部藝人</h1>
+        <h1 className="page-title" data-testid="artists-title">
+          {title}
+          <span className="count">{list.length}</span>
+        </h1>
       </header>
       <nav className="dir-filters" aria-label="篩選">
         <div className="picks filter-picks">
@@ -56,14 +61,13 @@ export default async function ArtistsPage({ searchParams }: Props) {
         <ul className="rows dir-list" data-testid="artist-dir">
           {list.map(({ artist: a, count }) => (
             <li key={a.slug} data-artist={a.slug}>
-              <span className="row-main">
-                <Link className="link dir-name" href={artistHref(a.slug)}>
-                  {a.name}
-                </Link>
+              {/* 整列可點、高度 54px（2026-10-02 建議 20：原本只有 26px 高的名字可點） */}
+              <Link className="dir-link" href={artistHref(a.slug)}>
+                <span className="dir-name">{a.name}</span>
                 <span className="sub">
                   {[a.gender ? GENDER_LABEL[a.gender] : null, a.region ? REGION_LABEL[a.region] : null, `${count} 則收藏`].filter(Boolean).join(" · ")}
                 </span>
-              </span>
+              </Link>
               <FollowButton slug={a.slug} name={a.name} small />
             </li>
           ))}

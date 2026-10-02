@@ -26,7 +26,7 @@ export default async function TagPage({ params }: Props) {
   const list = c.sharesWithTag(tag).map(c.toShareView);
 
   return (
-    <main className="wrap page">
+    <main id="main" className="wrap page">
       <header className="page-head">
         <h1 className="page-title">{tag}</h1>
         <p className="page-meta">
