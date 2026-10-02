@@ -188,7 +188,8 @@ def main():
         wk.close()
         ch.close()
 
-    bad_errors = [e for e in ERRORS if not re.search(r"status of (404|403|409|429)", e)]
+    # 排除環境雜訊：未登入打 /api/me 的 401、無頭瀏覽器連不上 Turnstile（challenges.cloudflare.com）、Turnstile 自己印的 console 標記
+    bad_errors = [e for e in ERRORS if not re.search(r"status of (401|404|403|409|429)|challenges\.cloudflare\.com|font-size:0;color:transparent", e)]
     check("console error 為 0", not bad_errors, "；".join(bad_errors[:5]))
     (HERE / "result_修正_正式站.json").write_text(json.dumps([{"name": n, "ok": o, "detail": d} for n, o, d in results], ensure_ascii=False, indent=1), encoding="utf-8")
     passed = sum(1 for _, o, _ in results if o)

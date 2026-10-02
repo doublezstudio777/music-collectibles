@@ -94,3 +94,6 @@
 - 本機建置版打 API 偶發 1ms 的 503（Miniflare worker restarted），不是程式行為：驗收 helper 對沒有 JSON 內容的 503 自動重試一次；`/api/uploads/code` 這類不讀 body 的 POST 用 `Connection: close` 比較穩（2026-10-02）
 - 驗收腳本改 settings（dm 上限、門檻）要用 try/finally 還原，腳本中途炸掉會把後面批次全帶歪（10/02 dm_daily_new_limit 卡在 1 害 UI 腳本出價 429）；驗整頁快取裡的計數（願望清單人數）先做一次會讓內容版本 +1 的寫入再讀（2026-10-02）
 - Windows 工作排程器從 WSL 改設定：`schtasks /Query /XML` 匯出（ASCII＋CR/LF 混雜，先 `replace('\r','')`）、改 XML 用 UTF-16 寫到 `C:\Users\Zuka\AppData\Local\yinzang\`、`schtasks /Create /F /XML` 覆蓋；Logon Mode 要改成「不論登入與否」得輸入 Windows 密碼，從 WSL 做不到（2026-10-02）
+- 正式站 CSP（10/02 起）沒有 `unsafe-eval`：Playwright `wait_for_function` 字串版在 WebKit 連 `bypass_csp=True` 都被擋，輪詢一律用 `evaluate`＋Python 迴圈（Chromium 吃 bypass_csp）。表格對齊檢查腳本吃 file://，存頁面 HTML 要先拿掉 `<script>` 與 `modulepreload`，不然 CORS 錯誤會被算成 console error（2026-10-03）
+- 非互動 shell 跑 `deploy.sh` 前要 `set -a; . <(tr -d "\r" < /mnt/d/OneDrive/Claude-Data/_個人資料/音藏/_私人/cloudflare.txt); set +a` 載 `CLOUDFLARE_API_TOKEN`，不然第 0 步 `secret list` 讀不到會誤報「缺 secret」；worktree 沒有 `.deploy-assets`，部署前從主目錄 `cp -a`，合併後拷回（2026-10-03）
+- 本機備份沒有藝人照片檔（`/img/r/`），要驗藝人頁排版用 Playwright `route("**/img/**")` 從正式站拿圖；`pkill -f 關鍵字` 寫在同一行指令會比對到自己（又踩一次），停伺服器一律用 scratchpad 的 `stop_local.sh`（比對 `/proc/PID/cwd`）（2026-10-03）

@@ -1,0 +1,197 @@
+[
+ {
+  "name": "正式站 x-yz-build",
+  "ok": true,
+  "detail": "5aaaf9e4"
+ },
+ {
+  "name": "M1 404 淺色 狀態碼＋繁中",
+  "ok": true,
+  "detail": "404 找不到這一頁｜樂迷藏"
+ },
+ {
+  "name": "M1 404 淺色 頁首白底",
+  "ok": true,
+  "detail": "rgb(255, 255, 255)"
+ },
+ {
+  "name": "M1 404 深色 狀態碼＋繁中",
+  "ok": true,
+  "detail": "404 找不到這一頁｜樂迷藏"
+ },
+ {
+  "name": "M1 404 深色 頁首白底",
+  "ok": true,
+  "detail": "rgb(255, 255, 255)"
+ },
+ {
+  "name": "M1 被刪收藏 404",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M6 卡片標題 text-wrap: wrap",
+  "ok": true,
+  "detail": "wrap"
+ },
+ {
+  "name": "M6 標題不是 balance",
+  "ok": true,
+  "detail": "nowrap"
+ },
+ {
+  "name": "S2 首頁開關「只看出售中」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "L1 公告條 ≤ 72px",
+  "ok": true,
+  "detail": "64"
+ },
+ {
+  "name": "L3 今日推薦不推 0 則收藏",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "L5 main#main",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "首頁 390 無橫向溢出",
+  "ok": true,
+  "detail": "[390, 390]"
+ },
+ {
+  "name": "S21 搜尋頁沒輸入不列全部",
+  "ok": true,
+  "detail": "2610px"
+ },
+ {
+  "name": "S21 有關鍵字時分頁",
+  "ok": true,
+  "detail": "30 筆"
+ },
+ {
+  "name": "S20 標題跟著篩選",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S20 篩選與藝人列 ≥ 40px",
+  "ok": true,
+  "detail": "{40} {77}"
+ },
+ {
+  "name": "S15 新手指南圖全部載到",
+  "ok": true,
+  "detail": "[['howto-share', True], ['howto-edit', True], ['howto-report', True], ['levels-desktop', True], ['points-desktop', True], ['titles', True]]"
+ },
+ {
+  "name": "S15 指南提到合集、一次發多張、願望清單、私訊",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "L2 榮譽榜寫什麼時候開始算",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "L8 登入頁頁首沒有登入",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S5 單則頁「收錄在」一句",
+  "ok": true,
+  "detail": "收錄在《男孩》2015 台灣首版 CD"
+ },
+ {
+  "name": "M7 系列頁 390 沒有內部欄位",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M5 390 只有一張比較表",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M5 版本比較表列高一種 390",
+  "ok": true,
+  "detail": "[42]"
+ },
+ {
+  "name": "S3 系列頁頭部文字連結 390",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S18 登入提示一個品項一次 390",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "系列頁 390 無橫向溢出",
+  "ok": true,
+  "detail": "[390, 390]"
+ },
+ {
+  "name": "M7 系列頁 1440 沒有內部欄位",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M5 1440 只有一張比較表",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M5 版本比較表列高一種 1440",
+  "ok": true,
+  "detail": "[42]"
+ },
+ {
+  "name": "S3 系列頁頭部文字連結 1440",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S18 登入提示一個品項一次 1440",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "系列頁 1440 無橫向溢出",
+  "ok": true,
+  "detail": "[1440, 1440]"
+ },
+ {
+  "name": "S19 桌機三塊右緣對齊",
+  "ok": true,
+  "detail": "[1288, 1288, 1288] vs 1288"
+ },
+ {
+  "name": "L4 發行日台灣寫法",
+  "ok": true,
+  "detail": "2017/4/24"
+ },
+ {
+  "name": "L6 頁尾兩條線等寬",
+  "ok": true,
+  "detail": "[1440, 1440]"
+ },
+ {
+  "name": "公開頁橫向溢出為 0（4 寬 × 14 頁）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "console error 為 0",
+  "ok": true,
+  "detail": ""
+ }
+]
