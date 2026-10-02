@@ -13,7 +13,7 @@ import { ShareWall } from "@/components/share-wall";
 import { SeriesTile } from "@/components/work-cover";
 import { SITE_NAME } from "@/lib/data";
 import { activeArtistPhoto } from "@/lib/server/artist-photos";
-import { ArtistPhotoFigure } from "@/components/artist-photo";
+import { ArtistPhotoFigure, ArtistPhotoPlaceholder } from "@/components/artist-photo";
 import { ArtistPhotoSubmit } from "@/components/artist-photo-submit";
 import { spotifyArtistId } from "@/lib/server/spotify-picks";
 
@@ -74,8 +74,9 @@ export default async function ArtistPage({ params, searchParams }: Props) {
   return (
     <main id="main" className="wrap page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld }} />
-      <header className={`page-head head-split${photo ? " has-photo" : ""}`}>
-        {photo ? <ArtistPhotoFigure photo={photo} name={artist.name} /> : null}
+      {/* 藝人頁頭部（2026-10-03 用戶回饋）：照片維持直式放左，藝人名、類型、按鈕放右；沒照片放直式佔位圖。10/01 的手機滿寬 4:3 橫裁作廢 */}
+      <header className={`page-head artist-head${photo ? " has-photo" : " no-photo"}`} data-testid="artist-head">
+        {photo ? <ArtistPhotoFigure photo={photo} name={artist.name} /> : <ArtistPhotoPlaceholder />}
         <div className="artist-head-text">
           <h1 className="page-title">{artist.name}</h1>
           <p className="page-meta">
@@ -86,26 +87,29 @@ export default async function ArtistPage({ params, searchParams }: Props) {
             ) : null}
             {artist.tagline}
           </p>
-          <ArtistPhotoSubmit slug={artist.slug} name={artist.name} />
-        </div>
-        {/* 2026-10-01 手機排版：主要動作「追蹤」「我收藏了哪些」等寬兩欄；複製連結、編輯、歷史改成一列小文字連結 */}
-        <div className="head-actions artist-actions">
-          <div className="artist-main-acts">
-            <FollowButton slug={artist.slug} name={artist.name} />
-            {/* 一次勾選「我有」（2026-10-01）：個人頁面，不在整頁快取裡 */}
-            <Link className="btn btn-line" href={`/me/owned/${artist.slug}`} data-testid="owned-entry">
-              我收藏了哪些
-            </Link>
+          {/* 主要動作「追蹤」「我收藏了哪些」；複製連結、編輯、歷史一列小文字連結，手機靠右欄底部 */}
+          <div className="head-actions artist-actions">
+            <div className="artist-main-acts">
+              <FollowButton slug={artist.slug} name={artist.name} />
+              {/* 一次勾選「我有」（2026-10-01）：個人頁面，不在整頁快取裡 */}
+              <Link className="btn btn-line" href={`/me/owned/${artist.slug}`} data-testid="owned-entry">
+                我收藏了哪些
+              </Link>
+            </div>
+            <p className="artist-sub-acts">
+              <CopyLink className="link-btn" />
+              <Link className="link-btn" href={`${self}?edit=1#intro`} data-testid="edit-link">
+                編輯
+              </Link>
+              <Link className="link-btn" href={`${self}/history`}>
+                歷史
+              </Link>
+            </p>
           </div>
-          <p className="artist-sub-acts">
-            <CopyLink className="link-btn" />
-            <Link className="link-btn" href={`${self}?edit=1#intro`} data-testid="edit-link">
-              編輯
-            </Link>
-            <Link className="link-btn" href={`${self}/history`}>
-              歷史
-            </Link>
-          </p>
+        </div>
+        {/* 投稿入口與表單整寬排在照片與文字之下（手機右欄太窄放不下表單） */}
+        <div className="artist-submit-row">
+          <ArtistPhotoSubmit slug={artist.slug} name={artist.name} />
         </div>
       </header>
 

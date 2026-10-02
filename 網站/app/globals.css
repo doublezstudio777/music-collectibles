@@ -1248,8 +1248,7 @@ a.title-chip:hover { background: var(--line); }
 .admin[aria-busy="true"] button { pointer-events: none; opacity: .6; }
 .admin-toast { min-height: 0; }
 
-/* 藝人照片（2026-09-28）：藝人頁上方一張，照片下方攝影者・授權・來源；沒有照片時頁首維持原樣 */
-.head-split.has-photo { align-items: flex-end; }
+/* 藝人照片（2026-09-28）：藝人頁上方一張，照片下方攝影者・授權・來源。排版規則在檔尾「藝人頁頭部（2026-10-03）」 */
 .artist-head-text { flex: 1 1 260px; min-width: 0; }
 .artist-photo { flex: 0 0 auto; margin: 0; max-width: 100%; }
 .artist-photo img { background: var(--ph0); display: block; height: auto; width: 100%; }
@@ -2098,9 +2097,6 @@ button.ctag-n:disabled { cursor: default; }
 @media (max-width: 700px) {
   .artist-actions { width: 100%; }
   .artist-sub-acts { justify-content: flex-start; }
-  /* 照片滿版寬、固定比例置中裁切（臉通常在上半，往上對齊一點），說明跟照片同寬 */
-  .head-split.has-photo .artist-photo { width: 100% !important; }
-  .head-split.has-photo .artist-photo img { aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 25%; }
 }
 
 /* ============================================================
@@ -2310,3 +2306,41 @@ button.ctag-n:disabled { cursor: default; }
 .ver-contents .sub { margin-right: 6px; }
 /* 建議 19：系列頁主曲目跟上面的版本比較表、站上行情同寬（原本 640px 上限，桌機三塊右緣不齊） */
 .tracks-main .tracklist-wrap { max-width: none; }
+
+/* ============================================================
+   藝人頁頭部（2026-10-03 用戶回饋）：照片維持直式、放左；藝人名、類型・地區、按鈕放右。
+   10/01 的「手機滿寬 4:3 橫裁」作廢：維基的藝人照片多半是直式人像，裁成橫的會切掉臉。
+   ============================================================ */
+.artist-head { align-items: stretch; display: flex; flex-wrap: wrap; gap: 16px 24px; }
+.artist-head .artist-head-text { display: flex; flex-direction: column; min-width: 0; }
+.artist-head .artist-actions { margin-top: 16px; }
+.artist-head .artist-main-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.artist-head .artist-main-acts > .btn { width: auto; }
+.artist-head .artist-sub-acts { justify-content: flex-start; margin-top: 4px; }
+.artist-head .artist-submit-row { flex: 1 1 100%; min-width: 0; }
+.artist-head .artist-submit-row:empty { display: none; }
+/* 照片：桌機 210px 寬。直式原圖放進 3:4 框、上緣對齊（臉在上半）；橫式原圖照原比例整張顯示、不裁人臉 */
+.artist-head .artist-photo { width: 210px; }
+.artist-head .artist-photo.is-portrait img { aspect-ratio: 3 / 4; object-fit: cover; object-position: 50% 15%; }
+.artist-head .artist-photo.is-landscape img { aspect-ratio: auto; object-fit: fill; }
+.artist-photo-ph { aspect-ratio: 3 / 4; background: var(--ph0); display: grid; flex: 0 0 auto; margin: 0; place-items: center; width: 210px; }
+.artist-photo-ph svg { display: block; width: 52%; }
+@media (max-width: 700px) {
+  /* 兩欄：照片佔 42%（最小 120px，320 寬還看得清楚臉），右欄放名字、類型、兩顆等寬按鈕、小連結；右欄底部對齊照片底部 */
+  .artist-head { display: grid; gap: 10px 14px; grid-template-columns: minmax(120px, 42%) minmax(0, 1fr); }
+  .artist-head .artist-photo, .artist-head .artist-photo-ph { max-width: none; width: auto; }
+  .artist-head .artist-head-text { flex: none; }
+  .artist-head .page-title { font-size: var(--text-2xl); line-height: 1.2; overflow-wrap: anywhere; }
+  .artist-head .page-meta { font-size: var(--text-sm); margin-top: 6px; }
+  .artist-head .artist-actions { margin-top: auto; padding-top: 12px; width: 100%; }
+  /* 橫式原圖在手機改 1:1 置中裁切：只裁左右，臉不會被切掉，左欄也不會比右欄矮一大截 */
+  .artist-head .artist-photo.is-landscape img { aspect-ratio: 1; object-fit: cover; object-position: 50% 50%; }
+  .artist-head .artist-main-acts { display: grid; gap: 8px; grid-template-columns: minmax(0, 1fr); }
+  .artist-head .artist-main-acts > .btn { justify-content: center; min-width: 0; padding-left: 8px; padding-right: 8px; width: 100%; }
+  .artist-head .artist-sub-acts { gap: 4px 12px; }
+  .artist-head .artist-sub-acts .link-btn { min-height: 32px; }
+  .artist-head .artist-submit-row { grid-column: 1 / -1; }
+  /* 攝影者說明：跟照片同寬，字縮到 11px，允許兩行以上 */
+  .artist-head .artist-photo-credit { font-size: 11px; line-height: 1.4; margin-top: 4px; }
+  .artist-head .artist-photo-credit .dot { margin: 0 2px; }
+}
