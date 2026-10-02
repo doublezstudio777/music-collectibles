@@ -111,6 +111,22 @@ export default async function ArtistPage({ params, searchParams }: Props) {
         <div className="artist-submit-row">
           <ArtistPhotoSubmit slug={artist.slug} name={artist.name} />
         </div>
+        {spotifyId ? (
+          // Spotify 熱門歌曲（2026-10-03 移進頭部）：官方藝人嵌入播放器，熱門歌曲由 Spotify 決定、自動載入。
+          // 桌機排在文字右邊第三欄、跟照片等高；手機整寬排在照片＋資訊、投稿入口之下、「系列」之前。沒有 Spotify ID 的藝人不渲染、不留空位
+          <section className="artist-sp-wrap" data-testid="artist-spotify" aria-labelledby="artist-sp-title">
+            <h2 className="artist-sp-title" id="artist-sp-title">
+              Spotify 熱門歌曲<small className="artist-sp-by">由 Spotify 提供</small>
+            </h2>
+            <iframe
+              className="artist-sp"
+              title={`${artist.name}的 Spotify 熱門歌曲`}
+              src={`https://open.spotify.com/embed/artist/${spotifyId}?utm_source=generator`}
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            />
+          </section>
+        ) : null}
       </header>
 
       {main.length ? (
@@ -121,20 +137,6 @@ export default async function ArtistPage({ params, searchParams }: Props) {
               <SeriesTile key={`${w.artistSlug}/${w.no}`} series={w} credits={c.creditNames(w)} except={artist.slug} photo={c.seriesCover(w)} />
             ))}
           </ul>
-        </section>
-      ) : null}
-
-      {spotifyId ? (
-        // 在 Spotify 上的熱門歌曲（2026-10-01）：Spotify 官方藝人嵌入播放器，熱門歌曲由 Spotify 決定；跟首頁一樣自動載入
-        <section className="block" data-testid="artist-spotify">
-          <h2 className="block-title">在 Spotify 上的熱門歌曲</h2>
-          <iframe
-            className="artist-sp"
-            title={`${artist.name}在 Spotify 上的熱門歌曲`}
-            src={`https://open.spotify.com/embed/artist/${spotifyId}?utm_source=generator`}
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"
-          />
         </section>
       ) : null}
 

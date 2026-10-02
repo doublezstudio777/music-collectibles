@@ -97,3 +97,4 @@
 - 正式站 CSP（10/02 起）沒有 `unsafe-eval`：Playwright `wait_for_function` 字串版在 WebKit 連 `bypass_csp=True` 都被擋，輪詢一律用 `evaluate`＋Python 迴圈（Chromium 吃 bypass_csp）。表格對齊檢查腳本吃 file://，存頁面 HTML 要先拿掉 `<script>` 與 `modulepreload`，不然 CORS 錯誤會被算成 console error（2026-10-03）
 - 非互動 shell 跑 `deploy.sh` 前要 `set -a; . <(tr -d "\r" < /mnt/d/OneDrive/Claude-Data/_個人資料/音藏/_私人/cloudflare.txt); set +a` 載 `CLOUDFLARE_API_TOKEN`，不然第 0 步 `secret list` 讀不到會誤報「缺 secret」；worktree 沒有 `.deploy-assets`，部署前從主目錄 `cp -a`，合併後拷回（2026-10-03）
 - 本機備份沒有藝人照片檔（`/img/r/`），要驗藝人頁排版用 Playwright `route("**/img/**")` 從正式站拿圖；`pkill -f 關鍵字` 寫在同一行指令會比對到自己（又踩一次），停伺服器一律用 scratchpad 的 `stop_local.sh`（比對 `/proc/PID/cwd`）（2026-10-03）
+- Spotify 嵌入播放器只有 152 與 352 兩種版面，iframe 給中間高度（如 248）會畫成 152 版面下面留空白，別拿它對齊照片高度；本機 `.wrangler/state` 的 D1 可能落後遷移、`spotify_artists` 是空的，驗收前先 `migrations list --local` 並自己塞測試列；3x 整頁截圖會超過 32767px 上限，截頁面上半用 `clip`（2026-10-03）

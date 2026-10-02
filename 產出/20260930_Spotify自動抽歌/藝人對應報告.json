@@ -1,14 +1,14 @@
 {
- "產生時間": "2026-09-30T13:41:44.172Z",
+ "產生時間": "2026-10-02T18:32:48.548Z",
  "統計": {
-  "站上藝人": 231,
-  "對應成功": 151,
-  "疑義": 38,
-  "找不到": 42,
+  "站上藝人": 343,
+  "對應成功": 200,
+  "疑義": 98,
+  "找不到": 45,
   "未比對": 0,
   "來源": {
-   "search": 58,
-   "musicbrainz": 88,
+   "search": 91,
+   "musicbrainz": 104,
    "picks": 5
   }
  },
@@ -54,12 +54,52 @@
    "evidence": "MusicBrainz ba6b5808-3be3-42af-8296-8f4e826b2b64 的 Spotify 連結"
   },
   {
+   "slug": "a-root",
+   "name": "A_Root同根生",
+   "spotifyId": "4GNkB3y24Z3AV8itXAUGxE",
+   "spotifyName": "A_Root同根生",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：臺灣文蛤 Huh?"
+  },
+  {
+   "slug": "a-tt4v",
+   "name": "理想混蛋",
+   "spotifyId": "0Awqm7GXGiBp8fJNGvywra",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz d2480604-9a9f-4fb0-825c-0e7709bbf7c7 的 Spotify 連結"
+  },
+  {
+   "slug": "acid-brain",
+   "name": "Acid Brain酸腦",
+   "spotifyId": "0tyYrbyE0LGn7cQ1sdtxno",
+   "spotifyName": "Acid Brain 酸腦",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：七日譚"
+  },
+  {
    "slug": "aden",
    "name": "王ADEN",
    "spotifyId": "4ecBfM4xa6ZLDr7P8lsyTV",
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 74ced67f-8eda-4ec8-8cca-1278d0b081ad 的 Spotify 連結"
+  },
+  {
+   "slug": "adoy",
+   "name": "ADOY",
+   "spotifyId": "64sY7LsUjNE3ifONkftTXC",
+   "spotifyName": "ADOY",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：CATNIP"
+  },
+  {
+   "slug": "age-factory",
+   "name": "Age Factory",
+   "spotifyId": "7pgRyTH4nTH4KoruoGuAQo",
+   "spotifyName": "Age Factory",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Songs"
   },
   {
    "slug": "amei",
@@ -132,6 +172,22 @@
    "spotifyName": "百合花",
    "source": "search",
    "evidence": "搜尋同名（3 位同名，只有這位有作品交集），作品交集：萬事美妙、出來"
+  },
+  {
+   "slug": "bradd",
+   "name": "BRADD",
+   "spotifyId": "1T72OjsUb6ZGUElSwtixNO",
+   "spotifyName": "BRADD",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：Harvey Dent、Friendly Singing Neighbor"
+  },
+  {
+   "slug": "brbp",
+   "name": "BRBP",
+   "spotifyId": "4cr0LDiecyD9HJt7zE58YJ",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz d658240a-d80b-4f1b-8b13-2d41cf12c375 的 Spotify 連結"
   },
   {
    "slug": "cai-jia-zhen",
@@ -238,6 +294,22 @@
    "evidence": "搜尋同名，作品交集：三十幾"
   },
   {
+   "slug": "chen-ying-da",
+   "name": "陳穎達",
+   "spotifyId": "4X4VTDNKEWuLZQOR57PRAB",
+   "spotifyName": "陳穎達",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Live Without Irony"
+  },
+  {
+   "slug": "chen-zi-zhang",
+   "name": "陳子彰",
+   "spotifyId": "2BD9eeRk7m6hf2u9BXBo4X",
+   "spotifyName": "陳子彰",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：The Sea, The Sky, The You and I"
+  },
+  {
    "slug": "chunyan",
    "name": "春艷",
    "spotifyId": "20Ire8k6z7JX4iCFunLxxA",
@@ -262,12 +334,28 @@
    "evidence": "搜尋同名，作品交集：我說"
   },
   {
+   "slug": "cold-dew",
+   "name": "COLD DEW",
+   "spotifyId": "1wK8TaYMCje9VRs0y1R8b7",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 48ddec66-31c8-4ee0-aa18-d45be63487f9 的 Spotify 連結"
+  },
+  {
    "slug": "collage",
    "name": "珂拉琪",
    "spotifyId": "1YtYHaWLV0IU7SwhvG6Luk",
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 31678e44-9f4f-41eb-ad90-556e011bf38c 的 Spotify 連結"
+  },
+  {
+   "slug": "dac",
+   "name": "Dac",
+   "spotifyId": "0nWX29koulPYFLJoMxIpJx",
+   "spotifyName": "Dac",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Enough"
   },
   {
    "slug": "dan-dan-mao-mao",
@@ -294,12 +382,28 @@
    "evidence": "搜尋同名，作品交集：你在注視那遙遠的地方"
   },
   {
+   "slug": "debloop",
+   "name": "debloop",
+   "spotifyId": "0xOOE7MZvWploulCZXFnQR",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 08ff7a3f-997f-4a2e-b135-7303182a0aca 的 Spotify 連結"
+  },
+  {
    "slug": "deca-joins",
    "name": "deca joins",
    "spotifyId": "5wbF4yfjaOjTSkrnucKA77",
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 0ec64e22-aa09-48d3-9ec6-2f3f8575554f 的 Spotify 連結"
+  },
+  {
+   "slug": "dizparity",
+   "name": "Dizparity",
+   "spotifyId": "0DYcDpgiVTcXJszxcswVce",
+   "spotifyName": "Dizparity",
+   "source": "search",
+   "evidence": "搜尋同名（4 位同名，只有這位有作品交集），作品交集：Melancholy Order"
   },
   {
    "slug": "dj-mr-gin",
@@ -374,6 +478,22 @@
    "evidence": "搜尋同名，作品交集：VISION"
   },
   {
+   "slug": "fat-hamster-and-kang-new",
+   "name": "Fat Hamster and KANG New",
+   "spotifyId": "5W3W4W6r71LupxKRCVUf9T",
+   "spotifyName": "Fat Hamster and KANG New",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Brains in a Vat"
+  },
+  {
+   "slug": "feast",
+   "name": ".Feast",
+   "spotifyId": "7Gy1PxqrgsiqWF6JNYPHeB",
+   "spotifyName": ".Feast",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Membangun & Menghancurkan"
+  },
+  {
    "slug": "feng-xiao-yue",
    "name": "鳳小岳",
    "spotifyId": "3pr7TMfQrob0tDAfN3UeUh",
@@ -382,12 +502,36 @@
    "evidence": "MusicBrainz 43097778-4ff9-465d-a182-e27af5168a8b 的 Spotify 連結"
   },
   {
+   "slug": "flowstrong",
+   "name": "Flowstrong",
+   "spotifyId": "3KgKUvLzPtJSiXz0WC71YH",
+   "spotifyName": "Flowstrong",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：流水席 Flow's Banquet、Study (of) Breaks"
+  },
+  {
+   "slug": "ftk",
+   "name": "FTK",
+   "spotifyId": "12RXaZpOaCVZJ6CdyqbqXz",
+   "spotifyName": "FTK",
+   "source": "search",
+   "evidence": "搜尋同名（5 位同名，只有這位有作品交集），作品交集：五毒"
+  },
+  {
    "slug": "funkymo",
    "name": "FunkyMo",
    "spotifyId": "4qYwZQPZRdnMnjnlXWM19A",
    "spotifyName": "FunkyMo",
    "source": "search",
    "evidence": "搜尋同名，作品交集：物件，所在"
+  },
+  {
+   "slug": "future-after-a-second",
+   "name": "FUTURE AFTER A SECOND",
+   "spotifyId": "44etGbQsssKtC5TtTXiGUz",
+   "spotifyName": "FUTURE AFTER A SECOND",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：『異骨』Xenobones"
   },
   {
    "slug": "gao-wu-ren",
@@ -462,6 +606,14 @@
    "evidence": "MusicBrainz 3a9b4b79-7078-4002-82c6-450ddbd7f7a4 的 Spotify 連結"
   },
   {
+   "slug": "hyukoh",
+   "name": "Hyukoh",
+   "spotifyId": "57okaLdCtv3nVBSn5otJkp",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 8b64a68f-eb63-48dd-80d9-1c2abcdf1970 的 Spotify 連結"
+  },
+  {
    "slug": "ice-paper",
    "name": "Ice Paper",
    "spotifyId": "35kMWGEVOOesE5U0CdP3Zo",
@@ -478,12 +630,28 @@
    "evidence": "MusicBrainz e6b4faa3-2a04-4441-984a-40fd2444269d 的 Spotify 連結"
   },
   {
+   "slug": "imdifficult",
+   "name": "我是機車少女I'mdifficult",
+   "spotifyId": "00RNgtcAow7k32rk5KiUcl",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz afd9aeb0-0890-4ad2-b8b7-574b9446c48a 的 Spotify 連結"
+  },
+  {
    "slug": "ivana-wong",
    "name": "王菀之",
    "spotifyId": "27WDr8Ky1j0LtgY82Ttk5S",
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz f9794046-1b0a-4f6d-b9d0-fdfc85e8f33b 的 Spotify 連結"
+  },
+  {
+   "slug": "j-sheon",
+   "name": "J.Sheon",
+   "spotifyId": "4DEItwf281SHmTnS8q3Mn9",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 1bbce3ee-6a17-454f-831a-2eb746329953 的 Spotify 連結"
   },
   {
    "slug": "jade",
@@ -516,6 +684,14 @@
    "spotifyName": "Jocelyn 9.4.0",
    "source": "search",
    "evidence": "搜尋同名，作品交集：Sweet Spot"
+  },
+  {
+   "slug": "jolin",
+   "name": "JOLIN蔡依林",
+   "spotifyId": "1r9DuPTHiQ7hnRRZ99B8nL",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 3033ce2b-2fb2-408e-8c5a-aea48592d7bc 的 Spotify 連結"
   },
   {
    "slug": "joyce",
@@ -590,6 +766,14 @@
    "evidence": "MusicBrainz 52d7718d-fb8e-4bb9-adce-41e7151f847e 的 Spotify 連結"
   },
   {
+   "slug": "lei-qing",
+   "name": "雷擎",
+   "spotifyId": "3vkcJL0rXaCK63ef9gMzbf",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz bc6b9efd-f0cb-498e-b7df-c47c0def2fb4 的 Spotify 連結"
+  },
+  {
    "slug": "leo",
    "name": "Leo王",
    "spotifyId": "5Zn94mKQQYVZUvhiIXeXdP",
@@ -638,6 +822,30 @@
    "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：Lady Pum Pum"
   },
   {
+   "slug": "linion",
+   "name": "LINION",
+   "spotifyId": "26OkmynS2y6LiuUWz3yeqT",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz a7f037c1-362a-4152-8fbe-ca84c37bc5f4 的 Spotify 連結"
+  },
+  {
+   "slug": "liu-wei",
+   "name": "劉暐",
+   "spotifyId": "6qjAV93Q7qYARVE1qgxVRt",
+   "spotifyName": "劉暐",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：劉暐個人專輯"
+  },
+  {
+   "slug": "lomba-sihir",
+   "name": "Lomba Sihir",
+   "spotifyId": "6wD3vtAV0P3gWB9zLs7I4j",
+   "spotifyName": "Lomba Sihir",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Setelah: Obrolan Jam 3 Pagi、Obrolan Jam 3 Pagi"
+  },
+  {
    "slug": "lu-bo-he-chang-tuan",
    "name": "露波合唱團",
    "spotifyId": "0oHVKYA9iMLex4WC2ckCGo",
@@ -652,6 +860,22 @@
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 2ccc975f-ea40-4f0e-b861-8d80f967fe81 的 Spotify 連結"
+  },
+  {
+   "slug": "lu1",
+   "name": "路壹 Lu1",
+   "spotifyId": "2GfjyOogkWae1MCVpasSfJ",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz f5dec63f-7a91-4661-b3ea-6a72002f5ed1 的 Spotify 連結"
+  },
+  {
+   "slug": "lucy",
+   "name": "LÜCY",
+   "spotifyId": "6opBMmpW2ODmI9iPF2btzD",
+   "spotifyName": "LÜCY",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：LÜCY、Dance on the Shoreline"
   },
   {
    "slug": "lulu-lin",
@@ -670,12 +894,36 @@
    "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：女兒的九十九種藍——聽見零雨"
   },
   {
+   "slug": "lv-shao-chun",
+   "name": "呂紹淳",
+   "spotifyId": "0yvoFmqqc9fUS4iMpxNcNC",
+   "spotifyName": "呂紹淳",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：胎內"
+  },
+  {
+   "slug": "ma-wei",
+   "name": "馬尾",
+   "spotifyId": "4wFJB4d7JL4ehriQU0vaKf",
+   "spotifyName": "馬尾",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：奧祕"
+  },
+  {
    "slug": "makav",
    "name": "Makav真愛",
    "spotifyId": "6dI8nYKfnYDpPr3Z4shaLm",
    "spotifyName": "Makav 真愛",
    "source": "search",
    "evidence": "搜尋同名，作品交集：寶藏 Treasure"
+  },
+  {
+   "slug": "mandark",
+   "name": "MANDARK",
+   "spotifyId": "7znAteIK9wAnN6URYwFsks",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz d515c0d2-305d-445f-a4fc-71348fc9e074 的 Spotify 連結"
   },
   {
    "slug": "marz23",
@@ -758,6 +1006,22 @@
    "evidence": "MusicBrainz 4f531606-e7ae-47bd-9bb6-f270468b5798 的 Spotify 連結"
   },
   {
+   "slug": "narabara",
+   "name": "NaraBara",
+   "spotifyId": "5ri5adkr8ualRheReGoFpc",
+   "spotifyName": "NaraBara",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Dab Hi"
+  },
+  {
+   "slug": "nio",
+   "name": "NIO",
+   "spotifyId": "2vUJ16jhPsaaHwgC69luGc",
+   "spotifyName": "NIO",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：讓我想起"
+  },
+  {
    "slug": "nong-cun-wu-zhuang-qing-nian",
    "name": "農村武裝青年",
    "spotifyId": "5OMLBbk6IzeEniWMhwglHM",
@@ -772,6 +1036,14 @@
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz bd9dd73e-8454-4d4c-9c5f-d4625189ba4f 的 Spotify 連結"
+  },
+  {
+   "slug": "oberka",
+   "name": "Oberka",
+   "spotifyId": "28LXivKZPm48396rkSUUKt",
+   "spotifyName": "Oberka",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Regrow Protocol"
   },
   {
    "slug": "ozi",
@@ -822,6 +1094,14 @@
    "evidence": "MusicBrainz 7dc43706-3f4b-4f01-8c8c-2210ff746280 的 Spotify 連結"
   },
   {
+   "slug": "plutato",
+   "name": "Plutato",
+   "spotifyId": "3A3zuAop7uM5dY6Vs41dsR",
+   "spotifyName": "Plutato",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Pluto Potato、Ctrl+Z"
+  },
+  {
    "slug": "po-hou",
    "name": "潑猴",
    "spotifyId": "0GNy0qW4CXYY1PYFMZVoBK",
@@ -836,6 +1116,22 @@
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 89ff5809-438e-46da-8f36-e8c7f176a2eb 的 Spotify 連結"
+  },
+  {
+   "slug": "prod-cw",
+   "name": "PROD_CW",
+   "spotifyId": "3xSp2iZswNpbaZuumbxtsD",
+   "spotifyName": "PROD_CW",
+   "source": "search",
+   "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：If this is the end, meet me in Dreamland.、MUSIC SAVED MY LIFE SO DID YOU 我是電子音樂"
+  },
+  {
+   "slug": "puzzleman",
+   "name": "PUZZLEMAN",
+   "spotifyId": "5cqDJ1LV02tRyfWJoijkpZ",
+   "spotifyName": "PUZZLEMAN",
+   "source": "search",
+   "evidence": "搜尋同名（4 位同名，只有這位有作品交集），作品交集：MY MESSAGE (feat. Shing02)"
   },
   {
    "slug": "qiu-li-ting",
@@ -897,9 +1193,9 @@
    "slug": "savage-m",
    "name": "馬克SAVAGE.M",
    "spotifyId": "0N7qBbcs5Ij44dxbAKy2Sl",
-   "spotifyName": "馬克SAVAGE.M",
-   "source": "search",
-   "evidence": "搜尋同名，作品交集：海口"
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 43a8f75e-eae4-474b-b783-5b1c87c2e5a1 的 Spotify 連結"
   },
   {
    "slug": "shi-shi",
@@ -908,6 +1204,14 @@
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 0efd51ac-9864-4f4c-bcd7-4c80e20edf5e 的 Spotify 連結"
+  },
+  {
+   "slug": "shnti",
+   "name": "SHNTI",
+   "spotifyId": "53ve27q6YbRe2zbBn1iRtO",
+   "spotifyName": "SHNTI",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Melting PT."
   },
   {
    "slug": "silica-gel",
@@ -974,6 +1278,14 @@
    "evidence": "搜尋同名，作品交集：主題歌、善良的歹人、心內烏空"
   },
   {
+   "slug": "su-yi-fei",
+   "name": "蘇裔非",
+   "spotifyId": "6CRSvuMviai5Vchp57cMg5",
+   "spotifyName": "蘇裔非",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：少年殺人事件"
+  },
+  {
    "slug": "sunset-rollercoaster",
    "name": "落日飛車",
    "spotifyId": "7BqRcZsHYYQeqMAOp7e532",
@@ -990,12 +1302,36 @@
    "evidence": "MusicBrainz 03a265bd-30be-4929-a220-0f583cc5160a 的 Spotify 連結"
   },
   {
+   "slug": "teacheray",
+   "name": "TeacheRay",
+   "spotifyId": "4yIaqx1pn86nkpMIo8gd5t",
+   "spotifyName": "TeacheRay",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：raymond."
+  },
+  {
    "slug": "terence-lam",
    "name": "林家謙",
    "spotifyId": "3tvtGR8HzMHDbkLeZrFiBI",
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 12317920-4c88-4a1f-a610-824858501e16 的 Spotify 連結"
+  },
+  {
+   "slug": "the-crane",
+   "name": "鶴The Crane",
+   "spotifyId": "7naloiyHdmw1HsJd95OYDL",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 1f3088ed-4fc4-4b92-a5a7-d70470a37e6d 的 Spotify 連結"
+  },
+  {
+   "slug": "tickle-tickle",
+   "name": "Tickle Tickle癢癢",
+   "spotifyId": "50KK9HzjnkeiGaLlFH30ne",
+   "spotifyName": "Tickle Tickle 癢癢",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：成人料理亭"
   },
   {
    "slug": "tizzy-bac",
@@ -1030,6 +1366,14 @@
    "evidence": "MusicBrainz 13b43831-3577-481c-a202-e6e6119484b4 的 Spotify 連結"
   },
   {
+   "slug": "undep",
+   "name": "undep",
+   "spotifyId": "3UkaThmogc05M9rzMxzXRL",
+   "spotifyName": "undep",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：umop ap!sdn"
+  },
+  {
    "slug": "usay-kawlu",
    "name": "舞思愛",
    "spotifyId": "52D6gr3G6xkMKDXsT7XZfi",
@@ -1062,12 +1406,36 @@
    "evidence": "MusicBrainz ebf7170c-82b9-49bb-b392-4777c99b231c 的 Spotify 連結"
   },
   {
+   "slug": "wannasleep",
+   "name": "wannasleep",
+   "spotifyId": "1Qe4VNycDbzI2unKKDtQ0x",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 85ec6660-bb2b-4f20-8a76-6ab68e9a048a 的 Spotify 連結"
+  },
+  {
    "slug": "wei-ru-xuan",
    "name": "魏如萱",
    "spotifyId": "190bkHbFrRvEhcB7Zpuv3y",
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 3821e3ac-4d91-40b8-a669-f58d1fe2c0c4 的 Spotify 連結"
+  },
+  {
+   "slug": "wen-shi-za-cao",
+   "name": "溫室雜草",
+   "spotifyId": "6DZ6tvZTWTDO1vEBvUYfbP",
+   "spotifyName": "溫室雜草",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：春天有腳、Intro_鞋"
+  },
+  {
+   "slug": "wring-out-laura",
+   "name": "Wring Out Laura",
+   "spotifyId": "18vTML8rDnFF1JODSnWbKR",
+   "spotifyName": "Wring Out Laura",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Elixir"
   },
   {
    "slug": "wu-wang-he-zuo-she",
@@ -1126,12 +1494,28 @@
    "evidence": "MusicBrainz 9cb85b01-4e87-47e1-8d2e-aa6712657b98 的 Spotify 連結"
   },
   {
+   "slug": "yang-shu-ya",
+   "name": "楊舒雅",
+   "spotifyId": "1VkkkELF3uUCzCB9EZTlKO",
+   "spotifyName": "楊舒雅",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：Rule男Freestyle"
+  },
+  {
    "slug": "yang-su-hao",
    "name": "楊肅浩",
    "spotifyId": "5kantIA1sW9wi3V00TUS6f",
    "spotifyName": "楊肅浩",
    "source": "search",
    "evidence": "搜尋同名，作品交集：像咱這款人、噶瑪蘭的風吹"
+  },
+  {
+   "slug": "yang-yi-xiu",
+   "name": "楊易修",
+   "spotifyId": "2Vkf1PFOK1SyZCOEyLQ2hz",
+   "spotifyName": "楊易修",
+   "source": "search",
+   "evidence": "搜尋同名，作品交集：野臺語言"
   },
   {
    "slug": "yellow",
@@ -1148,6 +1532,14 @@
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 03a25129-3371-4ab4-b30b-f5d9dcfbec7c 的 Spotify 連結"
+  },
+  {
+   "slug": "yu-tiao",
+   "name": "魚條",
+   "spotifyId": "5NpkBOIMi2iJocLhi5MTde",
+   "spotifyName": "",
+   "source": "musicbrainz",
+   "evidence": "MusicBrainz 3ef8860b-2655-428e-b985-875a7f0c63a9 的 Spotify 連結"
   },
   {
    "slug": "yuan-ya-wei",
@@ -1224,21 +1616,99 @@
  ],
  "doubt": [
   {
+   "slug": "a-flyt",
+   "name": "A.FLYT",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "B.A.S.I.C"
+   ],
+   "searched": [
+    "A.FLYT"
+   ],
+   "candidates": [
+    {
+     "id": "7fV3vqbqrK31dLIy3cDla9",
+     "name": "A. FLYT",
+     "url": "https://open.spotify.com/artist/7fV3vqbqrK31dLIy3cDla9",
+     "hits": [],
+     "albums": [
+      "B3NCH PART¥¥"
+     ]
+    }
+   ]
+  },
+  {
    "slug": "a-kua-mian",
    "name": "阿跨面",
    "reason": "2 位同名候選都沒有作品交集",
+   "known": [
+    "心",
+    "陷眠"
+   ],
+   "searched": [
+    "阿跨面"
+   ],
    "candidates": [
     {
      "id": "26QeJhwzQ5vwSNX8wH1t0D",
      "name": "阿跨面",
      "url": "https://open.spotify.com/artist/26QeJhwzQ5vwSNX8wH1t0D",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "饒舌霹靂雙人組",
+      "心",
+      "不敗之獅",
+      "木桶伯",
+      "惡馬惡人騎",
+      "破浪 (北流五週年音樂共創計畫)"
+     ]
     },
     {
      "id": "6nnd21RMI13SZEGPHzdkH1",
      "name": "阿跨面",
      "url": "https://open.spotify.com/artist/6nnd21RMI13SZEGPHzdkH1",
-     "hits": []
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "aaa-hyukoh",
+   "name": "AAA（HYUKOH與落日飛車）",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "AAA（HYUKOH與落日飛車）",
+    "HYUKOH與落日飛車",
+    "AAA"
+   ],
+   "candidates": [
+    {
+     "id": "1AyWsgtaIgXbzjJlTx2ZDp",
+     "name": "AAA",
+     "url": "https://open.spotify.com/artist/1AyWsgtaIgXbzjJlTx2ZDp",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "aiko-tomi",
+   "name": "富愛子AIKO TOMI",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "富愛子AIKO TOMI",
+    "富愛子",
+    "AIKO TOMI"
+   ],
+   "candidates": [
+    {
+     "id": "24jBJ64cYnyWF53EKv6K9t",
+     "name": "Aiko Tomi",
+     "url": "https://open.spotify.com/artist/24jBJ64cYnyWF53EKv6K9t",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1246,6 +1716,19 @@
    "slug": "atarashii-gakko",
    "name": "ATARASHII GAKKO!",
    "reason": "多位同名候選都有作品交集",
+   "known": [
+    "毒花",
+    "キミワイナ'17",
+    "マエナラワナイ",
+    "狼の詩",
+    "若気ガイタル",
+    "一時帰国",
+    "マ人間",
+    "新しい学校のすゝめ"
+   ],
+   "searched": [
+    "ATARASHII GAKKO!"
+   ],
    "candidates": [
     {
      "id": "4OfU76YhPU04wlmbVFFgTJ",
@@ -1254,6 +1737,14 @@
      "hits": [
       "AG! Calling",
       "Tokyo Calling"
+     ],
+     "albums": [
+      "From Tokyo with Love",
+      "AG! Calling",
+      "ICHIJIKIKOKU",
+      "wakage ga itaru",
+      "maenarawanai",
+      "Sweet Memories feat. アイナ・ジ・エンド"
      ]
     },
     {
@@ -1263,20 +1754,226 @@
      "hits": [
       "AG! Calling",
       "Tokyo Calling"
+     ],
+     "albums": [
+      "From Tokyo with Love",
+      "AG! Calling",
+      "ICHIJIKIKOKU",
+      "wakage ga itaru",
+      "maenarawanai",
+      "Sweet Memories feat. アイナ・ジ・エンド"
      ]
+    }
+   ]
+  },
+  {
+   "slug": "b-e-n-n",
+   "name": "B E N N",
+   "reason": "3 位同名候選都沒有作品交集",
+   "known": [
+    "Hilarious"
+   ],
+   "searched": [
+    "B E N N"
+   ],
+   "candidates": [
+    {
+     "id": "5mdL6HD58VA7I20wk6qNWp",
+     "name": "B E N N",
+     "url": "https://open.spotify.com/artist/5mdL6HD58VA7I20wk6qNWp",
+     "hits": [],
+     "albums": []
+    },
+    {
+     "id": "2pjrpXqo6g1WhTyNw3BvoD",
+     "name": "Benn",
+     "url": "https://open.spotify.com/artist/2pjrpXqo6g1WhTyNw3BvoD",
+     "hits": [],
+     "albums": []
+    },
+    {
+     "id": "160UgFdAcjA2TJunvFN1Mz",
+     "name": "B E N N",
+     "url": "https://open.spotify.com/artist/160UgFdAcjA2TJunvFN1Mz",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "beyond-cure",
+   "name": "BEYOND CURE病入膏肓",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "BEYOND CURE病入膏肓",
+    "BEYOND CURE",
+    "病入膏肓"
+   ],
+   "candidates": [
+    {
+     "id": "0T50TPLPGVjTpLOhRUMdbh",
+     "name": "Beyond Cure",
+     "url": "https://open.spotify.com/artist/0T50TPLPGVjTpLOhRUMdbh",
+     "hits": [],
+     "albums": []
     }
    ]
   },
   {
    "slug": "blaire-ko",
    "name": "柯智豪Blaire Ko",
-   "reason": "同名候選沒有作品交集",
+   "reason": "2 位同名候選都沒有作品交集",
+   "known": [
+    "吊樹頭 Tiàu Tshiū-Thâu",
+    "夜婆 Iā-Pô"
+   ],
+   "searched": [
+    "柯智豪Blaire Ko",
+    "柯智豪",
+    "Blaire Ko"
+   ],
    "candidates": [
     {
      "id": "18ekrnVi0Q4yVfv8EDs6Kh",
      "name": "柯智豪 Blaire Ko",
      "url": "https://open.spotify.com/artist/18ekrnVi0Q4yVfv8EDs6Kh",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "鱷魚 電影原聲帶"
+     ]
+    },
+    {
+     "id": "3ovcRgJKVKJumd6QKosCd1",
+     "name": "柯智豪",
+     "url": "https://open.spotify.com/artist/3ovcRgJKVKJumd6QKosCd1",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "brandon-lin",
+   "name": "Brandon Lin",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "Sure As The Sun Will Rise"
+   ],
+   "searched": [
+    "Brandon Lin"
+   ],
+   "candidates": [
+    {
+     "id": "34uAT9ljsrLL2g7kx8lDZW",
+     "name": "Brandon Lin",
+     "url": "https://open.spotify.com/artist/34uAT9ljsrLL2g7kx8lDZW",
+     "hits": [],
+     "albums": [
+      "Affection / Promise"
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "c-holly",
+   "name": "C.Holly",
+   "reason": "2 位同名候選都沒有作品交集",
+   "known": [
+    "9 of 9 ：ARCANA CONCERT",
+    "HUR＋ 九人九色專場演唱會〈9 of 9 ：ARCANA CONCERT〉"
+   ],
+   "searched": [
+    "C.Holly"
+   ],
+   "candidates": [
+    {
+     "id": "3RRWcWaoWx1OiXnrWo7k7t",
+     "name": "C.Holly",
+     "url": "https://open.spotify.com/artist/3RRWcWaoWx1OiXnrWo7k7t",
+     "hits": [],
+     "albums": [
+      "HOllY S#IT",
+      "三不娶",
+      "花心大蘿蔔",
+      "錢所未有",
+      "致.........你/妳"
+     ]
+    },
+    {
+     "id": "0WwIV2VpocSuV3BK8yohfX",
+     "name": "C.Holly",
+     "url": "https://open.spotify.com/artist/0WwIV2VpocSuV3BK8yohfX",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "ced",
+   "name": "CED",
+   "reason": "4 位同名候選都沒有作品交集",
+   "known": [
+    "RLGL"
+   ],
+   "searched": [
+    "CED"
+   ],
+   "candidates": [
+    {
+     "id": "3M1YtHr7K9yHjawwbJ2DgC",
+     "name": "CED",
+     "url": "https://open.spotify.com/artist/3M1YtHr7K9yHjawwbJ2DgC",
+     "hits": [],
+     "albums": []
+    },
+    {
+     "id": "4P7rl6DRVdXLcUrtpZ6Jks",
+     "name": "CED",
+     "url": "https://open.spotify.com/artist/4P7rl6DRVdXLcUrtpZ6Jks",
+     "hits": [],
+     "albums": []
+    },
+    {
+     "id": "2CUf9SS04IKH49smdPm0RD",
+     "name": "CED",
+     "url": "https://open.spotify.com/artist/2CUf9SS04IKH49smdPm0RD",
+     "hits": [],
+     "albums": []
+    },
+    {
+     "id": "5lCL9Q7bsoMMyP8f5Sd6al",
+     "name": "CED",
+     "url": "https://open.spotify.com/artist/5lCL9Q7bsoMMyP8f5Sd6al",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "cheer",
+   "name": "cheer",
+   "reason": "2 位同名候選都沒有作品交集",
+   "known": [
+    "HEMI DEMI SEMI",
+    "在石頭縫隙間"
+   ],
+   "searched": [
+    "cheer"
+   ],
+   "candidates": [
+    {
+     "id": "60IqhWF6w6hCfi70sbftUY",
+     "name": "Cheer",
+     "url": "https://open.spotify.com/artist/60IqhWF6w6hCfi70sbftUY",
+     "hits": [],
+     "albums": []
+    },
+    {
+     "id": "6EOL8I9aYnto0Pri52pT23",
+     "name": "Cheer",
+     "url": "https://open.spotify.com/artist/6EOL8I9aYnto0Pri52pT23",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1284,12 +1981,214 @@
    "slug": "chun-mian-le-dui",
    "name": "春麵樂隊",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "Pleasure (蔡依林專輯) Pleasure",
+    "下回上去"
+   ],
+   "searched": [
+    "春麵樂隊"
+   ],
    "candidates": [
     {
      "id": "36UX8aECCMTav8MCeAyMJa",
      "name": "春麵樂隊",
      "url": "https://open.spotify.com/artist/36UX8aECCMTav8MCeAyMJa",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "我在你的眼睛我看見不愛 (電影 《小雁與吳愛麗》片尾曲)"
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "dac-zaoyuan",
+   "name": "Dac與鄭昭元ZAOYUAN",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "Dac與鄭昭元ZAOYUAN",
+    "Dac",
+    "與鄭昭元",
+    "ZAOYUAN"
+   ],
+   "candidates": [
+    {
+     "id": "0nWX29koulPYFLJoMxIpJx",
+     "name": "Dac",
+     "url": "https://open.spotify.com/artist/0nWX29koulPYFLJoMxIpJx",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "dao-che-ru-ku",
+   "name": "倒車入庫",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "燒香拜佛"
+   ],
+   "searched": [
+    "倒車入庫"
+   ],
+   "candidates": [
+    {
+     "id": "4R0TnjJyA5UhOyARtiXzp5",
+     "name": "倒車入庫",
+     "url": "https://open.spotify.com/artist/4R0TnjJyA5UhOyARtiXzp5",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "dciv",
+   "name": "DCIV柯德維",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "失而復得",
+    "給我兒子們的信"
+   ],
+   "searched": [
+    "DCIV柯德維",
+    "DCIV",
+    "柯德維"
+   ],
+   "candidates": [
+    {
+     "id": "1ek0Tv8frXGgW6GCCE2jit",
+     "name": "DCIV",
+     "url": "https://open.spotify.com/artist/1ek0Tv8frXGgW6GCCE2jit",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "destroyers",
+   "name": "擊沈女孩DESTROYERS",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "擊沈女孩DESTROYERS",
+    "擊沈女孩",
+    "DESTROYERS"
+   ],
+   "candidates": [
+    {
+     "id": "0n2SzMMLz0dcLCTFvKkxO7",
+     "name": "Destroyers",
+     "url": "https://open.spotify.com/artist/0n2SzMMLz0dcLCTFvKkxO7",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "dremedreman",
+   "name": "曾妮Dremedreman",
+   "reason": "2 位同名候選都沒有作品交集",
+   "known": [
+    "全村的希望"
+   ],
+   "searched": [
+    "曾妮Dremedreman",
+    "曾妮",
+    "Dremedreman"
+   ],
+   "candidates": [
+    {
+     "id": "750MTSIX7J3OQ6jyvFKlpJ",
+     "name": "曾妮",
+     "url": "https://open.spotify.com/artist/750MTSIX7J3OQ6jyvFKlpJ",
+     "hits": [],
+     "albums": []
+    },
+    {
+     "id": "6ri6BbW6G0vCsKIlmMTBHM",
+     "name": "曾妮",
+     "url": "https://open.spotify.com/artist/6ri6BbW6G0vCsKIlmMTBHM",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "elle-shimada",
+   "name": "ELLE SHIMADA",
+   "reason": "2 位同名候選都沒有作品交集",
+   "known": [
+    "LULLABY FOR THR RIVER IN MY BODY"
+   ],
+   "searched": [
+    "ELLE SHIMADA"
+   ],
+   "candidates": [
+    {
+     "id": "6QCfENvTPwkHq4V6nTMOpk",
+     "name": "Elle Shimada",
+     "url": "https://open.spotify.com/artist/6QCfENvTPwkHq4V6nTMOpk",
+     "hits": [],
+     "albums": [
+      "DAUGHTER WATER",
+      "LULLABY FOR THE RIVER IN MY BODY",
+      "ANSWERED PRAYERS",
+      "RESOLUTE",
+      "FEEL IT",
+      "GIRL SIZED DREAMS"
+     ]
+    },
+    {
+     "id": "6aHjJRep1QzwphdY2XGF4s",
+     "name": "Elle Shimada",
+     "url": "https://open.spotify.com/artist/6aHjJRep1QzwphdY2XGF4s",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "erika-liu",
+   "name": "劉艾立",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "雙魚宮",
+    "超級星光大道"
+   ],
+   "searched": [
+    "劉艾立",
+    "ERIKA劉艾立",
+    "ERIKA"
+   ],
+   "candidates": [
+    {
+     "id": "3cuZA22vz0nToT0LAcecup",
+     "name": "ERIKA",
+     "url": "https://open.spotify.com/artist/3cuZA22vz0nToT0LAcecup",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "haezee",
+   "name": "Haezee黃瑋昕",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "TWO BROKEN SOULS"
+   ],
+   "searched": [
+    "Haezee黃瑋昕",
+    "Haezee",
+    "黃瑋昕"
+   ],
+   "candidates": [
+    {
+     "id": "0LestIkVCbetqsJ3o72Yzn",
+     "name": "Haezee",
+     "url": "https://open.spotify.com/artist/0LestIkVCbetqsJ3o72Yzn",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1297,12 +2196,20 @@
    "slug": "huang-jing-shi-yi",
    "name": "荒井十一",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "不完全自救手冊",
+    "期待集"
+   ],
+   "searched": [
+    "荒井十一"
+   ],
    "candidates": [
     {
      "id": "6CWZnfvr14CZ7mRH8nrbpi",
      "name": "荒井十一",
      "url": "https://open.spotify.com/artist/6CWZnfvr14CZ7mRH8nrbpi",
-     "hits": []
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1310,12 +2217,53 @@
    "slug": "huang-qi-shan",
    "name": "黃綺珊",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "不完全自救手冊",
+    "HOVER OVER",
+    "INSIDEMUSIC",
+    "風華絕代",
+    "將愛情進行到底",
+    "我還能做什麼",
+    "只有你",
+    "驕傲"
+   ],
+   "searched": [
+    "黃綺珊"
+   ],
    "candidates": [
     {
      "id": "14nGVY7mVn9CZupiLEUKE7",
      "name": "黃綺珊",
      "url": "https://open.spotify.com/artist/14nGVY7mVn9CZupiLEUKE7",
-     "hits": []
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "huang-ye-yuan",
+   "name": "黃業圓",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "悖論"
+   ],
+   "searched": [
+    "黃業圓"
+   ],
+   "candidates": [
+    {
+     "id": "0lrScffAl5GLdLTbi2j8Kj",
+     "name": "黃業圓",
+     "url": "https://open.spotify.com/artist/0lrScffAl5GLdLTbi2j8Kj",
+     "hits": [],
+     "albums": [
+      "Paradox",
+      "Where Did You Go(何處尋蹤)",
+      "听着",
+      "不舍",
+      "看著我",
+      "Low Dimension Mumble (Live)"
+     ]
     }
    ]
   },
@@ -1323,24 +2271,37 @@
    "slug": "huang-zi-xuan",
    "name": "黃子軒",
    "reason": "3 位同名候選都沒有作品交集",
+   "known": [
+    "Pleasure (蔡依林專輯) Pleasure",
+    "牛騷 New Soul"
+   ],
+   "searched": [
+    "黃子軒"
+   ],
    "candidates": [
     {
      "id": "6k4ICKI3As1XFTil93hlq4",
      "name": "黃子軒",
      "url": "https://open.spotify.com/artist/6k4ICKI3As1XFTil93hlq4",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "牛騷",
+      "客家的卡夫卡"
+     ]
     },
     {
      "id": "5KebwxJw8Mp91RyHBnsgBF",
      "name": "黃子軒",
      "url": "https://open.spotify.com/artist/5KebwxJw8Mp91RyHBnsgBF",
-     "hits": []
+     "hits": [],
+     "albums": []
     },
     {
      "id": "5O9gUy8tHqgfafBohQnvBy",
      "name": "黃子軒",
      "url": "https://open.spotify.com/artist/5O9gUy8tHqgfafBohQnvBy",
-     "hits": []
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1348,18 +2309,69 @@
    "slug": "hush",
    "name": "HUSH",
    "reason": "2 位同名候選都沒有作品交集",
+   "known": [
+    "不完全自救手冊"
+   ],
+   "searched": [
+    "HUSH"
+   ],
    "candidates": [
     {
      "id": "5Mx85GBWB3PbMOhZAVxXkR",
      "name": "HUSH",
      "url": "https://open.spotify.com/artist/5Mx85GBWB3PbMOhZAVxXkR",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "娛樂自己",
+      "換句話說",
+      "機會與命運",
+      "Everyone's Gonna Miss You",
+      "異常現象",
+      "X"
+     ]
     },
     {
      "id": "4uEz0wp9gDd7E8g0AHvga3",
      "name": "HUSH",
      "url": "https://open.spotify.com/artist/4uEz0wp9gDd7E8g0AHvga3",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "另外一個夢想"
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "jacqui",
+   "name": "Jacqui",
+   "reason": "3 位同名候選都沒有作品交集",
+   "known": [
+    "Dirty Mirror Selfie"
+   ],
+   "searched": [
+    "Jacqui"
+   ],
+   "candidates": [
+    {
+     "id": "4g07FXwEqS5euGYGo1n6x1",
+     "name": "Jacqui",
+     "url": "https://open.spotify.com/artist/4g07FXwEqS5euGYGo1n6x1",
+     "hits": [],
+     "albums": []
+    },
+    {
+     "id": "4BoCKCo6sydyvhzHmDCaxK",
+     "name": "Jacqui",
+     "url": "https://open.spotify.com/artist/4BoCKCo6sydyvhzHmDCaxK",
+     "hits": [],
+     "albums": []
+    },
+    {
+     "id": "7l2NwCNMobcoxGnZbbDYNA",
+     "name": "Jacqui",
+     "url": "https://open.spotify.com/artist/7l2NwCNMobcoxGnZbbDYNA",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1367,12 +2379,27 @@
    "slug": "james-lee",
    "name": "李銖銜",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "不完全自救手冊"
+   ],
+   "searched": [
+    "李銖銜",
+    "James Lee"
+   ],
    "candidates": [
     {
      "id": "4QHci6hVY85I6xSIu0W4k6",
      "name": "James Lee",
      "url": "https://open.spotify.com/artist/4QHci6hVY85I6xSIu0W4k6",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "Castles",
+      "The Reckoning",
+      "Circles",
+      "DEAD STARS",
+      "Reverse",
+      "Hell"
+     ]
     }
    ]
   },
@@ -1380,12 +2407,44 @@
    "slug": "jiang-hui-yi",
    "name": "江惠儀",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "陷眠",
+    "超級紅人榜",
+    "露螺",
+    "空"
+   ],
+   "searched": [
+    "江惠儀"
+   ],
    "candidates": [
     {
      "id": "71SbWxk7XleajPLt2fh3Bl",
      "name": "江惠儀",
      "url": "https://open.spotify.com/artist/71SbWxk7XleajPLt2fh3Bl",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "踅啊踅（《美麗人生》台視60週年大戲插曲 ）"
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "jiang-meng-xun",
+   "name": "江孟薰",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "完福"
+   ],
+   "searched": [
+    "江孟薰"
+   ],
+   "candidates": [
+    {
+     "id": "3APxhHtUm221nsYWpgjGbm",
+     "name": "江孟薰",
+     "url": "https://open.spotify.com/artist/3APxhHtUm221nsYWpgjGbm",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1393,12 +2452,154 @@
    "slug": "jihu",
    "name": "JIHU",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "不完全自救手冊"
+   ],
+   "searched": [
+    "JIHU"
+   ],
    "candidates": [
     {
      "id": "5sR9BwbhwlsifEWrlw4uEF",
      "name": "JIHU",
      "url": "https://open.spotify.com/artist/5sR9BwbhwlsifEWrlw4uEF",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "彝部分II·走回大凉山",
+      "彝部分",
+      "母亲的河",
+      "阿果",
+      "Negative",
+      "月亮追啊追"
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "kafe-hu",
+   "name": "KAFE.HU咖啡胡",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "不完全自救手冊"
+   ],
+   "searched": [
+    "KAFE.HU咖啡胡",
+    "KAFE.HU",
+    "咖啡胡"
+   ],
+   "candidates": [
+    {
+     "id": "1En3GDLWMMPFVlSLEODTmU",
+     "name": "Kafe.Hu",
+     "url": "https://open.spotify.com/artist/1En3GDLWMMPFVlSLEODTmU",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "kbn",
+   "name": "KbN凱比鳥",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "KbN凱比鳥",
+    "KbN",
+    "凱比鳥"
+   ],
+   "candidates": [
+    {
+     "id": "5wHDddAu3raELszSogydoe",
+     "name": "KbN",
+     "url": "https://open.spotify.com/artist/5wHDddAu3raELszSogydoe",
+     "hits": [],
+     "albums": []
+    },
+    {
+     "id": "0o9w4ZCunIMa5e9gB4fhNG",
+     "name": "KBN",
+     "url": "https://open.spotify.com/artist/0o9w4ZCunIMa5e9gB4fhNG",
+     "hits": [],
+     "albums": []
+    },
+    {
+     "id": "4OXexlci9YYfOzOWqigTx9",
+     "name": "KBN",
+     "url": "https://open.spotify.com/artist/4OXexlci9YYfOzOWqigTx9",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "kiki",
+   "name": "KIKI",
+   "reason": "2 位同名候選都沒有作品交集",
+   "known": [
+    "KIKI"
+   ],
+   "searched": [
+    "KIKI"
+   ],
+   "candidates": [
+    {
+     "id": "6MG7fjH9YBryqLT03MnwQM",
+     "name": "KIKI",
+     "url": "https://open.spotify.com/artist/6MG7fjH9YBryqLT03MnwQM",
+     "hits": [],
+     "albums": [
+      "Post-existential Crisis",
+      "Death of a Daisy & Birth of an Oyster"
+     ]
+    },
+    {
+     "id": "0UMs6dTf23FC2fHc40fXNS",
+     "name": "KI/KI",
+     "url": "https://open.spotify.com/artist/0UMs6dTf23FC2fHc40fXNS",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "knowtis",
+   "name": "KNOWTIS",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "Knock'em off (feat. someshiit 山姆)"
+   ],
+   "searched": [
+    "KNOWTIS"
+   ],
+   "candidates": [
+    {
+     "id": "2jKpRyJAY8BCqYkuTRYnZu",
+     "name": "KNOWTIS",
+     "url": "https://open.spotify.com/artist/2jKpRyJAY8BCqYkuTRYnZu",
+     "hits": [],
+     "albums": [
+      "KNOWT!S"
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "kuljelje-ljamcun",
+   "name": "古樂樂良春Kuljelje Ljamcun",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "古樂樂良春Kuljelje Ljamcun",
+    "古樂樂良春",
+    "Kuljelje Ljamcun"
+   ],
+   "candidates": [
+    {
+     "id": "6ImyzgaHrmwqkBMvVxTwGV",
+     "name": "Kuljelje Ljamcun",
+     "url": "https://open.spotify.com/artist/6ImyzgaHrmwqkBMvVxTwGV",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1406,12 +2607,42 @@
    "slug": "kumu-basaw",
    "name": "Kumu Basaw姑慕·巴紹",
    "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "Kumu Basaw姑慕·巴紹",
+    "Kumu Basaw",
+    "姑慕·巴紹"
+   ],
    "candidates": [
     {
      "id": "1AJCereA3JUP2yOzSvrlk9",
      "name": "Kumu Basaw 姑慕·巴紹",
      "url": "https://open.spotify.com/artist/1AJCereA3JUP2yOzSvrlk9",
-     "hits": []
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "lawis-aow",
+   "name": "高金龍Lawis Aow",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "Saitikotiko",
+    "Saitikotiko 一次又一次"
+   ],
+   "searched": [
+    "高金龍Lawis Aow",
+    "高金龍",
+    "Lawis Aow"
+   ],
+   "candidates": [
+    {
+     "id": "6Ti070DQOFPYBjCk8iRw5M",
+     "name": "LAWIS AOW",
+     "url": "https://open.spotify.com/artist/6Ti070DQOFPYBjCk8iRw5M",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1419,12 +2650,40 @@
    "slug": "leezi",
    "name": "張羽涵",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "不完全自救手冊"
+   ],
+   "searched": [
+    "張羽涵",
+    "Leezi"
+   ],
    "candidates": [
     {
      "id": "4bfo6byxy2kbtsrn6p5PDq",
      "name": "張羽涵",
      "url": "https://open.spotify.com/artist/4bfo6byxy2kbtsrn6p5PDq",
-     "hits": []
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "li-wei-yong",
+   "name": "利惟庸",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "不會得就是不會得"
+   ],
+   "searched": [
+    "利惟庸"
+   ],
+   "candidates": [
+    {
+     "id": "1aMeRhjSdzFlzB7uXYhM6L",
+     "name": "利惟庸",
+     "url": "https://open.spotify.com/artist/1aMeRhjSdzFlzB7uXYhM6L",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1432,12 +2691,26 @@
    "slug": "li-ying-hong",
    "name": "李英宏",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "台北直直撞",
+    "水哥 2020",
+    "東方美人",
+    "萬華的蛇",
+    "龍虎豹",
+    "什麼時候她 feat. 蛋堡Soft Lipa",
+    "Nina來台東",
+    "水哥 ft. 蛋堡"
+   ],
+   "searched": [
+    "李英宏"
+   ],
    "candidates": [
     {
      "id": "1obLIowaY3adZNXW9z9Ein",
      "name": "李英宏",
      "url": "https://open.spotify.com/artist/1obLIowaY3adZNXW9z9Ein",
-     "hits": []
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1445,12 +2718,78 @@
    "slug": "lin-yu-ting",
    "name": "林鈺婷",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "洄游",
+    "羊尾仔看詩"
+   ],
+   "searched": [
+    "林鈺婷"
+   ],
    "candidates": [
     {
      "id": "2cOhQdzQOtXFuq9UjvEuXV",
      "name": "林鈺婷",
      "url": "https://open.spotify.com/artist/2cOhQdzQOtXFuq9UjvEuXV",
-     "hits": []
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "lite",
+   "name": "LITE",
+   "reason": "3 位同名候選都沒有作品交集",
+   "known": [
+    "STRATA"
+   ],
+   "searched": [
+    "LITE"
+   ],
+   "candidates": [
+    {
+     "id": "0TF6B1cp2QZXLE0NjhTMT9",
+     "name": "LITE",
+     "url": "https://open.spotify.com/artist/0TF6B1cp2QZXLE0NjhTMT9",
+     "hits": [],
+     "albums": [
+      "Phantasia"
+     ]
+    },
+    {
+     "id": "7nDi4G8h9GQbMRI994qDLI",
+     "name": "LITE",
+     "url": "https://open.spotify.com/artist/7nDi4G8h9GQbMRI994qDLI",
+     "hits": [],
+     "albums": []
+    },
+    {
+     "id": "7nS76AsKWmXyVqrpKFeyYv",
+     "name": "LITE",
+     "url": "https://open.spotify.com/artist/7nS76AsKWmXyVqrpKFeyYv",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "lizi",
+   "name": "Lizi栗子",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "Off the Chain"
+   ],
+   "searched": [
+    "Lizi栗子",
+    "Lizi",
+    "栗子"
+   ],
+   "candidates": [
+    {
+     "id": "3pwSkdUT7DXmubn3DhIeke",
+     "name": "Lizi 栗子",
+     "url": "https://open.spotify.com/artist/3pwSkdUT7DXmubn3DhIeke",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1458,12 +2797,133 @@
    "slug": "lv-shi-xuan",
    "name": "呂士軒",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "誤入奇途",
+    "AAA",
+    "AAA (專輯) AAA",
+    "Pleasure (蔡依林專輯) Pleasure",
+    "Suí 水",
+    "二周目",
+    "夢想家",
+    "好聲豪氣"
+   ],
+   "searched": [
+    "呂士軒"
+   ],
    "candidates": [
     {
      "id": "61gu0mOGuVNpTt5yT8GISP",
      "name": "呂士軒",
      "url": "https://open.spotify.com/artist/61gu0mOGuVNpTt5yT8GISP",
-     "hits": []
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "mao-dan-zhi",
+   "name": "貓膽汁",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "多汁",
+    "失望"
+   ],
+   "searched": [
+    "貓膽汁"
+   ],
+   "candidates": [
+    {
+     "id": "3jB1rrv3m8Uass8V0WBjX4",
+     "name": "貓膽汁",
+     "url": "https://open.spotify.com/artist/3jB1rrv3m8Uass8V0WBjX4",
+     "hits": [],
+     "albums": [
+      "Juicy"
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "mong-tong",
+   "name": "Mong Tong夢東",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "Mong Tong夢東",
+    "Mong Tong",
+    "夢東"
+   ],
+   "candidates": [
+    {
+     "id": "61QVaGjYK4UNd6uTz7Lzuo",
+     "name": "Mong Tong",
+     "url": "https://open.spotify.com/artist/61QVaGjYK4UNd6uTz7Lzuo",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "morikilr",
+   "name": "Morikilr孔亞明",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "kamawan za kavung 像帽子一樣"
+   ],
+   "searched": [
+    "Morikilr孔亞明",
+    "Morikilr",
+    "孔亞明"
+   ],
+   "candidates": [
+    {
+     "id": "6wHlnN08SPdMYrB5RciiBi",
+     "name": "孔亞明",
+     "url": "https://open.spotify.com/artist/6wHlnN08SPdMYrB5RciiBi",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "n-y-p-d",
+   "name": "N.Y.P.D.南洋派對",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "DON'T LIKE 我鍾意"
+   ],
+   "searched": [
+    "N.Y.P.D.南洋派對",
+    "N.Y.P.D.",
+    "南洋派對"
+   ],
+   "candidates": [
+    {
+     "id": "0uGCA6uvmofOBLPplBhyAY",
+     "name": "N.Y.P.D. 南洋派對",
+     "url": "https://open.spotify.com/artist/0uGCA6uvmofOBLPplBhyAY",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "naau",
+   "name": "Naa'u娜塢",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "Naa'u娜塢",
+    "Naa'u",
+    "娜塢"
+   ],
+   "candidates": [
+    {
+     "id": "6IU5RWcjMeR04pA62rFWzV",
+     "name": "Naa'u娜塢",
+     "url": "https://open.spotify.com/artist/6IU5RWcjMeR04pA62rFWzV",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1471,18 +2931,105 @@
    "slug": "ok",
    "name": "王OK",
    "reason": "2 位同名候選都沒有作品交集",
+   "known": [
+    "不完全自救手冊"
+   ],
+   "searched": [
+    "王OK",
+    "OK"
+   ],
    "candidates": [
     {
      "id": "2vm0txaJEJMzRoEOZYHOo4",
      "name": "王OK",
      "url": "https://open.spotify.com/artist/2vm0txaJEJMzRoEOZYHOo4",
-     "hits": []
+     "hits": [],
+     "albums": []
     },
     {
      "id": "4Zbna8fTJqdcZ2Ztz7Ly9C",
      "name": "王OK",
      "url": "https://open.spotify.com/artist/4Zbna8fTJqdcZ2Ztz7Ly9C",
-     "hits": []
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "our-shame",
+   "name": "凹與山Our Shame",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "Hollywood Dream"
+   ],
+   "searched": [
+    "凹與山Our Shame",
+    "凹與山",
+    "Our Shame"
+   ],
+   "candidates": [
+    {
+     "id": "5vKIV2YjcVSf3wWUkcyCR5",
+     "name": "Our Shame",
+     "url": "https://open.spotify.com/artist/5vKIV2YjcVSf3wWUkcyCR5",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "panai",
+   "name": "巴奈Panai",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "泥娃娃",
+    "愛，不到",
+    "吊樹頭 Tiàu Tshiū-Thâu",
+    "夜婆 Iā-Pô"
+   ],
+   "searched": [
+    "巴奈Panai",
+    "巴奈",
+    "Panai"
+   ],
+   "candidates": [
+    {
+     "id": "2PbU3CmXZmV6dPfzLONLIA",
+     "name": "巴奈",
+     "url": "https://open.spotify.com/artist/2PbU3CmXZmV6dPfzLONLIA",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "pang-hu",
+   "name": "胖虎",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "LIFE & LIVE",
+    "大家好我們是胖虎",
+    "反轉未來",
+    "前方的路",
+    "胖虎x2024 火球祭 FIREBALL Fest. 演出精華回顧"
+   ],
+   "searched": [
+    "胖虎"
+   ],
+   "candidates": [
+    {
+     "id": "2BIvyKmXBTeQFyf18Lgtq9",
+     "name": "胖虎",
+     "url": "https://open.spotify.com/artist/2BIvyKmXBTeQFyf18Lgtq9",
+     "hits": [],
+     "albums": [
+      "Fell Down",
+      "白月光与朱砂痣",
+      "TA",
+      "太迟",
+      "散心路线",
+      "Pack.vol.1"
+     ]
     }
    ]
   },
@@ -1490,12 +3037,22 @@
    "slug": "project-ace",
    "name": "李吉吉",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "不完全自救手冊"
+   ],
+   "searched": [
+    "李吉吉",
+    "Project Ace"
+   ],
    "candidates": [
     {
      "id": "5BUYDnSCfcFA1VDI79KURZ",
      "name": "李吉吉",
      "url": "https://open.spotify.com/artist/5BUYDnSCfcFA1VDI79KURZ",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "在通往未達的道路上"
+     ]
     }
    ]
   },
@@ -1503,12 +3060,23 @@
    "slug": "qin-si-feng",
    "name": "秦四風",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "不完全自救手冊"
+   ],
+   "searched": [
+    "秦四風"
+   ],
    "candidates": [
     {
      "id": "2n0GSIjJNATwgaBGC3GwpH",
      "name": "秦四風",
      "url": "https://open.spotify.com/artist/2n0GSIjJNATwgaBGC3GwpH",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "愛情公寓電影原聲音樂",
+      "SEDAR Trio - Vol. 1",
+      "愛情公寓電影原聲音樂之晚安"
+     ]
     }
    ]
   },
@@ -1516,12 +3084,28 @@
    "slug": "qiu-de",
    "name": "裘德",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "不完全自救手冊",
+    "胚胎",
+    "蘑菇濃湯",
+    "裘德",
+    "離別總是那麼突然",
+    "離開銀色荒原",
+    "青鳥 (生物股長單曲) 青鳥",
+    "骨骼謝幕"
+   ],
+   "searched": [
+    "裘德"
+   ],
    "candidates": [
     {
      "id": "5fCp6OAexnwOR1yPPXKSnF",
      "name": "裘德",
      "url": "https://open.spotify.com/artist/5fCp6OAexnwOR1yPPXKSnF",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "千丈"
+     ]
     }
    ]
   },
@@ -1529,12 +3113,44 @@
    "slug": "qiu-shu",
    "name": "邱舒",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "鏡仔"
+   ],
+   "searched": [
+    "邱舒"
+   ],
    "candidates": [
     {
      "id": "5g0FAOaBQilmDZTEebCFSM",
      "name": "邱舒",
      "url": "https://open.spotify.com/artist/5g0FAOaBQilmDZTEebCFSM",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "正來尞 Zang Loiˇ Liau",
+      "等路 Waiting a present for",
+      "無垢鳥(《光的孩子》片尾曲）",
+      "僑育當慶 Chiao Yu rocks!"
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "roger-lin",
+   "name": "林煒翔／Roger Lin",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "林煒翔／Roger Lin",
+    "林煒翔",
+    "Roger Lin"
+   ],
+   "candidates": [
+    {
+     "id": "6asKuZzheNBzgXUD6x1aFh",
+     "name": "Roger Lin",
+     "url": "https://open.spotify.com/artist/6asKuZzheNBzgXUD6x1aFh",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1542,12 +3158,82 @@
    "slug": "sa-ba-tai-lu-ge-er-tong-he-chang-tuan",
    "name": "薩巴太魯閣兒童合唱團",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "給幸福的一封信"
+   ],
+   "searched": [
+    "薩巴太魯閣兒童合唱團"
+   ],
    "candidates": [
     {
      "id": "2DtEbTzTVPNdvhZT8HKtUn",
      "name": "薩巴太魯閣兒童合唱團",
      "url": "https://open.spotify.com/artist/2DtEbTzTVPNdvhZT8HKtUn",
-     "hits": []
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "san-zhi-gou",
+   "name": "三隻狗",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "不完全自救手冊",
+    "期待集"
+   ],
+   "searched": [
+    "三隻狗"
+   ],
+   "candidates": [
+    {
+     "id": "7FdriWy0UbU8xGbLwA5vBz",
+     "name": "三隻狗",
+     "url": "https://open.spotify.com/artist/7FdriWy0UbU8xGbLwA5vBz",
+     "hits": [],
+     "albums": [
+      "F U"
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "sapud-kacaw",
+   "name": "Sapud Kacaw撒部．噶照",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "Sapud Kacaw撒部．噶照",
+    "Sapud Kacaw",
+    "撒部．噶照"
+   ],
+   "candidates": [
+    {
+     "id": "5pg9bD45ZlvHbIlBkSCY6n",
+     "name": "Sapud Kacaw 撒部.噶照",
+     "url": "https://open.spotify.com/artist/5pg9bD45ZlvHbIlBkSCY6n",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "sauljaljui",
+   "name": "戴曉君Sauljaljui",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "戴曉君Sauljaljui",
+    "戴曉君",
+    "Sauljaljui"
+   ],
+   "candidates": [
+    {
+     "id": "5U7enzUf0xuOMdiqj4tncy",
+     "name": "Sauljaljui",
+     "url": "https://open.spotify.com/artist/5U7enzUf0xuOMdiqj4tncy",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1555,12 +3241,113 @@
    "slug": "sha-zi-yu-bai-chi",
    "name": "傻子與白痴",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "姿態",
+    "遠慮"
+   ],
+   "searched": [
+    "傻子與白痴"
+   ],
    "candidates": [
     {
      "id": "6O2AKZpWVzjoBedWoh6Eht",
      "name": "傻子與白痴",
      "url": "https://open.spotify.com/artist/6O2AKZpWVzjoBedWoh6Eht",
-     "hits": []
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "shen-jing-yuan",
+   "name": "神經元",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "不眨眼的人"
+   ],
+   "searched": [
+    "神經元"
+   ],
+   "candidates": [
+    {
+     "id": "0JO7LjM53ktNVO02Px0aDh",
+     "name": "神經元",
+     "url": "https://open.spotify.com/artist/0JO7LjM53ktNVO02Px0aDh",
+     "hits": [],
+     "albums": [
+      "迴旋樓梯",
+      "Punchline製造機 2"
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "sherryz",
+   "name": "SherryZ鄭雙雙",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "SherryZ鄭雙雙",
+    "SherryZ",
+    "鄭雙雙"
+   ],
+   "candidates": [
+    {
+     "id": "642hyS9EveDWXVIANUQnMb",
+     "name": "鄭雙雙",
+     "url": "https://open.spotify.com/artist/642hyS9EveDWXVIANUQnMb",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "sonia-calico",
+   "name": "Sonia Calico",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "月光乩"
+   ],
+   "searched": [
+    "Sonia Calico"
+   ],
+   "candidates": [
+    {
+     "id": "7yZgyvPwZiP9D6ZvGrH1oB",
+     "name": "Sonia Calico",
+     "url": "https://open.spotify.com/artist/7yZgyvPwZiP9D6ZvGrH1oB",
+     "hits": [],
+     "albums": [
+      "Holding Out For A Hero (我要女神龍)",
+      "Moonlight",
+      "Simulation of an Overloaded World",
+      "後宮亂鬥",
+      "Desert Trance",
+      "Fake Jewelry"
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "sophy",
+   "name": "SOPHY王嘉儀",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "RACE OF FAITH ft YELLOW 黃宣",
+    "水性揚花"
+   ],
+   "searched": [
+    "SOPHY王嘉儀",
+    "SOPHY",
+    "王嘉儀"
+   ],
+   "candidates": [
+    {
+     "id": "5Hx1PRV6i7vQdc8gAGE8eq",
+     "name": "SOPHY",
+     "url": "https://open.spotify.com/artist/5Hx1PRV6i7vQdc8gAGE8eq",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1568,12 +3355,25 @@
    "slug": "su-yu-han",
    "name": "蘇郁涵",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "Over The Moons",
+    "嗨高科技 Hi-Tech Pros and Cons",
+    "天才與笨蛋",
+    "她去了一場寧靜的戰爭",
+    "指仙",
+    "自由的姿態",
+    "自由的姿態 （Liberated Gesture)"
+   ],
+   "searched": [
+    "蘇郁涵"
+   ],
    "candidates": [
     {
      "id": "3rRJYXgrlBQWtVG5BTrwo7",
      "name": "蘇郁涵",
      "url": "https://open.spotify.com/artist/3rRJYXgrlBQWtVG5BTrwo7",
-     "hits": []
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1581,12 +3381,97 @@
    "slug": "su-yun-ying",
    "name": "蘇運瑩",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "不完全自救手冊",
+    "圓",
+    "蘑菇濃湯",
+    "離別總是那麼突然",
+    "青鳥 (生物股長單曲) 青鳥",
+    "中國好歌曲",
+    "冥明",
+    "我是歌手"
+   ],
+   "searched": [
+    "蘇運瑩"
+   ],
    "candidates": [
     {
      "id": "6ejudZXVrIoEUZrJojX69X",
      "name": "蘇運瑩",
      "url": "https://open.spotify.com/artist/6ejudZXVrIoEUZrJojX69X",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "峨眉金曲"
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "suming",
+   "name": "Suming舒米恩",
+   "reason": "2 位同名候選都沒有作品交集",
+   "known": [
+    "Mikerid 引路"
+   ],
+   "searched": [
+    "Suming舒米恩",
+    "Suming",
+    "舒米恩"
+   ],
+   "candidates": [
+    {
+     "id": "3jV6Ro12GySf82kJiksE7D",
+     "name": "Suming",
+     "url": "https://open.spotify.com/artist/3jV6Ro12GySf82kJiksE7D",
+     "hits": [],
+     "albums": []
+    },
+    {
+     "id": "4b93I2NZtUVqxb8X2Aybiy",
+     "name": "舒米恩",
+     "url": "https://open.spotify.com/artist/4b93I2NZtUVqxb8X2Aybiy",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "sweet-john",
+   "name": "甜約翰Sweet John",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "甜約翰Sweet John",
+    "甜約翰",
+    "Sweet John"
+   ],
+   "candidates": [
+    {
+     "id": "78UcIEW1VFh2WOgNk0E7mm",
+     "name": "Sweet John",
+     "url": "https://open.spotify.com/artist/78UcIEW1VFh2WOgNk0E7mm",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "thats-my-shhh",
+   "name": "That's My Shhh",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "TMSX : 10 Years of Shhh"
+   ],
+   "searched": [
+    "That's My Shhh"
+   ],
+   "candidates": [
+    {
+     "id": "5iUU1iEJjzYNmZv8l2rMVp",
+     "name": "That's My Shhh",
+     "url": "https://open.spotify.com/artist/5iUU1iEJjzYNmZv8l2rMVp",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1594,30 +3479,41 @@
    "slug": "the-wanted",
    "name": "尋人啟事",
    "reason": "4 位同名候選都沒有作品交集",
+   "known": [
+    "減肥計劃"
+   ],
+   "searched": [
+    "尋人啟事",
+    "The Wanted"
+   ],
    "candidates": [
     {
      "id": "2NhdGz9EDv2FeUw6udu2g1",
      "name": "The Wanted",
      "url": "https://open.spotify.com/artist/2NhdGz9EDv2FeUw6udu2g1",
-     "hits": []
+     "hits": [],
+     "albums": []
     },
     {
      "id": "4yj67eNGlmu1WlVVrtTPe6",
      "name": "The Wanted",
      "url": "https://open.spotify.com/artist/4yj67eNGlmu1WlVVrtTPe6",
-     "hits": []
+     "hits": [],
+     "albums": []
     },
     {
      "id": "3qIJPuCSX8AWAM3iayj66H",
      "name": "The Wanted",
      "url": "https://open.spotify.com/artist/3qIJPuCSX8AWAM3iayj66H",
-     "hits": []
+     "hits": [],
+     "albums": []
     },
     {
      "id": "7yvTVBk6rPyekp664Vi6rF",
      "name": "The Wanted",
      "url": "https://open.spotify.com/artist/7yvTVBk6rPyekp664Vi6rF",
-     "hits": []
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1625,12 +3521,43 @@
    "slug": "tiu-tiu",
    "name": "淺堤",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "湯與海",
+    "不完整的村莊",
+    "婚禮之途",
+    "沈默的鉅作"
+   ],
+   "searched": [
+    "淺堤",
+    "Tiu Tiu"
+   ],
    "candidates": [
     {
      "id": "6GRFvtz4kHw2gH0uPzlnNW",
      "name": "淺堤",
      "url": "https://open.spotify.com/artist/6GRFvtz4kHw2gH0uPzlnNW",
-     "hits": []
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "tracy-yang",
+   "name": "Tracy Yang楊又臻",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "Tracy Yang楊又臻",
+    "Tracy Yang",
+    "楊又臻"
+   ],
+   "candidates": [
+    {
+     "id": "3qLorfR6kFlvpc8KueJn3P",
+     "name": "Tracy Yang",
+     "url": "https://open.spotify.com/artist/3qLorfR6kFlvpc8KueJn3P",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1638,12 +3565,19 @@
    "slug": "tu-ling-yin-le-shi-yan-shi",
    "name": "圖靈音樂實驗室",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "不完全自救手冊"
+   ],
+   "searched": [
+    "圖靈音樂實驗室"
+   ],
    "candidates": [
     {
      "id": "7e44osCQ7ppxzkZO5R1viO",
      "name": "圖靈音樂實驗室",
      "url": "https://open.spotify.com/artist/7e44osCQ7ppxzkZO5R1viO",
-     "hits": []
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1651,12 +3585,25 @@
    "slug": "von-citizen",
    "name": "Von Citizen",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "不完全自救手冊"
+   ],
+   "searched": [
+    "Von Citizen"
+   ],
    "candidates": [
     {
      "id": "6y3CdH55aic6K8tT1NgRQ6",
      "name": "Von Citizen",
      "url": "https://open.spotify.com/artist/6y3CdH55aic6K8tT1NgRQ6",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "Sentience",
+      "Outlier",
+      "Flint",
+      "Afterglow",
+      "Remnants (feat. 白羽 & 蔡劍)"
+     ]
     }
    ]
   },
@@ -1664,18 +3611,34 @@
    "slug": "weng-li-you",
    "name": "翁立友",
    "reason": "2 位同名候選都沒有作品交集",
+   "known": [
+    "媽媽的背影",
+    "我問天",
+    "Flow (楊乃文專輯) Flow",
+    "世界 World",
+    "你將永遠活在我的歌裡",
+    "刀馬旦",
+    "瓦合"
+   ],
+   "searched": [
+    "翁立友"
+   ],
    "candidates": [
     {
      "id": "1Xqmr3W1G4QNPrLqHWewJd",
      "name": "翁立友",
      "url": "https://open.spotify.com/artist/1Xqmr3W1G4QNPrLqHWewJd",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "好膽你就來"
+     ]
     },
     {
      "id": "1j4y6TFyr3PARnB1vcOdax",
      "name": "翁立友",
      "url": "https://open.spotify.com/artist/1j4y6TFyr3PARnB1vcOdax",
-     "hits": []
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1683,18 +3646,69 @@
    "slug": "wu-yong-ji",
    "name": "吳永吉",
    "reason": "2 位同名候選都沒有作品交集",
+   "known": [
+    "褪褲lān的兄弟"
+   ],
+   "searched": [
+    "吳永吉"
+   ],
    "candidates": [
     {
      "id": "03TuTDwbot9dn9bbcG2u06",
      "name": "吳永吉",
      "url": "https://open.spotify.com/artist/03TuTDwbot9dn9bbcG2u06",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "台灣好生活"
+     ]
     },
     {
      "id": "7fBqrrz22wwjoRIFEddGjs",
      "name": "吳永吉",
      "url": "https://open.spotify.com/artist/7fBqrrz22wwjoRIFEddGjs",
-     "hits": []
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "wu-zheng-jun",
+   "name": "吳政君",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "傳奇．雙擊--新視界",
+    "傳奇．雙擊—新視界"
+   ],
+   "searched": [
+    "吳政君"
+   ],
+   "candidates": [
+    {
+     "id": "0k0eXmnYXXtx9bmf0CPdE7",
+     "name": "吳政君",
+     "url": "https://open.spotify.com/artist/0k0eXmnYXXtx9bmf0CPdE7",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "xiao-qin",
+   "name": "笑琴",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "美麗的灣"
+   ],
+   "searched": [
+    "笑琴"
+   ],
+   "candidates": [
+    {
+     "id": "2SaFT3GC9SqxdEw4K8a0kr",
+     "name": "笑琴",
+     "url": "https://open.spotify.com/artist/2SaFT3GC9SqxdEw4K8a0kr",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1702,12 +3716,22 @@
    "slug": "xiong-zai",
    "name": "熊仔",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "夢想成真 Sisyphus' Dream",
+    "520",
+    "∞→0",
+    "存活"
+   ],
+   "searched": [
+    "熊仔"
+   ],
    "candidates": [
     {
      "id": "7aZT36dGRXGL0vKA2qUnZm",
      "name": "熊仔",
      "url": "https://open.spotify.com/artist/7aZT36dGRXGL0vKA2qUnZm",
-     "hits": []
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1715,12 +3739,26 @@
    "slug": "xiu-lan-ma-ya",
    "name": "秀蘭瑪雅",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "鐵心肝"
+   ],
+   "searched": [
+    "秀蘭瑪雅"
+   ],
    "candidates": [
     {
      "id": "2EeRoHaQh0WizmHCDhrREV",
      "name": "秀蘭瑪雅",
      "url": "https://open.spotify.com/artist/2EeRoHaQh0WizmHCDhrREV",
-     "hits": []
+     "hits": [],
+     "albums": [
+      "唱乎甲己來聽",
+      "繡一蕊花",
+      "天頂星",
+      "寄乎人生的第21張批",
+      "風過雨無停",
+      "真心話"
+     ]
     }
    ]
   },
@@ -1728,12 +3766,24 @@
    "slug": "xu-jun",
    "name": "許鈞",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "不完全自救手冊",
+    "期待集",
+    "歌一切",
+    "蘑菇濃湯",
+    "離別總是那麼突然",
+    "青鳥 (生物股長單曲) 青鳥"
+   ],
+   "searched": [
+    "許鈞"
+   ],
    "candidates": [
     {
      "id": "5tsyYxrAHH054OcrZm8Nwm",
      "name": "許鈞",
      "url": "https://open.spotify.com/artist/5tsyYxrAHH054OcrZm8Nwm",
-     "hits": []
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1741,12 +3791,150 @@
    "slug": "ya-wei-mo-rui",
    "name": "雅維·茉芮",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "世界和我一起跳舞",
+    "斯瓦細格",
+    "wahi藤蔓"
+   ],
+   "searched": [
+    "雅維·茉芮"
+   ],
    "candidates": [
     {
      "id": "4zXe9dCC4wGyiPLMr6mvDR",
      "name": "雅維·茉芮",
      "url": "https://open.spotify.com/artist/4zXe9dCC4wGyiPLMr6mvDR",
-     "hits": []
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "yang-shu-yu-ji-na",
+   "name": "楊淑喻（吉那）",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "Pretty Disco",
+    "We Are Family",
+    "亻厓个房間",
+    "把燈關上（摎火扚忒）",
+    "辣妹駕到",
+    "𠊎个房間"
+   ],
+   "searched": [
+    "楊淑喻（吉那）",
+    "吉那",
+    "楊淑喻"
+   ],
+   "candidates": [
+    {
+     "id": "7MIxUvztbpGhGnuUpSGETm",
+     "name": "吉那",
+     "url": "https://open.spotify.com/artist/7MIxUvztbpGhGnuUpSGETm",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "ye-jun-lin",
+   "name": "葉俊麟",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "康達效應 Coanda Effect"
+   ],
+   "searched": [
+    "葉俊麟"
+   ],
+   "candidates": [
+    {
+     "id": "1X9fWntid7DkW6GcQLJsHM",
+     "name": "葉俊麟",
+     "url": "https://open.spotify.com/artist/1X9fWntid7DkW6GcQLJsHM",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "you-fa",
+   "name": "幽法",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "fakeloh 石化"
+   ],
+   "searched": [
+    "幽法"
+   ],
+   "candidates": [
+    {
+     "id": "1fegU8KQ5dFTjOoKTt6K77",
+     "name": "幽法",
+     "url": "https://open.spotify.com/artist/1fegU8KQ5dFTjOoKTt6K77",
+     "hits": [],
+     "albums": [
+      "純粹的融合病歷",
+      "Hia ⾃然的脈動"
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "yufu",
+   "name": "Yufu／陳郁夫",
+   "reason": "站上沒有已知作品可比",
+   "known": [],
+   "searched": [
+    "Yufu／陳郁夫",
+    "Yufu",
+    "陳郁夫"
+   ],
+   "candidates": [
+    {
+     "id": "4lq7hzzPRSVIU1bvThHpPj",
+     "name": "Yufu",
+     "url": "https://open.spotify.com/artist/4lq7hzzPRSVIU1bvThHpPj",
+     "hits": [],
+     "albums": []
+    },
+    {
+     "id": "3cBgQhiEPDou7JZRNaB0ti",
+     "name": "Yufu",
+     "url": "https://open.spotify.com/artist/3cBgQhiEPDou7JZRNaB0ti",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "yyt",
+   "name": "yyt",
+   "reason": "2 位同名候選都沒有作品交集",
+   "known": [
+    "Balls Hit the Floor"
+   ],
+   "searched": [
+    "yyt"
+   ],
+   "candidates": [
+    {
+     "id": "1m2mmv8uETxvs0RgPvPpB3",
+     "name": "yyt",
+     "url": "https://open.spotify.com/artist/1m2mmv8uETxvs0RgPvPpB3",
+     "hits": [],
+     "albums": [
+      "GGGG_2",
+      "感覺",
+      "Everything You Wanna Say to Me NOW is So True",
+      "Baked"
+     ]
+    },
+    {
+     "id": "2GGKaBxe5broA9pZC5B2DX",
+     "name": "YYT",
+     "url": "https://open.spotify.com/artist/2GGKaBxe5broA9pZC5B2DX",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1754,12 +3942,60 @@
    "slug": "zhang-kai-ting",
    "name": "張凱婷",
    "reason": "同名候選沒有作品交集",
+   "known": [
+    "世界",
+    "世界 World"
+   ],
+   "searched": [
+    "張凱婷"
+   ],
    "candidates": [
     {
      "id": "2D4Ck2ODhWEbRk1W3wvu4x",
      "name": "張凱婷",
      "url": "https://open.spotify.com/artist/2D4Ck2ODhWEbRk1W3wvu4x",
-     "hits": []
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "zheng-jia-fu",
+   "name": "鄭嘉富",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "Pluto Potato"
+   ],
+   "searched": [
+    "鄭嘉富"
+   ],
+   "candidates": [
+    {
+     "id": "35W7GsxeLw9omLc3jg3wkr",
+     "name": "鄭嘉富",
+     "url": "https://open.spotify.com/artist/35W7GsxeLw9omLc3jg3wkr",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "zheng-jing-ru",
+   "name": "鄭敬儒",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "暗流"
+   ],
+   "searched": [
+    "鄭敬儒"
+   ],
+   "candidates": [
+    {
+     "id": "5S5NCbcD9xAVFcgv5Xh9dr",
+     "name": "鄭敬儒",
+     "url": "https://open.spotify.com/artist/5S5NCbcD9xAVFcgv5Xh9dr",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1767,18 +4003,69 @@
    "slug": "zheng-nan",
    "name": "鄭楠",
    "reason": "2 位同名候選都沒有作品交集",
+   "known": [
+    "不完全自救手冊"
+   ],
+   "searched": [
+    "鄭楠"
+   ],
    "candidates": [
     {
      "id": "5Iha7TMTsbxvBJdtiGJP5M",
      "name": "鄭楠",
      "url": "https://open.spotify.com/artist/5Iha7TMTsbxvBJdtiGJP5M",
-     "hits": []
+     "hits": [],
+     "albums": []
     },
     {
      "id": "12qm6Wyr5SjXsTbHVAPo8f",
      "name": "鄭楠",
      "url": "https://open.spotify.com/artist/12qm6Wyr5SjXsTbHVAPo8f",
-     "hits": []
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "zheng-yu-tai",
+   "name": "鄭宇泰",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "氣孔生成維度"
+   ],
+   "searched": [
+    "鄭宇泰"
+   ],
+   "candidates": [
+    {
+     "id": "63maWbbm3H6mvzD0PLDOCO",
+     "name": "鄭宇泰",
+     "url": "https://open.spotify.com/artist/63maWbbm3H6mvzD0PLDOCO",
+     "hits": [],
+     "albums": []
+    }
+   ]
+  },
+  {
+   "slug": "zheng-zhao-yuan",
+   "name": "鄭昭元",
+   "reason": "同名候選沒有作品交集",
+   "known": [
+    "All On You",
+    "Enough",
+    "Home",
+    "New notes (prod. by 鄭昭元 ZAOYUAN)"
+   ],
+   "searched": [
+    "鄭昭元"
+   ],
+   "candidates": [
+    {
+     "id": "2hUuQG6SbfbR83fkdItx9X",
+     "name": "鄭昭元",
+     "url": "https://open.spotify.com/artist/2hUuQG6SbfbR83fkdItx9X",
+     "hits": [],
+     "albums": []
     }
    ]
   },
@@ -1786,24 +4073,35 @@
    "slug": "zoomie",
    "name": "柔米",
    "reason": "3 位同名候選都沒有作品交集",
+   "known": [
+    "鎮妹 Zhin' Moi",
+    "鎮妹Zhin‘ Moi"
+   ],
+   "searched": [
+    "柔米",
+    "Zoomie"
+   ],
    "candidates": [
     {
      "id": "39Y5WEseiDOmqwnswjZCpg",
      "name": "ZooMie",
      "url": "https://open.spotify.com/artist/39Y5WEseiDOmqwnswjZCpg",
-     "hits": []
+     "hits": [],
+     "albums": []
     },
     {
      "id": "22BYpVoRYDbxUstM81bTO6",
      "name": "Zoomie",
      "url": "https://open.spotify.com/artist/22BYpVoRYDbxUstM81bTO6",
-     "hits": []
+     "hits": [],
+     "albums": []
     },
     {
      "id": "4tEVC4UA7bc0jJ7bK0Aphy",
      "name": "Zoomie",
      "url": "https://open.spotify.com/artist/4tEVC4UA7bc0jJ7bK0Aphy",
-     "hits": []
+     "hits": [],
+     "albums": []
     }
    ]
   }
@@ -1817,11 +4115,6 @@
   {
    "slug": "a-yi-luo",
    "name": "阿依.羅",
-   "reason": "搜尋沒有同名藝人"
-  },
-  {
-   "slug": "aaa-hyukoh",
-   "name": "AAA（HYUKOH與落日飛車）",
    "reason": "搜尋沒有同名藝人"
   },
   {
@@ -1840,18 +4133,18 @@
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "dac-zaoyuan",
-   "name": "Dac與鄭昭元ZAOYUAN",
+   "slug": "debby-wang",
+   "name": "王思雅／Debby Wang",
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "dremedreman",
-   "name": "曾妮Dremedreman",
+   "slug": "falk-bonitz-rafique",
+   "name": "Falk Bonitz Rafique",
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "erika-liu",
-   "name": "劉艾立",
+   "slug": "freedom-beat",
+   "name": "Freedom Beat",
    "reason": "搜尋沒有同名藝人"
   },
   {
@@ -1860,13 +4153,23 @@
    "reason": "搜尋沒有同名藝人"
   },
   {
+   "slug": "gong-zhen-xiao-ying",
+   "name": "共振效應",
+   "reason": "搜尋沒有同名藝人"
+  },
+  {
    "slug": "guang-cai-yu-lao-le-shou",
    "name": "廣財與老樂手",
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "imdifficult",
-   "name": "我是機車少女I'mdifficult",
+   "slug": "hong-wei-nong",
+   "name": "洪惟農",
+   "reason": "搜尋沒有同名藝人"
+  },
+  {
+   "slug": "huang-yan-bin",
+   "name": "黃彥斌",
    "reason": "搜尋沒有同名藝人"
   },
   {
@@ -1875,23 +4178,43 @@
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "jolin",
-   "name": "JOLIN蔡依林",
+   "slug": "jia-ri-zhen-cao",
+   "name": "假日貞操",
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "kafe-hu",
-   "name": "KAFE.HU咖啡胡",
+   "slug": "jian-yu-min",
+   "name": "簡聿民",
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "lawis-aow",
-   "name": "高金龍Lawis Aow",
+   "slug": "li-mao-song",
+   "name": "李茂嵩",
    "reason": "搜尋沒有同名藝人"
   },
   {
    "slug": "li-quan-zhe",
    "name": "李權哲",
+   "reason": "搜尋沒有同名藝人"
+  },
+  {
+   "slug": "lin-wei-zhong",
+   "name": "林偉中",
+   "reason": "搜尋沒有同名藝人"
+  },
+  {
+   "slug": "lin-yi-le",
+   "name": "林以樂",
+   "reason": "搜尋沒有同名藝人"
+  },
+  {
+   "slug": "lin-yi-shuo",
+   "name": "林奕碩",
+   "reason": "搜尋沒有同名藝人"
+  },
+  {
+   "slug": "lu-qian-qian",
+   "name": "魯千千",
    "reason": "搜尋沒有同名藝人"
   },
   {
@@ -1905,23 +4228,13 @@
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "mong-tong",
-   "name": "Mong Tong夢東",
+   "slug": "namdo-calling",
+   "name": "NAMDO CALLING",
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "morikilr",
-   "name": "Morikilr孔亞明",
-   "reason": "搜尋沒有同名藝人"
-  },
-  {
-   "slug": "our-shame",
-   "name": "凹與山Our Shame",
-   "reason": "搜尋沒有同名藝人"
-  },
-  {
-   "slug": "panai",
-   "name": "巴奈Panai",
+   "slug": "pan-zi-jue",
+   "name": "潘子爵",
    "reason": "搜尋沒有同名藝人"
   },
   {
@@ -1930,23 +4243,13 @@
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "sauljaljui",
-   "name": "戴曉君Sauljaljui",
-   "reason": "搜尋沒有同名藝人"
-  },
-  {
    "slug": "shang-xin-yu-jue",
    "name": "傷心欲絕",
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "sherryz",
-   "name": "SherryZ鄭雙雙",
-   "reason": "搜尋沒有同名藝人"
-  },
-  {
-   "slug": "sophy",
-   "name": "SOPHY王嘉儀",
+   "slug": "sheng-zi-chong",
+   "name": "聲子蟲",
    "reason": "搜尋沒有同名藝人"
   },
   {
@@ -1955,28 +4258,8 @@
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "suming",
-   "name": "Suming舒米恩",
-   "reason": "搜尋沒有同名藝人"
-  },
-  {
-   "slug": "sweet-john",
-   "name": "甜約翰Sweet John",
-   "reason": "搜尋沒有同名藝人"
-  },
-  {
-   "slug": "the-crane",
-   "name": "鶴The Crane",
-   "reason": "搜尋沒有同名藝人"
-  },
-  {
    "slug": "ti-pi-ou-jue-shi-da-le-tuan",
    "name": "踢霹歐爵士大樂團",
-   "reason": "搜尋沒有同名藝人"
-  },
-  {
-   "slug": "tracy-yang",
-   "name": "Tracy Yang楊又臻",
    "reason": "搜尋沒有同名藝人"
   },
   {
@@ -1985,8 +4268,23 @@
    "reason": "搜尋沒有同名藝人"
   },
   {
+   "slug": "wang-pin-xin",
+   "name": "王品心",
+   "reason": "搜尋沒有同名藝人"
+  },
+  {
+   "slug": "wen-ti-zong-bu",
+   "name": "問題總部",
+   "reason": "搜尋沒有同名藝人"
+  },
+  {
    "slug": "wu-jiong-en-jia-yi-fa-li-de",
    "name": "舞炯恩加以法利得",
+   "reason": "搜尋沒有同名藝人"
+  },
+  {
+   "slug": "wu-rui-peng",
+   "name": "吳睿朋",
    "reason": "搜尋沒有同名藝人"
   },
   {
@@ -2005,11 +4303,6 @@
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "yang-shu-yu-ji-na",
-   "name": "楊淑喻（吉那）",
-   "reason": "搜尋沒有同名藝人"
-  },
-  {
    "slug": "ye-ying",
    "name": "葉穎",
    "reason": "搜尋沒有同名藝人"
@@ -2017,6 +4310,26 @@
   {
    "slug": "yeemao",
    "name": "夜貓組",
+   "reason": "搜尋沒有同名藝人"
+  },
+  {
+   "slug": "yi-hao-li-hang",
+   "name": "一好．屴夯",
+   "reason": "搜尋沒有同名藝人"
+  },
+  {
+   "slug": "yun-duan-si-ji",
+   "name": "雲端司機",
+   "reason": "搜尋沒有同名藝人"
+  },
+  {
+   "slug": "zhong-qi",
+   "name": "鍾錡",
+   "reason": "搜尋沒有同名藝人"
+  },
+  {
+   "slug": "zhong-yi-an",
+   "name": "鐘奕安",
    "reason": "搜尋沒有同名藝人"
   }
  ],

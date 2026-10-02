@@ -96,11 +96,8 @@ async function sp(path) {
     if (r.status === 429) {
       sstats.r429++;
       const s = Math.max(1, Number(r.headers.get("retry-after")) || 2 ** (attempt + 1));
-      // development mode 配額（QUOTA_EXCEEDED）一鎖就是十幾小時：不等，丟出去讓主程式存檔收工，下次重跑從快取接著做
-      if (s > 120) throw new QuotaError(`Spotify 配額用完（${path.split("?")[0].replace(/[A-Za-z0-9]{22}/g, "ID")}），${Math.round(s / 3600)} 小時後才能再打`);
-      console.error(`  429，${s} 秒後重試：${url}`);
-      await sleep(s * 1000);
-      continue;
+      // 2026-10-03 起任何 429 都立刻停（development mode 配額一鎖就是 24 小時，短的也不等），丟出去讓主程式存檔收工，下次重跑從快取接著做
+      throw new QuotaError(`Spotify 429（${path.split("?")[0].replace(/[A-Za-z0-9]{22}/g, "ID")}），Retry-After ${s} 秒（約 ${Math.round(s / 3600)} 小時）`);
     }
     if (r.status === 401) {
       token = "";
@@ -183,7 +180,7 @@ async function match() {
     }
   }
   async function matchOne(p) {
-    const names = [p.name, ...JSON.parse(p.aliases || "[]")].filter(Boolean);
+    const names = splitNames([p.name, ...JSON.parse(p.aliases || "[]")].filter(Boolean));
     const nameSet = new Set(names.map(norm).filter(Boolean));
     const intro = (() => {
       try {
@@ -261,7 +258,7 @@ async function match() {
     for (const [id, sname] of cands) {
       const titles = [...cachedAlbumTitles(id), ...(searched.get(id) ?? [])];
       const hits = known.length ? titleHit(known, titles) : [];
-      withHits.push({ id, name: sname, hits: [...new Set(hits)].slice(0, 5) });
+      withHits.push({ id, name: sname, hits: [...new Set(hits)].slice(0, 5), albums: [...new Set(titles)].slice(0, 6) });
     }
     const hitters = withHits.filter((c) => c.hits.length);
     if (hitters.length === 1) {
@@ -271,7 +268,9 @@ async function match() {
     }
     done("doubt", {
       reason: !known.length ? "站上沒有已知作品可比" : hitters.length > 1 ? "多位同名候選都有作品交集" : cands.size > 1 ? `${cands.size} 位同名候選都沒有作品交集` : "同名候選沒有作品交集",
-      candidates: withHits.map((c) => ({ id: c.id, name: c.name, url: `https://open.spotify.com/artist/${c.id}`, hits: c.hits })),
+      known: [...new Set(known)].slice(0, 8),
+      searched: names,
+      candidates: withHits.map((c) => ({ id: c.id, name: c.name, url: `https://open.spotify.com/artist/${c.id}`, hits: c.hits, albums: c.albums })),
     });
   }
   // 同一個 Spotify ID 對到兩位站上藝人：兩位都改列疑義
@@ -301,6 +300,42 @@ async function match() {
     ) + "\n",
   );
   console.log(`\n對應成功 ${report.ok.length}（${JSON.stringify(countBy(report.ok, "source"))}）、疑義 ${report.doubt.length}、找不到 ${report.none.length}、未比對 ${report.pending.length}；Spotify 連線 ${sstats.network}、快取 ${sstats.cached}、429 ${sstats.r429}`);
+}
+/** 中英連寫的名字拆開再搜（2026-10-03）：「JOLIN蔡依林」→ JOLIN、蔡依林；「楊淑喻（吉那）」→ 楊淑喻、吉那；「Yufu／陳郁夫」→ 兩段。原名保留排最前，拆出來的段落只在長度 ≥2 才算 */
+export function splitNames(names) {
+  const out = [];
+  const add = (x) => {
+    const t = x.replace(/\s+/g, " ").trim();
+    if (t && !out.includes(t)) out.push(t);
+  };
+  for (const nm of names) {
+    add(nm);
+    const parts = [];
+    // 括號裡的別名（全形或半形）
+    for (const m of nm.matchAll(/[（(]([^（）()]{1,40})[）)]/g)) parts.push(m[1]);
+    const base = nm.replace(/[（(][^（）()]{1,40}[）)]/g, " ");
+    // ／、/、｜ 分隔
+    for (const seg of base.split(/[／/｜|]/)) {
+      parts.push(seg);
+      // 拉丁段 + 中文段（或反過來）：在中文與拉丁字母的交界切開
+      const cjk = /[\u3400-\u9fff\uf900-\ufaff\u3005\u30fb\u00b7]/;
+      const lat = /[A-Za-z0-9]/;
+      let cur = "";
+      let kind = "";
+      for (const ch of seg) {
+        const k = cjk.test(ch) ? "c" : lat.test(ch) ? "l" : "";
+        if (k && kind && k !== kind) {
+          parts.push(cur);
+          cur = "";
+        }
+        if (k) kind = k;
+        cur += ch;
+      }
+      parts.push(cur);
+    }
+    for (const x of parts) if (x.replace(/[\s.'!&·．]/g, "").length >= 2) add(x);
+  }
+  return out;
 }
 const countBy = (xs, k) => xs.reduce((m, x) => ((m[x[k]] = (m[x[k]] ?? 0) + 1), m), {});
 
