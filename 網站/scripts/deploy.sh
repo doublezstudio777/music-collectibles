@@ -103,6 +103,14 @@ smoke() {
   else
     if grep -qi "^x-robots-tag: noindex" <<<"$HEAD"; then echo "煙霧測試失敗：ALLOW_INDEXING=1 卻還有 X-Robots-Tag noindex"; exit 1; fi; echo "沒有 X-Robots-Tag noindex（開放收錄）"
     if grep -q '<meta name="robots" content="noindex"' <<<"$BODY"; then echo "煙霧測試失敗：ALLOW_INDEXING=1 卻還有 meta robots noindex"; exit 1; fi; echo "沒有 meta robots noindex（開放收錄）"
+    # 2026-10-02 開放收錄：公開目錄頁要能收錄，私人頁（設定、搜尋、登入、會員頁）照樣 noindex（lib/seo.ts 的 isPrivatePath）
+    local P H
+    H=$(curl -fsS -m 30 -D - -o /dev/null "$URL/artists")
+    if grep -qi "^x-robots-tag: noindex" <<<"$H"; then echo "煙霧測試失敗：/artists 不該有 X-Robots-Tag noindex"; exit 1; fi; echo "/artists 可收錄"
+    for P in /settings /search /login /u/dz4277; do
+      H=$(curl -sS -m 30 -D - -o /dev/null "$URL$P")
+      grep -qi "^x-robots-tag: noindex" <<<"$H" || { echo "煙霧測試失敗：$P 要有 X-Robots-Tag noindex"; exit 1; }
+    done; echo "私人頁 /settings /search /login /u/ 仍 noindex"
   fi
   # SEO（2026-10-01）：首頁 canonical 固定正式網域、有 og:image（首頁原本沒有 og）
   grep -q '<link rel="canonical" href="https://lemibox.com/"' <<<"$BODY" || { echo "煙霧測試失敗：首頁 canonical"; exit 1; }; echo "首頁 canonical https://lemibox.com/"
@@ -114,7 +122,17 @@ smoke() {
   else
     grep -q "^Sitemap: https://lemibox.com/sitemap.xml" <<<"$ROBOTS" || { echo "煙霧測試失敗：robots.txt 沒附 sitemap"; exit 1; }; echo "robots.txt 附 sitemap"
   fi
-  curl -fsS -m 30 "$URL/sitemap.xml" | grep -q "<sitemapindex" || { echo "煙霧測試失敗：sitemap.xml"; exit 1; }; echo "sitemap.xml 正常"
+  local SM
+  SM=$(curl -fsS -m 30 "$URL/sitemap.xml")
+  grep -q "<sitemapindex" <<<"$SM" || { echo "煙霧測試失敗：sitemap.xml"; exit 1; }; echo "sitemap.xml 正常"
+  if [[ "$INDEXING" == "1" ]]; then
+    # 開放收錄後 sitemap 是給 Google 讀的：索引裡每個分割檔都要 200、而且是 urlset
+    local F X
+    for F in $(grep -oE "<loc>[^<]+</loc>" <<<"$SM" | sed -E 's#</?loc>##g; s#^https://lemibox.com##'); do
+      X=$(curl -fsS -m 30 "$URL$F") || { echo "煙霧測試失敗：$F 沒有回 200"; exit 1; }
+      grep -q "<urlset" <<<"$X" || { echo "煙霧測試失敗：$F 不是 urlset"; exit 1; }
+    done; echo "sitemap 分割檔都 200"
+  fi
   if [[ "$URL" == "https://lemibox.com" ]]; then
     local WWW
     WWW=$(curl -sS -m 30 -o /dev/null -w '%{http_code} %{redirect_url}' "https://www.lemibox.com/artists?x=1")

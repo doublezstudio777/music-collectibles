@@ -37,7 +37,8 @@
   "vars": {
     "TURNSTILE_SITE_KEY": "0x4AAAAAAFEx6pj-sHlnKx92",
     "ADMIN_EMAILS": "zukawork0312@gmail.com",
-    "ALLOW_INDEXING": "0",
+    // 搜尋引擎收錄：2026-10-02 用戶核准開放（0→1）。改回 0＝全站 noindex、robots.txt 不附 sitemap
+    "ALLOW_INDEXING": "1",
     "PBKDF2_ITERATIONS": "50000",
     // 管理後台用量頁查 Cloudflare GraphQL 用（不是密鑰）；金鑰另外用 secret CF_ANALYTICS_TOKEN，沒設顯示「未設定」
     "CF_ACCOUNT_ID": "48743ee150caa3577d8abd6e99196709"

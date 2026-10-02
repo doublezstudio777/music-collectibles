@@ -10,8 +10,8 @@
 // Mac 沒有固定路徑，請設環境變數 YINZANG_BACKUP_DIR 或用 --out。
 //
 // 產出：
-//   {根目錄}/{YYYYMMDD-HHmm}-{remote|local}/d1.sql        D1 全部資料表（wrangler d1 export）
-//   {根目錄}/{YYYYMMDD-HHmm}-{remote|local}/manifest.json 每張表筆數、這次新下載的照片、孤兒檢查、筆數守恆
+//   {根目錄}/{YYYYMMDD-HHmmss}-{remote|local}/d1.sql      D1 全部資料表（wrangler d1 export）；同一秒撞名加 -2、-3
+//   {根目錄}/{YYYYMMDD-HHmmss}-{remote|local}/manifest.json 每張表筆數、這次新下載的照片、孤兒檢查、筆數守恆
 //   {根目錄}/R2-{remote|local}/p/…、a/…                   照片（累積同步：只下載本機還沒有的）
 // 照片不按日期重複存：檔名是隨機 id、內容不會改，累積一份就夠，manifest 記下每次新增了哪些。
 
@@ -74,7 +74,11 @@ const query = (sql) => {
 
 const pad = (n) => String(n).padStart(2, "0");
 const d = new Date();
-const stamp = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}`;
+// 2026-10-02：資料夾名稱精確到秒（原本到分鐘，同一分鐘跑兩次後一次會覆寫前一次，10/01 刪測試帳號前的備份就這樣被蓋掉）；
+// 同一秒內又撞名就加流水號 -2、-3…，絕不寫進已存在的資料夾
+const stamp0 = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+let stamp = stamp0;
+for (let i = 2; existsSync(join(out, `${stamp}-${where}`)); i++) stamp = `${stamp0}-${i}`;
 const dir = join(out, `${stamp}-${where}`);
 const r2dir = join(out, `R2-${where}`);
 mkdirSync(dir, { recursive: true });
@@ -142,10 +146,20 @@ const orphans = query(
           (SELECT COUNT(*) FROM follows f LEFT JOIN artists a ON a.slug = f.artist_slug WHERE a.slug IS NULL) AS follows,
           (SELECT COUNT(*) FROM photos WHERE purpose = 'share' AND share_no IS NULL) AS photosWithoutShare`,
 )[0];
+// 上一份備份：照 manifest 的 at（ISO 時間）排，不照資料夾名稱排（舊名到分鐘、新名到秒，混在一起字串排序會錯）
+const atOf = (n) => {
+  try {
+    return JSON.parse(readFileSync(join(out, n, "manifest.json"), "utf8")).at ?? "";
+  } catch {
+    return "";
+  }
+};
 const prev = readdirSync(out)
-  .filter((n) => n.endsWith(`-${where}`) && n < `${stamp}-${where}`)
-  .sort()
-  .pop();
+  .filter((n) => n.endsWith(`-${where}`) && n !== `${stamp}-${where}` && !n.startsWith("R2-"))
+  .map((n) => [n, atOf(n)])
+  .filter(([, at]) => at && at <= d.toISOString())
+  .sort((a, b) => (a[1] < b[1] ? -1 : 1))
+  .pop()?.[0];
 const shrunk = [];
 if (prev && existsSync(join(out, prev, "manifest.json"))) {
   const before = JSON.parse(readFileSync(join(out, prev, "manifest.json"), "utf8")).counts ?? {};

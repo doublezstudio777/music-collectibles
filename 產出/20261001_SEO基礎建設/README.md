@@ -167,6 +167,8 @@ R2 刪除：`v/Zf-kajdaz2j7n98S.webp`（1,094 bytes）。刪後 bucket 117 個�
 
 ## 開放收錄時要做的事
 
+**2026-10-02 已開放**：A 案、`ALLOW_INDEXING`＝1、Cloudflare Version ID `5eac0b17`，正式站驗收 25/25、sitemap 884 筆，細節記在 `00_現況.md` 2026-10-02 那筆。第 3 項 GSC 由主對話處理，第 4 項 aftest1001 10/01 已刪。
+
 1. 決定「內容太空」用 A 案還是 B 案（B 案改 `seriesIndex` 一行）
 2. `wrangler.production.jsonc` 的 `ALLOW_INDEXING` 改 `"1"`，跑 `scripts/deploy.sh`（煙霧測試會自動改驗「沒有 noindex」「robots.txt 附 sitemap」）
 3. Google Search Console 加 `lemibox.com`（網域資源要 DNS TXT，帳號金鑰沒有 DNS 權限，要用戶在 Cloudflare 後台加），提交 `https://lemibox.com/sitemap.xml`

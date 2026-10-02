@@ -89,3 +89,4 @@
 - GA4 自動事件（user_engagement 等）帶 `document.title`，個人頁標題有暱稱：用 `gtag('set', { page_title, page_location })` 蓋掉才乾淨；本機驗 GA 用 Playwright 把 lemibox.com 轉給本機、`/g/collect` 用 204 fulfill（abort 會讓 gtag 重送，看起來像重複事件）（2026-10-01）
 - 排程狀態存成 JSON（autofill_state）時，測試用 SQL 改值要等那一輪 finishedAt 後再改，進行中的批次會拿記憶體版本覆寫回去；本機沒有排程，手動 API 每 30 秒接一批（2026-10-01）
 - `backup.mjs` 的資料夾名只到分鐘：同一分鐘跑兩次會覆寫（10/01 刪前備份被刪後匯出蓋掉）。刪資料前後各備份一次要隔一分鐘，或刪後重掃改用 `d1 export` 到 scratchpad；正式站整庫找某帳號殘留，grep 備份的 d1.sql 比逐表逐欄 SQL 快很多（2026-10-01）
+- 部署腳本裡 curl 結果要先存變數再 grep：`curl … | grep -q` 在 pipefail 下會因 SIGPIPE 誤判失敗（2026-10-02 加 sitemap 斷言時又踩一次，程式已部署、改完用 --smoke-only 補驗）
