@@ -199,6 +199,12 @@ function VersionBlock({
         </div>
       ) : (
         <>
+      {/* 內容物（2026-10-02）：原本在品項比較表裡，表拿掉後寫成一行；空白的走下面的「補上」 */}
+      {v.contents && v.contents !== "—" && v.contents !== "待查證" ? (
+        <p className="ver-contents" data-testid="ver-contents">
+          <span className="sub">內容物</span> {v.contents}
+        </p>
+      ) : null}
       <FieldFill vkey={vkey} fields={blanks} />
 
       {price ? <PriceHistory summary={price} /> : null}

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { priceText, SITE_NAME, userHref, verifyHref, type Sale, type SaleState, type ShareView } from "@/lib/data";
-import { api, whenLoggedIn } from "@/lib/account";
+import { api, openPanel, whenLoggedIn } from "@/lib/account";
 import { useAction, useAppState } from "@/lib/state";
 import { ShareDelete } from "@/components/share-delete";
 import type { PublicOffer } from "@/lib/server/trade";
@@ -411,6 +411,21 @@ function RefPhotoAdmin({ share }: { share: ShareView }) {
   );
 }
 
+/**
+ * 沒驗證 Email（2026-10-02 設計總檢建議 8）：API 的規則是「出價、我要買可以，私訊不行」，買了也沒辦法跟賣家說話，
+ * 介面改成一致：交易區先要求驗證，跟私訊頁同一句話、同一顆「驗證 Email」按鈕。真正的擋仍在 API（私訊）
+ */
+function VerifyNote({ what, email }: { what: string; email?: string }) {
+  return (
+    <p className="convo-blocked deal-verify" data-testid="deal-need-verify">
+      驗證 Email 後才能{what}
+      <button type="button" className="btn btn-line" onClick={() => openPanel("verify", undefined, email)}>
+        驗證 Email
+      </button>
+    </p>
+  );
+}
+
 /** 海外連線：交易按鈕的位置改顯示這一行（真正的擋在 API） */
 export function RegionNote() {
   return (
@@ -553,6 +568,7 @@ function BuyBox({ share, sale, offers }: { share: ShareView; sale: Sale; offers:
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
+  const unverified = Boolean(me) && !me?.verified;
 
   if (sale.state === "offer") {
     const submit = (e: React.FormEvent) => {
@@ -577,6 +593,8 @@ function BuyBox({ share, sale, offers }: { share: ShareView; sale: Sale; offers:
         </div>
         {!canTrade ? (
           <RegionNote />
+        ) : unverified ? (
+          <VerifyNote what="出價或問賣家" email={me?.email} />
         ) : open ? (
           <form className="offer-form" onSubmit={submit} noValidate>
             <MoneyInput id="offer-amount" value={amount} onChange={setAmount} label="出價金額" />
@@ -624,14 +642,18 @@ function BuyBox({ share, sale, offers }: { share: ShareView; sale: Sale; offers:
           <strong className="deal-price">{priceText(sale.price ?? 0)}</strong>
         </div>
         {!canTrade ? <RegionNote /> : null}
-        <div className={canTrade ? "deal-actions" : "deal-actions one"}>
-          {canTrade ? (
-            <button type="button" className="btn btn-p btn-lg" onClick={buy} data-testid="buy-open" aria-haspopup="dialog">
-              我要買
-            </button>
-          ) : null}
-          <DmButton to={{ share: share.n }} label="問賣家" className="btn btn-line btn-lg" testid="dm-share" />
-        </div>
+        {unverified && canTrade ? (
+          <VerifyNote what="買或問賣家" email={me?.email} />
+        ) : (
+          <div className={canTrade ? "deal-actions" : "deal-actions one"}>
+            {canTrade ? (
+              <button type="button" className="btn btn-p btn-lg" onClick={buy} data-testid="buy-open" aria-haspopup="dialog">
+                我要買
+              </button>
+            ) : null}
+            <DmButton to={{ share: share.n }} label="問賣家" className="btn btn-line btn-lg" testid="dm-share" />
+          </div>
+        )}
         {error ? <p className="field-error">{error}</p> : null}
         {open ? (
           <ConfirmDialog title="確定要買？" confirmLabel="確定要買" busyLabel="送出中…" onConfirm={confirmBuy} onClose={() => setOpen(false)} testid="buy-confirm">

@@ -236,7 +236,7 @@ def main():
         # ---------- 必修 3：後台確認 ----------
         c = ctx_for(ch, "uxadmin", 1440, 900)
         p = page_of(c)
-        go(p, "/admin")
+        go(p, "/admin/moderation")
         p.click("[data-testid=pause-open]")
         p.wait_for_selector("[data-testid=pause-confirm]")
         ok_disabled = p.locator("[data-testid=pause-confirm-ok]").is_disabled()
@@ -246,7 +246,8 @@ def main():
         shot(p, "修正_03_整站暫停確認_1440")
         p.keyboard.press("Escape")
         p.wait_for_timeout(200)
-        check("M3 Esc 關掉、沒有暫停", p.locator("[data-testid=pause-confirm]").count() == 0 and sql("SELECT value FROM settings WHERE key = 'paused'") in ([], [{"value": "0"}], [{"value": ""}]) or p.locator("[data-testid=site-status] [data-paused=false]").count() == 1)
+        paused = sql("SELECT value FROM settings WHERE key = 'paused'")
+        check("M3 Esc 關掉、沒有暫停", p.locator("[data-testid=pause-confirm]").count() == 0 and (not paused or str(paused[0]["value"]) in ("0", "")), str(paused))
         go(p, "/admin/moderation")
         p.select_option("#td-type", "artist")
         p.fill("#td-key", "hyukoh")
@@ -279,7 +280,7 @@ def main():
         p = page_of(c)
         go(p, "/share/3")
         cid = sql("SELECT id FROM comments WHERE author_id = 'ux-b-id' ORDER BY id DESC LIMIT 1")[0]["id"]
-        r = api(p, f"/api/comments/{cid}/report", {"reason": "spam"})
+        r = api(p, "/api/reports", {"target": f"comment:{cid}", "reason": "abuse"})
         check("M3 甲檢舉留言（API）", r["status"] in (200, 201, 409), str(r["status"]))
         c.close()
         c = ctx_for(ch, "uxadmin", 1440, 900)
@@ -418,7 +419,7 @@ def main():
             ht = p.evaluate("getComputedStyle(document.querySelector('h1')).textWrap || getComputedStyle(document.querySelector('h1')).textWrapMode")
             check(f"M6 標題 text-wrap {tag}", ht in ("wrap", "normal", ""), ht)
             if width == 1440:
-                edges = p.evaluate("['.ver-table', '.market-stats', '.tracks-main .tracklist'].map(s => { const e = document.querySelector(s); return e ? Math.round(e.getBoundingClientRect().right) : null; })")
+                edges = p.evaluate("['.ver-table-scroll', '.market-stats', '.tracks-main .tracklist'].map(s => { const e = document.querySelector(s); return e ? Math.round(e.getBoundingClientRect().right) : null; })")
                 wrap_r = p.evaluate("Math.round(document.querySelector('main.wrap').getBoundingClientRect().right - 32)")
                 check("S19 桌機三塊右緣對齊內容區", all(e is None or abs(e - wrap_r) <= 1 for e in edges), f"{edges} vs {wrap_r}")
                 yr = p.locator(".ver-table tbody tr").first.locator("td").nth(1).inner_text()
@@ -525,7 +526,11 @@ def main():
         p.click(".composer-row button[type=submit]")
         p.wait_for_selector("[data-testid=offer-msg]", timeout=10000)
         check("S7 送出訊息的回饋", "已送出" in p.locator("[data-testid=offer-msg]").inner_text())
+        # 剛送出訊息的那一頁還在重新讀取，換一個新分頁開列表（舊分頁的換頁會被自己的重新導向打斷）
+        p.wait_for_timeout(1500)
+        p = page_of(c)
         go(p, "/messages")
+        p.wait_for_selector(".inbox-list h1", timeout=15000)
         fs = p.evaluate("getComputedStyle(document.querySelector('.inbox-list h1')).fontSize")
         check("S2 私訊頁標題跟願望清單一樣 28px", fs == "28px", fs)
         shot(p, "修正_17_私訊列表_390")
@@ -548,7 +553,7 @@ def main():
         go(p, "/share/9")
         p.wait_for_timeout(500)
         r = api(p, "/api/shares/9/offers", {"kind": "buy"})
-        dm = api(p, "/api/threads", {"share": 9})
+        dm = api(p, "/api/shares/9/threads", {})
         check("S8 未驗證 Email 的規則（記錄）", True, f"我要買 API {r['status']} {r['body'].get('error', {}).get('code', '')}；開私訊 API {dm['status']} {dm['body'].get('error', {}).get('code', '')}")
         shot(p, "修正_17_未驗證會員單則頁_390")
         if r["status"] in (200, 201):
@@ -588,7 +593,8 @@ def main():
         c = ctx_for(wk, "uxa", 390, 844, 3, True)
         p = page_of(c)
         go(p, "/guide")
-        imgs = p.evaluate("[...document.querySelectorAll('[data-guide-img]')].map(i => [i.dataset.guideImg, i.naturalWidth > 0])")
+        # 圖是 lazy 載入：先全部改成立即載入再等 decode，才量得到
+        imgs = p.evaluate("""async () => { const list = [...document.querySelectorAll('[data-guide-img]')]; for (const i of list) { i.loading = 'eager'; try { await i.decode(); } catch {} } return list.map(i => [i.dataset.guideImg, i.naturalWidth > 0, i.currentSrc.split('/').pop()]); }""")
         check("S15 新手指南圖全部載到", all(x[1] for x in imgs), str(imgs))
         check("S15 指南有合集、一次發多張、願望清單、私訊", all(k in p.locator("main").inner_text() for k in ("一次發多張", "發合集", "願望清單", "私訊")))
         check("S2 指南必填說法一致", "必填：照片、誰的東西、是什麼" in p.locator("main").inner_text())

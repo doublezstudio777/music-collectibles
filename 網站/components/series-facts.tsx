@@ -22,8 +22,8 @@ const COLS: Col[] = [
   { key: "discs", label: "片數", get: (v) => (v.discs ? String(v.discs) : ""), mono: true },
   { key: "tracks", label: "曲目", get: (v) => (v.trackCount ? `${v.trackCount} 首` : ""), mono: true },
   { key: "packaging", label: "包裝", get: (v) => v.packaging },
-  { key: "contents", label: "內容物", get: (v) => v.contents },
 ];
+// 內容物是自由填的長文字，放進不換行的表會把整張表撐到要橫捲，改寫在各版本段落的標題下（page.tsx VersionBlock）
 
 /** 估字寬（em）：中日韓字與全形標點 1em，其他字元 .64em（Inter 大寫最寬約 .7、小寫數字約 .55，取偏寬的值寧可多留白） */
 function emWidth(s: string, mono = false) {

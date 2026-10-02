@@ -7,6 +7,7 @@
 // 開著時 Esc 關、Tab 不出框、背景不捲動；關掉焦點回到原本的按鈕。
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 export function ConfirmDialog({
   title,
@@ -94,7 +95,9 @@ export function ConfirmDialog({
     closeRef.current();
   };
 
-  return (
+  // 掛到 body（2026-10-02）：單則頁的交易區有祖先建立了 containing block（WebKit 對 container-type 的處理），
+  // fixed 的遮罩會被困在那個區塊裡、對話框被切到畫面外；用 portal 直接掛在 body 下就不受影響
+  return createPortal(
     <div className="q-layer" data-testid={`${testid}-layer`}>
       <div className="q-backdrop" onClick={onClose} aria-hidden="true" />
       <form className="q-dialog confirm-dialog" role="dialog" aria-modal="true" aria-labelledby={`${testid}-title`} ref={box} onSubmit={go} noValidate data-testid={testid}>
@@ -125,6 +128,7 @@ export function ConfirmDialog({
           </button>
         </div>
       </form>
-    </div>
+    </div>,
+    document.body,
   );
 }

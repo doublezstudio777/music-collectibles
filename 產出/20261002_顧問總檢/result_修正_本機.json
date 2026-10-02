@@ -1,0 +1,672 @@
+[
+ {
+  "name": "M1 404 狀態碼 淺色",
+  "ok": true,
+  "detail": "404"
+ },
+ {
+  "name": "M1 404 繁中標題 淺色",
+  "ok": true,
+  "detail": "找不到這一頁｜樂迷藏"
+ },
+ {
+  "name": "M1 404 頁首白底 淺色",
+  "ok": true,
+  "detail": "header rgb(255, 255, 255) body rgb(255, 255, 255)"
+ },
+ {
+  "name": "M1 404 有搜尋與回首頁 淺色",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M1 404 狀態碼 深色",
+  "ok": true,
+  "detail": "404"
+ },
+ {
+  "name": "M1 404 繁中標題 深色",
+  "ok": true,
+  "detail": "找不到這一頁｜樂迷藏"
+ },
+ {
+  "name": "M1 404 頁首白底 深色",
+  "ok": true,
+  "detail": "header rgb(255, 255, 255) body rgb(255, 255, 255)"
+ },
+ {
+  "name": "M1 404 有搜尋與回首頁 深色",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M1 被刪收藏 404",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M1 /artist/nobody 自製 404",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M1 /u/nobody 自製 404",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M1 /artist/hyukoh/999 自製 404",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M2 我要買先確認",
+  "ok": true,
+  "detail": "確定要買？  NT$ 450 按下確定，賣家會收到你的購買意願，接下來在私訊裡跟你聯絡。 成交後請用私訊約交付，樂迷藏不經手款項。 確定要買 取消"
+ },
+ {
+  "name": "M2 取消後沒有送出",
+  "ok": true,
+  "detail": "0"
+ },
+ {
+  "name": "M2 確定後才送出並進私訊",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M2 甲對 #8 出價 300（API）",
+  "ok": true,
+  "detail": "200"
+ },
+ {
+  "name": "M2 拒絕先確認",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S6 出價狀態無框線",
+  "ok": true,
+  "detail": "0px"
+ },
+ {
+  "name": "M2 賣家接受（API）",
+  "ok": true,
+  "detail": "200"
+ },
+ {
+  "name": "M2 成交給這位先確認",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M2 取消後 #8 仍是開放出價",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M3 手動暫停要打「暫停」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M3 Esc 關掉、沒有暫停",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "M3 永久刪除要打識別碼",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M3 沒有刪掉 hyukoh",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M3 乙留言（API）",
+  "ok": true,
+  "detail": "201"
+ },
+ {
+  "name": "M3 會員刪留言用站內對話框",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M3 甲檢舉留言（API）",
+  "ok": true,
+  "detail": "201"
+ },
+ {
+  "name": "M3 後台刪留言先確認",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S4 後台沒有黑底實心鈕",
+  "ok": true,
+  "detail": "0"
+ },
+ {
+  "name": "L7 待處理非 0 排前面、有黑框",
+  "ok": true,
+  "detail": "[['2', 'queue-item has-n'], ['1', 'queue-item has-n'], ['2', 'queue-item has-n'], ['0', 'queue-item is-zero']]"
+ },
+ {
+  "name": "L7 推薦歌曲有搜尋",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S22 會員表列高只有一種",
+  "ok": true,
+  "detail": "[66]"
+ },
+ {
+  "name": "S22 次要動作收進更多",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S22 會員頁 390 無橫向溢出",
+  "ok": true,
+  "detail": "[390, 390, 390]"
+ },
+ {
+  "name": "S22 390 改卡片",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S9 黏底列 ≤ 84px（iPhone 390 畫面 10%）",
+  "ok": true,
+  "detail": "82px"
+ },
+ {
+  "name": "S2 必填說法跟黏底列一致",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S9 詳細展開全文",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S12 別名只差大小寫不顯示",
+  "ok": true,
+  "detail": "Hyukoh\n"
+ },
+ {
+  "name": "S12 選好後也不重複英文名",
+  "ok": true,
+  "detail": "Hyukoh\n修改\n"
+ },
+ {
+  "name": "M4 排序鈕每格 ≥40×40",
+  "ok": true,
+  "detail": "[('封面', 43, 40), ('▶', 43, 40), ('×', 43, 40), ('◀', 43, 40), ('設封面', 43, 40), ('▶', 43, 40), ('×', 43, 40), ('◀', 43, 40), ('設封面', 43, 40), ('×', 43, 40)]"
+ },
+ {
+  "name": "M4 每張四格等寬、高度一致",
+  "ok": true,
+  "detail": "[4, 4, 4]"
+ },
+ {
+  "name": "M4 「設封面」不換行",
+  "ok": true,
+  "detail": "[[43.25, 40, True], [43.25, 40, True]]"
+ },
+ {
+  "name": "S10 發布後出現「已發布」條",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S10 重新整理後不再出現",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S11 一起發文空狀態有出口",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S2 合集表單欄位叫「合集照片」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M7 系列頁 390 沒有「資料狀態」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M7 系列頁 390 沒有「曲目差異」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M7 系列頁 390 沒有「比較基準」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M7 系列頁 390 沒有「待確認」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M7 系列頁 390 沒有「2017-04-24」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M5 390 品項裡沒有第二張比較表",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M5 版本比較表列高只有一種 390",
+  "ok": true,
+  "detail": "[42]"
+ },
+ {
+  "name": "M5 版本比較表沒有截斷 390",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "系列頁 390 無橫向溢出",
+  "ok": true,
+  "detail": "[390, 390, 390]"
+ },
+ {
+  "name": "S3 系列頁頭部三個小文字連結 390",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S18 登入提示一個品項一次 390",
+  "ok": true,
+  "detail": "2 個提示 / 2 個品項"
+ },
+ {
+  "name": "S18 沒有「還沒有人炫過這個版本」 390",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S18 版本標題旁有我有／願望清單 390",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S18 系列頁高度 390",
+  "ok": true,
+  "detail": "4548px（修前 390 是 5,641）；0 個版本收成一列"
+ },
+ {
+  "name": "M6 標題 text-wrap 390",
+  "ok": true,
+  "detail": "wrap"
+ },
+ {
+  "name": "S18 統計數字每段一行",
+  "ok": true,
+  "detail": "[1, 1, 1]"
+ },
+ {
+  "name": "M7 系列頁 1440 沒有「資料狀態」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M7 系列頁 1440 沒有「曲目差異」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M7 系列頁 1440 沒有「比較基準」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M7 系列頁 1440 沒有「待確認」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M7 系列頁 1440 沒有「2017-04-24」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M5 1440 品項裡沒有第二張比較表",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "M5 版本比較表列高只有一種 1440",
+  "ok": true,
+  "detail": "[42]"
+ },
+ {
+  "name": "M5 版本比較表沒有截斷 1440",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "name": "系列頁 1440 無橫向溢出",
+  "ok": true,
+  "detail": "[1440, 1440, 1440]"
+ },
+ {
+  "name": "S3 系列頁頭部三個小文字連結 1440",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S18 登入提示一個品項一次 1440",
+  "ok": true,
+  "detail": "2 個提示 / 2 個品項"
+ },
+ {
+  "name": "S18 沒有「還沒有人炫過這個版本」 1440",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S18 版本標題旁有我有／願望清單 1440",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S18 系列頁高度 1440",
+  "ok": true,
+  "detail": "4356px（修前 390 是 5,641）；0 個版本收成一列"
+ },
+ {
+  "name": "M6 標題 text-wrap 1440",
+  "ok": true,
+  "detail": "wrap"
+ },
+ {
+  "name": "S19 桌機三塊右緣對齊內容區",
+  "ok": true,
+  "detail": "[1288, 1288, 1288] vs 1288"
+ },
+ {
+  "name": "L4 發行日台灣寫法",
+  "ok": true,
+  "detail": "2017/4/24"
+ },
+ {
+  "name": "M6 卡片標題 text-wrap: wrap",
+  "ok": true,
+  "detail": "wrap"
+ },
+ {
+  "name": "M6 兩行標題第一行右側空白 ≤ 40px",
+  "ok": true,
+  "detail": "[0, 0, 0, 5, 0, 0, 15]"
+ },
+ {
+  "name": "S2 首頁開關叫「只看出售中」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "L1 公告條最多兩行（≤ 72px）",
+  "ok": true,
+  "detail": "64"
+ },
+ {
+  "name": "L3 今日推薦不推 0 則收藏的藝人",
+  "ok": true,
+  "detail": "今日推薦單曲  MC HotDog 男歌手・國內・1 則收藏 看其他人MC HotDog的相關收藏 換一首 "
+ },
+ {
+  "name": "L5 第一個 Tab 是跳到主要內容",
+  "ok": true,
+  "detail": "skip-link|跳到主要內容"
+ },
+ {
+  "name": "L5 每頁 main 有 id",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "L8 登入頁頁首沒有「登入」",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "L2 榮譽榜空狀態寫什麼時候開始算",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "L6 頁尾兩條分隔線等寬",
+  "ok": true,
+  "detail": "[1440, 1440]"
+ },
+ {
+  "name": "S1 頁首每顆 40 高 @390",
+  "ok": true,
+  "detail": "[40] 頭像 [40, 40, 'U']"
+ },
+ {
+  "name": "S1 頭像只放首字 @390",
+  "ok": true,
+  "detail": "U"
+ },
+ {
+  "name": "S1 頁首不超出右緣 @390",
+  "ok": true,
+  "detail": "372"
+ },
+ {
+  "name": "首頁登入 390 無橫向溢出",
+  "ok": true,
+  "detail": "[390, 390, 390]"
+ },
+ {
+  "name": "S1 頁首每顆 40 高 @375",
+  "ok": true,
+  "detail": "[40] 頭像 [40, 40, 'U']"
+ },
+ {
+  "name": "S1 頭像只放首字 @375",
+  "ok": true,
+  "detail": "U"
+ },
+ {
+  "name": "S1 頁首不超出右緣 @375",
+  "ok": true,
+  "detail": "357"
+ },
+ {
+  "name": "首頁登入 375 無橫向溢出",
+  "ok": true,
+  "detail": "[375, 375, 375]"
+ },
+ {
+  "name": "S1 頁首每顆 40 高 @320",
+  "ok": true,
+  "detail": "[40] 頭像 [40, 40, 'U']"
+ },
+ {
+  "name": "S1 頭像只放首字 @320",
+  "ok": true,
+  "detail": "U"
+ },
+ {
+  "name": "S1 頁首不超出右緣 @320",
+  "ok": true,
+  "detail": "311"
+ },
+ {
+  "name": "首頁登入 320 無橫向溢出",
+  "ok": true,
+  "detail": "[320, 320, 320]"
+ },
+ {
+  "name": "S5 單則頁「收錄在」一句",
+  "ok": true,
+  "detail": "收錄在《男孩》2015 台灣首版 CD"
+ },
+ {
+  "name": "S5 有連結時不重複類型行",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S7 對話頂端價格在標題右側沒被切",
+  "ok": true,
+  "detail": "NT$ 450"
+ },
+ {
+  "name": "S7 輸入框是多行",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S7 多行框會長高",
+  "ok": true,
+  "detail": "86px"
+ },
+ {
+  "name": "S7 送出訊息的回饋",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S2 私訊頁標題跟願望清單一樣 28px",
+  "ok": true,
+  "detail": "28px"
+ },
+ {
+  "name": "S7 出價回饋寫金額",
+  "ok": true,
+  "detail": "已送出出價 NT$ 320"
+ },
+ {
+  "name": "S8 未驗證 Email 的規則（記錄）",
+  "ok": true,
+  "detail": "我要買 API 200 ；開私訊 API 403 EMAIL_UNVERIFIED"
+ },
+ {
+  "name": "S13 我有空狀態有出口",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S13 願望清單空狀態有出口",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S13 沒有「標記」這個說法",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S13 分數每行不斷出孤字",
+  "ok": true,
+  "detail": "['目前 0 分離 新晉樂迷 Lv.2 還差', '每天統計一次，上次 2026-10-02']"
+ },
+ {
+  "name": "S14 出售中排在炫收藏前",
+  "ok": true,
+  "detail": "['出售中', '炫收藏', '我有', '願望清單 0']"
+ },
+ {
+  "name": "S14 炫收藏只列不在賣的",
+  "ok": true,
+  "detail": "0"
+ },
+ {
+  "name": "S14 檢舉大頭貼在頁底",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S15 新手指南圖全部載到",
+  "ok": false,
+  "detail": "[['howto-share', True], ['howto-edit', False], ['howto-report', False], ['levels-desktop', False], ['points-desktop', False], ['titles', False]]"
+ },
+ {
+  "name": "S15 指南有合集、一次發多張、願望清單、私訊",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S2 指南必填說法一致",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S16 儲存鈕一律左下",
+  "ok": true,
+  "detail": "[18, 18, 18, 18, 18, 18] vs 18"
+ },
+ {
+  "name": "S16 密碼提示不用括號",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S17 同意勾選框 ≥ 24px",
+  "ok": true,
+  "detail": "24×24"
+ },
+ {
+  "name": "S17 註冊鈕沒有停用",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S17 沒勾就說原因",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "S20 標題跟著篩選",
+  "ok": true,
+  "detail": "團體40"
+ },
+ {
+  "name": "S20 篩選標籤 ≥ 40px",
+  "ok": true,
+  "detail": "{40}"
+ },
+ {
+  "name": "S20 藝人列整列可點 ≥ 40px",
+  "ok": true,
+  "detail": "{77}"
+ },
+ {
+  "name": "S21 搜尋頁沒輸入時不列全部系列",
+  "ok": true,
+  "detail": "2610px（修前 59,047）"
+ },
+ {
+  "name": "S21 有關鍵字時系列分頁",
+  "ok": true,
+  "detail": "30 筆"
+ },
+ {
+  "name": "全站橫向溢出為 0（4 寬 × 39 頁）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "console error 為 0",
+  "ok": true,
+  "detail": ""
+ }
+]

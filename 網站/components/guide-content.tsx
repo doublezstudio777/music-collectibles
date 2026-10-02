@@ -65,7 +65,7 @@ export function GuideContent({ headingLevel = 2 }: { headingLevel?: 2 | 3 }) {
           <li>選填：專輯或演唱會、版本、想說的話、標籤、要不要賣</li>
           <li>發布後可編輯</li>
         </ul>
-        <Pic desk={{ src: "howto-share", w: 750, h: 1876 }} alt="操作示意：1 炫收藏、2 加照片、3 選藝人、4 選品項、5 發布" />
+        <Pic desk={{ src: "howto-share", w: 750, h: 1947 }} alt="操作示意：1 炫收藏、2 加照片、3 選藝人、4 選品項、5 發布" />
       </section>
 
       <section id="batch" className="guide-sec">
@@ -93,7 +93,7 @@ export function GuideContent({ headingLevel = 2 }: { headingLevel?: 2 | 3 }) {
           <li>可編輯項目：簡介、發行年、曲目、版本、目錄號</li>
           <li>每次修改保留紀錄，可還原</li>
         </ul>
-        <Pic desk={{ src: "howto-edit", w: 750, h: 1539 }} alt="操作示意：1 編輯、2 修改、3 儲存" />
+        <Pic desk={{ src: "howto-edit", w: 750, h: 1619 }} alt="操作示意：1 編輯、2 修改、3 儲存" />
       </section>
 
       <section id="trade" className="guide-sec">

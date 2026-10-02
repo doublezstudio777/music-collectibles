@@ -1,0 +1,13 @@
+/* 與 網站/app/globals.css 同一組代幣（黑白橘 A，直角、零陰影、零漸層） */
+:root{
+  --bg:#ffffff;--surface:#f5f5f5;--surface2:#ededed;--line:#dcdcdc;
+  --text:#111111;--muted:#5c5c5c;--orange:#ff6a00;--on-orange:#111111;
+  --font-sans:"Inter","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono","SFMono-Regular",Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.65;
+  -webkit-font-smoothing:antialiased;line-break:strict;word-break:keep-all;overflow-wrap:break-word}
+.canvas{background:var(--bg)}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--font-mono)}
