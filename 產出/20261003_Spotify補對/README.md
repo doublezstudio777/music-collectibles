@@ -32,3 +32,23 @@ Cloudflare Version ID `c24899f3`，沒有遷移。部署前備份 `20261003-0232
 ## 本機注意
 
 本機 D1（`.wrangler/state`）原本沒有 `spotify_artists` 資料、也沒套 0028／0029，這次套了遷移並塞 gordon、陳綺貞兩筆 Spotify ID 當驗收用（本機測試資料，不影響正式站）。
+
+## 三、第二輪自動判定（2026-10-03 深夜）
+
+疑義 98 位太多，不能全丟給使用者逐一點。新寫 `網站/scripts/spotify-second-pass.mjs` 用額外證據再判一次，採用的寫進 `網站/scripts/spotify-manual.json` 再 `spotify-match.mjs --remote --apply`。寫入前備份 `20261003-030447-remote`。結果：**採用 64、空殼不配 12、仍待使用者 22**，正式站 `spotify_artists` 200 → **264 列啟用**（新 64 位 `albums` 為空，等每晚 02:00 排程抽）。完整名單與每位的證據在 `第二輪判定.json`，給使用者看的是 `用戶確認_精簡版.md`。
+
+證據與採用數：
+- `wikidata-p1902` 3：Wikidata P1902（Spotify artist ID）。QID 來自 MusicBrainz 的 Wikidata 連結、10/1 補匯的 `pending-result.json`、站上 `wiki_url` 的 pageprops。ATARASHII GAKKO!、李英宏（Wikidata 給的 ID 跟第一輪的同名候選不同，第一輪抓到的是空殼）、熊仔
+- `wikidata-search` 2：Wikidata 同名項目（只認站上主名稱與中文段，別名「The Wanted」會對到英國男團，已擋）的 P1902 正好是同名候選。HUSH、柯智豪
+- `musicbrainz` 0：16 位有 MBID 的重查 url-rels，沒有新增 Spotify 連結
+- `search-title` 38：拿站上已知作品（系列標題優先、再入圍作品與簡介《》、跨藝人合輯不搜）去 Spotify search（album＋track），結果對全部已知作品累計命中。同一演出者命中 ≥2 個作品（Spotify 名稱可以跟站上不同：呂士軒＝TroutFresh、淺堤＝Shallow Levée、裘德＝Jude Chiu、胖虎＝punkhoo、江惠儀＝Joey Chiang）、或命中 1 個且名稱相符。第一輪只用 `artist:名` 抓前 10 張，作品多的或 Spotify 用英文名的都漏了，這條救回最多
+- `single-cjk-empty` 14：唯一同名候選、站上名稱含中文、站上沒有已知作品（或只有跨藝人合輯）、候選有作品且像華語圈藝人（Spotify 名稱含中文或作品標題有中文）。純英文名＋純英文作品的不採用（「AAA」會對到日本團，「Roger Lin」太常見）
+- `multi-only-real` 6：多位同名候選只有一位有作品，其他是沒作品沒照片的空殼；或那位的作品有中文標題／跟站上作品相同。阿跨面、黃子軒、翁立友、吳永吉、C.Holly、ELLE SHIMADA、KbN
+- `single-works-hit` 1：唯一候選補搜到的作品跟站上相同（高金龍 SAITIKOTIKO/一次又一次）
+- 空殼不配 12：候選沒頭像也沒作品、作品搜尋也對不到（荒井十一、黃綺珊、張羽涵、利惟庸、林鈺婷、王OK、蘇郁涵、楊淑喻（吉那）、張凱婷、鄭嘉富、鄭敬儒、鄭楠）。就算是本人，播放器也沒東西可放，先當找不到
+
+規格裡「Spotify genres 含 taiwan／mandopop」那條用不上：這個 app 的 Spotify 回應（search 與 get artist）只有 id、name、images、external_urls，沒有 genres、followers、popularity。配額：第二輪 Spotify 只打 search 共 163 次（1 秒 1 次、429 0 次）、`--apply` 對 64 個手動 ID 各打一次 get artist；MusicBrainz 16、Wikidata 171、維基 11。
+
+重跑說明：`spotify-match.mjs --apply` 之後第一輪報告會把手動指定的算進 ok，疑義只剩沒採用的；要重現 98 位的判定要用 git 裡 apply 前的報告：`node scripts/spotify-second-pass.mjs --remote --report <舊報告> [--write]`。已寫進 `spotify-manual.json` 的沿用不重判，要重判就刪那條。
+
+驗證：正式站 `/artist/lv-shi-xuan`、`/artist/tiu-tiu`、`/artist/li-ying-hong`、`/artist/xiong-zai` 的 HTML 都有 `open.spotify.com/embed/artist/{新 ID}`，跟 manual 檔一致。

@@ -1,6 +1,6 @@
 {
  "_說明": "藝人識別碼 → Spotify 藝人 ID（scripts/spotify-match.mjs 產生；只有公開 ID，沒有金鑰）",
- "產生時間": "2026-10-02T18:32:48.547Z",
+ "產生時間": "2026-10-02T19:08:53.908Z",
  "artists": {
   "163braces": {
    "spotifyId": "6gtUGnqU4qnJ2ZB2bvp5TZ",
@@ -25,6 +25,18 @@
    "spotifyName": "阿布絲・塔娜比瑪",
    "source": "search",
    "evidence": "搜尋同名（3 位同名，只有這位有作品交集），作品交集：QUEENDOM、QUEENDOM 王國"
+  },
+  "a-flyt": {
+   "spotifyId": "7fV3vqbqrK31dLIy3cDla9",
+   "spotifyName": "A. FLYT",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「A. FLYT」（名稱相符）有 1 個同名作品：B.A.S.I.C（＝第一輪同名候選）（2026-10-03）"
+  },
+  "a-kua-mian": {
+   "spotifyId": "26QeJhwzQ5vwSNX8wH1t0D",
+   "spotifyName": "阿跨面",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「阿跨面」（名稱相符）有 1 個同名作品：陷眠（＝第一輪同名候選）（2026-10-03）"
   },
   "a-lin": {
    "spotifyId": "28gf2piFx6cAKOMIwcky5a",
@@ -98,11 +110,23 @@
    "source": "search",
    "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：AKA"
   },
+  "atarashii-gakko": {
+   "spotifyId": "4OfU76YhPU04wlmbVFFgTJ",
+   "spotifyName": "ATARASHII GAKKO!",
+   "source": "manual",
+   "evidence": "第二輪 wikidata-p1902：Wikidata Q30937273（QID 來自MusicBrainz 12a43a61-e31a-4cac-92a6-c95ce9cdfe3c）的 P1902 Spotify artist ID，與同名候選一致（2026-10-03）"
+  },
   "az": {
    "spotifyId": "20tREv54XdXoRSTGp6EGRy",
    "spotifyName": "AZ李孝祖",
    "source": "search",
    "evidence": "搜尋同名，作品交集：美式教育PAMERICAH"
+  },
+  "b-e-n-n": {
+   "spotifyId": "5mdL6HD58VA7I20wk6qNWp",
+   "spotifyName": "B E N N",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「B E N N」（名稱相符）有 1 個同名作品：Hilarious（＝第一輪同名候選）（2026-10-03）"
   },
   "ba-shi-ba-ke-ba-le-zi": {
    "spotifyId": "7tYJYd9Xr6O4I0uQE2ZGd0",
@@ -122,6 +146,18 @@
    "source": "search",
    "evidence": "搜尋同名（3 位同名，只有這位有作品交集），作品交集：萬事美妙、出來"
   },
+  "beyond-cure": {
+   "spotifyId": "0T50TPLPGVjTpLOhRUMdbh",
+   "spotifyName": "Beyond Cure",
+   "source": "manual",
+   "evidence": "第二輪 single-cjk-empty：唯一同名候選、名稱含中文、站上沒有已知作品可比、候選在 Spotify 有 10 張作品（19%、藥物治療）、作品標題有中文（2026-10-03）"
+  },
+  "blaire-ko": {
+   "spotifyId": "3ovcRgJKVKJumd6QKosCd1",
+   "spotifyName": "柯智豪",
+   "source": "manual",
+   "evidence": "第二輪 wikidata-search：Wikidata 同名項目 Q113452608「柯智豪」（臺灣藝術家）的 P1902 正好是同名候選（2026-10-03）"
+  },
   "bradd": {
    "spotifyId": "1T72OjsUb6ZGUElSwtixNO",
    "spotifyName": "BRADD",
@@ -133,6 +169,12 @@
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz d658240a-d80b-4f1b-8b13-2d41cf12c375 的 Spotify 連結"
+  },
+  "c-holly": {
+   "spotifyId": "3RRWcWaoWx1OiXnrWo7k7t",
+   "spotifyName": "C.Holly",
+   "source": "manual",
+   "evidence": "第二輪 multi-only-real：2 位同名候選只有這位有作品（HOllY S#IT、三不娶），作品有中文標題（2026-10-03）"
   },
   "cai-jia-zhen": {
    "spotifyId": "22v6AgV8hdNbJC51hqTLeH",
@@ -152,6 +194,12 @@
    "source": "search",
    "evidence": "搜尋同名，作品交集：戲台"
   },
+  "ced": {
+   "spotifyId": "3M1YtHr7K9yHjawwbJ2DgC",
+   "spotifyName": "CED",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「CED」（名稱相符）有 1 個同名作品：RLGL（＝第一輪同名候選）（2026-10-03）"
+  },
   "ceng-wei-zhong": {
    "spotifyId": "7zY8finbugZLFpNfwNe4qW",
    "spotifyName": "曾瑋中",
@@ -163,6 +211,12 @@
    "spotifyName": "查勞.巴西瓦里",
    "source": "search",
    "evidence": "搜尋同名，作品交集：Kami Kami 我們我們"
+  },
+  "cheer": {
+   "spotifyId": "60IqhWF6w6hCfi70sbftUY",
+   "spotifyName": "Cheer",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「Cheer」（名稱相符）有 1 個同名作品：HEMI DEMI SEMI（＝第一輪同名候選）（2026-10-03）"
   },
   "chen-jian-qi": {
    "spotifyId": "0AeMrbKRLvN2r1aNiLGYlZ",
@@ -223,6 +277,12 @@
    "spotifyName": "陳子彰",
    "source": "search",
    "evidence": "搜尋同名，作品交集：The Sea, The Sky, The You and I"
+  },
+  "chun-mian-le-dui": {
+   "spotifyId": "0Nq5qAJPpzIU0rUFwa3CfL",
+   "spotifyName": "春麵樂隊ChuNoodle",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「春麵樂隊ChuNoodle」（名稱相符）有 1 個同名作品：下回上去（第一輪搜尋沒抓到這位）（2026-10-03）"
   },
   "chunyan": {
    "spotifyId": "20Ire8k6z7JX4iCFunLxxA",
@@ -314,6 +374,12 @@
    "source": "musicbrainz",
    "evidence": "MusicBrainz eff2e455-53e9-4006-be4c-2f550f3fd8b2 的 Spotify 連結"
   },
+  "dremedreman": {
+   "spotifyId": "5r3Jn6rneyLJZhnNIJ63RC",
+   "spotifyName": "Dremedreman 曾妮",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「Dremedreman 曾妮」（名稱相符）有 1 個同名作品：全村的希望（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
   "e-so": {
    "spotifyId": "2qXGNIlmY3JrYkxOWyXZsd",
    "spotifyName": "",
@@ -332,6 +398,12 @@
    "source": "musicbrainz",
    "evidence": "MusicBrainz 9fdc68d1-98ac-463c-a309-181b58c74aed 的 Spotify 連結"
   },
+  "elle-shimada": {
+   "spotifyId": "6QCfENvTPwkHq4V6nTMOpk",
+   "spotifyName": "Elle Shimada",
+   "source": "manual",
+   "evidence": "第二輪 multi-only-real：2 位同名候選只有這位有作品（DAUGHTER WATER、LULLABY FOR THE RIVER IN MY BODY），其中「LULLABY FOR THE RIVER IN MY BODY」跟站上作品相同（2026-10-03）"
+  },
   "ena-mori": {
    "spotifyId": "5FW3vzEP2gQB3RQRNmR6ON",
    "spotifyName": "",
@@ -343,6 +415,12 @@
    "spotifyName": "Energy",
    "source": "search",
    "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：星期五晚上 (慶功16蹲版)、Here I Am、星期五晚上"
+  },
+  "erika-liu": {
+   "spotifyId": "3cuZA22vz0nToT0LAcecup",
+   "spotifyName": "ERIKA",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「ERIKA」（名稱相符）有 1 個同名作品：雙魚宮（＝第一輪同名候選）（2026-10-03）"
   },
   "fang-pin-rong": {
    "spotifyId": "4Z5hQV5kCmLtsWuhHvIVJ9",
@@ -422,6 +500,12 @@
    "source": "picks",
    "evidence": "手動歌單 5 首的第一位演出者都是「G.U.T.S」"
   },
+  "haezee": {
+   "spotifyId": "0LestIkVCbetqsJ3o72Yzn",
+   "spotifyName": "Haezee",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「Haezee」（名稱相符）有 1 個同名作品：TWO BROKEN SOULS（＝第一輪同名候選）（2026-10-03）"
+  },
   "hong-pei-yu": {
    "spotifyId": "0rARfHZ4ZteUlzbAuxUwAs",
    "spotifyName": "",
@@ -440,11 +524,29 @@
    "source": "musicbrainz",
    "evidence": "MusicBrainz 1ec1d4a4-37c8-4e30-90e7-3d86a94b99bc 的 Spotify 連結"
   },
+  "huang-ye-yuan": {
+   "spotifyId": "0lrScffAl5GLdLTbi2j8Kj",
+   "spotifyName": "黃業圓",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「黃業圓」（名稱相符）有 1 個同名作品：悖論（＝第一輪同名候選）（2026-10-03）"
+  },
   "huang-yu-han": {
    "spotifyId": "58na39JAZ12nojYGPuqdWg",
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 3a9b4b79-7078-4002-82c6-450ddbd7f7a4 的 Spotify 連結"
+  },
+  "huang-zi-xuan": {
+   "spotifyId": "6k4ICKI3As1XFTil93hlq4",
+   "spotifyName": "黃子軒",
+   "source": "manual",
+   "evidence": "第二輪 multi-only-real：3 位同名候選只有這位有作品（客家的卡夫卡、牛騷）又有照片，其他 2 位沒作品沒照片（2026-10-03）"
+  },
+  "hush": {
+   "spotifyId": "5Mx85GBWB3PbMOhZAVxXkR",
+   "spotifyName": "HUSH",
+   "source": "manual",
+   "evidence": "第二輪 wikidata-search：Wikidata 同名項目 Q19850107「HUSH」（台灣創作歌手）的 P1902 正好是同名候選（2026-10-03）"
   },
   "hyukoh": {
    "spotifyId": "57okaLdCtv3nVBSn5otJkp",
@@ -482,11 +584,29 @@
    "source": "musicbrainz",
    "evidence": "MusicBrainz 1bbce3ee-6a17-454f-831a-2eb746329953 的 Spotify 連結"
   },
+  "jacqui": {
+   "spotifyId": "4g07FXwEqS5euGYGo1n6x1",
+   "spotifyName": "Jacqui",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「Jacqui」（名稱相符）有 1 個同名作品：Dirty Mirror Selfie（＝第一輪同名候選）（2026-10-03）"
+  },
   "jade": {
    "spotifyId": "2CP7We7wDMW76lotAw85aR",
    "spotifyName": "JADE",
    "source": "search",
    "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：Creeper"
+  },
+  "jiang-hui-yi": {
+   "spotifyId": "0x9eLvaaFJtZULN7TTVEgI",
+   "spotifyName": "Joey Chiang",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「Joey Chiang」（Spotify 名稱跟站上不同）有 2 個同名作品：陷眠、露螺（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  "jiang-meng-xun": {
+   "spotifyId": "3APxhHtUm221nsYWpgjGbm",
+   "spotifyName": "江孟薰",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「江孟薰」（名稱相符）有 1 個同名作品：完福（＝第一輪同名候選）（2026-10-03）"
   },
   "jj-lin": {
    "spotifyId": "7Dx7RhX0mFuXhCOUgB01uM",
@@ -524,6 +644,12 @@
    "source": "search",
    "evidence": "搜尋同名，作品交集：當我不敢說 Weak Messages Create Bad Situations、JUD 陳泳希 首張迷你專輯、當我不敢說+"
   },
+  "kafe-hu": {
+   "spotifyId": "1En3GDLWMMPFVlSLEODTmU",
+   "spotifyName": "Kafe.Hu",
+   "source": "manual",
+   "evidence": "第二輪 single-cjk-empty：唯一同名候選、名稱含中文、站上只有跨藝人合輯、沒有已知作品可比、候選在 Spotify 有 10 張作品（A Message For Those Who Don't Get Me、经济舱 (Live)）、作品標題有中文（2026-10-03）"
+  },
   "kang-shi-tan-de-bian-hua-qiu": {
    "spotifyId": "4fmdz90I7bCk35iK6GZ9fK",
    "spotifyName": "",
@@ -535,6 +661,12 @@
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz cffc644c-6608-4d5e-8b6a-3e5bdd0ea96f 的 Spotify 連結"
+  },
+  "kbn": {
+   "spotifyId": "5wHDddAu3raELszSogydoe",
+   "spotifyName": "KbN",
+   "source": "manual",
+   "evidence": "第二輪 multi-only-real：3 位同名候選只有這位有作品（Lo-Fi Camping: Sound of the Night、19992005），作品有中文標題（2026-10-03）"
   },
   "ke-zhi-tang": {
    "spotifyId": "3KdU8KfkDy7xHmQS00B5wd",
@@ -560,11 +692,29 @@
    "source": "musicbrainz",
    "evidence": "MusicBrainz 8450cc38-85c7-4dec-a3e9-2fc47917c79d 的 Spotify 連結"
   },
+  "kuljelje-ljamcun": {
+   "spotifyId": "6ImyzgaHrmwqkBMvVxTwGV",
+   "spotifyName": "Kuljelje Ljamcun",
+   "source": "manual",
+   "evidence": "第二輪 single-cjk-empty：唯一同名候選、名稱含中文、站上沒有已知作品可比、候選在 Spotify 有 4 張作品（ATAVISM 返祖現象、Papamaw (feat. YuChia Wang)）、作品標題有中文（2026-10-03）"
+  },
+  "kumu-basaw": {
+   "spotifyId": "1AJCereA3JUP2yOzSvrlk9",
+   "spotifyName": "Kumu Basaw 姑慕·巴紹",
+   "source": "manual",
+   "evidence": "第二輪 single-cjk-empty：唯一同名候選、名稱含中文、站上沒有已知作品可比、候選在 Spotify 有 2 張作品（Qrasun 格拉孫、Sapah 家）（2026-10-03）"
+  },
   "lao-wang-le-dui": {
    "spotifyId": "4MRQK5pLyNbcOW493n55iT",
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 52d7718d-fb8e-4bb9-adce-41e7151f847e 的 Spotify 連結"
+  },
+  "lawis-aow": {
+   "spotifyId": "6Ti070DQOFPYBjCk8iRw5M",
+   "spotifyName": "LAWIS AOW",
+   "source": "manual",
+   "evidence": "第二輪 single-works-hit：唯一同名候選，Spotify 作品「SAITIKOTIKO/一次又一次」跟站上已知作品相同（2026-10-03）"
   },
   "lei-qing": {
    "spotifyId": "3vkcJL0rXaCK63ef9gMzbf",
@@ -583,6 +733,12 @@
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 82c314c4-0498-466a-9093-79cef38875a0 的 Spotify 連結"
+  },
+  "li-ying-hong": {
+   "spotifyId": "4VP44ZwK51R0y7ZbjJLHJR",
+   "spotifyName": "DJ Didilong",
+   "source": "manual",
+   "evidence": "第二輪 wikidata-p1902：Wikidata Q28413382（QID 來自MusicBrainz bef9d994-7df9-484d-acd9-3d26a37161d1）的 P1902 Spotify artist ID（2026-10-03）"
   },
   "li-zhu-xin": {
    "spotifyId": "0qI7jcxX3CFiafnkAe7Rjp",
@@ -614,11 +770,23 @@
    "source": "musicbrainz",
    "evidence": "MusicBrainz a7f037c1-362a-4152-8fbe-ca84c37bc5f4 的 Spotify 連結"
   },
+  "lite": {
+   "spotifyId": "0TF6B1cp2QZXLE0NjhTMT9",
+   "spotifyName": "LITE",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「LITE」（名稱相符）有 1 個同名作品：STRATA（＝第一輪同名候選）（2026-10-03）"
+  },
   "liu-wei": {
    "spotifyId": "6qjAV93Q7qYARVE1qgxVRt",
    "spotifyName": "劉暐",
    "source": "search",
    "evidence": "搜尋同名，作品交集：劉暐個人專輯"
+  },
+  "lizi": {
+   "spotifyId": "3pwSkdUT7DXmubn3DhIeke",
+   "spotifyName": "Lizi 栗子",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「Lizi 栗子」（名稱相符）有 1 個同名作品：Off the Chain（＝第一輪同名候選）（2026-10-03）"
   },
   "lomba-sihir": {
    "spotifyId": "6wD3vtAV0P3gWB9zLs7I4j",
@@ -668,6 +836,12 @@
    "source": "search",
    "evidence": "搜尋同名，作品交集：胎內"
   },
+  "lv-shi-xuan": {
+   "spotifyId": "78IEFKJN8gQgJM1WOvt2Tl",
+   "spotifyName": "TroutFresh",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「TroutFresh」（Spotify 名稱跟站上不同）有 2 個同名作品：誤入奇途、二周目（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
   "ma-wei": {
    "spotifyId": "4wFJB4d7JL4ehriQU0vaKf",
    "spotifyName": "馬尾",
@@ -685,6 +859,12 @@
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz d515c0d2-305d-445f-a4fc-71348fc9e074 的 Spotify 連結"
+  },
+  "mao-dan-zhi": {
+   "spotifyId": "3jB1rrv3m8Uass8V0WBjX4",
+   "spotifyName": "貓膽汁",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「貓膽汁」（名稱相符）有 1 個同名作品：失望（＝第一輪同名候選）（2026-10-03）"
   },
   "marz23": {
    "spotifyId": "4XBG26mgvzGqT09eopG4d9",
@@ -740,11 +920,29 @@
    "source": "musicbrainz",
    "evidence": "MusicBrainz 5fbab346-06f9-4b98-a916-02d08ebb7257 的 Spotify 連結"
   },
+  "mong-tong": {
+   "spotifyId": "61QVaGjYK4UNd6uTz7Lzuo",
+   "spotifyName": "Mong Tong",
+   "source": "manual",
+   "evidence": "第二輪 single-cjk-empty：唯一同名候選、名稱含中文、站上沒有已知作品可比、候選在 Spotify 有 10 張作品（Mong Tong on Audiotree Live、Mystery 秘神）、作品標題有中文（2026-10-03）"
+  },
+  "morikilr": {
+   "spotifyId": "6wHlnN08SPdMYrB5RciiBi",
+   "spotifyName": "孔亞明",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「孔亞明」（名稱相符）有 1 個同名作品：kamawan za kavung 像帽子一樣（＝第一輪同名候選）（2026-10-03）"
+  },
   "muta": {
    "spotifyId": "4pWDJ1CIEJGf6AzU1HIDgM",
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 4f531606-e7ae-47bd-9bb6-f270468b5798 的 Spotify 連結"
+  },
+  "naau": {
+   "spotifyId": "6IU5RWcjMeR04pA62rFWzV",
+   "spotifyName": "Naa'u娜塢",
+   "source": "manual",
+   "evidence": "第二輪 single-cjk-empty：唯一同名候選、名稱含中文、站上沒有已知作品可比、候選在 Spotify 有 3 張作品（kenkengiu 路上會有好多彎、saviki 山，美）（2026-10-03）"
   },
   "narabara": {
    "spotifyId": "5ri5adkr8ualRheReGoFpc",
@@ -776,11 +974,29 @@
    "source": "search",
    "evidence": "搜尋同名，作品交集：Regrow Protocol"
   },
+  "our-shame": {
+   "spotifyId": "5vKIV2YjcVSf3wWUkcyCR5",
+   "spotifyName": "Our Shame",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「Our Shame」（名稱相符）有 1 個同名作品：Hollywood Dream（＝第一輪同名候選）（2026-10-03）"
+  },
   "ozi": {
    "spotifyId": "7Icsejk4pdIhkq2KO5A0jD",
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 21686a1f-65ff-45b9-b5e2-9bc891791b33 的 Spotify 連結"
+  },
+  "panai": {
+   "spotifyId": "2PbU3CmXZmV6dPfzLONLIA",
+   "spotifyName": "巴奈",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「巴奈」（名稱相符）有 1 個同名作品：泥娃娃（＝第一輪同名候選）（2026-10-03）"
+  },
+  "pang-hu": {
+   "spotifyId": "5VjRKAwMi363o2WQ7D509J",
+   "spotifyName": "punkhoo",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「punkhoo」（Spotify 名稱跟站上不同）有 2 個同名作品：LIFE & LIVE、大家好我們是胖虎（第一輪搜尋沒抓到這位）（2026-10-03）"
   },
   "peng-bai-yi": {
    "spotifyId": "5aacxSews2ZIWSR23ywXAz",
@@ -836,11 +1052,29 @@
    "source": "search",
    "evidence": "搜尋同名（2 位同名，只有這位有作品交集），作品交集：If this is the end, meet me in Dreamland.、MUSIC SAVED MY LIFE SO DID YOU 我是電子音樂"
   },
+  "project-ace": {
+   "spotifyId": "5BUYDnSCfcFA1VDI79KURZ",
+   "spotifyName": "李吉吉",
+   "source": "manual",
+   "evidence": "第二輪 single-cjk-empty：唯一同名候選、名稱含中文、站上只有跨藝人合輯、沒有已知作品可比、候選在 Spotify 有 1 張作品（在通往未達的道路上）（2026-10-03）"
+  },
   "puzzleman": {
    "spotifyId": "5cqDJ1LV02tRyfWJoijkpZ",
    "spotifyName": "PUZZLEMAN",
    "source": "search",
    "evidence": "搜尋同名（4 位同名，只有這位有作品交集），作品交集：MY MESSAGE (feat. Shing02)"
+  },
+  "qin-si-feng": {
+   "spotifyId": "2n0GSIjJNATwgaBGC3GwpH",
+   "spotifyName": "秦四風",
+   "source": "manual",
+   "evidence": "第二輪 single-cjk-empty：唯一同名候選、名稱含中文、站上只有跨藝人合輯、沒有已知作品可比、候選在 Spotify 有 3 張作品（愛情公寓電影原聲音樂、SEDAR Trio - Vol. 1）（2026-10-03）"
+  },
+  "qiu-de": {
+   "spotifyId": "0RFpGSVvrZOh43m5WdZn8T",
+   "spotifyName": "Jude Chiu",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「Jude Chiu」（Spotify 名稱跟站上不同）有 4 個同名作品：胚胎、裘德、離開銀色荒原（第一輪搜尋沒抓到這位）（2026-10-03）"
   },
   "qiu-li-ting": {
    "spotifyId": "6mdV49yQxgiThoy7Ax4Vrd",
@@ -854,6 +1088,12 @@
    "source": "search",
    "evidence": "搜尋同名，作品交集：夢裡夢外"
   },
+  "qiu-shu": {
+   "spotifyId": "5g0FAOaBQilmDZTEebCFSM",
+   "spotifyName": "邱舒",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「邱舒」（名稱相符）有 1 個同名作品：鏡仔（＝第一輪同名候選）（2026-10-03）"
+  },
   "qiu-shu-chan": {
    "spotifyId": "16kMpdfHTTmwcRByPpBiEa",
    "spotifyName": "邱淑蟬",
@@ -865,6 +1105,18 @@
    "spotifyName": "Robot Swing",
    "source": "search",
    "evidence": "搜尋同名，作品交集：Override!、IS IT ALIVE? (Live at Yuchen Cinema Studio)"
+  },
+  "sa-ba-tai-lu-ge-er-tong-he-chang-tuan": {
+   "spotifyId": "2DtEbTzTVPNdvhZT8HKtUn",
+   "spotifyName": "薩巴太魯閣兒童合唱團",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「薩巴太魯閣兒童合唱團」（名稱相符）有 1 個同名作品：給幸福的一封信（＝第一輪同名候選）（2026-10-03）"
+  },
+  "san-zhi-gou": {
+   "spotifyId": "7FdriWy0UbU8xGbLwA5vBz",
+   "spotifyName": "三隻狗",
+   "source": "manual",
+   "evidence": "第二輪 single-cjk-empty：唯一同名候選、名稱含中文、站上只有跨藝人合輯、沒有已知作品可比、候選在 Spotify 有 1 張作品（F U）（2026-10-03）"
   },
   "sandy-lam": {
    "spotifyId": "3K2hOAx9MPhduvDf2qguro",
@@ -878,17 +1130,47 @@
    "source": "musicbrainz",
    "evidence": "MusicBrainz a67cc2cb-23b2-4aa9-a196-860f4d6e9cf7 的 Spotify 連結"
   },
+  "sapud-kacaw": {
+   "spotifyId": "5pg9bD45ZlvHbIlBkSCY6n",
+   "spotifyName": "Sapud Kacaw 撒部.噶照",
+   "source": "manual",
+   "evidence": "第二輪 single-cjk-empty：唯一同名候選、名稱含中文、站上沒有已知作品可比、候選在 Spotify 有 1 張作品（Parod 爐灶）（2026-10-03）"
+  },
   "sarah": {
    "spotifyId": "3IYmKNTLMRm9lR9lJ3sqHZ",
    "spotifyName": "陳以諾Sarah",
    "source": "search",
    "evidence": "搜尋同名，作品交集：慢花誌"
   },
+  "sauljaljui": {
+   "spotifyId": "5U7enzUf0xuOMdiqj4tncy",
+   "spotifyName": "Sauljaljui",
+   "source": "manual",
+   "evidence": "第二輪 single-cjk-empty：唯一同名候選、名稱含中文、站上沒有已知作品可比、候選在 Spotify 有 6 張作品（Sauljaljui、VAIVAIK 尋走）、作品標題有中文（2026-10-03）"
+  },
   "savage-m": {
    "spotifyId": "0N7qBbcs5Ij44dxbAKy2Sl",
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 43a8f75e-eae4-474b-b783-5b1c87c2e5a1 的 Spotify 連結"
+  },
+  "sha-zi-yu-bai-chi": {
+   "spotifyId": "4rk0xYl7t3XftIQQedJjK4",
+   "spotifyName": "傻子與白痴 Fool And Idiot",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「傻子與白痴 Fool And Idiot」（名稱相符）有 2 個同名作品：姿態、遠慮（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  "shen-jing-yuan": {
+   "spotifyId": "0JO7LjM53ktNVO02Px0aDh",
+   "spotifyName": "神經元",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「神經元」（名稱相符）有 1 個同名作品：不眨眼的人（＝第一輪同名候選）（2026-10-03）"
+  },
+  "sherryz": {
+   "spotifyId": "642hyS9EveDWXVIANUQnMb",
+   "spotifyName": "鄭雙雙",
+   "source": "manual",
+   "evidence": "第二輪 single-cjk-empty：唯一同名候選、名稱含中文、站上沒有已知作品可比、候選在 Spotify 有 10 張作品（Time、Right Here (北流五週年音樂共創計畫)）（2026-10-03）"
   },
   "shi-shi": {
    "spotifyId": "4XKp9GFAQfsh2NflSRnHQi",
@@ -932,6 +1214,12 @@
    "source": "musicbrainz",
    "evidence": "MusicBrainz d902e912-001e-4776-bf50-f71d3e53c971 的 Spotify 連結"
   },
+  "sophy": {
+   "spotifyId": "5Hx1PRV6i7vQdc8gAGE8eq",
+   "spotifyName": "SOPHY",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「SOPHY」（名稱相符）有 1 個同名作品：水性揚花（＝第一輪同名候選）（2026-10-03）"
+  },
   "sorry-youth": {
    "spotifyId": "6c4IBMTcnFDhsKHXNSBBvp",
    "spotifyName": "",
@@ -956,11 +1244,23 @@
    "source": "search",
    "evidence": "搜尋同名，作品交集：少年殺人事件"
   },
+  "suming": {
+   "spotifyId": "3jV6Ro12GySf82kJiksE7D",
+   "spotifyName": "Suming",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「Suming」（名稱相符）有 1 個同名作品：Mikerid 引路（＝第一輪同名候選）（2026-10-03）"
+  },
   "sunset-rollercoaster": {
    "spotifyId": "7BqRcZsHYYQeqMAOp7e532",
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 75c5edb5-796d-46f3-bac3-9b59da658023 的 Spotify 連結"
+  },
+  "sweet-john": {
+   "spotifyId": "78UcIEW1VFh2WOgNk0E7mm",
+   "spotifyName": "Sweet John",
+   "source": "manual",
+   "evidence": "第二輪 single-cjk-empty：唯一同名候選、名稱含中文、站上沒有已知作品可比、候選在 Spotify 有 10 張作品（GOOD AFTERNIGHT、Dear）、作品標題有中文（2026-10-03）"
   },
   "tanya-chua": {
    "spotifyId": "376pcuw4IgWBMOUwCr8kIm",
@@ -986,17 +1286,35 @@
    "source": "musicbrainz",
    "evidence": "MusicBrainz 1f3088ed-4fc4-4b92-a5a7-d70470a37e6d 的 Spotify 連結"
   },
+  "the-wanted": {
+   "spotifyId": "7FNSvrE4X5hb2C6pYN0skP",
+   "spotifyName": "尋人啟事The Wanted",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「尋人啟事The Wanted」（名稱相符）有 1 個同名作品：減肥計劃（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
   "tickle-tickle": {
    "spotifyId": "50KK9HzjnkeiGaLlFH30ne",
    "spotifyName": "Tickle Tickle 癢癢",
    "source": "search",
    "evidence": "搜尋同名，作品交集：成人料理亭"
   },
+  "tiu-tiu": {
+   "spotifyId": "6xDRh6bnmn1CQhRUntBka9",
+   "spotifyName": "Shallow Levée",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「Shallow Levée」（Spotify 名稱跟站上不同）有 4 個同名作品：沈默的鉅作、湯與海、婚禮之途（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
   "tizzy-bac": {
    "spotifyId": "6Rv0ndBVPEQJ7KagPDtC5H",
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 597b05aa-d273-48c2-b151-a912e0ed942b 的 Spotify 連結"
+  },
+  "tracy-yang": {
+   "spotifyId": "3qLorfR6kFlvpc8KueJn3P",
+   "spotifyName": "Tracy Yang",
+   "source": "manual",
+   "evidence": "第二輪 single-cjk-empty：唯一同名候選、名稱含中文、站上沒有已知作品可比、候選在 Spotify 有 2 張作品（Rise Above、展信安）、作品標題有中文（2026-10-03）"
   },
   "traego": {
    "spotifyId": "3LvnOpBMEBaUpGeTBASdT3",
@@ -1064,6 +1382,12 @@
    "source": "search",
    "evidence": "搜尋同名，作品交集：春天有腳、Intro_鞋"
   },
+  "weng-li-you": {
+   "spotifyId": "1Xqmr3W1G4QNPrLqHWewJd",
+   "spotifyName": "翁立友",
+   "source": "manual",
+   "evidence": "第二輪 multi-only-real：2 位同名候選只有這位有作品（好膽你就來）又有照片，其他 1 位沒作品沒照片（2026-10-03）"
+  },
   "wring-out-laura": {
    "spotifyId": "18vTML8rDnFF1JODSnWbKR",
    "spotifyName": "Wring Out Laura",
@@ -1075,6 +1399,18 @@
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 7c62c7cc-c814-4d3b-a56f-701475e03bff 的 Spotify 連結"
+  },
+  "wu-yong-ji": {
+   "spotifyId": "03TuTDwbot9dn9bbcG2u06",
+   "spotifyName": "吳永吉",
+   "source": "manual",
+   "evidence": "第二輪 multi-only-real：2 位同名候選只有這位有作品（台灣好生活）又有照片，其他 1 位沒作品沒照片（2026-10-03）"
+  },
+  "wu-zheng-jun": {
+   "spotifyId": "0k0eXmnYXXtx9bmf0CPdE7",
+   "spotifyName": "吳政君",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「吳政君」（名稱相符）有 1 個同名作品：傳奇．雙擊--新視界（＝第一輪同名候選）（2026-10-03）"
   },
   "xiao-huang-qi": {
    "spotifyId": "0E6oEhZZtQvj811iXQFLrB",
@@ -1094,11 +1430,29 @@
    "source": "search",
    "evidence": "搜尋同名，作品交集：秋離、一路平安"
   },
+  "xiong-zai": {
+   "spotifyId": "5DdhWWd83hbrWLXIVx129X",
+   "spotifyName": "Kumachan",
+   "source": "manual",
+   "evidence": "第二輪 wikidata-p1902：Wikidata Q25644628（QID 來自MusicBrainz be73ce7e-6779-4b40-9629-732d9851e5d3）的 P1902 Spotify artist ID（2026-10-03）"
+  },
   "xu-fu-kai": {
    "spotifyId": "1cfpx67CNTohABdelcfXdL",
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz 9d34a284-219d-4b39-be36-f4d8c7110b2e 的 Spotify 連結"
+  },
+  "xu-jun": {
+   "spotifyId": "3kU8TgZ3WouCr0GDkYnPbN",
+   "spotifyName": "许钧",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「许钧」（Spotify 名稱跟站上不同）有 2 個同名作品：期待集、歌一切（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  "ya-wei-mo-rui": {
+   "spotifyId": "2tw5PEWw0X8EFl6dlAQUdV",
+   "spotifyName": "雅維·茉芮 Yaway·Mawring",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「雅維·茉芮 Yaway·Mawring」（名稱相符）有 1 個同名作品：世界和我一起跳舞（第一輪搜尋沒抓到這位）（2026-10-03）"
   },
   "yang-nai-wen": {
    "spotifyId": "2Vl4kZKeQslEl4P0ATWuue",
@@ -1142,6 +1496,12 @@
    "source": "musicbrainz",
    "evidence": "MusicBrainz 03a25129-3371-4ab4-b30b-f5d9dcfbec7c 的 Spotify 連結"
   },
+  "you-fa": {
+   "spotifyId": "1fegU8KQ5dFTjOoKTt6K77",
+   "spotifyName": "幽法",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「幽法」（名稱相符）有 1 個同名作品：fakeloh 石化（＝第一輪同名候選）（2026-10-03）"
+  },
   "yu-tiao": {
    "spotifyId": "5NpkBOIMi2iJocLhi5MTde",
    "spotifyName": "",
@@ -1153,6 +1513,12 @@
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz ff81994b-bc0b-4952-b0ac-8fd9ad03e899 的 Spotify 連結"
+  },
+  "yyt": {
+   "spotifyId": "1m2mmv8uETxvs0RgPvPpB3",
+   "spotifyName": "yyt",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「yyt」（名稱相符）有 1 個同名作品：Balls Hit the Floor（＝第一輪同名候選）（2026-10-03）"
   },
   "zhan-ya-wen": {
    "spotifyId": "7uzUuvl79ISbTXl2C7P5pu",
@@ -1184,6 +1550,18 @@
    "source": "musicbrainz",
    "evidence": "MusicBrainz a1168584-1163-49b5-81ce-f7c289720cac 的 Spotify 連結"
   },
+  "zheng-yu-tai": {
+   "spotifyId": "6LwWzQgmc59xITv0sEUrzY",
+   "spotifyName": "鄭宇泰 Myrllin Cheng",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「鄭宇泰 Myrllin Cheng」（名稱相符）有 1 個同名作品：氣孔生成維度（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  "zheng-zhao-yuan": {
+   "spotifyId": "6LCI3F627oY5LPJ3cB4Hvj",
+   "spotifyName": "鄭昭元 ZAOYUAN",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「鄭昭元 ZAOYUAN」（名稱相符）有 2 個同名作品：Enough、Home（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
   "zhou-tang-hao": {
    "spotifyId": "1fHw35wWkpOw05sswFSl70",
    "spotifyName": "",
@@ -1195,6 +1573,12 @@
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz e3587c0a-2f41-4bf3-bd61-1145ec9e685b 的 Spotify 連結"
+  },
+  "zoomie": {
+   "spotifyId": "78wy7wlEi5zMurqwCEDJpG",
+   "spotifyName": "柔米 Zoomie",
+   "source": "manual",
+   "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「柔米 Zoomie」（名稱相符）有 1 個同名作品：鎮妹 Zhin' Moi（第一輪搜尋沒抓到這位）（2026-10-03）"
   },
   "zou-xu": {
    "spotifyId": "7lk9vXaiJOXeKd2ms7Ohh0",
