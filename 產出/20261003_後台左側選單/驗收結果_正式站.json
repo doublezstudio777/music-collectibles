@@ -1,0 +1,67 @@
+[
+ {
+  "name": "未登入 /admin：只有管理員進得去、沒有選單",
+  "ok": true,
+  "detail": "HTTP 200"
+ },
+ {
+  "name": "未登入 /admin/status：只有管理員進得去、沒有選單",
+  "ok": true,
+  "detail": "HTTP 200"
+ },
+ {
+  "name": "未登入 /admin/feedback：只有管理員進得去、沒有選單",
+  "ok": true,
+  "detail": "HTTP 200"
+ },
+ {
+  "name": "未登入 /api/admin/nav-counts 401",
+  "ok": true,
+  "detail": "401"
+ },
+ {
+  "name": "未登入 /api/admin/usage 401",
+  "ok": true,
+  "detail": "401"
+ },
+ {
+  "name": "/api/notice 舊版本號拒收 400",
+  "ok": true,
+  "detail": "400"
+ },
+ {
+  "name": "公告：訪客第一次看得到",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "公告：伺服器發 lmb_tn=1.2（一年、Secure）",
+  "ok": true,
+  "detail": "lmb_tn=1.2; Path=/; Max-Age=31536000; SameSite=Lax; Secure"
+ },
+ {
+  "name": "公告：重新整理不出現",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "公告：換頁不出現",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "公告：關分頁重開不出現",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "公告：清 localStorage 只留 cookie 不出現",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "console error 0（/admin 未登入頁）",
+  "ok": true,
+  "detail": "[]"
+ }
+]
