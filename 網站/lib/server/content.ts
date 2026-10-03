@@ -32,6 +32,7 @@ import {
 import { Catalog } from "@/lib/catalog";
 import { badgeText } from "@/lib/levels";
 import { isAdmin } from "@/lib/server/auth";
+import { noteVisible } from "@/lib/server/spotify-auto";
 import {
   SITE_NAME,
   asSeriesKind,
@@ -378,6 +379,10 @@ async function cachedCatalog(): Promise<Catalog> {
   if (v >= 0) {
     memo = { v, at: now, catalog };
     catalog.catch(() => (memo = null));
+    // Spotify 藝人自動比對（2026-10-03）觸發 A：顯示中的藝人清單有變，就替新出現、還沒有 Spotify ID 的藝人排工作（lib/server/spotify-auto.ts）
+    catalog
+      .then((c) => noteVisible(c.artists.filter((a) => a.kind === "藝人" && c.artistVisible(a)).map((a) => a.slug)))
+      .catch(() => {});
   }
   return catalog;
 }

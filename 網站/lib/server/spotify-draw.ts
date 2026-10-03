@@ -28,13 +28,16 @@ const MAX_CALLS = 30;
 const ALBUM_LIST_TTL_DAYS = 30;
 const MAX_ALBUM_PAGES = 20;
 const RECENT = 10;
-/** 每個配額桶每天自己設的上限（實測 Get Artist's Albums 約 100 次被鎖，留一半以上的餘裕） */
-export const DAILY_LIMIT = { artist_albums: 60, album: 80 } as const;
-type Bucket = keyof typeof DAILY_LIMIT;
+/**
+ * 每個配額桶每天自己設的上限（實測 Get Artist's Albums 約 100 次被鎖，留一半以上的餘裕）。
+ * search：藝人自動比對（2026-10-03，lib/server/spotify-auto.ts）用，只打 search，一位藝人最多約 9 次
+ */
+export const DAILY_LIMIT = { artist_albums: 60, album: 80, search: 120 } as const;
+export type Bucket = keyof typeof DAILY_LIMIT;
 
 export const taiwanDay = (now = Date.now()) => new Date(now + 8 * 3600_000).toISOString().slice(0, 10);
 
-class RateLimited extends Error {
+export class RateLimited extends Error {
   constructor(
     public bucket: Bucket | "token",
     public retryAfter: number,
@@ -43,12 +46,12 @@ class RateLimited extends Error {
   }
 }
 /** 這次呼叫的對外連線用完，或這個桶今天的額度用完／鎖住中 */
-class NoBudget extends Error {}
+export class NoBudget extends Error {}
 
 let cached: { token: string; exp: number } | null = null;
 
 /** 一次執行的額度帳：calls＝這次對外連線數，used／locked＝各桶今天的狀態（開頭從 D1 讀，結尾寫回） */
-type Ledger = { calls: number; max: number; day: string; now: number; used: Record<Bucket, number>; start: Record<Bucket, number>; lockedUntil: Partial<Record<Bucket, string>> };
+export type Ledger = { calls: number; max: number; day: string; now: number; used: Record<Bucket, number>; start: Record<Bucket, number>; lockedUntil: Partial<Record<Bucket, string>> };
 
 const canUse = (l: Ledger, b: Bucket) => l.calls < l.max && l.used[b] < DAILY_LIMIT[b] && !(l.lockedUntil[b] && Date.parse(l.lockedUntil[b]!) > l.now);
 const retryAfter = (r: Response) => Math.max(60, Number(r.headers.get("retry-after")) || 0);
@@ -74,7 +77,7 @@ async function getToken(l: Ledger): Promise<string> {
 }
 
 /** GET Spotify Web API（記在某個桶）；404／400 回 null，429 鎖桶後丟 RateLimited，沒額度丟 NoBudget */
-async function sp<T>(path: string, bucket: Bucket, l: Ledger): Promise<T | null> {
+export async function sp<T>(path: string, bucket: Bucket, l: Ledger): Promise<T | null> {
   for (let attempt = 0; attempt < 2; attempt++) {
     const token = await getToken(l);
     if (!canUse(l, bucket)) throw new NoBudget();
@@ -204,16 +207,16 @@ export type DrawResult = {
   bumped: boolean;
 };
 
-const setState = (key: string, value: string) =>
+export const setState = (key: string, value: string) =>
   env.DB!.prepare(
     `INSERT INTO spotify_state (key, value) VALUES (?1, ?2) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now')`,
   ).bind(key, value);
 
-async function openLedger(now: number, max: number): Promise<Ledger> {
+export async function openLedger(now: number, max: number): Promise<Ledger> {
   const day = taiwanDay(now);
   const rows = (await env.DB!.prepare(`SELECT key, value FROM spotify_state WHERE key LIKE 'used:%' OR key LIKE 'backoff:%' OR key = 'pending_bump'`).all<{ key: string; value: string }>()).results;
   const m = new Map(rows.map((r) => [r.key, r.value]));
-  const used = { artist_albums: Number(m.get(`used:artist_albums:${day}`) ?? 0), album: Number(m.get(`used:album:${day}`) ?? 0) };
+  const used = Object.fromEntries((Object.keys(DAILY_LIMIT) as Bucket[]).map((b) => [b, Number(m.get(`used:${b}:${day}`) ?? 0)])) as Record<Bucket, number>;
   const lockedUntil: Ledger["lockedUntil"] = {};
   for (const b of Object.keys(DAILY_LIMIT) as Bucket[]) {
     const v = m.get(`backoff:${b}`);
@@ -222,7 +225,7 @@ async function openLedger(now: number, max: number): Promise<Ledger> {
   return { calls: 0, max, day, now, used, start: { ...used }, lockedUntil };
 }
 /** 把這次用掉的額度與新鎖寫回（累加用 SQL 做，兩個執行同時跑也不會蓋掉對方） */
-function closeLedger(l: Ledger): D1PreparedStatement[] {
+export function closeLedger(l: Ledger): D1PreparedStatement[] {
   const st: D1PreparedStatement[] = [];
   for (const b of Object.keys(DAILY_LIMIT) as Bucket[]) {
     const add = l.used[b] - l.start[b];
@@ -399,10 +402,10 @@ export async function drawStatus() {
     poolRows: pool?.n ?? 0,
     poolTracks: pool?.tracks ?? 0,
     drawnToday: today?.n ?? 0,
-    usedToday: { artist_albums: Number(m.get(`used:artist_albums:${day}`) ?? 0), album: Number(m.get(`used:album:${day}`) ?? 0) },
+    usedToday: { artist_albums: Number(m.get(`used:artist_albums:${day}`) ?? 0), album: Number(m.get(`used:album:${day}`) ?? 0), search: Number(m.get(`used:search:${day}`) ?? 0) },
     limits: DAILY_LIMIT,
     // 只回還在鎖的
-    backoff: Object.fromEntries((["artist_albums", "album"] as const).map((b) => [b, (m.get(`backoff:${b}`) ?? "") > new Date().toISOString() ? m.get(`backoff:${b}`)! : null])) as Record<Bucket, string | null>,
+    backoff: Object.fromEntries((["artist_albums", "album", "search"] as const).map((b) => [b, (m.get(`backoff:${b}`) ?? "") > new Date().toISOString() ? m.get(`backoff:${b}`)! : null])) as Record<Bucket, string | null>,
     lastRun: m.get("last_run") ? JSON.parse(m.get("last_run")!) : null,
     hasKey: Boolean(env.SPOTIFY_CLIENT_ID && env.SPOTIFY_CLIENT_SECRET),
   };

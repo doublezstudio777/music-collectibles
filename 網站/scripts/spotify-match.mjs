@@ -13,6 +13,9 @@
 //      而且候選的專輯／單曲標題跟已知作品（站上系列標題、金曲金音入圍作品、維基簡介《》、手動歌單歌名）有交集 → 用那個
 //      同名候選兩位以上、或沒有作品交集、或站上沒有已知作品可比 → 列「疑義」不配
 //   手動指定：scripts/spotify-manual.json { 識別碼: { spotifyId, evidence } }，優先於以上規則
+//   使用者確認不配：spotify-manual.json 的 rejected（all＝整位不配；ids＝這幾個 ID 不是本人）
+//   node scripts/spotify-match.mjs --remote|--local --sync-decisions    把 rejected 與 whenVisible（藝人頁還沒顯示、出現時才用的 ID）
+//     同步進 D1 的 spotify_match，給 Worker 自動比對（lib/server/spotify-auto.ts）用；--print-decisions 只印 SQL
 //
 // Spotify API 回應快取在 .cache/spotify/（已在 .gitignore 的 .cache/ 底下），重跑直接讀快取；429 依 Retry-After 等待。
 
@@ -141,7 +144,10 @@ async function searchAlbums(names) {
 
 /* ---------- 讀站上資料 ---------- */
 const manualFile = join(root, "scripts", "spotify-manual.json");
-const manual = existsSync(manualFile) ? JSON.parse(readFileSync(manualFile, "utf8")).artists ?? {} : {};
+const manualAll = existsSync(manualFile) ? JSON.parse(readFileSync(manualFile, "utf8")) : {};
+const manual = manualAll.artists ?? {};
+// 2026-10-03：使用者確認不配的（all＝整位不配，ids＝這幾個 Spotify ID 不是本人）。Worker 自動比對讀 D1 的 spotify_match，由 --sync-decisions 同步
+const rejected = manualAll.rejected ?? {};
 
 async function match() {
   const people = query(
@@ -202,6 +208,11 @@ async function match() {
       console.log(`[${n}/${people.length}] ${p.name}：${status === "ok" ? `${extra.source} ${extra.spotifyId}` : status}${extra.reason ? `（${extra.reason}）` : ""}`);
     };
 
+    const no = new Set(rejected[p.slug]?.ids ?? []);
+    if (rejected[p.slug]?.all) {
+      done("none", { reason: `使用者確認不配：${rejected[p.slug].reason ?? ""}` });
+      return;
+    }
     // 0. 手動指定
     if (manual[p.slug]?.spotifyId) {
       const a = await sp(`artists/${manual[p.slug].spotifyId}`);
@@ -218,7 +229,7 @@ async function match() {
         ...new Set(
           (a.relations ?? []).map((r) => r.url?.resource?.match(/open\.spotify\.com\/(?:intl-[a-z-]+\/)?artist\/([A-Za-z0-9]{22})/)?.[1]).filter(Boolean),
         ),
-      ];
+      ].filter((id) => !no.has(id));
       if (mbIds.length === 1) {
         done("ok", { spotifyId: mbIds[0], spotifyName: "", source: "musicbrainz", evidence: `MusicBrainz ${p.mbid} 的 Spotify 連結` });
         return;
@@ -235,7 +246,7 @@ async function match() {
       }
       if (ids.size === 1) {
         const [[id, sname]] = [...ids];
-        if (nameSet.has(norm(sname))) {
+        if (nameSet.has(norm(sname)) && !no.has(id)) {
           done("ok", { spotifyId: id, spotifyName: sname, source: "picks", evidence: `手動歌單 ${mine.length} 首的第一位演出者都是「${sname}」` });
           return;
         }
@@ -245,7 +256,7 @@ async function match() {
     const cands = new Map();
     for (const nm of names) {
       const b = await sp(`search?q=${encodeURIComponent(nm)}&type=artist&limit=10&market=TW`);
-      for (const a of b?.artists?.items ?? []) if (nameSet.has(norm(a.name))) cands.set(a.id, a.name);
+      for (const a of b?.artists?.items ?? []) if (nameSet.has(norm(a.name)) && !no.has(a.id)) cands.set(a.id, a.name);
       if (cands.size) break;
     }
     if (mbIds.length > 1) for (const id of mbIds) cands.set(id, cands.get(id) ?? "(MusicBrainz 多個連結)");
@@ -376,8 +387,12 @@ function applyToDb() {
     st.push(`UPDATE spotify_artists SET albums=${q(JSON.stringify(c.ids))}, albums_at=${q(c.at)} WHERE artist_slug=${q(slug)} AND spotify_id=${q(v.spotifyId)} AND albums IS NULL`);
   }
   console.log(`快取裡有完整專輯清單的藝人 ${seeded} 位，補進 D1（原本沒有清單的才補）`);
-  // 不在對應檔裡的藝人（改判疑義、藝人被刪）：停用自動抽歌，已抽過的紀錄保留
-  st.push(`UPDATE spotify_artists SET enabled=0 WHERE artist_slug NOT IN (${rows.map(([s]) => q(s)).join(", ") || "''"})`);
+  // 不在對應檔裡的藝人（改判疑義、藝人被刪）：停用自動抽歌，已抽過的紀錄保留。
+  // Worker 自動比對寫的（source='auto'，2026-10-03 起）不在這個檔裡，不停用
+  st.push(`UPDATE spotify_artists SET enabled=0 WHERE source <> 'auto' AND artist_slug NOT IN (${rows.map(([s]) => q(s)).join(", ") || "''"})`);
+  // 使用者確認整位不配的：就算以前配過也停用
+  const allNo = Object.entries(rejected).filter(([, v]) => v.all).map(([s]) => s);
+  if (allNo.length) st.push(`UPDATE spotify_artists SET enabled=0 WHERE artist_slug IN (${allNo.map(q).join(", ")})`);
   st.push(`UPDATE spotify_artists SET enabled=1 WHERE artist_slug IN (${rows.map(([s]) => q(s)).join(", ") || "''"})`);
   const file = join(root, ".wrangler", "spotify-artists.sql");
   writeFileSync(file, st.join(";\n") + ";\n");
@@ -387,5 +402,40 @@ function applyToDb() {
   console.log(`spotify_artists：${c.n} 列、啟用 ${c.on_}`);
 }
 
+/** 使用者的判斷 → spotify_match（Worker 自動比對讀這張）。整位不配＝rejected；不是本人的 ID 與出現時才用的 ID 先存著（waiting），不改既有狀態 */
+function decisionsSql() {
+  const now = "strftime('%Y-%m-%dT%H:%M:%fZ','now')";
+  const st = [];
+  for (const [slug, v] of Object.entries(rejected)) {
+    if (v.all)
+      st.push(
+        `INSERT INTO spotify_match (artist_slug, status, reason, outcome, note) VALUES (${q(slug)}, 'rejected', 'manual', 'rejected', ${q(v.reason ?? "使用者確認不配")}) ` +
+          `ON CONFLICT(artist_slug) DO UPDATE SET status='rejected', outcome='rejected', note=excluded.note, updated_at=${now}`,
+      );
+    else
+      st.push(
+        `INSERT INTO spotify_match (artist_slug, status, reason, rejected_ids, note) VALUES (${q(slug)}, 'waiting', 'manual', ${q(JSON.stringify(v.ids ?? []))}, ${q(v.reason ?? "")}) ` +
+          `ON CONFLICT(artist_slug) DO UPDATE SET rejected_ids=excluded.rejected_ids, updated_at=${now}`,
+      );
+  }
+  for (const [slug, v] of Object.entries(manualAll.whenVisible ?? {}))
+    st.push(
+      `INSERT INTO spotify_match (artist_slug, status, reason, preset_id, preset_note) VALUES (${q(slug)}, 'waiting', 'manual', ${q(v.spotifyId)}, ${q(v.evidence ?? "")}) ` +
+        `ON CONFLICT(artist_slug) DO UPDATE SET preset_id=excluded.preset_id, preset_note=excluded.preset_note, updated_at=${now}`,
+    );
+  return st;
+}
+if (argv.includes("--print-decisions")) {
+  console.log(decisionsSql().join(";\n--> statement-breakpoint\n") + ";");
+  process.exit(0);
+}
+if (argv.includes("--sync-decisions")) {
+  const file = join(root, ".wrangler", "spotify-decisions.sql");
+  writeFileSync(file, decisionsSql().join(";\n") + ";\n");
+  const r = wrangler(["d1", "execute", "DB", ...target, "--file", file, ...(remote ? ["--yes"] : [])]);
+  if (r.status !== 0) throw new Error("寫入 spotify_match 失敗");
+  console.log(`spotify_match：${JSON.stringify(query(`SELECT status, COUNT(*) AS n FROM spotify_match GROUP BY status`))}`);
+  process.exit(0);
+}
 if (!applyOnly) await match();
 if (apply) applyToDb();

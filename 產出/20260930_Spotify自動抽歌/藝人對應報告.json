@@ -1,15 +1,15 @@
 {
- "產生時間": "2026-10-02T19:08:53.908Z",
+ "產生時間": "2026-10-03T00:44:01.416Z",
  "統計": {
   "站上藝人": 343,
-  "對應成功": 264,
-  "疑義": 34,
-  "找不到": 45,
+  "對應成功": 273,
+  "疑義": 26,
+  "找不到": 44,
   "未比對": 0,
   "來源": {
    "search": 91,
    "musicbrainz": 104,
-   "manual": 64,
+   "manual": 73,
    "picks": 5
   }
  },
@@ -655,6 +655,14 @@
    "evidence": "MusicBrainz e8e40508-1ffe-4fa1-a68c-b507bfe5abc4 的 Spotify 連結"
   },
   {
+   "slug": "giyu-tjuljaviya",
+   "name": "張淦勛",
+   "spotifyId": "6164qyIB1Wgt5q2TeZsNp4",
+   "spotifyName": "張淦勛 Giyu Tjuljaviya",
+   "source": "manual",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「張淦勛 Giyu Tjuljaviya」（名稱相符）有 1 個同名作品：南迴之子（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  {
    "slug": "gordon",
    "name": "國蛋",
    "spotifyId": "4L4ArdVJzY6Uxbd82fJjqu",
@@ -981,6 +989,14 @@
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz acf92994-57ba-4b36-9a04-28a943db5cba 的 Spotify 連結"
+  },
+  {
+   "slug": "li-quan-zhe",
+   "name": "李權哲",
+   "spotifyId": "0PSG0vJNGf6Nc0Vu0S1yFW",
+   "spotifyName": "Jerry Li",
+   "source": "manual",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「Jerry Li」（Spotify 名稱跟站上不同）有 2 個同名作品：愛情一陣風、醒著不醉（第一輪搜尋沒抓到這位）（2026-10-03）"
   },
   {
    "slug": "li-rong-hao",
@@ -1327,6 +1343,14 @@
    "evidence": "MusicBrainz 21686a1f-65ff-45b9-b5e2-9bc891791b33 的 Spotify 連結"
   },
   {
+   "slug": "pan-zi-jue",
+   "name": "潘子爵",
+   "spotifyId": "7r74JFmvA3yPLuDyyzH8Mx",
+   "spotifyName": "Ruby Pan 潘子爵",
+   "source": "manual",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「Ruby Pan 潘子爵」（名稱相符）有 1 個同名作品：沒問題少女（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  {
    "slug": "panai",
    "name": "巴奈Panai",
    "spotifyId": "2PbU3CmXZmV6dPfzLONLIA",
@@ -1559,6 +1583,14 @@
    "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「傻子與白痴 Fool And Idiot」（名稱相符）有 2 個同名作品：姿態、遠慮（第一輪搜尋沒抓到這位）（2026-10-03）"
   },
   {
+   "slug": "shang-xin-yu-jue",
+   "name": "傷心欲絕",
+   "spotifyId": "3mgkHRW7Rgkbx2gJb5TPl7",
+   "spotifyName": "Wayne's so Sad",
+   "source": "manual",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「Wayne's so Sad」（Spotify 名稱跟站上不同）有 3 個同名作品：還是偶爾想要偉大、無名氏敬上、大雨（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  {
    "slug": "shen-jing-yuan",
    "name": "神經元",
    "spotifyId": "0JO7LjM53ktNVO02Px0aDh",
@@ -1669,6 +1701,14 @@
    "spotifyName": "蘇裔非",
    "source": "search",
    "evidence": "搜尋同名，作品交集：少年殺人事件"
+  },
+  {
+   "slug": "su-yun-ying",
+   "name": "蘇運瑩",
+   "spotifyId": "63tzlZxY9iaOeUnmGfwlyA",
+   "spotifyName": "Sue",
+   "source": "manual",
+   "evidence": "使用者確認：Spotify「Sue」有《冥明》（2015，跟站上作品同名）、〈野子〉〈螢火蟲〉；同名候選「蘇運瑩」只有《峨眉金曲》不是本人（2026-10-03 使用者確認）"
   },
   {
    "slug": "suming",
@@ -1927,6 +1967,14 @@
    "evidence": "第二輪 wikidata-p1902：Wikidata Q25644628（QID 來自MusicBrainz be73ce7e-6779-4b40-9629-732d9851e5d3）的 P1902 Spotify artist ID（2026-10-03）"
   },
   {
+   "slug": "xiu-lan-ma-ya",
+   "name": "秀蘭瑪雅",
+   "spotifyId": "2EeRoHaQh0WizmHCDhrREV",
+   "spotifyName": "秀蘭瑪雅",
+   "source": "manual",
+   "evidence": "使用者確認：唯一同名候選，作品《唱乎甲己來聽》《繡一蕊花》《天頂星》等台語專輯（2026-10-03 使用者確認）"
+  },
+  {
    "slug": "xu-fu-kai",
    "name": "許富凱",
    "spotifyId": "1cfpx67CNTohABdelcfXdL",
@@ -1941,6 +1989,14 @@
    "spotifyName": "许钧",
    "source": "manual",
    "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「许钧」（Spotify 名稱跟站上不同）有 2 個同名作品：期待集、歌一切（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  {
+   "slug": "xu-zhe-pei",
+   "name": "許哲珮",
+   "spotifyId": "7ruJU7jtsDqbgA23BL3VFQ",
+   "spotifyName": "Peggy Hsu",
+   "source": "manual",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「Peggy Hsu」（Spotify 名稱跟站上不同）有 2 個同名作品：雪人、許願盒（第一輪搜尋沒抓到這位）（2026-10-03）"
   },
   {
    "slug": "ya-wei-mo-rui",
@@ -1989,6 +2045,22 @@
    "spotifyName": "楊易修",
    "source": "search",
    "evidence": "搜尋同名，作品交集：野臺語言"
+  },
+  {
+   "slug": "ye-ying",
+   "name": "葉穎",
+   "spotifyId": "3lN5TnoCbzUqwIMFQrGkx8",
+   "spotifyName": "葉穎 Leaf Yeh",
+   "source": "manual",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「葉穎 Leaf Yeh」（名稱相符）有 1 個同名作品：生滅（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  {
+   "slug": "yeemao",
+   "name": "夜貓組",
+   "spotifyId": "10bBWqtVxVR6nl4BzU97Xk",
+   "spotifyName": "夜貓組 (Leo王+春艷)",
+   "source": "manual",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「夜貓組 (Leo王+春艷)」（名稱相符）有 1 個同名作品：健康歌曲（第一輪搜尋沒抓到這位）（2026-10-03）"
   },
   {
    "slug": "yellow",
@@ -2129,26 +2201,6 @@
  ],
  "doubt": [
   {
-   "slug": "aaa-hyukoh",
-   "name": "AAA（HYUKOH與落日飛車）",
-   "reason": "站上沒有已知作品可比",
-   "known": [],
-   "searched": [
-    "AAA（HYUKOH與落日飛車）",
-    "HYUKOH與落日飛車",
-    "AAA"
-   ],
-   "candidates": [
-    {
-     "id": "1AyWsgtaIgXbzjJlTx2ZDp",
-     "name": "AAA",
-     "url": "https://open.spotify.com/artist/1AyWsgtaIgXbzjJlTx2ZDp",
-     "hits": [],
-     "albums": []
-    }
-   ]
-  },
-  {
    "slug": "aiko-tomi",
    "name": "富愛子AIKO TOMI",
    "reason": "站上沒有已知作品可比",
@@ -2187,27 +2239,6 @@
      "albums": [
       "Affection / Promise"
      ]
-    }
-   ]
-  },
-  {
-   "slug": "dac-zaoyuan",
-   "name": "Dac與鄭昭元ZAOYUAN",
-   "reason": "站上沒有已知作品可比",
-   "known": [],
-   "searched": [
-    "Dac與鄭昭元ZAOYUAN",
-    "Dac",
-    "與鄭昭元",
-    "ZAOYUAN"
-   ],
-   "candidates": [
-    {
-     "id": "0nWX29koulPYFLJoMxIpJx",
-     "name": "Dac",
-     "url": "https://open.spotify.com/artist/0nWX29koulPYFLJoMxIpJx",
-     "hits": [],
-     "albums": []
     }
    ]
   },
@@ -2325,7 +2356,7 @@
   {
    "slug": "james-lee",
    "name": "李銖銜",
-   "reason": "同名候選沒有作品交集",
+   "reason": "3 位同名候選都沒有作品交集",
    "known": [
     "不完全自救手冊"
    ],
@@ -2335,75 +2366,46 @@
    ],
    "candidates": [
     {
-     "id": "4QHci6hVY85I6xSIu0W4k6",
+     "id": "0dqozhhuZUmje6uRBlQGF7",
      "name": "James Lee",
-     "url": "https://open.spotify.com/artist/4QHci6hVY85I6xSIu0W4k6",
+     "url": "https://open.spotify.com/artist/0dqozhhuZUmje6uRBlQGF7",
      "hits": [],
      "albums": [
-      "Castles",
-      "The Reckoning",
-      "Circles",
-      "DEAD STARS",
-      "Reverse",
-      "Hell"
-     ]
-    }
-   ]
-  },
-  {
-   "slug": "jihu",
-   "name": "JIHU",
-   "reason": "同名候選沒有作品交集",
-   "known": [
-    "不完全自救手冊"
-   ],
-   "searched": [
-    "JIHU"
-   ],
-   "candidates": [
-    {
-     "id": "5sR9BwbhwlsifEWrlw4uEF",
-     "name": "JIHU",
-     "url": "https://open.spotify.com/artist/5sR9BwbhwlsifEWrlw4uEF",
-     "hits": [],
-     "albums": [
-      "彝部分II·走回大凉山",
-      "彝部分",
-      "母亲的河",
-      "阿果",
-      "Negative",
-      "月亮追啊追"
-     ]
-    }
-   ]
-  },
-  {
-   "slug": "kiki",
-   "name": "KIKI",
-   "reason": "2 位同名候選都沒有作品交集",
-   "known": [
-    "KIKI"
-   ],
-   "searched": [
-    "KIKI"
-   ],
-   "candidates": [
-    {
-     "id": "6MG7fjH9YBryqLT03MnwQM",
-     "name": "KIKI",
-     "url": "https://open.spotify.com/artist/6MG7fjH9YBryqLT03MnwQM",
-     "hits": [],
-     "albums": [
-      "Post-existential Crisis",
-      "Death of a Daisy & Birth of an Oyster"
+      "A Hundred Years from Now",
+      "Straight Up",
+      "Looking Back",
+      "Ember Trails",
+      "Under the Oak Tree",
+      "Tony Tsao VIola Collection"
      ]
     },
     {
-     "id": "0UMs6dTf23FC2fHc40fXNS",
-     "name": "KI/KI",
-     "url": "https://open.spotify.com/artist/0UMs6dTf23FC2fHc40fXNS",
+     "id": "0w5RhBX0NWZB55fNPGrr9g",
+     "name": "James Lee",
+     "url": "https://open.spotify.com/artist/0w5RhBX0NWZB55fNPGrr9g",
      "hits": [],
-     "albums": []
+     "albums": [
+      "Stuck On You",
+      "Daylight",
+      "Mango Curry (KCAB Remix)",
+      "I Won't Leave",
+      "Mine",
+      "Take You Out"
+     ]
+    },
+    {
+     "id": "0mSopfnGdUc9Busn1xlvuq",
+     "name": "James Lee",
+     "url": "https://open.spotify.com/artist/0mSopfnGdUc9Busn1xlvuq",
+     "hits": [],
+     "albums": [
+      "My First Twenty Years",
+      "Dear Friend",
+      "Out of All These Stars",
+      "Used To Loving You",
+      "One Year (Studio Acoustic)",
+      "In My Dreams"
+     ]
     }
    ]
   },
@@ -2542,26 +2544,6 @@
    ]
   },
   {
-   "slug": "roger-lin",
-   "name": "林煒翔／Roger Lin",
-   "reason": "站上沒有已知作品可比",
-   "known": [],
-   "searched": [
-    "林煒翔／Roger Lin",
-    "林煒翔",
-    "Roger Lin"
-   ],
-   "candidates": [
-    {
-     "id": "6asKuZzheNBzgXUD6x1aFh",
-     "name": "Roger Lin",
-     "url": "https://open.spotify.com/artist/6asKuZzheNBzgXUD6x1aFh",
-     "hits": [],
-     "albums": []
-    }
-   ]
-  },
-  {
    "slug": "sonia-calico",
    "name": "Sonia Calico",
    "reason": "同名候選沒有作品交集",
@@ -2611,35 +2593,6 @@
      "url": "https://open.spotify.com/artist/3rRJYXgrlBQWtVG5BTrwo7",
      "hits": [],
      "albums": []
-    }
-   ]
-  },
-  {
-   "slug": "su-yun-ying",
-   "name": "蘇運瑩",
-   "reason": "同名候選沒有作品交集",
-   "known": [
-    "不完全自救手冊",
-    "圓",
-    "蘑菇濃湯",
-    "離別總是那麼突然",
-    "青鳥 (生物股長單曲) 青鳥",
-    "中國好歌曲",
-    "冥明",
-    "我是歌手"
-   ],
-   "searched": [
-    "蘇運瑩"
-   ],
-   "candidates": [
-    {
-     "id": "6ejudZXVrIoEUZrJojX69X",
-     "name": "蘇運瑩",
-     "url": "https://open.spotify.com/artist/6ejudZXVrIoEUZrJojX69X",
-     "hits": [],
-     "albums": [
-      "峨眉金曲"
-     ]
     }
    ]
   },
@@ -2730,33 +2683,6 @@
    ]
   },
   {
-   "slug": "xiu-lan-ma-ya",
-   "name": "秀蘭瑪雅",
-   "reason": "同名候選沒有作品交集",
-   "known": [
-    "鐵心肝"
-   ],
-   "searched": [
-    "秀蘭瑪雅"
-   ],
-   "candidates": [
-    {
-     "id": "2EeRoHaQh0WizmHCDhrREV",
-     "name": "秀蘭瑪雅",
-     "url": "https://open.spotify.com/artist/2EeRoHaQh0WizmHCDhrREV",
-     "hits": [],
-     "albums": [
-      "唱乎甲己來聽",
-      "繡一蕊花",
-      "天頂星",
-      "寄乎人生的第21張批",
-      "風過雨無停",
-      "真心話"
-     ]
-    }
-   ]
-  },
-  {
    "slug": "yang-shu-yu-ji-na",
    "name": "楊淑喻（吉那）",
    "reason": "同名候選沒有作品交集",
@@ -2778,26 +2704,6 @@
      "id": "7MIxUvztbpGhGnuUpSGETm",
      "name": "吉那",
      "url": "https://open.spotify.com/artist/7MIxUvztbpGhGnuUpSGETm",
-     "hits": [],
-     "albums": []
-    }
-   ]
-  },
-  {
-   "slug": "ye-jun-lin",
-   "name": "葉俊麟",
-   "reason": "同名候選沒有作品交集",
-   "known": [
-    "康達效應 Coanda Effect"
-   ],
-   "searched": [
-    "葉俊麟"
-   ],
-   "candidates": [
-    {
-     "id": "1X9fWntid7DkW6GcQLJsHM",
-     "name": "葉俊麟",
-     "url": "https://open.spotify.com/artist/1X9fWntid7DkW6GcQLJsHM",
      "hits": [],
      "albums": []
     }
@@ -2931,6 +2837,11 @@
    "reason": "搜尋沒有同名藝人"
   },
   {
+   "slug": "aaa-hyukoh",
+   "name": "AAA（HYUKOH與落日飛車）",
+   "reason": "使用者確認不配：合作名義（HYUKOH 與落日飛車），Spotify 的 AAA 是日本團，使用者確認不是（2026-10-03 使用者確認）"
+  },
+  {
    "slug": "bu-lai-mei",
    "name": "布萊梅",
    "reason": "搜尋沒有同名藝人"
@@ -2946,6 +2857,11 @@
    "reason": "搜尋沒有同名藝人"
   },
   {
+   "slug": "dac-zaoyuan",
+   "name": "Dac與鄭昭元ZAOYUAN",
+   "reason": "搜尋沒有同名藝人"
+  },
+  {
    "slug": "debby-wang",
    "name": "王思雅／Debby Wang",
    "reason": "搜尋沒有同名藝人"
@@ -2958,11 +2874,6 @@
   {
    "slug": "freedom-beat",
    "name": "Freedom Beat",
-   "reason": "搜尋沒有同名藝人"
-  },
-  {
-   "slug": "giyu-tjuljaviya",
-   "name": "張淦勛",
    "reason": "搜尋沒有同名藝人"
   },
   {
@@ -3001,13 +2912,18 @@
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "li-mao-song",
-   "name": "李茂嵩",
+   "slug": "jihu",
+   "name": "JIHU",
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "li-quan-zhe",
-   "name": "李權哲",
+   "slug": "kiki",
+   "name": "KIKI",
+   "reason": "搜尋沒有同名藝人"
+  },
+  {
+   "slug": "li-mao-song",
+   "name": "李茂嵩",
    "reason": "搜尋沒有同名藝人"
   },
   {
@@ -3046,18 +2962,13 @@
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "pan-zi-jue",
-   "name": "潘子爵",
+   "slug": "roger-lin",
+   "name": "林煒翔／Roger Lin",
    "reason": "搜尋沒有同名藝人"
   },
   {
    "slug": "san-xiao-tang",
    "name": "三小湯",
-   "reason": "搜尋沒有同名藝人"
-  },
-  {
-   "slug": "shang-xin-yu-jue",
-   "name": "傷心欲絕",
    "reason": "搜尋沒有同名藝人"
   },
   {
@@ -3111,18 +3022,8 @@
    "reason": "搜尋沒有同名藝人"
   },
   {
-   "slug": "xu-zhe-pei",
-   "name": "許哲珮",
-   "reason": "搜尋沒有同名藝人"
-  },
-  {
-   "slug": "ye-ying",
-   "name": "葉穎",
-   "reason": "搜尋沒有同名藝人"
-  },
-  {
-   "slug": "yeemao",
-   "name": "夜貓組",
+   "slug": "ye-jun-lin",
+   "name": "葉俊麟",
    "reason": "搜尋沒有同名藝人"
   },
   {

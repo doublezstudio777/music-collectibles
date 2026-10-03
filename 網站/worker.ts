@@ -28,6 +28,7 @@ import { notifyAdmin } from "./lib/server/notify";
 import { hit } from "./lib/server/services";
 import { runSpotifyDraw } from "./lib/server/spotify-draw";
 import { runAutofill } from "./lib/server/autofill";
+import { runSpotifyAuto, startSpotifyMonthly } from "./lib/server/spotify-auto";
 import { startReleaseScan } from "./lib/server/release-scan";
 import { recomputeScores } from "./lib/server/scores";
 
@@ -224,11 +225,19 @@ const scheduledWorker = {
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
     if (event.cron === "*/10 * * * *") {
       ctx.waitUntil(
-        runAutofill({ ms: 120_000, maxCalls: 45, scan: true })
-          .then((r) => {
-            if (r.done) console.log("[樂迷藏排程] 自動補資料", JSON.stringify(r));
-          })
-          .catch((e) => cronFailed("自動補資料", e)),
+        (async () => {
+          // Spotify 藝人自動比對（2026-10-03）先跑一小批（最多 20 次對外連線），用掉的從自動補資料的 45 次裡扣，整次執行不超過免費方案的 50
+          let used = 0;
+          try {
+            const s = await runSpotifyAuto({ ms: 45_000, maxCalls: 20, now: event.scheduledTime });
+            used = s.calls;
+            if (s.checked || s.stopped) console.log("[樂迷藏排程] Spotify 自動比對", JSON.stringify(s));
+          } catch (e) {
+            await cronFailed("Spotify 自動比對", e);
+          }
+          const r = await runAutofill({ ms: 120_000, maxCalls: Math.max(10, 45 - used), scan: true });
+          if (r.done) console.log("[樂迷藏排程] 自動補資料", JSON.stringify(r));
+        })().catch((e) => cronFailed("自動補資料", e)),
       );
       return;
     }
@@ -256,6 +265,14 @@ const scheduledWorker = {
       startReleaseScan({ trigger: "cron", now: event.scheduledTime }).catch((e) => cronFailed("每月補新作品", e)),
     );
     ctx.waitUntil(recomputeScores().catch((e) => cronFailed("彙總分數", e)));
+    // Spotify 藝人自動比對觸發 B（2026-10-03）：每月一次，顯示中但還沒對到的重排，實際比對由 */10 排程接手（抽歌時段過後）
+    ctx.waitUntil(
+      startSpotifyMonthly(event.scheduledTime)
+        .then((n) => {
+          if (n >= 0) console.log(`[樂迷藏排程] Spotify 每月重跑：排了 ${n} 位`);
+        })
+        .catch((e) => cronFailed("Spotify 每月重跑", e)),
+    );
   },
 };
 

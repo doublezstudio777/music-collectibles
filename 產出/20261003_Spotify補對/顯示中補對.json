@@ -1,0 +1,133 @@
+{
+ "產生時間": "2026-10-03T00:43:44.758Z",
+ "統計": {
+  "疑義": 13,
+  "採用": 7,
+  "採用來源": {
+   "search-title": 7
+  },
+  "空殼不配": 6,
+  "仍待使用者": 0,
+  "外部請求": {
+   "wd": 0,
+   "wp": 0,
+   "mb": 8,
+   "spotify": {
+    "network": 0,
+    "cached": 28,
+    "r429": 0
+   },
+   "spotifyStopped": null
+  },
+  "說明": "Spotify 回應沒有 genres／followers／popularity 欄位，規格第 3 條的 genres 分支用不上"
+ },
+ "adopted": [
+  {
+   "slug": "giyu-tjuljaviya",
+   "name": "張淦勛",
+   "spotifyId": "6164qyIB1Wgt5q2TeZsNp4",
+   "spotifyName": "",
+   "type": "search-title",
+   "evidence": "用站上作品搜 Spotify，演出者「張淦勛 Giyu Tjuljaviya」（名稱相符）有 1 個同名作品：南迴之子（第一輪搜尋沒抓到這位）",
+   "inCandidates": false
+  },
+  {
+   "slug": "li-quan-zhe",
+   "name": "李權哲",
+   "spotifyId": "0PSG0vJNGf6Nc0Vu0S1yFW",
+   "spotifyName": "",
+   "type": "search-title",
+   "evidence": "用站上作品搜 Spotify，演出者「Jerry Li」（Spotify 名稱跟站上不同）有 2 個同名作品：愛情一陣風、醒著不醉（第一輪搜尋沒抓到這位）",
+   "inCandidates": false
+  },
+  {
+   "slug": "pan-zi-jue",
+   "name": "潘子爵",
+   "spotifyId": "7r74JFmvA3yPLuDyyzH8Mx",
+   "spotifyName": "",
+   "type": "search-title",
+   "evidence": "用站上作品搜 Spotify，演出者「Ruby Pan 潘子爵」（名稱相符）有 1 個同名作品：沒問題少女（第一輪搜尋沒抓到這位）",
+   "inCandidates": false
+  },
+  {
+   "slug": "shang-xin-yu-jue",
+   "name": "傷心欲絕",
+   "spotifyId": "3mgkHRW7Rgkbx2gJb5TPl7",
+   "spotifyName": "",
+   "type": "search-title",
+   "evidence": "用站上作品搜 Spotify，演出者「Wayne's so Sad」（Spotify 名稱跟站上不同）有 3 個同名作品：還是偶爾想要偉大、無名氏敬上、大雨（第一輪搜尋沒抓到這位）",
+   "inCandidates": false
+  },
+  {
+   "slug": "xu-zhe-pei",
+   "name": "許哲珮",
+   "spotifyId": "7ruJU7jtsDqbgA23BL3VFQ",
+   "spotifyName": "",
+   "type": "search-title",
+   "evidence": "用站上作品搜 Spotify，演出者「Peggy Hsu」（Spotify 名稱跟站上不同）有 2 個同名作品：雪人、許願盒（第一輪搜尋沒抓到這位）",
+   "inCandidates": false
+  },
+  {
+   "slug": "ye-ying",
+   "name": "葉穎",
+   "spotifyId": "3lN5TnoCbzUqwIMFQrGkx8",
+   "spotifyName": "",
+   "type": "search-title",
+   "evidence": "用站上作品搜 Spotify，演出者「葉穎 Leaf Yeh」（名稱相符）有 1 個同名作品：生滅（第一輪搜尋沒抓到這位）",
+   "inCandidates": false
+  },
+  {
+   "slug": "yeemao",
+   "name": "夜貓組",
+   "spotifyId": "10bBWqtVxVR6nl4BzU97Xk",
+   "spotifyName": "",
+   "type": "search-title",
+   "evidence": "用站上作品搜 Spotify，演出者「夜貓組 (Leo王+春艷)」（名稱相符）有 1 個同名作品：健康歌曲（第一輪搜尋沒抓到這位）",
+   "inCandidates": false
+  }
+ ],
+ "shells": [
+  {
+   "slug": "a-luo-ka-li-ting-ba-qi-la",
+   "name": "阿洛·卡力亭·巴奇辣",
+   "candidates": []
+  },
+  {
+   "slug": "huang-jing-shi-yi",
+   "name": "荒井十一",
+   "candidates": [
+    "https://open.spotify.com/artist/6CWZnfvr14CZ7mRH8nrbpi"
+   ]
+  },
+  {
+   "slug": "huang-qi-shan",
+   "name": "黃綺珊",
+   "candidates": [
+    "https://open.spotify.com/artist/14nGVY7mVn9CZupiLEUKE7"
+   ]
+  },
+  {
+   "slug": "lin-yu-ting",
+   "name": "林鈺婷",
+   "candidates": [
+    "https://open.spotify.com/artist/2cOhQdzQOtXFuq9UjvEuXV"
+   ]
+  },
+  {
+   "slug": "su-yu-han",
+   "name": "蘇郁涵",
+   "candidates": [
+    "https://open.spotify.com/artist/3rRJYXgrlBQWtVG5BTrwo7"
+   ]
+  },
+  {
+   "slug": "zheng-nan",
+   "name": "鄭楠",
+   "candidates": [
+    "https://open.spotify.com/artist/5Iha7TMTsbxvBJdtiGJP5M",
+    "https://open.spotify.com/artist/12qm6Wyr5SjXsTbHVAPo8f"
+   ]
+  }
+ ],
+ "remain": []
+}

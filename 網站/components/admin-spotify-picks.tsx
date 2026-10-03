@@ -68,11 +68,76 @@ type DrawStatus = {
   poolRows: number;
   poolTracks: number;
   drawnToday: number;
-  usedToday: { artist_albums: number; album: number };
-  limits: { artist_albums: number; album: number };
-  backoff: { artist_albums: string | null; album: string | null };
+  usedToday: { artist_albums: number; album: number; search: number };
+  limits: { artist_albums: number; album: number; search: number };
+  backoff: { artist_albums: string | null; album: string | null; search: string | null };
   hasKey: boolean;
+  auto: AutoStatus;
 };
+
+type AutoStatus = {
+  last: { at: string; checked: number; matched: { slug: string; name: string; spotifyId: string; source: string }[]; stopped: string; calls: number; queued: number } | null;
+  month: string | null;
+  visible: number;
+  visibleAt: string | null;
+  autoMatched: number;
+  queue: Record<string, number>;
+  unmatched: { slug: string; name: string; status: string | null; outcome: string | null; note: string; checkedAt: string | null }[];
+};
+
+const when = (v: string | null | undefined) => (v ? new Date(v).toLocaleString("zh-TW", { hour12: false }) : "還沒有");
+const OUTCOME: Record<string, string> = { none: "找不到", doubt: "證據不夠", shell: "空殼", gone: "已刪除", rejected: "確認不配", matched: "已對到" };
+const STATUS: Record<string, string> = { queued: "排隊中", waiting: "等出現", rejected: "確認不配" };
+
+/** Spotify 藝人自動比對（2026-10-03）：唯讀。藝人頁出現時自動比對、每月重跑一次 */
+function AutoBox({ a }: { a: AutoStatus }) {
+  const last = a.last;
+  return (
+    <section className="block" data-testid="sp-auto-match">
+      <h2 className="block-title">藝人自動比對</h2>
+      <p className="sub" data-testid="sp-auto-last">
+        {last
+          ? `上次自動比對：${when(last.at)}，比對 ${last.checked} 位、對到 ${last.matched.length} 位${last.matched.length ? `（${last.matched.map((m) => m.name).join("、")}）` : ""}${last.stopped ? `；停下原因：${last.stopped}` : ""}。`
+          : "還沒有自動比對過。"}
+        {`自動流程累計對到 ${a.autoMatched} 位；排隊中 ${a.queue.queued ?? 0} 位。`}
+      </p>
+      <p className="sub">{`藝人頁從不顯示變顯示時自動比對；每月一次重跑顯示中但還沒對到的（這個月：${a.month ?? "還沒跑"}）。只有高信心的才寫入，其餘不配。`}</p>
+      <h3 className="sub-title" data-testid="sp-auto-unmatched-title">
+        {`還沒對到的顯示中藝人 ${a.unmatched.length} / ${a.visible} 位`}
+      </h3>
+      {a.unmatched.length ? (
+        <div className="tbl-scroll">
+          <table className="tbl admin-tbl" data-testid="sp-auto-unmatched">
+            <thead>
+              <tr>
+                <th>藝人</th>
+                <th>狀態</th>
+                <th>說明</th>
+                <th>上次比對</th>
+              </tr>
+            </thead>
+            <tbody>
+              {a.unmatched.map((u) => (
+                <tr key={u.slug} data-slug={u.slug}>
+                  <td>
+                    <a className="link" href={`/artist/${u.slug}`} target="_blank" rel="noopener">
+                      {u.name}
+                    </a>
+                  </td>
+                  <td>{u.status === "done" ? (OUTCOME[u.outcome ?? ""] ?? "比對過") : (STATUS[u.status ?? ""] ?? "還沒排")}</td>
+                  <td>{u.note}</td>
+                  <td>{u.checkedAt ? when(u.checkedAt) : "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="empty">顯示中的藝人都有 Spotify 了</p>
+      )}
+    </section>
+  );
+}
 
 /** 自動抽歌狀態（2026-09-30）：唯讀，排程每天台灣 02:00～04:55 自己跑 */
 function DrawBox() {
@@ -85,20 +150,23 @@ function DrawBox() {
   if (!st) return null;
   const locked = (v: string | null) => (v ? `（鎖到 ${new Date(v).toLocaleString("zh-TW", { hour12: false })}）` : "");
   return (
-    <section className="block" data-testid="sp-auto">
-      <h2 className="block-title">自動抽歌</h2>
-      <p className="sub">
-        {st.hasKey
-          ? `對應到 Spotify 的藝人 ${st.enabled} 位，已有歌 ${st.withTrack} 位；今天（${st.day}）抽了 ${st.drawnToday} 首。抽歌池累計 ${st.poolRows} 次、${st.poolTracks} 首不同的歌；已存專輯清單 ${st.withAlbumList} 位、專輯曲目 ${st.albumsCached} 張。`
-          : "還沒設定 Spotify 金鑰，首頁只用下面的手動歌單。"}
-      </p>
-      {st.hasKey ? (
+    <>
+      <section className="block" data-testid="sp-auto">
+        <h2 className="block-title">自動抽歌</h2>
         <p className="sub">
-          {`今天用掉的 Spotify 額度：專輯清單 ${st.usedToday.artist_albums}/${st.limits.artist_albums}${locked(st.backoff.artist_albums)}、專輯曲目 ${st.usedToday.album}/${st.limits.album}${locked(st.backoff.album)}`}
+          {st.hasKey
+            ? `對應到 Spotify 的藝人 ${st.enabled} 位，已有歌 ${st.withTrack} 位；今天（${st.day}）抽了 ${st.drawnToday} 首。抽歌池累計 ${st.poolRows} 次、${st.poolTracks} 首不同的歌；已存專輯清單 ${st.withAlbumList} 位、專輯曲目 ${st.albumsCached} 張。`
+            : "還沒設定 Spotify 金鑰，首頁只用下面的手動歌單。"}
         </p>
-      ) : null}
-      <p className="sub">下面的手動歌單改當備援：只有對不到 Spotify、或還沒抽過歌的藝人，首頁才用手動歌單的歌。</p>
-    </section>
+        {st.hasKey ? (
+          <p className="sub">
+            {`今天用掉的 Spotify 額度：專輯清單 ${st.usedToday.artist_albums}/${st.limits.artist_albums}${locked(st.backoff.artist_albums)}、專輯曲目 ${st.usedToday.album}/${st.limits.album}${locked(st.backoff.album)}、藝人比對搜尋 ${st.usedToday.search}/${st.limits.search}${locked(st.backoff.search)}`}
+          </p>
+        ) : null}
+        <p className="sub">下面的手動歌單改當備援：只有對不到 Spotify、或還沒抽過歌的藝人，首頁才用手動歌單的歌。</p>
+      </section>
+      {st.auto ? <AutoBox a={st.auto} /> : null}
+    </>
   );
 }
 

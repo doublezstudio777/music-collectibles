@@ -1148,6 +1148,42 @@ export const spotifyAlbums = sqliteTable("spotify_albums", {
   fetchedAt: text("fetched_at").notNull().default(now),
 });
 
+/**
+ * Spotify 藝人自動比對（2026-10-03，drizzle/0030；lib/server/spotify-auto.ts）：一位藝人一列。
+ * 原則（使用者 10/03）：藝人頁有對外顯示的才配，沒顯示的等出現再配。
+ * status：
+ *   queued＝等排程比對（觸發 A：藝人頁從不顯示變顯示；觸發 B：每月一次重跑顯示中但沒 ID 的）
+ *   done＝比對過（對到就寫進 spotify_artists，source='auto'）
+ *   waiting＝藝人頁還沒顯示、使用者已先做過判斷（preset_id 或 rejected_ids），出現時才轉 queued
+ *   rejected＝使用者確認整位不配，自動流程永遠不碰
+ * outcome：matched｜none（找不到同名）｜doubt（有候選但證據不夠）｜shell（候選沒照片沒作品）｜gone（藝人已刪）
+ * 沒有內容版本觸發器：比對寫入後由程式讓 content_version 加 1 一次
+ */
+export const spotifyMatch = sqliteTable(
+  "spotify_match",
+  {
+    artistSlug: text("artist_slug").primaryKey(),
+    status: text("status").notNull().default("queued"),
+    /** visible｜monthly｜seed｜manual */
+    reason: text("reason").notNull().default("visible"),
+    outcome: text("outcome"),
+    /** 對到的 Spotify ID，或最後一次的證據說明 */
+    spotifyId: text("spotify_id"),
+    note: text("note").notNull().default(""),
+    /** 使用者確認過、藝人頁出現時直接用的 Spotify ID */
+    presetId: text("preset_id"),
+    presetNote: text("preset_note").notNull().default(""),
+    /** JSON string[]：確定不是本人的 Spotify ID */
+    rejectedIds: text("rejected_ids").notNull().default("[]"),
+    tries: integer("tries").notNull().default(0),
+    nextAt: text("next_at").notNull().default(now),
+    checkedAt: text("checked_at"),
+    createdAt: text("created_at").notNull().default(now),
+    updatedAt: text("updated_at").notNull().default(now),
+  },
+  (t) => [index("spotify_match_queue_idx").on(t.status, t.nextAt)],
+);
+
 /* =====================================================================
  * 發布時自動補資料（2026-09-30，drizzle/0025）：兩張新表，都沒有內容版本觸發器。
  * 會員（或管理員）在炫收藏表單新增藝人、系列、版本時排一筆工作，Worker 在背景查 MusicBrainz／Wikidata：

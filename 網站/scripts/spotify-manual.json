@@ -256,6 +256,144 @@
   "xu-jun": {
    "spotifyId": "3kU8TgZ3WouCr0GDkYnPbN",
    "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「许钧」（Spotify 名稱跟站上不同）有 2 個同名作品：期待集、歌一切（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  "su-yun-ying": {
+   "spotifyId": "63tzlZxY9iaOeUnmGfwlyA",
+   "evidence": "使用者確認：Spotify「Sue」有《冥明》（2015，跟站上作品同名）、〈野子〉〈螢火蟲〉；同名候選「蘇運瑩」只有《峨眉金曲》不是本人（2026-10-03 使用者確認）"
+  },
+  "xiu-lan-ma-ya": {
+   "spotifyId": "2EeRoHaQh0WizmHCDhrREV",
+   "evidence": "使用者確認：唯一同名候選，作品《唱乎甲己來聽》《繡一蕊花》《天頂星》等台語專輯（2026-10-03 使用者確認）"
+  },
+  "giyu-tjuljaviya": {
+   "spotifyId": "6164qyIB1Wgt5q2TeZsNp4",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「張淦勛 Giyu Tjuljaviya」（名稱相符）有 1 個同名作品：南迴之子（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  "li-quan-zhe": {
+   "spotifyId": "0PSG0vJNGf6Nc0Vu0S1yFW",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「Jerry Li」（Spotify 名稱跟站上不同）有 2 個同名作品：愛情一陣風、醒著不醉（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  "pan-zi-jue": {
+   "spotifyId": "7r74JFmvA3yPLuDyyzH8Mx",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「Ruby Pan 潘子爵」（名稱相符）有 1 個同名作品：沒問題少女（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  "shang-xin-yu-jue": {
+   "spotifyId": "3mgkHRW7Rgkbx2gJb5TPl7",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「Wayne's so Sad」（Spotify 名稱跟站上不同）有 3 個同名作品：還是偶爾想要偉大、無名氏敬上、大雨（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  "xu-zhe-pei": {
+   "spotifyId": "7ruJU7jtsDqbgA23BL3VFQ",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「Peggy Hsu」（Spotify 名稱跟站上不同）有 2 個同名作品：雪人、許願盒（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  "ye-ying": {
+   "spotifyId": "3lN5TnoCbzUqwIMFQrGkx8",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「葉穎 Leaf Yeh」（名稱相符）有 1 個同名作品：生滅（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  "yeemao": {
+   "spotifyId": "10bBWqtVxVR6nl4BzU97Xk",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「夜貓組 (Leo王+春艷)」（名稱相符）有 1 個同名作品：健康歌曲（第一輪搜尋沒抓到這位）（2026-10-03）"
+  }
+ },
+ "_說明_rejected": "rejected：藝人識別碼 → { all: true }＝這位永遠不配（自動流程也不配）；{ ids: [...] }＝這幾個 Spotify ID 確定不是本人，自動流程不會選它們，其他新候選照規則判斷",
+ "rejected": {
+  "aaa-hyukoh": {
+   "all": true,
+   "reason": "合作名義（HYUKOH 與落日飛車），Spotify 的 AAA 是日本團，使用者確認不是（2026-10-03 使用者確認）"
+  },
+  "dac-zaoyuan": {
+   "ids": [
+    "0nWX29koulPYFLJoMxIpJx"
+   ],
+   "reason": "合作名義，候選 Dac 是個人，不配（2026-10-03 使用者確認）"
+  },
+  "james-lee": {
+   "ids": [
+    "4QHci6hVY85I6xSIu0W4k6"
+   ],
+   "reason": "候選 James Lee 沒有作品可證明是李銖銜，不配（2026-10-03 使用者確認）"
+  },
+  "jihu": {
+   "ids": [
+    "5sR9BwbhwlsifEWrlw4uEF"
+   ],
+   "reason": "候選作品《母亲的河》《彝部分》跟站上對不上，不配（2026-10-03 使用者確認）"
+  },
+  "kiki": {
+   "ids": [
+    "6MG7fjH9YBryqLT03MnwQM",
+    "0UMs6dTf23FC2fHc40fXNS",
+    "30FDJPN3RtwJZ20g5YGCRX",
+    "6hJtgCB3L5cnJSND7sp6GU",
+    "5RlTfdqlSGGASLxhDAHYtP"
+   ],
+   "reason": "同名候選太多、都對不上，不配（2026-10-03 使用者確認）"
+  },
+  "roger-lin": {
+   "ids": [
+    "6asKuZzheNBzgXUD6x1aFh"
+   ],
+   "reason": "名稱太常見、作品對不上，不配（2026-10-03 使用者確認）"
+  },
+  "ye-jun-lin": {
+   "ids": [
+    "1X9fWntid7DkW6GcQLJsHM"
+   ],
+   "reason": "候選沒有作品可比，不配（2026-10-03 使用者確認）"
+  }
+ },
+ "_說明_whenVisible": "whenVisible：藝人頁目前不顯示（會 404）、使用者已確認的 Spotify ID。藝人頁一出現（觸發 A），Worker 直接用這個 ID，不再自己比對",
+ "whenVisible": {
+  "aiko-tomi": {
+   "spotifyId": "24jBJ64cYnyWF53EKv6K9t",
+   "evidence": "富愛子＝Aiko Tomi，名稱對得上；使用者確認，藝人頁出現時才寫入（2026-10-03 使用者確認）"
+  },
+  "brandon-lin": {
+   "spotifyId": "34uAT9ljsrLL2g7kx8lDZW",
+   "evidence": "名稱完全相同；使用者確認，藝人頁出現時才寫入（2026-10-03 使用者確認）"
+  },
+  "dao-che-ru-ku": {
+   "spotifyId": "5dnOo3EpTCmEnLwoC4tP78",
+   "evidence": "Reversing into Garage 有《燒香拜佛》，跟站上作品同名；使用者確認，藝人頁出現時才寫入（2026-10-03 使用者確認）"
+  },
+  "dciv": {
+   "spotifyId": "1ek0Tv8frXGgW6GCCE2jit",
+   "evidence": "DCIV《Lost, Then Found》＝站上《失而復得》；使用者確認，藝人頁出現時才寫入（2026-10-03 使用者確認）"
+  },
+  "destroyers": {
+   "spotifyId": "0n2SzMMLz0dcLCTFvKkxO7",
+   "evidence": "擊沈女孩 DESTROYERS，名稱對得上；使用者確認，藝人頁出現時才寫入（2026-10-03 使用者確認）"
+  },
+  "knowtis": {
+   "spotifyId": "2jKpRyJAY8BCqYkuTRYnZu",
+   "evidence": "名稱完全相同；使用者確認，藝人頁出現時才寫入（2026-10-03 使用者確認）"
+  },
+  "n-y-p-d": {
+   "spotifyId": "0uGCA6uvmofOBLPplBhyAY",
+   "evidence": "Spotify 名稱「N.Y.P.D. 南洋派對」完全相同；使用者確認，藝人頁出現時才寫入（2026-10-03 使用者確認）"
+  },
+  "sonia-calico": {
+   "spotifyId": "7yZgyvPwZiP9D6ZvGrH1oB",
+   "evidence": "名稱完全相同；使用者確認，藝人頁出現時才寫入（2026-10-03 使用者確認）"
+  },
+  "thats-my-shhh": {
+   "spotifyId": "5iUU1iEJjzYNmZv8l2rMVp",
+   "evidence": "名稱完全相同；使用者確認，藝人頁出現時才寫入（2026-10-03 使用者確認）"
+  },
+  "tu-ling-yin-le-shi-yan-shi": {
+   "spotifyId": "7e44osCQ7ppxzkZO5R1viO",
+   "evidence": "名稱完全相同；使用者確認，藝人頁出現時才寫入（2026-10-03 使用者確認）"
+  },
+  "von-citizen": {
+   "spotifyId": "6y3CdH55aic6K8tT1NgRQ6",
+   "evidence": "名稱完全相同；使用者確認，藝人頁出現時才寫入（2026-10-03 使用者確認）"
+  },
+  "xiao-qin": {
+   "spotifyId": "2SaFT3GC9SqxdEw4K8a0kr",
+   "evidence": "名稱完全相同；使用者確認，藝人頁出現時才寫入（2026-10-03 使用者確認）"
+  },
+  "yufu": {
+   "spotifyId": "4lq7hzzPRSVIU1bvThHpPj",
+   "evidence": "兩位同名 Yufu 中有作品的那位（Heal Me Good、CINEMAPHONIC Live）；使用者確認，藝人頁出現時才寫入（2026-10-03 使用者確認）"
   }
  }
 }

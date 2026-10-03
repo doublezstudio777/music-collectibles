@@ -49,6 +49,8 @@ const localBindingConfig = {
     // 2c：本機預設不寄真信（沒有 RESEND_API_KEY＝印 console）。真實寄信測試時才用環境變數帶進來，並用 MAIL_ALLOWLIST 限收件人
     ...(process.env.RESEND_API_KEY ? { RESEND_API_KEY: process.env.RESEND_API_KEY } : {}),
     ...(process.env.MAIL_ALLOWLIST ? { MAIL_ALLOWLIST: process.env.MAIL_ALLOWLIST } : {}),
+    // Spotify：本機要測自動抽歌、藝人自動比對時才用環境變數帶進來（2026-10-03），平常不設＝不打 Spotify
+    ...(process.env.SPOTIFY_CLIENT_ID ? { SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET ?? "" } : {}),
   },
   // 照片：本機 Miniflare 模擬 R2（與 D1 同放 .wrangler/state），雲端 0 個 bucket
   r2_buckets: [

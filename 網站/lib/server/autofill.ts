@@ -130,7 +130,8 @@ export function kickAutofill() {
   }
 }
 
-async function takeLock(ms: number) {
+/** 排程鎖（自動補資料、每月補新作品、Spotify 藝人自動比對 2026-10-03 共用）：拿到回 true */
+export async function takeLock(ms: number) {
   const r = await db()
     .prepare(
       `INSERT INTO autofill_state (key, value, updated_at) VALUES ('lock', ?1, ?2)
@@ -141,7 +142,7 @@ async function takeLock(ms: number) {
     .all();
   return r.results.length > 0;
 }
-const dropLock = () => db().prepare(`UPDATE autofill_state SET value = '', updated_at = ?1 WHERE key = 'lock'`).bind(nowIso()).run();
+export const dropLock = () => db().prepare(`UPDATE autofill_state SET value = '', updated_at = ?1 WHERE key = 'lock'`).bind(nowIso()).run();
 
 async function nextJob() {
   return db()

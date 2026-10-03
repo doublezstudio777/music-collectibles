@@ -1,6 +1,6 @@
 {
  "_說明": "藝人識別碼 → Spotify 藝人 ID（scripts/spotify-match.mjs 產生；只有公開 ID，沒有金鑰）",
- "產生時間": "2026-10-02T19:08:53.908Z",
+ "產生時間": "2026-10-03T00:44:01.416Z",
  "artists": {
   "163braces": {
    "spotifyId": "6gtUGnqU4qnJ2ZB2bvp5TZ",
@@ -482,6 +482,12 @@
    "source": "musicbrainz",
    "evidence": "MusicBrainz e8e40508-1ffe-4fa1-a68c-b507bfe5abc4 的 Spotify 連結"
   },
+  "giyu-tjuljaviya": {
+   "spotifyId": "6164qyIB1Wgt5q2TeZsNp4",
+   "spotifyName": "張淦勛 Giyu Tjuljaviya",
+   "source": "manual",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「張淦勛 Giyu Tjuljaviya」（名稱相符）有 1 個同名作品：南迴之子（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
   "gordon": {
    "spotifyId": "4L4ArdVJzY6Uxbd82fJjqu",
    "spotifyName": "Gordon",
@@ -727,6 +733,12 @@
    "spotifyName": "",
    "source": "musicbrainz",
    "evidence": "MusicBrainz acf92994-57ba-4b36-9a04-28a943db5cba 的 Spotify 連結"
+  },
+  "li-quan-zhe": {
+   "spotifyId": "0PSG0vJNGf6Nc0Vu0S1yFW",
+   "spotifyName": "Jerry Li",
+   "source": "manual",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「Jerry Li」（Spotify 名稱跟站上不同）有 2 個同名作品：愛情一陣風、醒著不醉（第一輪搜尋沒抓到這位）（2026-10-03）"
   },
   "li-rong-hao": {
    "spotifyId": "0rTP0x4vRFSDbhtqcCqc8K",
@@ -986,6 +998,12 @@
    "source": "musicbrainz",
    "evidence": "MusicBrainz 21686a1f-65ff-45b9-b5e2-9bc891791b33 的 Spotify 連結"
   },
+  "pan-zi-jue": {
+   "spotifyId": "7r74JFmvA3yPLuDyyzH8Mx",
+   "spotifyName": "Ruby Pan 潘子爵",
+   "source": "manual",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「Ruby Pan 潘子爵」（名稱相符）有 1 個同名作品：沒問題少女（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
   "panai": {
    "spotifyId": "2PbU3CmXZmV6dPfzLONLIA",
    "spotifyName": "巴奈",
@@ -1160,6 +1178,12 @@
    "source": "manual",
    "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「傻子與白痴 Fool And Idiot」（名稱相符）有 2 個同名作品：姿態、遠慮（第一輪搜尋沒抓到這位）（2026-10-03）"
   },
+  "shang-xin-yu-jue": {
+   "spotifyId": "3mgkHRW7Rgkbx2gJb5TPl7",
+   "spotifyName": "Wayne's so Sad",
+   "source": "manual",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「Wayne's so Sad」（Spotify 名稱跟站上不同）有 3 個同名作品：還是偶爾想要偉大、無名氏敬上、大雨（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
   "shen-jing-yuan": {
    "spotifyId": "0JO7LjM53ktNVO02Px0aDh",
    "spotifyName": "神經元",
@@ -1243,6 +1267,12 @@
    "spotifyName": "蘇裔非",
    "source": "search",
    "evidence": "搜尋同名，作品交集：少年殺人事件"
+  },
+  "su-yun-ying": {
+   "spotifyId": "63tzlZxY9iaOeUnmGfwlyA",
+   "spotifyName": "Sue",
+   "source": "manual",
+   "evidence": "使用者確認：Spotify「Sue」有《冥明》（2015，跟站上作品同名）、〈野子〉〈螢火蟲〉；同名候選「蘇運瑩」只有《峨眉金曲》不是本人（2026-10-03 使用者確認）"
   },
   "suming": {
    "spotifyId": "3jV6Ro12GySf82kJiksE7D",
@@ -1436,6 +1466,12 @@
    "source": "manual",
    "evidence": "第二輪 wikidata-p1902：Wikidata Q25644628（QID 來自MusicBrainz be73ce7e-6779-4b40-9629-732d9851e5d3）的 P1902 Spotify artist ID（2026-10-03）"
   },
+  "xiu-lan-ma-ya": {
+   "spotifyId": "2EeRoHaQh0WizmHCDhrREV",
+   "spotifyName": "秀蘭瑪雅",
+   "source": "manual",
+   "evidence": "使用者確認：唯一同名候選，作品《唱乎甲己來聽》《繡一蕊花》《天頂星》等台語專輯（2026-10-03 使用者確認）"
+  },
   "xu-fu-kai": {
    "spotifyId": "1cfpx67CNTohABdelcfXdL",
    "spotifyName": "",
@@ -1447,6 +1483,12 @@
    "spotifyName": "许钧",
    "source": "manual",
    "evidence": "第二輪 search-title：用站上作品搜 Spotify，演出者「许钧」（Spotify 名稱跟站上不同）有 2 個同名作品：期待集、歌一切（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  "xu-zhe-pei": {
+   "spotifyId": "7ruJU7jtsDqbgA23BL3VFQ",
+   "spotifyName": "Peggy Hsu",
+   "source": "manual",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「Peggy Hsu」（Spotify 名稱跟站上不同）有 2 個同名作品：雪人、許願盒（第一輪搜尋沒抓到這位）（2026-10-03）"
   },
   "ya-wei-mo-rui": {
    "spotifyId": "2tw5PEWw0X8EFl6dlAQUdV",
@@ -1483,6 +1525,18 @@
    "spotifyName": "楊易修",
    "source": "search",
    "evidence": "搜尋同名，作品交集：野臺語言"
+  },
+  "ye-ying": {
+   "spotifyId": "3lN5TnoCbzUqwIMFQrGkx8",
+   "spotifyName": "葉穎 Leaf Yeh",
+   "source": "manual",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「葉穎 Leaf Yeh」（名稱相符）有 1 個同名作品：生滅（第一輪搜尋沒抓到這位）（2026-10-03）"
+  },
+  "yeemao": {
+   "spotifyId": "10bBWqtVxVR6nl4BzU97Xk",
+   "spotifyName": "夜貓組 (Leo王+春艷)",
+   "source": "manual",
+   "evidence": "顯示中補對 search-title：用站上作品搜 Spotify，演出者「夜貓組 (Leo王+春艷)」（名稱相符）有 1 個同名作品：健康歌曲（第一輪搜尋沒抓到這位）（2026-10-03）"
   },
   "yellow": {
    "spotifyId": "6iUs0Aijnu60VAAf8Aj2YM",

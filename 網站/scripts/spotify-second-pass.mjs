@@ -19,6 +19,8 @@
 //   node scripts/spotify-second-pass.mjs --remote [--write] [--report <第一輪報告.json>]
 //   --write 才寫 spotify-manual.json 與精簡版清單；--report 指定第一輪報告（spotify-match.mjs --apply 之後報告會把手動指定的算進 ok、
 //   疑義只剩沒採用的，要重現完整 98 位的判定就用 git 裡 apply 前的那份）
+//   --slugs a,b,c（2026-10-03 加）：只判這幾位（第一輪是疑義的用報告裡的候選，「找不到」的用站上名稱＋別名從頭搜），
+//   結果寫 產出/20261003_Spotify補對/顯示中補對.json，不動精簡版清單；使用者確認不配的（spotify-manual.json 的 rejected）一律不採用
 
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -217,10 +219,22 @@ const norm = (s) =>
 
 /* ---------- 主程式 ---------- */
 const report = JSON.parse(readFileSync(REPORT, "utf8"));
-const doubt = report.doubt;
 const people = Object.fromEntries(
   query(`SELECT slug, name, aliases, mbid, wiki_url, region, intro FROM artists WHERE kind='藝人' AND status='approved' AND deleted_at IS NULL AND hidden_at IS NULL`).map((p) => [p.slug, p]),
 );
+const only = opt("--slugs", "") ? opt("--slugs", "").split(",").map((x) => x.trim()).filter(Boolean) : null;
+const aliasesOf = (p) => {
+  try {
+    return JSON.parse(p?.aliases || "[]");
+  } catch {
+    return [];
+  }
+};
+const doubt = only
+  ? only.map((slug) => report.doubt.find((d) => d.slug === slug) ?? { slug, name: people[slug]?.name ?? slug, candidates: [], searched: [people[slug]?.name, ...aliasesOf(people[slug])].filter(Boolean) })
+  : report.doubt;
+const manualAll = existsSync(MANUAL) ? JSON.parse(readFileSync(MANUAL, "utf8")) : {};
+const rejected = manualAll.rejected ?? {};
 const seriesBy = new Map();
 for (const s of query(`SELECT artist_slug AS a, title, year FROM series WHERE deleted_at IS NULL AND status='approved' ORDER BY year`)) {
   if (!seriesBy.has(s.a)) seriesBy.set(s.a, []);
@@ -284,6 +298,11 @@ for (const d of doubt) {
   const cands = d.candidates.map((c) => ({ ...c, images: candImages(names, c.id), works: candAlbums(names, c.id) }));
   const evidence = { qidFrom: "", qid: "", mbSpotify: [], wdP1902: [], wdSearch: null };
   const take = (id, type, why) => {
+    if (rejected[d.slug]?.all || (rejected[d.slug]?.ids ?? []).includes(id)) {
+      remain.push({ ...d, note: `規則選到 ${id}，但使用者確認不配` });
+      console.log(`[${n}/${doubt.length}] ${d.name}：規則選到 ${id}，使用者確認不配，略過`);
+      return;
+    }
     const sname = cands.find((c) => c.id === id)?.name ?? "";
     adopted.push({ slug: d.slug, name: d.name, spotifyId: id, spotifyName: sname, type, evidence: why, inCandidates: candIds.has(id) });
     console.log(`[${n}/${doubt.length}] ${d.name}：採用 ${id}（${type}：${why}）`);
@@ -475,6 +494,15 @@ const out = {
   remain,
 };
 console.log(`\n採用 ${adopted.length}（${JSON.stringify(out.統計.採用來源)}）、空殼不配 ${shells.length}、仍待使用者 ${remain.length}；請求 ${JSON.stringify(out.統計.外部請求)}`);
+if (only) {
+  writeFileSync(join(OUTDIR, "顯示中補對.json"), JSON.stringify(out, null, 1) + "\n");
+  if (write) {
+    const manual = JSON.parse(readFileSync(MANUAL, "utf8"));
+    for (const a of adopted) if (!a.fromManual) manual.artists[a.slug] = { spotifyId: a.spotifyId, evidence: `顯示中補對 ${a.type}：${a.evidence}（2026-10-03）` };
+    writeFileSync(MANUAL, JSON.stringify(manual, null, 1) + "\n");
+  }
+  process.exit(0);
+}
 if (!write) {
   writeFileSync(join(OUTDIR, "第二輪判定_試跑.json"), JSON.stringify(out, null, 1) + "\n");
   process.exit(0);
