@@ -99,3 +99,4 @@
 - 本機備份沒有藝人照片檔（`/img/r/`），要驗藝人頁排版用 Playwright `route("**/img/**")` 從正式站拿圖；`pkill -f 關鍵字` 寫在同一行指令會比對到自己（又踩一次），停伺服器一律用 scratchpad 的 `stop_local.sh`（比對 `/proc/PID/cwd`）（2026-10-03）
 - Spotify 嵌入播放器只有 152 與 352 兩種版面，iframe 給中間高度（如 248）會畫成 152 版面下面留空白，別拿它對齊照片高度；本機 `.wrangler/state` 的 D1 可能落後遷移、`spotify_artists` 是空的，驗收前先 `migrations list --local` 並自己塞測試列；3x 整頁截圖會超過 32767px 上限，截頁面上半用 `clip`（2026-10-03）
 - Spotify 這個 app 的回應沒有 genres／followers／popularity（search 與 get artist 都只有 id、name、images），拿 genre 當證據的規則寫了也沒用；對藝人要用「站上已知作品標題」去 search album＋track 再看演出者，比 `artist:名` 抓前 10 張可靠得多，Spotify 用英文名的藝人（TroutFresh、Shallow Levée）只有這樣才對得到。`spotify-match.mjs --apply` 會改寫第一輪報告，第二輪要重現得用 git 裡舊報告（2026-10-03）
+- 本機要模擬「藝人頁從不顯示變顯示」：插 series 時 `credits` 一定要放 json_array(藝人 slug)，`mainSeriesOf` 只看 credits，只填 artist_slug 頁面照樣 404；本機要打 Spotify 就在 build 前帶 SPOTIFY_CLIENT_ID／SECRET 環境變數（vite.config.ts 只在有設時塞進本機 vars）（2026-10-03）

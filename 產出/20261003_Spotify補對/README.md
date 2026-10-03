@@ -52,3 +52,45 @@ Cloudflare Version ID `c24899f3`，沒有遷移。部署前備份 `20261003-0232
 重跑說明：`spotify-match.mjs --apply` 之後第一輪報告會把手動指定的算進 ok，疑義只剩沒採用的；要重現 98 位的判定要用 git 裡 apply 前的報告：`node scripts/spotify-second-pass.mjs --remote --report <舊報告> [--write]`。已寫進 `spotify-manual.json` 的沿用不重判，要重判就刪那條。
 
 驗證：正式站 `/artist/lv-shi-xuan`、`/artist/tiu-tiu`、`/artist/li-ying-hong`、`/artist/xiong-zai` 的 HTML 都有 `open.spotify.com/embed/artist/{新 ID}`，跟 manual 檔一致。
+
+## 四、收尾：只配顯示中的藝人＋出現時自動配（2026-10-03 上午）
+
+使用者 10/03 原話：「AAA 不是。其他的我不知道耶。我覺得比較重要的是，只要已經有頁面的就要出現，沒有的就算了，等真的有出現再加上去。」
+
+Cloudflare Version ID `c2025047`，遷移 `0030_spotify_match`（只新增 `spotify_match` 一張表＋種子資料，沒有重建表）。寫正式站前備份 `20261003-084202-remote`，部署第 3 步備份 `20261003-085319-remote`。
+
+### 顯示中藝人（照現行顯示規則，會 404 的不算；正式站 `/artists` 列出的 153 位）
+
+| | 有 Spotify ID | 沒有 | 比例 |
+|---|---|---|---|
+| 改前 | 137 | 16 | 89.5% |
+| 改後 | 146 | 7 | 95.4% |
+
+新採用 9 位（正式站藝人頁都已嵌入，ID 跟 `spotify-manual.json` 一致）：
+- 精簡版 22 位裡顯示中的：蘇運瑩＝Spotify「Sue」（有《冥明》〈野子〉〈螢火蟲〉；同名「蘇運瑩」只有《峨眉金曲》不是本人）、秀蘭瑪雅
+- 顯示中、不在 22 位裡、用第二輪作品標題搜尋補到的 7 位：張淦勛（張淦勛 Giyu Tjuljaviya，《南迴之子》）、李權哲（Jerry Li，《愛情一陣風》《醒著不醉》）、潘子爵（Ruby Pan 潘子爵，《沒問題少女》）、傷心欲絕（Wayne's so Sad，3 張同名作品）、許哲珮（Peggy Hsu，《雪人》《許願盒》）、葉穎（葉穎 Leaf Yeh，《生滅》）、夜貓組（夜貓組 (Leo王+春艷)，《健康歌曲》）。證據在 `顯示中補對.json`
+
+還沒對到的顯示中 7 位：阿洛·卡力亭·巴奇辣、荒井十一、黃綺珊、林鈺婷、蘇郁涵、鄭楠（Spotify 同名頁沒照片沒作品、作品標題也搜不到）、李銖銜（唯一候選 James Lee 確認不配）。每月重跑會再查。
+
+精簡版 22 位的處理（寫在 `網站/scripts/spotify-manual.json`）：
+- `rejected`：AAA（HYUKOH與落日飛車）整位不配，自動流程永遠不碰；Dac與鄭昭元、李銖銜、JIHU、KIKI、Roger Lin、葉俊麟只把看過的候選 ID 記成「不是本人」，日後出現新候選照規則判斷
+- `whenVisible`：藝人頁還沒顯示、名稱或作品對得上的 13 位（富愛子、Brandon Lin、倒車入庫＝Reversing into Garage、DCIV、擊沈女孩、KNOWTIS、N.Y.P.D.南洋派對、Sonia Calico、That's My Shhh、圖靈音樂實驗室、Von Citizen、笑琴、Yufu 有作品那位）先存著，藝人頁一出現 Worker 直接寫入，不再比對
+- 改這兩段後跑 `node scripts/spotify-match.mjs --remote --sync-decisions` 同步進 D1（這次的已經寫在遷移 0030 裡）
+
+### 自動化（`網站/lib/server/spotify-auto.ts`）
+
+- 觸發 A（藝人頁從不顯示變顯示）：內容目錄每次重組（內容版本一變就重組）算一次顯示中的藝人，清單有變就存 `spotify_state.visible`，同一句 SQL 替「顯示中、沒有啟用的 Spotify ID、沒排過」的藝人排一筆 `spotify_match`；`waiting`（使用者先判斷過的）也在這時轉排隊。比對過的不會因為重組再排
+- 觸發 B（每月一次）：每天 02:00 的排程看 `auto_month`，月份變了就把顯示中、比對過但沒對到的全部重排。這個月已標成 2026-10，第一次是 11 月
+- 執行：`*/10` 排程在自動補資料之前跑一小批（最多 20 次對外連線，用掉的從自動補資料的 45 次扣，整次不超過 50），共用 `autofill_state` 的排程鎖與 MusicBrainz 計時；Spotify 記在抽歌的配額帳新桶 `search`（每天上限 120），每秒最多 1 次、只打 search、不打 artist-albums；任何 429 立刻停、把 search 桶鎖到 Retry-After 之後並寫進 `auto_last`；鎖住或額度用完時整批不跑（連 MusicBrainz 都不打）。抽歌時段（台灣 02:00～04:59）不跑
+- 規則：使用者確認過的 ID → MusicBrainz 唯一 Spotify 連結 → Wikidata P1902 → 名稱完全相同且作品交集唯一 → 作品標題搜尋（命中 ≥2 個或命中 1 個且名稱相符）。高信心直接寫 `spotify_artists`（source＝`auto`，albums 留空），讓 content_version 加 1 一次換上播放器；其餘記 none／doubt／shell 不配。確定不是本人的 ID、已配給別位的 ID 不用
+- 寫入後每晚 02:00 抽歌排程照常接手（`drawn_on` 空的排最前）
+- `spotify-match.mjs --apply` 不會停用 source＝`auto` 的列（原本會把不在對應檔裡的全部停用）
+- 後台「推薦歌曲」頁新增「藝人自動比對」：上次自動比對時間、比對幾位、對到幾位（名單）、累計自動對到幾位、排隊數、還沒對到的顯示中藝人表格（狀態、說明、上次比對）。額度列多一項「藝人比對搜尋」。管理員 API `POST /api/admin/spotify-draw` 多 `match`（立刻跑一批）、`monthly`（立刻重排）
+
+### 驗收
+
+- 本機（`.wrangler/state`，套 0030）：部署後第一次重組就把 502 位顯示中沒 ID 的排進佇列（本機有示範資料），先全部標成比對過模擬穩定狀態；再替不顯示的周自從、Von Citizen 各加一個系列 → 兩頁 404→200，佇列只多這 2 位（reason＝visible）→ `match` 一批：周自從用「名稱相同＋作品交集《人造人間》」對到 `2eYVJwq3xrMAUfM9OFmzR9`（跟正式站第一輪結果相同）、Von Citizen 用使用者確認過的 ID；3 次 Spotify 連線，`spotify_artists` 兩列 source＝auto、albums 空、drawn_on 空（抽歌待抽清單有它們），content_version 加 1，兩頁 HTML 都有嵌入
+- 本機觸發 B：`monthly` 只重排顯示中沒 ID 的 2 位，不顯示的不排；search 桶設成鎖住時 `match` 回 skipped、0 次連線、佇列不動
+- 本機後台截圖 `img/本機_自動比對/後台_藝人自動比對.jpg`，console error 0
+- 正式站：部署後 `spotify_state.visible`＝153，沒有新排隊（顯示中沒 ID 的 7 位都已有比對紀錄）；9 位新採用的藝人頁 HTML 都有 `open.spotify.com/embed/artist/{ID}` 且跟 manual 一致；Playwright 390 寬抽 3 位（蘇運瑩、秀蘭瑪雅、傷心欲絕）iframe 352px、console error 0，截圖在 `img/正式站_新採用/`
+- 本機留下的測試資料（只在本機 D1）：周自從、Von Citizen 各一個系列（created_by＝`test:spotify-auto`）、兩列 auto 的 `spotify_artists`、管理員測試 session 一列
