@@ -15,6 +15,14 @@ export const TERMS_EFFECTIVE = "2026-10-09";
 export const TERMS_REQUIRED = "1.0";
 
 const ver = (v: string) => v.split(".").map((x) => Number(x) || 0);
+/** 版本 a ≥ b（「1.10」>「1.9」；a 空的是 false） */
+export function versionAtLeast(a: string | null | undefined, b: string) {
+  if (!a) return false;
+  const [x, y] = [ver(a), ver(b)];
+  for (let i = 0; i < Math.max(x.length, y.length); i++) if ((x[i] ?? 0) !== (y[i] ?? 0)) return (x[i] ?? 0) > (y[i] ?? 0);
+  return true;
+}
+
 /** 會員同意過的版本 ≥ TERMS_REQUIRED（沒同意過任何版本是 false） */
 export function termsAccepted(version: string | null | undefined) {
   if (!version) return false;

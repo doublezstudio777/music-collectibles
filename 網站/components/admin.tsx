@@ -188,72 +188,6 @@ function targetLink(t: string) {
 
 /** 台灣時間（資料庫存 UTC） */
 const day = (iso: string) => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 16).replace("T", " ");
-const gb = (n: number) => `${(n / 1024 ** 3).toFixed(2)} GB`;
-const pct = (a: number, b: number) => `${Math.round((a / b) * 1000) / 10}%`;
-
-/** 網站狀態：暫停模式（第三道防線）、本月照片讀取（第二道）、照片容量（第一道） */
-function SiteStatus({ site, run }: { site: Site; run: (path: string, body: unknown) => Promise<void> }) {
-  // 整站暫停影響所有人，要打「暫停」才能按（2026-10-02 必修 3）
-  const [ask, setAsk] = useState(false);
-  return (
-    <section className="block">
-      <h2 className="block-title">網站狀態</h2>
-      <dl className="spec-list site-status" data-testid="site-status">
-        <div>
-          <dt>暫停模式</dt>
-          <dd data-paused={site.paused}>
-            {site.paused ? (
-              <>
-                <span className="flag flag-lock">暫停中</span> {site.pausedReason}
-                {site.pausedAt ? <span className="sub"> · {day(site.pausedAt)}</span> : null}
-              </>
-            ) : (
-              "正常"
-            )}
-          </dd>
-        </div>
-        <div>
-          <dt>本月照片讀取</dt>
-          <dd className="num">
-            {site.reads.toLocaleString("en-US")} / {site.readLimit.toLocaleString("en-US")}（{pct(site.reads, site.readLimit)}）
-          </dd>
-        </div>
-        <div>
-          <dt>照片容量</dt>
-          <dd className="num">
-            {gb(site.storageUsed)} / {gb(site.storageLimit)}（{pct(site.storageUsed, site.storageLimit)}）
-          </dd>
-        </div>
-      </dl>
-      <div className="report-acts">
-        {site.paused ? (
-          <button type="button" className="btn btn-line" onClick={() => run("/api/admin/pause", { paused: false })}>
-            解除暫停
-          </button>
-        ) : (
-          <button type="button" className="btn-text" onClick={() => setAsk(true)} aria-haspopup="dialog" data-testid="pause-open">
-            手動暫停
-          </button>
-        )}
-      </div>
-      {ask ? (
-        <ConfirmDialog
-          title="暫停整個網站？"
-          confirmLabel="確定暫停"
-          danger
-          typeWord="暫停"
-          onConfirm={async () => {
-            await run("/api/admin/pause", { paused: true });
-          }}
-          onClose={() => setAsk(false)}
-          testid="pause-confirm"
-        >
-          <p>暫停後所有人都不能上傳照片、看大圖，直到你在這裡解除暫停。</p>
-        </ConfirmDialog>
-      ) : null}
-    </section>
-  );
-}
 
 /** 下架：隱藏／恢復、永久刪除空頁面、藝人頁顯示 */
 function Takedown({ data, run }: { data: Overview; run: (path: string, body: unknown) => Promise<void> }) {
@@ -442,7 +376,7 @@ export function Admin() {
       <div className="admin-toast">
         <SaveMsg {...op.msg} testid="admin-msg" />
       </div>
-      <SiteStatus site={data.site} run={run} />
+      {/* 網站狀態（暫停模式、照片讀取、容量）2026-10-03 移到 /admin/status */}
       <Takedown data={data} run={run} />
       <section className="block">
         <h2 className="block-title">檢舉門檻</h2>

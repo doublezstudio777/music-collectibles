@@ -49,6 +49,10 @@ export const publicMe = (u: User) => ({
   nameNextAt: nextNameChange(u.nameChangedAt),
   /** 已同意現行版使用條款與隱私權政策（2026-10-01）；false 時前端跳補同意視窗 */
   termsOk: termsAccepted(u.termsVersion),
+  /** 同意過的條款版本（2026-10-03）：同意的版本 ≥ 公告版本就不顯示條款更新公告 */
+  termsVersion: u.termsVersion ?? null,
+  /** 關掉過的條款更新公告版本（user_notices）；只有 /api/me 會填，其他回應一律 null */
+  noticeSeen: null as string | null,
 });
 export type Me = ReturnType<typeof publicMe>;
 

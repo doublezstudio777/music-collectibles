@@ -1,6 +1,7 @@
 import { currentUser, json, publicMe } from "@/lib/server/auth";
 import { myState } from "@/lib/server/me";
 import { canTrade, requestCountry, touchActivity } from "@/lib/server/geo";
+import { noticeSeen } from "@/lib/server/notice";
 
 /**
  * 目前登入的使用者＋個人狀態（點讚、我有、想要、追蹤），網頁開站只打這一支。
@@ -11,9 +12,11 @@ import { canTrade, requestCountry, touchActivity } from "@/lib/server/geo";
 export async function GET(req: Request) {
   const s = await currentUser(req);
   const geo = { country: requestCountry(req), canTrade: canTrade(req) };
-  if (s) await touchActivity(s.user.id, req);
+  if (!s) return json({ user: null, state: null, geo }, 200, { "Cache-Control": "no-store" });
+  await touchActivity(s.user.id, req);
+  const [state, seen] = await Promise.all([myState(s.user.id), noticeSeen(s.user.id)]);
   return json(
-    s ? { user: publicMe(s.user), state: await myState(s.user.id), geo } : { user: null, state: null, geo },
+    { user: { ...publicMe(s.user), noticeSeen: seen }, state, geo },
     200,
     { "Cache-Control": "no-store" },
   );

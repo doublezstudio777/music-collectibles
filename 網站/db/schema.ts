@@ -1280,6 +1280,16 @@ export const termsConsents = sqliteTable(
 );
 
 /**
+ * 條款更新公告關掉了哪一版（2026-10-03，drizzle/0031）：登入會員以這裡為準，換裝置、換瀏覽器都不再出現。
+ * 不放在 users：users 有 cv_users 觸發器，任何更新都會讓全站整頁快取失效
+ */
+export const userNotices = sqliteTable("user_notices", {
+  userId: text("user_id").primaryKey(),
+  version: text("version").notNull(),
+  updatedAt: text("updated_at").notNull().default(now),
+});
+
+/**
  * 權利侵害通知（2026-10-01，drizzle/0027；著作權法第 90 條之 4 起、使用條款第 11 條）。
  * 流程：通知人在 /takedown 送出（不用登入）→ 管理員移除內容並通知會員（status=removed）或不成立（rejected）
  * → 會員 10 日內可送回復通知（counter_at）→ 管理員轉送通知人（forwarded_at，restore_due＝10 個工作日後）

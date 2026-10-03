@@ -25,6 +25,9 @@ export type Me = {
   nameNextAt?: string | null;
   /** 已同意現行版使用條款與隱私權政策（2026-10-01） */
   termsOk?: boolean;
+  /** 同意過的條款版本、關掉過的條款更新公告版本（2026-10-03，條款更新公告用） */
+  termsVersion?: string | null;
+  noticeSeen?: string | null;
 };
 
 export type PanelMode = "login" | "register" | "verify" | "forgot" | "reset";

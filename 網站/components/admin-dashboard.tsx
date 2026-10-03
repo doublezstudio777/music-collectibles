@@ -22,26 +22,8 @@ type Queue = {
   takedowns?: number;
 };
 type StatsRes = { stats: Stats; cached: boolean; queue: Queue };
-type Usage = {
-  r2: { used: number; limit: number; free: number };
-  reads: { month: number; stopAt: number; free: number };
-  paused: { on: boolean; at: string | null; reason: string };
-  free: { workersRequestsPerDay: number; workersCpuMs: number; d1RowsReadPerDay: number; d1RowsWrittenPerDay: number; r2ClassAPerMonth: number };
-  cloudflare:
-    | { configured: false; need: string }
-    | { configured: true; ok: false; message: string }
-    | {
-        configured: true;
-        ok: true;
-        workers: { date: string; requests: number; errors: number; exceeded: number; cpuP50: number; cpuP90: number }[];
-        d1Today: { rowsRead: number; rowsWritten: number };
-        r2Month: { classA: number; classB: number };
-        at: string;
-      };
-};
 
 const n = (x: number) => x.toLocaleString("en-US");
-const gb = (b: number) => `${(b / 1024 ** 3).toFixed(2)} GB`;
 const pct = (a: number, b: number) => `${b ? Math.round((a / b) * 1000) / 10 : 0}%`;
 const tw = (iso: string) => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 16).replace("T", " ");
 
@@ -130,116 +112,25 @@ const TREND: { title: string; get: (p: DayPoint) => number; money?: boolean }[] 
   { title: "成交金額", get: (p) => p.amount, money: true },
 ];
 
-function Meter({ label, used, limit, text, testid }: { label: string; used: number; limit: number; text: string; testid?: string }) {
-  const r = Math.min(1, limit ? used / limit : 0);
-  return (
-    <div className="meter" data-testid={testid}>
-      <div className="meter-head">
-        <span>{label}</span>
-        <span className="num">{text}</span>
-      </div>
-      <span className="meter-bar" aria-hidden="true">
-        <span style={{ width: `${(r * 100).toFixed(1)}%` }} className={r >= 0.8 ? "is-high" : undefined} />
-      </span>
-    </div>
-  );
-}
-
-function UsageBlock({ u }: { u: Usage }) {
-  const cf = u.cloudflare;
-  return (
-    <section className="block" data-testid="usage">
-      <h2 className="block-title">用量與花費</h2>
-      <div className="meters">
-        <Meter label="照片容量（上限 8 GB，免費 10 GB）" used={u.r2.used} limit={u.r2.limit} text={`${gb(u.r2.used)} / ${gb(u.r2.limit)}（${pct(u.r2.used, u.r2.limit)}）`} testid="usage-r2" />
-        <Meter
-          label="本月照片讀取（免費 1,000 萬次，到門檻改顯示佔位圖）"
-          used={u.reads.month}
-          limit={u.reads.stopAt}
-          text={`${n(u.reads.month)} / ${n(u.reads.stopAt)}`}
-          testid="usage-reads"
-        />
-      </div>
-      <p className="usage-line" data-testid="usage-paused">
-        暫停模式：{u.paused.on ? <b className="flag flag-lock">暫停中</b> : "正常"}
-        {u.paused.on && u.paused.at ? `（${tw(u.paused.at)} · ${u.paused.reason}）` : ""}
-      </p>
-      <h3 className="sub-title">Cloudflare 用量</h3>
-      {!cf.configured ? (
-        <p className="usage-line" data-testid="cf-unset">
-          <b>未設定</b>　{cf.need}
-        </p>
-      ) : !cf.ok ? (
-        <p className="usage-line" role="alert">
-          {cf.message}
-        </p>
-      ) : (
-        <>
-          <div className="tbl-scroll">
-            <table className="tbl" data-testid="cf-workers">
-              <thead>
-                <tr>
-                  <th>日期（UTC）</th>
-                  <th className="num">請求</th>
-                  <th className="num">錯誤</th>
-                  <th className="num">超過 CPU</th>
-                  <th className="num">CPU p50</th>
-                  <th className="num">CPU p90</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cf.workers.map((w) => (
-                  <tr key={w.date}>
-                    <td>{w.date}</td>
-                    <td className="num">
-                      {n(w.requests)}
-                      <span className="sub"> / {n(u.free.workersRequestsPerDay)}</span>
-                    </td>
-                    <td className="num">{n(w.errors)}</td>
-                    <td className="num">{n(w.exceeded)}</td>
-                    <td className="num">{w.cpuP50} ms</td>
-                    <td className="num">{w.cpuP90} ms</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="usage-line">
-            D1 今天讀 {n(cf.d1Today.rowsRead)} / {n(u.free.d1RowsReadPerDay)} 列、寫 {n(cf.d1Today.rowsWritten)} / {n(u.free.d1RowsWrittenPerDay)} 列；
-            R2 本月寫入類操作 {n(cf.r2Month.classA)} / {n(u.free.r2ClassAPerMonth)}、讀取類 {n(cf.r2Month.classB)}。CPU 為各狀態請求數加權的近似值，
-            免費方案每個請求上限 {u.free.workersCpuMs} ms。資料時間 {tw(cf.at)}
-          </p>
-        </>
-      )}
-    </section>
-  );
-}
-
 export function AdminDashboard() {
   const [d, setD] = useState<StatsRes | null>(null);
-  const [u, setU] = useState<Usage | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
-  const fetchAll = (fresh: boolean) =>
-    Promise.all([api<StatsRes>(`/api/admin/stats${fresh ? "?fresh=1" : ""}`), api<Usage>("/api/admin/usage")]);
-  const apply = ([a, b]: Awaited<ReturnType<typeof fetchAll>>) => {
-    setBusy(false);
-    if (a.ok) setD(a.data);
-    else setError(a.error.message);
-    if (b.ok) setU(b.data);
-  };
   const load = (fresh: boolean) => {
     setBusy(true);
-    void fetchAll(fresh).then(apply);
+    void api<StatsRes>(`/api/admin/stats${fresh ? "?fresh=1" : ""}`).then((a) => {
+      setBusy(false);
+      if (a.ok) setD(a.data);
+      else setError(a.error.message);
+    });
   };
   useEffect(() => {
     let alive = true;
-    void Promise.all([api<StatsRes>("/api/admin/stats"), api<Usage>("/api/admin/usage")]).then(([a, b]) => {
+    void api<StatsRes>("/api/admin/stats").then((a) => {
       if (!alive) return;
       if (a.ok) setD(a.data);
       else setError(a.error.message);
-      if (b.ok) setU(b.data);
     });
     return () => {
       alive = false;
@@ -376,7 +267,7 @@ export function AdminDashboard() {
         </details>
       </section>
 
-      {u ? <UsageBlock u={u} /> : null}
+      {/* 用量與花費、暫停模式 2026-10-03 移到 /admin/status（components/admin-status.tsx） */}
     </div>
   );
 }
